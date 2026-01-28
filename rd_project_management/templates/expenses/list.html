@@ -1,0 +1,144 @@
+{% extends "base.html" %}
+{% block title %}Despesas - {{ project.title }}{% endblock %}
+
+{% block content %}
+<div class="d-flex align-items-center mb-4">
+    <a href="{{ url_for('projects.view_project', project_id=project.id) }}" class="btn btn-outline-secondary btn-sm me-3">
+        <i class="bi bi-arrow-left"></i>
+    </a>
+    <div class="flex-grow-1">
+        <h4 class="fw-bold mb-0"><i class="bi bi-cash-coin text-danger"></i> Despesas</h4>
+        <span class="text-muted">{{ project.title }}</span>
+    </div>
+    <a href="{{ url_for('expenses.create_expense', project_id=project.id) }}" class="btn btn-primary">
+        <i class="bi bi-plus-lg"></i> Nova Despesa
+    </a>
+</div>
+
+<!-- Stats -->
+<div class="row g-3 mb-4">
+    <div class="col-md-3 col-6">
+        <div class="card card-stats border-primary shadow-sm">
+            <div class="card-body">
+                <p class="text-muted mb-1 small">Orçamento Projeto</p>
+                <h5 class="fw-bold mb-0">R$ {{ "{:,.2f}".format(project.budget).replace(",", "X").replace(".", ",").replace("X", ".") }}</h5>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3 col-6">
+        <div class="card card-stats border-danger shadow-sm">
+            <div class="card-body">
+                <p class="text-muted mb-1 small">Total Despesas</p>
+                <h5 class="fw-bold mb-0">R$ {{ "{:,.2f}".format(total).replace(",", "X").replace(".", ",").replace("X", ".") }}</h5>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3 col-6">
+        <div class="card card-stats border-success shadow-sm">
+            <div class="card-body">
+                <p class="text-muted mb-1 small">Aprovadas</p>
+                <h5 class="fw-bold mb-0">R$ {{ "{:,.2f}".format(total_approved).replace(",", "X").replace(".", ",").replace("X", ".") }}</h5>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3 col-6">
+        <div class="card card-stats border-warning shadow-sm">
+            <div class="card-body">
+                <p class="text-muted mb-1 small">Pendentes</p>
+                <h5 class="fw-bold mb-0">R$ {{ "{:,.2f}".format(total_pending).replace(",", "X").replace(".", ",").replace("X", ".") }}</h5>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Filters -->
+<div class="card shadow-sm mb-4">
+    <div class="card-body py-2">
+        <form method="GET" class="row g-2 align-items-center">
+            <div class="col-md-4">
+                <select name="category" class="form-select form-select-sm">
+                    <option value="">Todas Categorias</option>
+                    {% for cat in ['Pessoal', 'Equipamento', 'Material', 'Viagem', 'Serviço Terceiro', 'Outros'] %}
+                    <option value="{{ cat }}" {{ 'selected' if category_filter == cat }}>{{ cat }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col-md-4">
+                <select name="status" class="form-select form-select-sm">
+                    <option value="">Todos Status</option>
+                    {% for s in ['Pendente', 'Aprovada', 'Rejeitada', 'Paga'] %}
+                    <option value="{{ s }}" {{ 'selected' if status_filter == s }}>{{ s }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col-md-4 text-end">
+                <button type="submit" class="btn btn-outline-primary btn-sm"><i class="bi bi-filter"></i> Filtrar</button>
+                <a href="{{ url_for('expenses.list_expenses', project_id=project.id) }}" class="btn btn-outline-secondary btn-sm"><i class="bi bi-x"></i></a>
+            </div>
+        </form>
+    </div>
+</div>
+
+{% if expenses %}
+<div class="card shadow-sm">
+    <div class="table-responsive">
+        <table class="table table-hover mb-0">
+            <thead>
+                <tr>
+                    <th>Data</th>
+                    <th>Descrição</th>
+                    <th>Categoria</th>
+                    <th>Fornecedor</th>
+                    <th>Valor</th>
+                    <th>Status</th>
+                    <th class="text-end">Ações</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for expense in expenses %}
+                <tr>
+                    <td>{{ expense.date.strftime('%d/%m/%Y') }}</td>
+                    <td>{{ expense.description }}</td>
+                    <td><span class="badge bg-secondary">{{ expense.category }}</span></td>
+                    <td class="text-muted">{{ expense.supplier or '-' }}</td>
+                    <td class="fw-bold">R$ {{ "{:,.2f}".format(expense.amount).replace(",", "X").replace(".", ",").replace("X", ".") }}</td>
+                    <td>
+                        {% if expense.status == 'Aprovada' %}
+                            <span class="badge bg-success">{{ expense.status }}</span>
+                        {% elif expense.status == 'Rejeitada' %}
+                            <span class="badge bg-danger">{{ expense.status }}</span>
+                        {% elif expense.status == 'Paga' %}
+                            <span class="badge bg-primary">{{ expense.status }}</span>
+                        {% else %}
+                            <span class="badge bg-warning text-dark">{{ expense.status }}</span>
+                        {% endif %}
+                    </td>
+                    <td class="text-end">
+                        <a href="{{ url_for('expenses.edit_expense', project_id=project.id, expense_id=expense.id) }}" class="btn btn-sm btn-outline-secondary">
+                            <i class="bi bi-pencil"></i>
+                        </a>
+                        <form method="POST" action="{{ url_for('expenses.delete_expense', project_id=project.id, expense_id=expense.id) }}" class="d-inline">
+                            <button type="submit" class="btn btn-sm btn-outline-danger" data-confirm="Excluir esta despesa?">
+                                <i class="bi bi-trash"></i>
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% else %}
+<div class="card shadow-sm">
+    <div class="empty-state">
+        <i class="bi bi-cash-coin"></i>
+        <h5>Nenhuma despesa registrada</h5>
+        <p>Adicione despesas para controlar os gastos do projeto</p>
+        <a href="{{ url_for('expenses.create_expense', project_id=project.id) }}" class="btn btn-primary">
+            <i class="bi bi-plus-lg"></i> Adicionar Despesa
+        </a>
+    </div>
+</div>
+{% endif %}
+{% endblock %}

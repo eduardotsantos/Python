@@ -1,0 +1,143 @@
+{% extends "base.html" %}
+{% block title %}Cronograma - {{ project.title }}{% endblock %}
+
+{% block content %}
+<div class="d-flex align-items-center mb-4">
+    <a href="{{ url_for('projects.view_project', project_id=project.id) }}" class="btn btn-outline-secondary btn-sm me-3">
+        <i class="bi bi-arrow-left"></i>
+    </a>
+    <div class="flex-grow-1">
+        <h4 class="fw-bold mb-0"><i class="bi bi-calendar3 text-warning"></i> Cronograma</h4>
+        <span class="text-muted">{{ project.title }}</span>
+    </div>
+    <a href="{{ url_for('schedule.create_milestone', project_id=project.id) }}" class="btn btn-primary">
+        <i class="bi bi-plus-lg"></i> Novo Marco
+    </a>
+</div>
+
+{% if milestones %}
+<!-- Overall Progress -->
+{% set overall = (milestones | map(attribute='progress') | sum) // (milestones | length) %}
+<div class="card shadow-sm mb-4">
+    <div class="card-body">
+        <div class="d-flex justify-content-between mb-2">
+            <strong>Progresso Geral</strong>
+            <strong>{{ overall }}%</strong>
+        </div>
+        <div class="progress" style="height: 12px;">
+            <div class="progress-bar bg-success" style="width: {{ overall }}%"></div>
+        </div>
+    </div>
+</div>
+
+<!-- Gantt Chart Visual -->
+<div class="card shadow-sm mb-4">
+    <div class="card-header bg-white">
+        <h6 class="mb-0 fw-bold">Gráfico de Gantt</h6>
+    </div>
+    <div class="card-body">
+        <div class="gantt-container">
+            {% set min_date = milestones | map(attribute='start_date') | min %}
+            {% set max_date = milestones | map(attribute='end_date') | max %}
+            {% set total_days = (max_date - min_date).days if max_date and min_date and (max_date - min_date).days > 0 else 1 %}
+
+            {% for milestone in milestones %}
+            <div class="d-flex align-items-center mb-2">
+                <div style="width: 250px; min-width: 250px;" class="pe-3">
+                    <div class="fw-bold small">{{ milestone.title }}</div>
+                    <div class="text-muted" style="font-size: 0.75rem;">
+                        {{ milestone.start_date.strftime('%d/%m') }} - {{ milestone.end_date.strftime('%d/%m/%Y') }}
+                    </div>
+                </div>
+                <div class="flex-grow-1 position-relative" style="height: 36px; background: #f0f0f0; border-radius: 6px;">
+                    {% set offset = ((milestone.start_date - min_date).days / total_days * 100) %}
+                    {% set width = (((milestone.end_date - milestone.start_date).days + 1) / total_days * 100) %}
+                    <div class="gantt-bar
+                        {{ 'bg-success' if milestone.status == 'Concluído' else 'bg-warning' if milestone.status == 'Em Andamento' else 'bg-info' if milestone.status == 'Pendente' else 'bg-danger' }}"
+                        style="position:absolute; left:{{ offset }}%; width:{{ width }}%; top:3px; height:30px;"
+                        title="{{ milestone.title }} ({{ milestone.progress }}%)">
+                        <div class="gantt-progress" style="width: {{ milestone.progress }}%;"></div>
+                        <span class="position-absolute small text-white fw-bold" style="top:5px;left:8px;">{{ milestone.progress }}%</span>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+
+<!-- Milestone List -->
+<div class="card shadow-sm">
+    <div class="card-header bg-white">
+        <h6 class="mb-0 fw-bold">Marcos do Projeto</h6>
+    </div>
+    <div class="table-responsive">
+        <table class="table table-hover mb-0">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Marco</th>
+                    <th>Início</th>
+                    <th>Término</th>
+                    <th>Progresso</th>
+                    <th>Status</th>
+                    <th class="text-end">Ações</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for milestone in milestones %}
+                <tr>
+                    <td>{{ milestone.order }}</td>
+                    <td>
+                        <strong>{{ milestone.title }}</strong>
+                        {% if milestone.description %}
+                        <br><small class="text-muted">{{ milestone.description[:80] }}{{ '...' if milestone.description|length > 80 }}</small>
+                        {% endif %}
+                    </td>
+                    <td>{{ milestone.start_date.strftime('%d/%m/%Y') }}</td>
+                    <td>{{ milestone.end_date.strftime('%d/%m/%Y') }}</td>
+                    <td style="min-width:150px;">
+                        <div class="d-flex align-items-center">
+                            <input type="range" class="form-range progress-slider me-2" min="0" max="100" step="5"
+                                   value="{{ milestone.progress }}"
+                                   data-milestone-id="{{ milestone.id }}"
+                                   data-project-id="{{ project.id }}"
+                                   style="width: 80px;">
+                            <span id="progress-label-{{ milestone.id }}" class="small fw-bold">{{ milestone.progress }}%</span>
+                        </div>
+                    </td>
+                    <td>
+                        <span id="status-{{ milestone.id }}" class="badge
+                            {{ 'bg-success' if milestone.status == 'Concluído' else 'bg-warning text-dark' if milestone.status == 'Em Andamento' else 'bg-danger' if milestone.status == 'Atrasado' else 'bg-info' }}">
+                            {{ milestone.status }}
+                        </span>
+                    </td>
+                    <td class="text-end">
+                        <a href="{{ url_for('schedule.edit_milestone', project_id=project.id, milestone_id=milestone.id) }}" class="btn btn-sm btn-outline-secondary">
+                            <i class="bi bi-pencil"></i>
+                        </a>
+                        <form method="POST" action="{{ url_for('schedule.delete_milestone', project_id=project.id, milestone_id=milestone.id) }}" class="d-inline">
+                            <button type="submit" class="btn btn-sm btn-outline-danger" data-confirm="Excluir este marco?">
+                                <i class="bi bi-trash"></i>
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% else %}
+<div class="card shadow-sm">
+    <div class="empty-state">
+        <i class="bi bi-calendar3"></i>
+        <h5>Nenhum marco definido</h5>
+        <p>Defina marcos e etapas para o cronograma do projeto</p>
+        <a href="{{ url_for('schedule.create_milestone', project_id=project.id) }}" class="btn btn-primary">
+            <i class="bi bi-plus-lg"></i> Criar Marco
+        </a>
+    </div>
+</div>
+{% endif %}
+{% endblock %}

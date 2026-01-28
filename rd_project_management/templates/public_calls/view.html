@@ -1,0 +1,78 @@
+{% extends "base.html" %}
+{% block title %}{{ call.title }} - Gestão P&D{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-8">
+        <div class="d-flex align-items-center mb-4">
+            <a href="{{ url_for('public_calls.list_calls') }}" class="btn btn-outline-secondary btn-sm me-3">
+                <i class="bi bi-arrow-left"></i>
+            </a>
+            <h4 class="fw-bold mb-0">Detalhes da Chamada</h4>
+        </div>
+
+        <div class="card shadow-sm">
+            <div class="card-body p-4">
+                <div class="mb-3">
+                    <span class="badge {{ 'bg-primary' if call.source == 'FINEP' else 'bg-success' }} fs-6">{{ call.source }}</span>
+                    {% if call.theme %}
+                    <span class="badge bg-secondary fs-6 ms-1">{{ call.theme }}</span>
+                    {% endif %}
+                </div>
+
+                <h4 class="fw-bold mb-3">{{ call.title }}</h4>
+
+                {% if call.description %}
+                <div class="mb-4">
+                    <h6 class="text-muted">Descrição</h6>
+                    <p>{{ call.description }}</p>
+                </div>
+                {% endif %}
+
+                <div class="row g-3 mb-4">
+                    {% if call.publication_date %}
+                    <div class="col-md-6">
+                        <h6 class="text-muted small">Data de Publicação</h6>
+                        <p class="fw-bold"><i class="bi bi-calendar"></i> {{ call.publication_date }}</p>
+                    </div>
+                    {% endif %}
+
+                    {% if call.deadline %}
+                    <div class="col-md-6">
+                        <h6 class="text-muted small">Prazo</h6>
+                        <p class="fw-bold text-danger"><i class="bi bi-alarm"></i> {{ call.deadline }}</p>
+                    </div>
+                    {% endif %}
+
+                    {% if call.funding_source %}
+                    <div class="col-md-6">
+                        <h6 class="text-muted small">Fonte de Recursos</h6>
+                        <p class="fw-bold"><i class="bi bi-cash"></i> {{ call.funding_source }}</p>
+                    </div>
+                    {% endif %}
+
+                    {% if call.target_audience %}
+                    <div class="col-md-6">
+                        <h6 class="text-muted small">Público Alvo</h6>
+                        <p class="fw-bold"><i class="bi bi-people"></i> {{ call.target_audience }}</p>
+                    </div>
+                    {% endif %}
+                </div>
+
+                {% if call.url %}
+                <div class="mb-4">
+                    <h6 class="text-muted small">Link da Chamada</h6>
+                    <a href="{{ call.url }}" target="_blank" class="btn btn-primary">
+                        <i class="bi bi-box-arrow-up-right"></i> Acessar no Site Oficial
+                    </a>
+                </div>
+                {% endif %}
+
+                <div class="text-muted small">
+                    <p>Atualizado em: {{ call.updated_at.strftime('%d/%m/%Y %H:%M') if call.updated_at else '-' }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

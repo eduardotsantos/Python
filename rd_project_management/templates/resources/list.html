@@ -1,0 +1,111 @@
+{% extends "base.html" %}
+{% block title %}Recursos - {{ project.title }}{% endblock %}
+
+{% block content %}
+<div class="d-flex align-items-center mb-4">
+    <a href="{{ url_for('projects.view_project', project_id=project.id) }}" class="btn btn-outline-secondary btn-sm me-3">
+        <i class="bi bi-arrow-left"></i>
+    </a>
+    <div class="flex-grow-1">
+        <h4 class="fw-bold mb-0"><i class="bi bi-people text-info"></i> Recursos</h4>
+        <span class="text-muted">{{ project.title }}</span>
+    </div>
+    <a href="{{ url_for('resources.create_resource', project_id=project.id) }}" class="btn btn-primary">
+        <i class="bi bi-plus-lg"></i> Novo Recurso
+    </a>
+</div>
+
+<!-- Stats -->
+<div class="row g-3 mb-4">
+    <div class="col-md-4">
+        <div class="card card-stats border-primary shadow-sm">
+            <div class="card-body">
+                <p class="text-muted mb-1 small">Pessoas</p>
+                <h3 class="fw-bold mb-0">{{ people|length }}</h3>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card card-stats border-warning shadow-sm">
+            <div class="card-body">
+                <p class="text-muted mb-1 small">Máquinas/Equipamentos</p>
+                <h3 class="fw-bold mb-0">{{ machines|length }}</h3>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card card-stats border-success shadow-sm">
+            <div class="card-body">
+                <p class="text-muted mb-1 small">Custo Estimado Total</p>
+                <h5 class="fw-bold mb-0">R$ {{ "{:,.2f}".format(total_cost).replace(",", "X").replace(".", ",").replace("X", ".") }}</h5>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Filter -->
+<div class="mb-3">
+    <div class="btn-group" role="group">
+        <a href="{{ url_for('resources.list_resources', project_id=project.id) }}" class="btn btn-sm {{ 'btn-primary' if not type_filter else 'btn-outline-primary' }}">Todos</a>
+        <a href="{{ url_for('resources.list_resources', project_id=project.id, type='Pessoa') }}" class="btn btn-sm {{ 'btn-primary' if type_filter == 'Pessoa' else 'btn-outline-primary' }}">Pessoas</a>
+        <a href="{{ url_for('resources.list_resources', project_id=project.id, type='Máquina') }}" class="btn btn-sm {{ 'btn-primary' if type_filter == 'Máquina' else 'btn-outline-primary' }}">Máquinas</a>
+    </div>
+</div>
+
+{% if resources %}
+<div class="row g-3">
+    {% for resource in resources %}
+    <div class="col-md-6 col-lg-4">
+        <div class="card resource-card shadow-sm h-100">
+            <div class="card-body">
+                <div class="d-flex align-items-start">
+                    <div class="resource-icon {{ 'bg-primary' if resource.type == 'Pessoa' else 'bg-warning' }} bg-opacity-10 me-3">
+                        <i class="bi {{ 'bi-person-fill text-primary' if resource.type == 'Pessoa' else 'bi-gear-fill text-warning' }}"></i>
+                    </div>
+                    <div class="flex-grow-1">
+                        <h6 class="fw-bold mb-1">{{ resource.name }}</h6>
+                        <span class="badge {{ 'bg-primary' if resource.type == 'Pessoa' else 'bg-warning text-dark' }} mb-2">{{ resource.type }}</span>
+                        {% if resource.role %}
+                        <span class="badge bg-secondary mb-2">{{ resource.role }}</span>
+                        {% endif %}
+                        <div class="small text-muted mt-1">
+                            {% if resource.hours_allocated %}
+                            <div><i class="bi bi-clock"></i> {{ resource.hours_allocated }}h alocadas</div>
+                            {% endif %}
+                            {% if resource.hourly_cost %}
+                            <div><i class="bi bi-cash"></i> R$ {{ "{:,.2f}".format(resource.hourly_cost).replace(",", "X").replace(".", ",").replace("X", ".") }}/h</div>
+                            {% endif %}
+                        </div>
+                        <div class="mt-2">
+                            <span class="badge {{ 'bg-success' if resource.status == 'Ativo' else 'bg-secondary' }}">{{ resource.status }}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card-footer bg-white border-top-0 text-end">
+                <a href="{{ url_for('resources.edit_resource', project_id=project.id, resource_id=resource.id) }}" class="btn btn-sm btn-outline-secondary">
+                    <i class="bi bi-pencil"></i> Editar
+                </a>
+                <form method="POST" action="{{ url_for('resources.delete_resource', project_id=project.id, resource_id=resource.id) }}" class="d-inline">
+                    <button type="submit" class="btn btn-sm btn-outline-danger" data-confirm="Excluir este recurso?">
+                        <i class="bi bi-trash"></i>
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% else %}
+<div class="card shadow-sm">
+    <div class="empty-state">
+        <i class="bi bi-people"></i>
+        <h5>Nenhum recurso cadastrado</h5>
+        <p>Adicione pessoas e máquinas ao projeto</p>
+        <a href="{{ url_for('resources.create_resource', project_id=project.id) }}" class="btn btn-primary">
+            <i class="bi bi-plus-lg"></i> Adicionar Recurso
+        </a>
+    </div>
+</div>
+{% endif %}
+{% endblock %}

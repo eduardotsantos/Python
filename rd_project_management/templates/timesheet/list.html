@@ -1,0 +1,138 @@
+{% extends "base.html" %}
+{% block title %}Timesheet - {{ project.title }}{% endblock %}
+
+{% block content %}
+<div class="d-flex align-items-center mb-4">
+    <a href="{{ url_for('projects.view_project', project_id=project.id) }}" class="btn btn-outline-secondary btn-sm me-3">
+        <i class="bi bi-arrow-left"></i>
+    </a>
+    <div class="flex-grow-1">
+        <h4 class="fw-bold mb-0"><i class="bi bi-clock text-success"></i> Timesheet</h4>
+        <span class="text-muted">{{ project.title }}</span>
+    </div>
+    <a href="{{ url_for('timesheet.create_entry', project_id=project.id) }}" class="btn btn-primary">
+        <i class="bi bi-plus-lg"></i> Registrar Horas
+    </a>
+</div>
+
+<!-- Stats -->
+<div class="row g-3 mb-4">
+    <div class="col-md-4">
+        <div class="card card-stats border-primary shadow-sm">
+            <div class="card-body">
+                <p class="text-muted mb-1 small">Total de Horas</p>
+                <h3 class="fw-bold mb-0">{{ "%.1f"|format(total_hours) }}h</h3>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card card-stats border-info shadow-sm">
+            <div class="card-body">
+                <p class="text-muted mb-1 small">Registros</p>
+                <h3 class="fw-bold mb-0">{{ entries|length }}</h3>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card card-stats border-success shadow-sm">
+            <div class="card-body">
+                <p class="text-muted mb-1 small">Colaboradores</p>
+                <h3 class="fw-bold mb-0">{{ hours_by_user|length }}</h3>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Hours by User -->
+{% if hours_by_user %}
+<div class="card shadow-sm mb-4">
+    <div class="card-header bg-white">
+        <h6 class="mb-0 fw-bold">Horas por Colaborador</h6>
+    </div>
+    <div class="card-body">
+        {% for user_name, hours in hours_by_user.items() %}
+        <div class="d-flex justify-content-between align-items-center mb-2">
+            <span><i class="bi bi-person"></i> {{ user_name }}</span>
+            <div class="d-flex align-items-center" style="width: 60%;">
+                <div class="progress flex-grow-1 me-2" style="height: 10px;">
+                    <div class="progress-bar bg-primary" style="width: {{ (hours / total_hours * 100) if total_hours > 0 else 0 }}%"></div>
+                </div>
+                <strong class="small">{{ "%.1f"|format(hours) }}h</strong>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endif %}
+
+<!-- Filter -->
+<div class="card shadow-sm mb-4">
+    <div class="card-body py-2">
+        <form method="GET" class="row g-2 align-items-center">
+            <div class="col-md-4">
+                <input type="month" name="month" class="form-control form-control-sm" value="{{ month_filter }}">
+            </div>
+            <div class="col-md-4 text-end">
+                <button type="submit" class="btn btn-outline-primary btn-sm"><i class="bi bi-filter"></i> Filtrar</button>
+                <a href="{{ url_for('timesheet.list_timesheet', project_id=project.id) }}" class="btn btn-outline-secondary btn-sm"><i class="bi bi-x"></i></a>
+            </div>
+        </form>
+    </div>
+</div>
+
+{% if entries %}
+<div class="card shadow-sm">
+    <div class="table-responsive">
+        <table class="table table-hover mb-0">
+            <thead>
+                <tr>
+                    <th>Data</th>
+                    <th>Colaborador</th>
+                    <th>Atividade</th>
+                    <th>Marco</th>
+                    <th>Horas</th>
+                    <th class="text-end">Ações</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for entry in entries %}
+                <tr>
+                    <td>{{ entry.date.strftime('%d/%m/%Y') }}</td>
+                    <td>{{ entry.user.full_name }}</td>
+                    <td>
+                        {{ entry.activity }}
+                        {% if entry.notes %}
+                        <br><small class="text-muted">{{ entry.notes[:60] }}{{ '...' if entry.notes|length > 60 }}</small>
+                        {% endif %}
+                    </td>
+                    <td class="text-muted">{{ entry.milestone.title if entry.milestone else '-' }}</td>
+                    <td class="fw-bold">{{ "%.1f"|format(entry.hours) }}h</td>
+                    <td class="text-end">
+                        <a href="{{ url_for('timesheet.edit_entry', project_id=project.id, entry_id=entry.id) }}" class="btn btn-sm btn-outline-secondary">
+                            <i class="bi bi-pencil"></i>
+                        </a>
+                        <form method="POST" action="{{ url_for('timesheet.delete_entry', project_id=project.id, entry_id=entry.id) }}" class="d-inline">
+                            <button type="submit" class="btn btn-sm btn-outline-danger" data-confirm="Excluir este registro?">
+                                <i class="bi bi-trash"></i>
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% else %}
+<div class="card shadow-sm">
+    <div class="empty-state">
+        <i class="bi bi-clock"></i>
+        <h5>Nenhum registro de horas</h5>
+        <p>Registre horas trabalhadas neste projeto</p>
+        <a href="{{ url_for('timesheet.create_entry', project_id=project.id) }}" class="btn btn-primary">
+            <i class="bi bi-plus-lg"></i> Registrar Horas
+        </a>
+    </div>
+</div>
+{% endif %}
+{% endblock %}

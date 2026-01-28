@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+{% block title %}{{ 'Editar' if milestone else 'Novo' }} Marco - Gestão P&D{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-8">
+        <div class="d-flex align-items-center mb-4">
+            <a href="{{ url_for('schedule.view_schedule', project_id=project.id) }}" class="btn btn-outline-secondary btn-sm me-3">
+                <i class="bi bi-arrow-left"></i>
+            </a>
+            <h4 class="fw-bold mb-0">{{ 'Editar' if milestone else 'Novo' }} Marco</h4>
+        </div>
+
+        <div class="card shadow-sm">
+            <div class="card-body p-4">
+                <form method="POST">
+                    <div class="row g-3">
+                        <div class="col-md-9">
+                            <label for="title" class="form-label">Título *</label>
+                            <input type="text" class="form-control" id="title" name="title"
+                                   value="{{ milestone.title if milestone else '' }}" required>
+                        </div>
+                        <div class="col-md-3">
+                            <label for="order" class="form-label">Ordem</label>
+                            <input type="number" class="form-control" id="order" name="order"
+                                   value="{{ milestone.order if milestone else '0' }}">
+                        </div>
+                        <div class="col-12">
+                            <label for="description" class="form-label">Descrição</label>
+                            <textarea class="form-control" id="description" name="description" rows="3">{{ milestone.description if milestone else '' }}</textarea>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="start_date" class="form-label">Data Início *</label>
+                            <input type="date" class="form-control" id="start_date" name="start_date"
+                                   value="{{ milestone.start_date.strftime('%Y-%m-%d') if milestone and milestone.start_date else '' }}" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="end_date" class="form-label">Data Término *</label>
+                            <input type="date" class="form-control" id="end_date" name="end_date"
+                                   value="{{ milestone.end_date.strftime('%Y-%m-%d') if milestone and milestone.end_date else '' }}" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="progress" class="form-label">Progresso (%)</label>
+                            <input type="range" class="form-range" id="progress" name="progress" min="0" max="100" step="5"
+                                   value="{{ milestone.progress if milestone else 0 }}"
+                                   oninput="document.getElementById('progressValue').textContent = this.value + '%'">
+                            <span id="progressValue" class="fw-bold">{{ milestone.progress if milestone else 0 }}%</span>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="status" class="form-label">Status</label>
+                            <select class="form-select" id="status" name="status">
+                                {% for s in ['Pendente', 'Em Andamento', 'Concluído', 'Atrasado'] %}
+                                <option value="{{ s }}" {{ 'selected' if milestone and milestone.status == s }}>{{ s }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+                    <hr class="my-4">
+                    <div class="d-flex justify-content-end gap-2">
+                        <a href="{{ url_for('schedule.view_schedule', project_id=project.id) }}" class="btn btn-outline-secondary">Cancelar</a>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="bi bi-check-lg"></i> {{ 'Salvar' if milestone else 'Criar Marco' }}
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
