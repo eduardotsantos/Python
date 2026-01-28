@@ -28,7 +28,7 @@ def scrape_bndes_calls():
         try:
             response = requests.get(url, headers=HEADERS, timeout=30, verify=True)
             response.raise_for_status()
-            soup = BeautifulSoup(response.text, 'lxml')
+            soup = BeautifulSoup(response.text, 'html.parser')
 
             page_calls = _parse_bndes_page(soup, url)
             calls.extend(page_calls)

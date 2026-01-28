@@ -24,7 +24,7 @@ def scrape_finep_calls():
     try:
         response = requests.get(FINEP_CHAMADAS_URL, headers=HEADERS, timeout=30)
         response.raise_for_status()
-        soup = BeautifulSoup(response.text, 'lxml')
+        soup = BeautifulSoup(response.text, 'html.parser')
 
         # FINEP uses various page structures - try multiple selectors
         # Try main content area with list items or articles
