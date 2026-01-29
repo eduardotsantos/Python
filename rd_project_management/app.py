@@ -42,6 +42,7 @@ def create_app():
     from routes.schedule import schedule_bp
     from routes.timesheet import timesheet_bp
     from routes.public_calls import public_calls_bp
+    from routes.users import users_bp
 
     app.register_blueprint(auth_bp)
     app.register_blueprint(projects_bp)
@@ -50,6 +51,7 @@ def create_app():
     app.register_blueprint(schedule_bp)
     app.register_blueprint(timesheet_bp)
     app.register_blueprint(public_calls_bp)
+    app.register_blueprint(users_bp)
 
     # Root redirect
     @app.route('/')

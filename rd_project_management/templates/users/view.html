@@ -1,0 +1,99 @@
+{% extends "base.html" %}
+{% block title %}{{ user.full_name }} - Gestão P&D{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-8">
+        <div class="d-flex align-items-center mb-4">
+            <a href="{{ url_for('users.list_users') }}" class="btn btn-outline-secondary btn-sm me-3">
+                <i class="bi bi-arrow-left"></i>
+            </a>
+            <div class="flex-grow-1">
+                <h4 class="fw-bold mb-0">Detalhes do Usuário</h4>
+            </div>
+            <a href="{{ url_for('users.edit_user', user_id=user.id) }}" class="btn btn-outline-primary btn-sm me-2">
+                <i class="bi bi-pencil"></i> Editar
+            </a>
+            {% if user.id != current_user.id %}
+            <form method="POST" action="{{ url_for('users.delete_user', user_id=user.id) }}" class="d-inline">
+                <button type="submit" class="btn btn-outline-danger btn-sm" data-confirm="Excluir usuário '{{ user.full_name }}'?">
+                    <i class="bi bi-trash"></i>
+                </button>
+            </form>
+            {% endif %}
+        </div>
+
+        <div class="card shadow-sm mb-4">
+            <div class="card-body p-4">
+                <div class="row align-items-center mb-4">
+                    <div class="col-auto">
+                        <div class="rounded-circle bg-{{ 'primary' if user.role == 'admin' else 'warning' if user.role == 'manager' else 'secondary' }} text-white d-flex align-items-center justify-content-center" style="width: 80px; height: 80px; font-size: 2rem;">
+                            <i class="bi bi-person"></i>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <h4 class="fw-bold mb-1">{{ user.full_name }}</h4>
+                        <p class="text-muted mb-1">@{{ user.username }}</p>
+                        <div>
+                            {% if user.role == 'admin' %}
+                                <span class="badge bg-danger"><i class="bi bi-shield-lock"></i> Administrador</span>
+                            {% elif user.role == 'manager' %}
+                                <span class="badge bg-warning text-dark"><i class="bi bi-briefcase"></i> Gerente</span>
+                            {% else %}
+                                <span class="badge bg-secondary"><i class="bi bi-person"></i> Usuário</span>
+                            {% endif %}
+                            {% if user.active %}
+                                <span class="badge bg-success ms-1"><i class="bi bi-check-circle"></i> Ativo</span>
+                            {% else %}
+                                <span class="badge bg-secondary ms-1"><i class="bi bi-pause-circle"></i> Inativo</span>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <h6 class="text-muted small">Email</h6>
+                        <p class="fw-bold"><i class="bi bi-envelope"></i> {{ user.email }}</p>
+                    </div>
+                    <div class="col-md-6">
+                        <h6 class="text-muted small">Cadastrado em</h6>
+                        <p class="fw-bold"><i class="bi bi-calendar"></i> {{ user.created_at.strftime('%d/%m/%Y às %H:%M') if user.created_at else '-' }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Activity Stats -->
+        <div class="row g-3">
+            <div class="col-md-4">
+                <div class="card card-stats border-primary shadow-sm">
+                    <div class="card-body text-center">
+                        <i class="bi bi-folder text-primary" style="font-size: 2rem;"></i>
+                        <h3 class="fw-bold mt-2 mb-0">{{ projects_count }}</h3>
+                        <p class="text-muted small mb-0">Projetos Responsável</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card card-stats border-info shadow-sm">
+                    <div class="card-body text-center">
+                        <i class="bi bi-clock text-info" style="font-size: 2rem;"></i>
+                        <h3 class="fw-bold mt-2 mb-0">{{ timesheets_count }}</h3>
+                        <p class="text-muted small mb-0">Registros de Horas</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card card-stats border-warning shadow-sm">
+                    <div class="card-body text-center">
+                        <i class="bi bi-cash-coin text-warning" style="font-size: 2rem;"></i>
+                        <h3 class="fw-bold mt-2 mb-0">{{ expenses_count }}</h3>
+                        <p class="text-muted small mb-0">Despesas Cadastradas</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
