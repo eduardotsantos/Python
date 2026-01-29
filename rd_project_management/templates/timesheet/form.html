@@ -31,7 +31,17 @@
                                    value="{{ entry.activity if entry else '' }}" required
                                    placeholder="Descreva a atividade realizada">
                         </div>
-                        <div class="col-md-12">
+                        <div class="col-md-6">
+                            <label for="resource_id" class="form-label">Recurso (Pessoa) *</label>
+                            <select class="form-select" id="resource_id" name="resource_id" required>
+                                <option value="">Selecione o colaborador</option>
+                                {% for r in resources %}
+                                <option value="{{ r.id }}" {{ 'selected' if entry and entry.resource_id == r.id }}>{{ r.name }}{% if r.role %} ({{ r.role }}){% endif %}</option>
+                                {% endfor %}
+                            </select>
+                            <div class="form-text">Selecione o colaborador que realizou a atividade</div>
+                        </div>
+                        <div class="col-md-6">
                             <label for="milestone_id" class="form-label">Marco/Etapa Relacionada</label>
                             <select class="form-select" id="milestone_id" name="milestone_id">
                                 <option value="">Nenhum</option>

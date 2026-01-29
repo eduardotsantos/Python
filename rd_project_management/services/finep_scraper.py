@@ -1,16 +1,25 @@
 import requests
 from bs4 import BeautifulSoup
 import logging
+import re
 
 logger = logging.getLogger(__name__)
 
-FINEP_CHAMADAS_URL = "http://www.finep.gov.br/chamadas-publicas"
+# Multiple URLs to try for FINEP
+FINEP_URLS = [
+    "http://www.finep.gov.br/chamadas-publicas?situacao=aberta",
+    "http://www.finep.gov.br/chamadas-publicas",
+    "http://www.finep.gov.br/apoio-e-financiamento-externa/programas-e-linhas/chamadas-publicas",
+]
 FINEP_BASE_URL = "http://www.finep.gov.br"
 
 HEADERS = {
     'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
-    'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
-    'Accept-Language': 'pt-BR,pt;q=0.9,en;q=0.8',
+    'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
+    'Accept-Language': 'pt-BR,pt;q=0.9,en-US;q=0.8,en;q=0.7',
+    'Accept-Encoding': 'gzip, deflate',
+    'Connection': 'keep-alive',
+    'Cache-Control': 'max-age=0',
 }
 
 
@@ -19,121 +28,224 @@ def scrape_finep_calls():
     Scrape public calls from FINEP website.
     Returns a list of dicts with call information.
     """
+    all_calls = []
+    seen_titles = set()
+
+    for url in FINEP_URLS:
+        try:
+            logger.info(f"Tentando buscar FINEP de: {url}")
+            response = requests.get(url, headers=HEADERS, timeout=30, allow_redirects=True)
+            response.raise_for_status()
+
+            soup = BeautifulSoup(response.text, 'html.parser')
+
+            # Try multiple parsing strategies
+            calls = []
+
+            # Strategy 1: Look for table rows
+            calls.extend(_parse_table_structure(soup))
+
+            # Strategy 2: Look for div items (Joomla-style)
+            if not calls:
+                calls.extend(_parse_joomla_items(soup))
+
+            # Strategy 3: Look for any links that seem like calls
+            if not calls:
+                calls.extend(_parse_links_strategy(soup))
+
+            # Add unique calls
+            for call in calls:
+                if call.get('title') and call['title'] not in seen_titles:
+                    seen_titles.add(call['title'])
+                    all_calls.append(call)
+
+            if all_calls:
+                logger.info(f"FINEP: Encontradas {len(all_calls)} chamadas de {url}")
+                break  # Stop if we found calls
+
+        except requests.RequestException as e:
+            logger.warning(f"Erro ao buscar FINEP ({url}): {e}")
+        except Exception as e:
+            logger.error(f"Erro ao processar FINEP ({url}): {e}")
+
+    logger.info(f"FINEP: Total de {len(all_calls)} chamadas públicas encontradas")
+    return all_calls
+
+
+def _parse_table_structure(soup):
+    """Parse table-based structure."""
     calls = []
 
-    try:
-        response = requests.get(FINEP_CHAMADAS_URL, headers=HEADERS, timeout=30)
-        response.raise_for_status()
-        soup = BeautifulSoup(response.text, 'html.parser')
-
-        # FINEP uses various page structures - try multiple selectors
-        # Try main content area with list items or articles
-        content_selectors = [
-            'div.items-row',
-            'div.item-page',
-            'table.category tbody tr',
-            'div#content article',
-            'div.blog-items div.item',
-            'ul.category li',
-            'div.com-content-category-blog__items div',
-        ]
-
-        items = []
-        for selector in content_selectors:
-            items = soup.select(selector)
-            if items:
-                break
-
-        if items:
-            for item in items:
-                call = _parse_finep_item(item)
-                if call and call.get('title'):
-                    calls.append(call)
-
-        # If no structured items found, try extracting links from content
-        if not calls:
-            content_area = soup.select_one('div#content, div.item-page, main, div#component')
-            if content_area:
-                links = content_area.find_all('a', href=True)
-                for link in links:
+    # Look for tables with call listings
+    tables = soup.find_all('table')
+    for table in tables:
+        rows = table.find_all('tr')
+        for row in rows:
+            cells = row.find_all(['td', 'th'])
+            if len(cells) >= 1:
+                link = row.find('a', href=True)
+                if link:
                     text = link.get_text(strip=True)
                     href = link['href']
-                    if text and len(text) > 15 and _is_valid_call_link(text):
-                        url = href if href.startswith('http') else FINEP_BASE_URL + href
-                        call = {
-                            'source': 'FINEP',
-                            'title': text,
-                            'theme': _extract_theme(text),
-                            'description': text,
-                            'publication_date': '',
-                            'funding_source': 'FINEP',
-                            'target_audience': 'Empresas e ICTs',
-                            'url': url,
-                        }
+                    if text and len(text) > 10 and _is_valid_call_text(text):
+                        call = _create_call_dict(text, href)
+
+                        # Try to get date from other cells
+                        for cell in cells:
+                            cell_text = cell.get_text(strip=True)
+                            if _looks_like_date(cell_text):
+                                call['publication_date'] = cell_text
+                                break
+
                         calls.append(call)
-
-        # Also try to get details from subpages
-        if not calls:
-            calls = _try_alternative_finep_scrape(soup)
-
-        logger.info(f"FINEP: Found {len(calls)} public calls")
-
-    except requests.RequestException as e:
-        logger.error(f"Error fetching FINEP calls: {e}")
-    except Exception as e:
-        logger.error(f"Error parsing FINEP calls: {e}")
 
     return calls
 
 
-def _parse_finep_item(item):
-    """Parse a single FINEP item element."""
-    call = {
+def _parse_joomla_items(soup):
+    """Parse Joomla-style content items."""
+    calls = []
+
+    # Various Joomla selectors
+    selectors = [
+        'div.items-row',
+        'div.item-page',
+        'div.blog-items div.item',
+        'div.com-content-category-blog__items > div',
+        'ul.category li',
+        'div.category-list li',
+        'div[class*="chamada"]',
+        'article',
+        'div.item',
+    ]
+
+    for selector in selectors:
+        items = soup.select(selector)
+        for item in items:
+            link = item.find('a', href=True)
+            if link:
+                text = link.get_text(strip=True)
+                href = link['href']
+                if text and len(text) > 15 and _is_valid_call_text(text):
+                    call = _create_call_dict(text, href)
+
+                    # Try to find date
+                    date_el = item.find(['time', 'span'], class_=lambda x: x and 'date' in x.lower() if x else False)
+                    if date_el:
+                        call['publication_date'] = date_el.get_text(strip=True)
+
+                    # Try to find description
+                    desc_el = item.find(['p', 'div'], class_=lambda x: x and ('intro' in x.lower() or 'desc' in x.lower()) if x else False)
+                    if desc_el:
+                        call['description'] = desc_el.get_text(strip=True)[:500]
+
+                    calls.append(call)
+
+        if calls:
+            break
+
+    return calls
+
+
+def _parse_links_strategy(soup):
+    """Parse by finding all valid links in the content area."""
+    calls = []
+    seen = set()
+
+    # Try to find main content area
+    content_areas = soup.select('div#content, main, div.item-page, div#component, div[role="main"], body')
+
+    for content in content_areas:
+        links = content.find_all('a', href=True)
+        for link in links:
+            text = link.get_text(strip=True)
+            href = link['href']
+
+            # Skip navigation, footer links, etc.
+            if not text or len(text) < 15:
+                continue
+            if text in seen:
+                continue
+            if not _is_valid_call_text(text):
+                continue
+
+            # Skip certain patterns
+            parent = link.parent
+            if parent:
+                parent_class = parent.get('class', [])
+                if any(c in str(parent_class).lower() for c in ['nav', 'menu', 'footer', 'breadcrumb']):
+                    continue
+
+            seen.add(text)
+            calls.append(_create_call_dict(text, href))
+
+        if calls:
+            break
+
+    return calls
+
+
+def _create_call_dict(title, href):
+    """Create a standardized call dictionary."""
+    url = href if href.startswith('http') else FINEP_BASE_URL + href
+
+    return {
         'source': 'FINEP',
-        'title': '',
-        'theme': '',
-        'description': '',
+        'title': title,
+        'theme': _extract_theme(title),
+        'description': title,
         'publication_date': '',
-        'funding_source': 'FINEP',
-        'target_audience': '',
-        'url': '',
+        'funding_source': 'FINEP / FNDCT',
+        'target_audience': 'Empresas, ICTs e Pesquisadores',
+        'url': url,
     }
 
-    # Try to find title
-    title_el = item.select_one('h2 a, h3 a, h4 a, a.mod-articles-category-title, td a, a')
-    if title_el:
-        call['title'] = title_el.get_text(strip=True)
-        href = title_el.get('href', '')
-        call['url'] = href if href.startswith('http') else FINEP_BASE_URL + href
 
-    # Try to find description
-    desc_el = item.select_one('div.intro, p, div.item-content, td:nth-of-type(2)')
-    if desc_el:
-        call['description'] = desc_el.get_text(strip=True)[:500]
-
-    # Try to find date
-    date_el = item.select_one('time, span.date, dd.published, td.list-date')
-    if date_el:
-        call['publication_date'] = date_el.get_text(strip=True)
-
-    call['theme'] = _extract_theme(call['title'])
-    call['target_audience'] = 'Empresas, ICTs e Pesquisadores'
-
-    return call
-
-
-def _is_valid_call_link(text):
-    """Check if a link text looks like a public call."""
-    keywords = ['chamada', 'edital', 'seleção', 'programa', 'subvenção',
-                'encomenda', 'fndct', 'inovação', 'pesquisa']
+def _is_valid_call_text(text):
+    """Check if text looks like a public call title."""
     text_lower = text.lower()
-    return any(kw in text_lower for kw in keywords)
+
+    # Must contain at least one of these keywords
+    keywords = [
+        'chamada', 'edital', 'seleção', 'selecao', 'programa',
+        'subvenção', 'subvencao', 'encomenda', 'fndct',
+        'inovação', 'inovacao', 'pesquisa', 'desenvolvimento',
+        'tecnologia', 'ct-', 'finep', 'fundo', 'apoio',
+    ]
+
+    # Negative keywords - skip if contains
+    skip_keywords = [
+        'resultado', 'retificação', 'retificacao', 'errata',
+        'prorrogação', 'prorrogacao', 'suspensão', 'suspensao',
+        'voltar', 'menu', 'mais', 'leia mais', 'saiba mais',
+        'home', 'início', 'inicio', 'contato', 'fale conosco',
+    ]
+
+    has_keyword = any(kw in text_lower for kw in keywords)
+    has_skip = any(kw in text_lower for kw in skip_keywords)
+
+    return has_keyword and not has_skip
+
+
+def _looks_like_date(text):
+    """Check if text looks like a date."""
+    # Brazilian date patterns
+    date_patterns = [
+        r'\d{1,2}/\d{1,2}/\d{2,4}',  # DD/MM/YYYY or DD/MM/YY
+        r'\d{1,2}\s+de\s+\w+\s+de\s+\d{4}',  # DD de Mês de YYYY
+    ]
+
+    for pattern in date_patterns:
+        if re.search(pattern, text):
+            return True
+    return False
 
 
 def _extract_theme(title):
     """Extract theme from the title."""
     themes = {
         'saúde': 'Saúde',
+        'saude': 'Saúde',
         'energia': 'Energia',
         'agro': 'Agropecuária',
         'tic': 'Tecnologia da Informação',
@@ -142,40 +254,27 @@ def _extract_theme(title):
         'defesa': 'Defesa',
         'aeroesp': 'Aeroespacial',
         'biotech': 'Biotecnologia',
+        'biotec': 'Biotecnologia',
         'nano': 'Nanotecnologia',
         'inovação': 'Inovação',
+        'inovacao': 'Inovação',
         'subvenção': 'Subvenção Econômica',
+        'subvencao': 'Subvenção Econômica',
+        'ct-': 'Fundo Setorial',
+        'fndct': 'FNDCT',
+        'infraestrutura': 'Infraestrutura',
+        'petro': 'Petróleo e Gás',
+        'mineral': 'Mineração',
+        'agua': 'Recursos Hídricos',
+        'água': 'Recursos Hídricos',
+        'transporte': 'Transportes',
+        'espacial': 'Espacial',
+        'nuclear': 'Nuclear',
     }
+
     title_lower = title.lower()
     for key, value in themes.items():
         if key in title_lower:
             return value
+
     return 'Ciência, Tecnologia e Inovação'
-
-
-def _try_alternative_finep_scrape(soup):
-    """Try alternative scraping approaches for FINEP."""
-    calls = []
-
-    # Try finding any content blocks with call-like information
-    all_links = soup.find_all('a', href=True)
-    seen_titles = set()
-    for link in all_links:
-        text = link.get_text(strip=True)
-        href = link['href']
-        if (text and len(text) > 20 and text not in seen_titles
-                and _is_valid_call_link(text)):
-            seen_titles.add(text)
-            url = href if href.startswith('http') else FINEP_BASE_URL + href
-            calls.append({
-                'source': 'FINEP',
-                'title': text,
-                'theme': _extract_theme(text),
-                'description': text,
-                'publication_date': '',
-                'funding_source': 'FINEP',
-                'target_audience': 'Empresas e ICTs',
-                'url': url,
-            })
-
-    return calls

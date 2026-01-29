@@ -1,6 +1,6 @@
 from flask import Blueprint, render_template, redirect, url_for, flash, request
 from flask_login import login_required, current_user
-from models import db, Timesheet, Project, Milestone
+from models import db, Timesheet, Project, Milestone, Resource
 from datetime import datetime, date
 
 timesheet_bp = Blueprint('timesheet', __name__)
@@ -59,13 +59,18 @@ def create_entry(project_id):
         if milestone_id:
             entry.milestone_id = int(milestone_id)
 
+        resource_id = request.form.get('resource_id')
+        if resource_id:
+            entry.resource_id = int(resource_id)
+
         db.session.add(entry)
         db.session.commit()
         flash('Registro de horas adicionado com sucesso!', 'success')
         return redirect(url_for('timesheet.list_timesheet', project_id=project_id))
 
     milestones = Milestone.query.filter_by(project_id=project_id).all()
-    return render_template('timesheet/form.html', project=project, entry=None, milestones=milestones)
+    resources = Resource.query.filter_by(project_id=project_id, type='Pessoa', status='Ativo').all()
+    return render_template('timesheet/form.html', project=project, entry=None, milestones=milestones, resources=resources)
 
 
 @timesheet_bp.route('/projects/<int:project_id>/timesheet/<int:entry_id>/edit', methods=['GET', 'POST'])
@@ -81,13 +86,16 @@ def edit_entry(project_id, entry_id):
         entry.notes = request.form.get('notes', '').strip()
         milestone_id = request.form.get('milestone_id')
         entry.milestone_id = int(milestone_id) if milestone_id else None
+        resource_id = request.form.get('resource_id')
+        entry.resource_id = int(resource_id) if resource_id else None
 
         db.session.commit()
         flash('Registro atualizado com sucesso!', 'success')
         return redirect(url_for('timesheet.list_timesheet', project_id=project_id))
 
     milestones = Milestone.query.filter_by(project_id=project_id).all()
-    return render_template('timesheet/form.html', project=project, entry=entry, milestones=milestones)
+    resources = Resource.query.filter_by(project_id=project_id, type='Pessoa', status='Ativo').all()
+    return render_template('timesheet/form.html', project=project, entry=entry, milestones=milestones, resources=resources)
 
 
 @timesheet_bp.route('/projects/<int:project_id>/timesheet/<int:entry_id>/delete', methods=['POST'])

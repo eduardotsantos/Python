@@ -1,8 +1,9 @@
 from flask import Blueprint, render_template, redirect, url_for, flash, request, jsonify
 from flask_login import login_required
-from models import db, PublicCall
+from models import db, PublicCall, Project, ProjectCall
 from services.finep_scraper import scrape_finep_calls
 from services.bndes_scraper import scrape_bndes_calls
+from datetime import datetime, date
 import logging
 
 logger = logging.getLogger(__name__)
@@ -32,10 +33,13 @@ def list_calls():
     total_finep = PublicCall.query.filter_by(source='FINEP').count()
     total_bndes = PublicCall.query.filter_by(source='BNDES').count()
 
+    total_other = PublicCall.query.filter(~PublicCall.source.in_(['FINEP', 'BNDES'])).count()
+
     return render_template('public_calls/list.html',
                            calls=calls,
                            total_finep=total_finep,
                            total_bndes=total_bndes,
+                           total_other=total_other,
                            source_filter=source_filter,
                            search=search)
 
@@ -105,11 +109,62 @@ def refresh_calls_ajax():
     return jsonify(results)
 
 
+@public_calls_bp.route('/public-calls/new', methods=['GET', 'POST'])
+@login_required
+def create_call():
+    """Manually create a public call."""
+    if request.method == 'POST':
+        call = PublicCall(
+            source=request.form.get('source', '').strip() or 'Outro',
+            title=request.form.get('title', '').strip(),
+            theme=request.form.get('theme', '').strip(),
+            description=request.form.get('description', '').strip(),
+            publication_date=request.form.get('publication_date', '').strip(),
+            deadline=request.form.get('deadline', '').strip(),
+            funding_source=request.form.get('funding_source', '').strip(),
+            target_audience=request.form.get('target_audience', '').strip(),
+            url=request.form.get('url', '').strip(),
+            status=request.form.get('status', 'Aberta'),
+        )
+        db.session.add(call)
+        db.session.commit()
+        flash('Chamada pública cadastrada com sucesso!', 'success')
+        return redirect(url_for('public_calls.list_calls'))
+
+    return render_template('public_calls/form.html', call=None)
+
+
+@public_calls_bp.route('/public-calls/<int:call_id>/edit', methods=['GET', 'POST'])
+@login_required
+def edit_call(call_id):
+    """Edit a public call."""
+    call = PublicCall.query.get_or_404(call_id)
+
+    if request.method == 'POST':
+        call.source = request.form.get('source', '').strip() or call.source
+        call.title = request.form.get('title', '').strip()
+        call.theme = request.form.get('theme', '').strip()
+        call.description = request.form.get('description', '').strip()
+        call.publication_date = request.form.get('publication_date', '').strip()
+        call.deadline = request.form.get('deadline', '').strip()
+        call.funding_source = request.form.get('funding_source', '').strip()
+        call.target_audience = request.form.get('target_audience', '').strip()
+        call.url = request.form.get('url', '').strip()
+        call.status = request.form.get('status', call.status)
+
+        db.session.commit()
+        flash('Chamada atualizada com sucesso!', 'success')
+        return redirect(url_for('public_calls.view_call', call_id=call_id))
+
+    return render_template('public_calls/form.html', call=call)
+
+
 @public_calls_bp.route('/public-calls/<int:call_id>')
 @login_required
 def view_call(call_id):
     call = PublicCall.query.get_or_404(call_id)
-    return render_template('public_calls/view.html', call=call)
+    projects = Project.query.order_by(Project.title).all()
+    return render_template('public_calls/view.html', call=call, projects=projects)
 
 
 @public_calls_bp.route('/public-calls/<int:call_id>/delete', methods=['POST'])
@@ -120,6 +175,54 @@ def delete_call(call_id):
     db.session.commit()
     flash('Chamada removida com sucesso!', 'success')
     return redirect(url_for('public_calls.list_calls'))
+
+
+@public_calls_bp.route('/public-calls/<int:call_id>/link', methods=['POST'])
+@login_required
+def link_to_project(call_id):
+    """Link a public call to a project."""
+    call = PublicCall.query.get_or_404(call_id)
+    project_id = request.form.get('project_id')
+    linked_at = request.form.get('linked_at', '')
+    notes = request.form.get('link_notes', '').strip()
+    status = request.form.get('link_status', 'Vinculado')
+
+    if not project_id:
+        flash('Selecione um projeto para vincular.', 'warning')
+        return redirect(url_for('public_calls.view_call', call_id=call_id))
+
+    # Check if link already exists
+    existing = ProjectCall.query.filter_by(
+        project_id=int(project_id),
+        public_call_id=call_id
+    ).first()
+
+    if existing:
+        flash('Este projeto já está vinculado a esta chamada.', 'warning')
+        return redirect(url_for('public_calls.view_call', call_id=call_id))
+
+    link = ProjectCall(
+        project_id=int(project_id),
+        public_call_id=call_id,
+        linked_at=datetime.strptime(linked_at, '%Y-%m-%d').date() if linked_at else date.today(),
+        notes=notes,
+        status=status
+    )
+    db.session.add(link)
+    db.session.commit()
+    flash('Projeto vinculado com sucesso!', 'success')
+    return redirect(url_for('public_calls.view_call', call_id=call_id))
+
+
+@public_calls_bp.route('/public-calls/<int:call_id>/unlink/<int:link_id>', methods=['POST'])
+@login_required
+def unlink_project(call_id, link_id):
+    """Remove a project link."""
+    link = ProjectCall.query.get_or_404(link_id)
+    db.session.delete(link)
+    db.session.commit()
+    flash('Vínculo removido com sucesso!', 'success')
+    return redirect(url_for('public_calls.view_call', call_id=call_id))
 
 
 def _upsert_call(call_data):

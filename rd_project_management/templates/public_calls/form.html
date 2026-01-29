@@ -1,0 +1,119 @@
+{% extends "base.html" %}
+{% block title %}{{ 'Editar' if call else 'Nova' }} Chamada Pública - Gestão P&D{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-8">
+        <div class="d-flex align-items-center mb-4">
+            <a href="{{ url_for('public_calls.list_calls') }}" class="btn btn-outline-secondary btn-sm me-3">
+                <i class="bi bi-arrow-left"></i>
+            </a>
+            <h4 class="fw-bold mb-0">{{ 'Editar' if call else 'Nova' }} Chamada Pública</h4>
+        </div>
+
+        <div class="card shadow-sm">
+            <div class="card-body p-4">
+                <form method="POST">
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label for="source" class="form-label">Fonte/Instituição *</label>
+                            <input type="text" class="form-control" id="source" name="source"
+                                   value="{{ call.source if call else '' }}" required
+                                   placeholder="Ex: FINEP, BNDES, CNPq, FAPESP..."
+                                   list="source-list">
+                            <datalist id="source-list">
+                                <option value="FINEP">
+                                <option value="BNDES">
+                                <option value="CNPq">
+                                <option value="CAPES">
+                                <option value="FAPESP">
+                                <option value="Embrapii">
+                                <option value="FAPERJ">
+                                <option value="FAPEMIG">
+                                <option value="Outro">
+                            </datalist>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="status" class="form-label">Status</label>
+                            <select class="form-select" id="status" name="status">
+                                <option value="Aberta" {{ 'selected' if not call or call.status == 'Aberta' }}>Aberta</option>
+                                <option value="Encerrada" {{ 'selected' if call and call.status == 'Encerrada' }}>Encerrada</option>
+                                <option value="Em Análise" {{ 'selected' if call and call.status == 'Em Análise' }}>Em Análise</option>
+                            </select>
+                        </div>
+                        <div class="col-12">
+                            <label for="title" class="form-label">Título *</label>
+                            <input type="text" class="form-control" id="title" name="title"
+                                   value="{{ call.title if call else '' }}" required
+                                   placeholder="Título completo da chamada pública">
+                        </div>
+                        <div class="col-md-6">
+                            <label for="theme" class="form-label">Tema</label>
+                            <input type="text" class="form-control" id="theme" name="theme"
+                                   value="{{ call.theme if call else '' }}"
+                                   placeholder="Ex: Inovação, Saúde, Energia..."
+                                   list="theme-list">
+                            <datalist id="theme-list">
+                                <option value="Inovação">
+                                <option value="Saúde">
+                                <option value="Energia">
+                                <option value="Agropecuária">
+                                <option value="Tecnologia da Informação">
+                                <option value="Transformação Digital">
+                                <option value="Sustentabilidade">
+                                <option value="Indústria">
+                                <option value="Infraestrutura">
+                                <option value="Biotecnologia">
+                                <option value="Defesa">
+                                <option value="Aeroespacial">
+                            </datalist>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="funding_source" class="form-label">Fonte de Recursos</label>
+                            <input type="text" class="form-control" id="funding_source" name="funding_source"
+                                   value="{{ call.funding_source if call else '' }}"
+                                   placeholder="Ex: FNDCT, Recursos Próprios...">
+                        </div>
+                        <div class="col-md-6">
+                            <label for="publication_date" class="form-label">Data de Publicação</label>
+                            <input type="text" class="form-control" id="publication_date" name="publication_date"
+                                   value="{{ call.publication_date if call else '' }}"
+                                   placeholder="Ex: 15/01/2024">
+                        </div>
+                        <div class="col-md-6">
+                            <label for="deadline" class="form-label">Prazo/Deadline</label>
+                            <input type="text" class="form-control" id="deadline" name="deadline"
+                                   value="{{ call.deadline if call else '' }}"
+                                   placeholder="Ex: 30/03/2024">
+                        </div>
+                        <div class="col-12">
+                            <label for="target_audience" class="form-label">Público-Alvo</label>
+                            <input type="text" class="form-control" id="target_audience" name="target_audience"
+                                   value="{{ call.target_audience if call else '' }}"
+                                   placeholder="Ex: Empresas, ICTs, Startups, Pesquisadores...">
+                        </div>
+                        <div class="col-12">
+                            <label for="url" class="form-label">Link do Edital</label>
+                            <input type="url" class="form-control" id="url" name="url"
+                                   value="{{ call.url if call else '' }}"
+                                   placeholder="https://...">
+                        </div>
+                        <div class="col-12">
+                            <label for="description" class="form-label">Descrição</label>
+                            <textarea class="form-control" id="description" name="description" rows="4"
+                                      placeholder="Descrição detalhada da chamada pública">{{ call.description if call else '' }}</textarea>
+                        </div>
+                    </div>
+                    <hr class="my-4">
+                    <div class="d-flex justify-content-end gap-2">
+                        <a href="{{ url_for('public_calls.list_calls') }}" class="btn btn-outline-secondary">Cancelar</a>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="bi bi-check-lg"></i> {{ 'Salvar' if call else 'Cadastrar' }}
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

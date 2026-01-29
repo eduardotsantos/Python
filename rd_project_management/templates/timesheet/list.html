@@ -87,7 +87,7 @@
             <thead>
                 <tr>
                     <th>Data</th>
-                    <th>Colaborador</th>
+                    <th>Recurso</th>
                     <th>Atividade</th>
                     <th>Marco</th>
                     <th>Horas</th>
@@ -98,7 +98,14 @@
                 {% for entry in entries %}
                 <tr>
                     <td>{{ entry.date.strftime('%d/%m/%Y') }}</td>
-                    <td>{{ entry.user.full_name }}</td>
+                    <td>
+                        {% if entry.resource %}
+                            <i class="bi bi-person-fill text-primary"></i> {{ entry.resource.name }}
+                            {% if entry.resource.role %}<br><small class="text-muted">{{ entry.resource.role }}</small>{% endif %}
+                        {% else %}
+                            <span class="text-muted">{{ entry.user.full_name }}</span>
+                        {% endif %}
+                    </td>
                     <td>
                         {{ entry.activity }}
                         {% if entry.notes %}

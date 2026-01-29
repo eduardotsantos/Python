@@ -100,6 +100,7 @@ class Timesheet(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     project_id = db.Column(db.Integer, db.ForeignKey('projects.id'), nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+    resource_id = db.Column(db.Integer, db.ForeignKey('resources.id'), nullable=True)
     date = db.Column(db.Date, nullable=False)
     hours = db.Column(db.Float, nullable=False)
     activity = db.Column(db.String(300), nullable=False)
@@ -109,6 +110,7 @@ class Timesheet(db.Model):
 
     user = db.relationship('User', backref='timesheets')
     milestone = db.relationship('Milestone', backref='timesheets')
+    resource = db.relationship('Resource', backref='timesheets')
 
 
 class PublicCall(db.Model):
@@ -130,3 +132,20 @@ class PublicCall(db.Model):
     __table_args__ = (
         db.UniqueConstraint('source', 'title', 'url', name='uq_public_call'),
     )
+
+    # Relationship to project links
+    project_links = db.relationship('ProjectCall', backref='public_call', cascade='all, delete-orphan')
+
+
+class ProjectCall(db.Model):
+    """Links between public calls and projects (when a project is linked to a funding call)."""
+    __tablename__ = 'project_calls'
+    id = db.Column(db.Integer, primary_key=True)
+    project_id = db.Column(db.Integer, db.ForeignKey('projects.id'), nullable=False)
+    public_call_id = db.Column(db.Integer, db.ForeignKey('public_calls.id'), nullable=False)
+    linked_at = db.Column(db.Date, nullable=False, default=date.today)
+    notes = db.Column(db.Text)
+    status = db.Column(db.String(50), default='Vinculado')  # Vinculado, Submetido, Aprovado, Rejeitado
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+
+    project = db.relationship('Project', backref='call_links')
