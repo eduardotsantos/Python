@@ -5,6 +5,7 @@ from services.finep_scraper import scrape_finep_calls
 from services.bndes_scraper import scrape_bndes_calls
 from datetime import datetime, date
 import logging
+import re
 
 logger = logging.getLogger(__name__)
 
@@ -223,6 +224,84 @@ def unlink_project(call_id, link_id):
     db.session.commit()
     flash('Vínculo removido com sucesso!', 'success')
     return redirect(url_for('public_calls.view_call', call_id=call_id))
+
+
+@public_calls_bp.route('/public-calls/suggest-links', methods=['POST'])
+@login_required
+def suggest_links():
+    """Automatically suggest links between projects and public calls based on keywords."""
+    count = 0
+    projects = Project.query.all()
+    calls = PublicCall.query.all()
+
+    for call in calls:
+        call_keywords = _extract_keywords(call.title + ' ' + (call.description or '') + ' ' + (call.theme or ''))
+
+        for project in projects:
+            # Check if link already exists
+            existing = ProjectCall.query.filter_by(
+                project_id=project.id,
+                public_call_id=call.id
+            ).first()
+
+            if existing:
+                continue
+
+            project_keywords = _extract_keywords(
+                project.title + ' ' + (project.description or '') + ' ' +
+                (project.category or '') + ' ' + (project.funding_source or '')
+            )
+
+            # Calculate match score
+            common_keywords = call_keywords & project_keywords
+            if len(common_keywords) >= 2:  # At least 2 matching keywords
+                link = ProjectCall(
+                    project_id=project.id,
+                    public_call_id=call.id,
+                    linked_at=date.today(),
+                    notes='Sugerido automaticamente',
+                    status='Sugerido'
+                )
+                db.session.add(link)
+                count += 1
+
+    db.session.commit()
+
+    return jsonify({
+        'success': count > 0,
+        'count': count,
+        'message': f'{count} vínculos sugeridos' if count > 0 else 'Nenhuma correspondência encontrada'
+    })
+
+
+def _extract_keywords(text):
+    """Extract relevant keywords from text."""
+    if not text:
+        return set()
+
+    text = text.lower()
+    # Remove accents and special characters
+    text = re.sub(r'[^\w\s]', ' ', text)
+
+    # Split into words
+    words = text.split()
+
+    # Filter short words and common stop words
+    stop_words = {
+        'de', 'da', 'do', 'das', 'dos', 'em', 'para', 'com', 'por', 'uma', 'um',
+        'que', 'se', 'na', 'no', 'nas', 'nos', 'ao', 'aos', 'ou', 'e', 'a', 'o',
+        'os', 'as', 'como', 'mais', 'menos', 'entre', 'sobre', 'este', 'esta',
+        'esse', 'essa', 'isto', 'isso', 'aquele', 'aquela', 'seu', 'sua', 'seus',
+        'suas', 'meu', 'minha', 'nosso', 'nossa', 'ter', 'ser', 'estar', 'haver',
+        'quando', 'onde', 'qual', 'quais', 'todo', 'toda', 'todos', 'todas'
+    }
+
+    keywords = set()
+    for word in words:
+        if len(word) >= 4 and word not in stop_words:
+            keywords.add(word)
+
+    return keywords
 
 
 def _upsert_call(call_data):

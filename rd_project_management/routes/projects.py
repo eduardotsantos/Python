@@ -1,7 +1,15 @@
-from flask import Blueprint, render_template, redirect, url_for, flash, request
+from flask import Blueprint, render_template, redirect, url_for, flash, request, send_file
 from flask_login import login_required, current_user
-from models import db, Project, User, Expense, Resource, Milestone, Timesheet
+from models import db, Project, User, Expense, Resource, Milestone, Timesheet, ProjectCall
 from datetime import datetime
+from io import BytesIO
+try:
+    from openpyxl import Workbook
+    from openpyxl.styles import Font, PatternFill, Alignment, Border, Side
+    from openpyxl.utils import get_column_letter
+    EXCEL_AVAILABLE = True
+except ImportError:
+    EXCEL_AVAILABLE = False
 
 projects_bp = Blueprint('projects', __name__)
 
@@ -155,3 +163,197 @@ def delete_project(project_id):
     db.session.commit()
     flash('Projeto excluído com sucesso!', 'success')
     return redirect(url_for('projects.list_projects'))
+
+
+@projects_bp.route('/projects/export-excel')
+@login_required
+def export_excel():
+    """Export all projects to Excel with multiple sheets."""
+    if not EXCEL_AVAILABLE:
+        flash('Funcionalidade de exportação Excel não disponível. Instale openpyxl.', 'danger')
+        return redirect(url_for('projects.list_projects'))
+
+    projects = Project.query.order_by(Project.created_at.desc()).all()
+
+    wb = Workbook()
+
+    # Style definitions
+    header_font = Font(bold=True, color='FFFFFF')
+    header_fill = PatternFill(start_color='0066CC', end_color='0066CC', fill_type='solid')
+    header_alignment = Alignment(horizontal='center', vertical='center', wrap_text=True)
+    thin_border = Border(
+        left=Side(style='thin'),
+        right=Side(style='thin'),
+        top=Side(style='thin'),
+        bottom=Side(style='thin')
+    )
+
+    # Sheet 1: Projects (Dados Gerais)
+    ws_projects = wb.active
+    ws_projects.title = 'Projetos'
+    project_headers = ['ID', 'Código', 'Título', 'Descrição', 'Status', 'Categoria',
+                       'Data Início', 'Data Fim', 'Orçamento (R$)', 'Fonte de Recursos',
+                       'Responsável', 'Criado em', 'Atualizado em']
+    _write_headers(ws_projects, project_headers, header_font, header_fill, header_alignment, thin_border)
+
+    for row_idx, project in enumerate(projects, start=2):
+        ws_projects.cell(row=row_idx, column=1, value=project.id)
+        ws_projects.cell(row=row_idx, column=2, value=project.code)
+        ws_projects.cell(row=row_idx, column=3, value=project.title)
+        ws_projects.cell(row=row_idx, column=4, value=project.description or '')
+        ws_projects.cell(row=row_idx, column=5, value=project.status)
+        ws_projects.cell(row=row_idx, column=6, value=project.category or '')
+        ws_projects.cell(row=row_idx, column=7, value=project.start_date.strftime('%d/%m/%Y') if project.start_date else '')
+        ws_projects.cell(row=row_idx, column=8, value=project.end_date.strftime('%d/%m/%Y') if project.end_date else '')
+        ws_projects.cell(row=row_idx, column=9, value=project.budget)
+        ws_projects.cell(row=row_idx, column=10, value=project.funding_source or '')
+        ws_projects.cell(row=row_idx, column=11, value=project.responsible.full_name if project.responsible else '')
+        ws_projects.cell(row=row_idx, column=12, value=project.created_at.strftime('%d/%m/%Y %H:%M') if project.created_at else '')
+        ws_projects.cell(row=row_idx, column=13, value=project.updated_at.strftime('%d/%m/%Y %H:%M') if project.updated_at else '')
+
+    _auto_adjust_columns(ws_projects)
+
+    # Sheet 2: Expenses (Despesas)
+    ws_expenses = wb.create_sheet('Despesas')
+    expense_headers = ['Projeto', 'Código Projeto', 'Descrição', 'Categoria', 'Valor (R$)',
+                       'Data', 'Nº Recibo', 'Fornecedor', 'Status', 'Notas', 'Criado por', 'Criado em']
+    _write_headers(ws_expenses, expense_headers, header_font, header_fill, header_alignment, thin_border)
+
+    expenses = Expense.query.join(Project).order_by(Project.code, Expense.date.desc()).all()
+    for row_idx, expense in enumerate(expenses, start=2):
+        ws_expenses.cell(row=row_idx, column=1, value=expense.project.title)
+        ws_expenses.cell(row=row_idx, column=2, value=expense.project.code)
+        ws_expenses.cell(row=row_idx, column=3, value=expense.description)
+        ws_expenses.cell(row=row_idx, column=4, value=expense.category)
+        ws_expenses.cell(row=row_idx, column=5, value=expense.amount)
+        ws_expenses.cell(row=row_idx, column=6, value=expense.date.strftime('%d/%m/%Y') if expense.date else '')
+        ws_expenses.cell(row=row_idx, column=7, value=expense.receipt_number or '')
+        ws_expenses.cell(row=row_idx, column=8, value=expense.supplier or '')
+        ws_expenses.cell(row=row_idx, column=9, value=expense.status)
+        ws_expenses.cell(row=row_idx, column=10, value=expense.notes or '')
+        ws_expenses.cell(row=row_idx, column=11, value=expense.created_by.full_name if expense.created_by else '')
+        ws_expenses.cell(row=row_idx, column=12, value=expense.created_at.strftime('%d/%m/%Y %H:%M') if expense.created_at else '')
+
+    _auto_adjust_columns(ws_expenses)
+
+    # Sheet 3: Resources (Recursos)
+    ws_resources = wb.create_sheet('Recursos')
+    resource_headers = ['Projeto', 'Código Projeto', 'Tipo', 'Nome', 'Função',
+                        'Horas Alocadas', 'Custo/Hora (R$)', 'Data Início', 'Data Fim', 'Status', 'Notas']
+    _write_headers(ws_resources, resource_headers, header_font, header_fill, header_alignment, thin_border)
+
+    resources = Resource.query.join(Project).order_by(Project.code).all()
+    for row_idx, resource in enumerate(resources, start=2):
+        ws_resources.cell(row=row_idx, column=1, value=resource.project.title)
+        ws_resources.cell(row=row_idx, column=2, value=resource.project.code)
+        ws_resources.cell(row=row_idx, column=3, value=resource.type)
+        ws_resources.cell(row=row_idx, column=4, value=resource.name)
+        ws_resources.cell(row=row_idx, column=5, value=resource.role or '')
+        ws_resources.cell(row=row_idx, column=6, value=resource.hours_allocated)
+        ws_resources.cell(row=row_idx, column=7, value=resource.hourly_cost)
+        ws_resources.cell(row=row_idx, column=8, value=resource.start_date.strftime('%d/%m/%Y') if resource.start_date else '')
+        ws_resources.cell(row=row_idx, column=9, value=resource.end_date.strftime('%d/%m/%Y') if resource.end_date else '')
+        ws_resources.cell(row=row_idx, column=10, value=resource.status)
+        ws_resources.cell(row=row_idx, column=11, value=resource.notes or '')
+
+    _auto_adjust_columns(ws_resources)
+
+    # Sheet 4: Milestones (Cronograma)
+    ws_milestones = wb.create_sheet('Cronograma')
+    milestone_headers = ['Projeto', 'Código Projeto', 'Marco', 'Descrição',
+                         'Data Início', 'Data Fim', 'Progresso (%)', 'Status', 'Ordem']
+    _write_headers(ws_milestones, milestone_headers, header_font, header_fill, header_alignment, thin_border)
+
+    milestones = Milestone.query.join(Project).order_by(Project.code, Milestone.order).all()
+    for row_idx, milestone in enumerate(milestones, start=2):
+        ws_milestones.cell(row=row_idx, column=1, value=milestone.project.title)
+        ws_milestones.cell(row=row_idx, column=2, value=milestone.project.code)
+        ws_milestones.cell(row=row_idx, column=3, value=milestone.title)
+        ws_milestones.cell(row=row_idx, column=4, value=milestone.description or '')
+        ws_milestones.cell(row=row_idx, column=5, value=milestone.start_date.strftime('%d/%m/%Y') if milestone.start_date else '')
+        ws_milestones.cell(row=row_idx, column=6, value=milestone.end_date.strftime('%d/%m/%Y') if milestone.end_date else '')
+        ws_milestones.cell(row=row_idx, column=7, value=milestone.progress)
+        ws_milestones.cell(row=row_idx, column=8, value=milestone.status)
+        ws_milestones.cell(row=row_idx, column=9, value=milestone.order)
+
+    _auto_adjust_columns(ws_milestones)
+
+    # Sheet 5: Timesheets (Apontamento de Horas)
+    ws_timesheets = wb.create_sheet('Apontamento de Horas')
+    timesheet_headers = ['Projeto', 'Código Projeto', 'Usuário', 'Data', 'Horas',
+                         'Atividade', 'Marco', 'Recurso', 'Notas']
+    _write_headers(ws_timesheets, timesheet_headers, header_font, header_fill, header_alignment, thin_border)
+
+    timesheets = Timesheet.query.join(Project).order_by(Project.code, Timesheet.date.desc()).all()
+    for row_idx, ts in enumerate(timesheets, start=2):
+        ws_timesheets.cell(row=row_idx, column=1, value=ts.project.title)
+        ws_timesheets.cell(row=row_idx, column=2, value=ts.project.code)
+        ws_timesheets.cell(row=row_idx, column=3, value=ts.user.full_name if ts.user else '')
+        ws_timesheets.cell(row=row_idx, column=4, value=ts.date.strftime('%d/%m/%Y') if ts.date else '')
+        ws_timesheets.cell(row=row_idx, column=5, value=ts.hours)
+        ws_timesheets.cell(row=row_idx, column=6, value=ts.activity)
+        ws_timesheets.cell(row=row_idx, column=7, value=ts.milestone.title if ts.milestone else '')
+        ws_timesheets.cell(row=row_idx, column=8, value=ts.resource.name if ts.resource else '')
+        ws_timesheets.cell(row=row_idx, column=9, value=ts.notes or '')
+
+    _auto_adjust_columns(ws_timesheets)
+
+    # Sheet 6: Project-Call Links (Chamadas Públicas Vinculadas)
+    ws_calls = wb.create_sheet('Chamadas Vinculadas')
+    call_headers = ['Projeto', 'Código Projeto', 'Chamada', 'Fonte', 'Tema',
+                    'Data Vinculação', 'Status Vínculo', 'Notas']
+    _write_headers(ws_calls, call_headers, header_font, header_fill, header_alignment, thin_border)
+
+    project_calls = ProjectCall.query.join(Project).order_by(Project.code).all()
+    for row_idx, pc in enumerate(project_calls, start=2):
+        ws_calls.cell(row=row_idx, column=1, value=pc.project.title)
+        ws_calls.cell(row=row_idx, column=2, value=pc.project.code)
+        ws_calls.cell(row=row_idx, column=3, value=pc.public_call.title if pc.public_call else '')
+        ws_calls.cell(row=row_idx, column=4, value=pc.public_call.source if pc.public_call else '')
+        ws_calls.cell(row=row_idx, column=5, value=pc.public_call.theme if pc.public_call else '')
+        ws_calls.cell(row=row_idx, column=6, value=pc.linked_at.strftime('%d/%m/%Y') if pc.linked_at else '')
+        ws_calls.cell(row=row_idx, column=7, value=pc.status)
+        ws_calls.cell(row=row_idx, column=8, value=pc.notes or '')
+
+    _auto_adjust_columns(ws_calls)
+
+    # Save to BytesIO
+    output = BytesIO()
+    wb.save(output)
+    output.seek(0)
+
+    filename = f'projetos_pd_{datetime.now().strftime("%Y%m%d_%H%M%S")}.xlsx'
+
+    return send_file(
+        output,
+        mimetype='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+        as_attachment=True,
+        download_name=filename
+    )
+
+
+def _write_headers(ws, headers, font, fill, alignment, border):
+    """Write headers to a worksheet with styling."""
+    for col_idx, header in enumerate(headers, start=1):
+        cell = ws.cell(row=1, column=col_idx, value=header)
+        cell.font = font
+        cell.fill = fill
+        cell.alignment = alignment
+        cell.border = border
+
+
+def _auto_adjust_columns(ws):
+    """Auto-adjust column widths based on content."""
+    for column in ws.columns:
+        max_length = 0
+        column_letter = get_column_letter(column[0].column)
+        for cell in column:
+            try:
+                if cell.value:
+                    cell_length = len(str(cell.value))
+                    if cell_length > max_length:
+                        max_length = cell_length
+            except (TypeError, AttributeError):
+                pass
+        adjusted_width = min(max_length + 2, 50)  # Cap at 50 characters
+        ws.column_dimensions[column_letter].width = adjusted_width

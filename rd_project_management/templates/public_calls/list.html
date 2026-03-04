@@ -10,8 +10,11 @@
     <a href="{{ url_for('public_calls.create_call') }}" class="btn btn-primary me-2">
         <i class="bi bi-plus-lg"></i> Nova Chamada
     </a>
-    <button type="button" class="btn btn-success" onclick="refreshPublicCalls(this)">
-        <i class="bi bi-arrow-clockwise"></i> Atualizar do FINEP/BNDES
+    <button type="button" class="btn btn-success me-2" onclick="refreshPublicCalls(this)">
+        <i class="bi bi-arrow-clockwise"></i> Atualizar do FINEP
+    </button>
+    <button type="button" class="btn btn-info" onclick="suggestAutoLinks(this)">
+        <i class="bi bi-link-45deg"></i> Sugerir Vínculos
     </button>
 </div>
 
@@ -154,7 +157,7 @@
     <div class="empty-state">
         <i class="bi bi-megaphone"></i>
         <h5>Nenhuma chamada pública encontrada</h5>
-        <p>Clique no botão "Atualizar do FINEP/BNDES" para buscar chamadas disponíveis</p>
+        <p>Clique no botão "Atualizar do FINEP" para buscar chamadas disponíveis</p>
         <form method="POST" action="{{ url_for('public_calls.refresh_calls') }}" class="d-inline">
             <button type="submit" class="btn btn-success">
                 <i class="bi bi-arrow-clockwise"></i> Atualizar Agora

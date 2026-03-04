@@ -120,3 +120,33 @@ function formatCurrency(value) {
         currency: 'BRL'
     }).format(value);
 }
+
+// Suggest automatic links between projects and public calls
+function suggestAutoLinks(button) {
+    const originalText = button.innerHTML;
+    button.disabled = true;
+    button.innerHTML = '<span class="spinner-border spinner-border-sm" role="status"></span> Analisando...';
+
+    fetch('/public-calls/suggest-links', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            showToast(`${data.count} vínculos sugeridos automaticamente!`, 'success');
+            setTimeout(() => location.reload(), 1500);
+        } else {
+            showToast(data.message || 'Nenhum vínculo sugerido', 'info');
+        }
+    })
+    .catch(err => {
+        showToast('Erro ao sugerir vínculos: ' + err, 'danger');
+    })
+    .finally(() => {
+        button.disabled = false;
+        button.innerHTML = originalText;
+    });
+}

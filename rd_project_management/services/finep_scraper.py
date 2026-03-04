@@ -61,7 +61,7 @@ def scrape_finep_calls():
 
             if all_calls:
                 logger.info(f"FINEP: Encontradas {len(all_calls)} chamadas de {url}")
-                break  # Stop if we found calls
+                # Continue trying other URLs to get more calls
 
         except requests.RequestException as e:
             logger.warning(f"Erro ao buscar FINEP ({url}): {e}")
@@ -105,6 +105,7 @@ def _parse_table_structure(soup):
 def _parse_joomla_items(soup):
     """Parse Joomla-style content items."""
     calls = []
+    seen_titles = set()
 
     # Various Joomla selectors
     selectors = [
@@ -122,11 +123,13 @@ def _parse_joomla_items(soup):
     for selector in selectors:
         items = soup.select(selector)
         for item in items:
-            link = item.find('a', href=True)
-            if link:
+            # Try to find all links in the item
+            links = item.find_all('a', href=True)
+            for link in links:
                 text = link.get_text(strip=True)
                 href = link['href']
-                if text and len(text) > 15 and _is_valid_call_text(text):
+                if text and len(text) > 15 and _is_valid_call_text(text) and text not in seen_titles:
+                    seen_titles.add(text)
                     call = _create_call_dict(text, href)
 
                     # Try to find date
@@ -141,8 +144,7 @@ def _parse_joomla_items(soup):
 
                     calls.append(call)
 
-        if calls:
-            break
+        # Continue checking other selectors to find more calls
 
     return calls
 
@@ -179,8 +181,7 @@ def _parse_links_strategy(soup):
             seen.add(text)
             calls.append(_create_call_dict(text, href))
 
-        if calls:
-            break
+        # Continue searching all content areas
 
     return calls
 
@@ -211,14 +212,21 @@ def _is_valid_call_text(text):
         'subvenção', 'subvencao', 'encomenda', 'fndct',
         'inovação', 'inovacao', 'pesquisa', 'desenvolvimento',
         'tecnologia', 'ct-', 'finep', 'fundo', 'apoio',
+        'mcti', 'mctic', 'cnpq', 'recurso', 'financiamento',
+        'projeto', 'pública', 'publica', 'aberta', 'vigente',
+        'carta convite', 'convite', 'credenciamento', 'startups',
+        'empresas', 'ict', 'universidade', 'instituição',
+        'infraestrutura', 'capacitação', 'bolsa', 'fomento',
     ]
 
     # Negative keywords - skip if contains
     skip_keywords = [
         'resultado', 'retificação', 'retificacao', 'errata',
         'prorrogação', 'prorrogacao', 'suspensão', 'suspensao',
-        'voltar', 'menu', 'mais', 'leia mais', 'saiba mais',
+        'voltar', 'menu', 'leia mais', 'saiba mais',
         'home', 'início', 'inicio', 'contato', 'fale conosco',
+        'login', 'cadastro', 'acessar', 'entrar', 'sair',
+        'twitter', 'facebook', 'instagram', 'linkedin',
     ]
 
     has_keyword = any(kw in text_lower for kw in keywords)
