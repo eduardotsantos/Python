@@ -1,6 +1,7 @@
 from flask import Blueprint, render_template, redirect, url_for, flash, request, send_file
 from flask_login import login_required, current_user
 from models import db, Project, User, Expense, Resource, Milestone, Timesheet, ProjectCall
+from services.tenant_utils import tenant_required, ensure_tenant_access, get_current_tenant_id
 from datetime import datetime
 from io import BytesIO
 try:
@@ -14,19 +15,33 @@ except ImportError:
 projects_bp = Blueprint('projects', __name__)
 
 
+def get_tenant_filter():
+    """Get tenant filter for queries."""
+    tenant_id = get_current_tenant_id()
+    if tenant_id:
+        return {'tenant_id': tenant_id}
+    return {}
+
+
 @projects_bp.route('/')
 @login_required
+@tenant_required
 def dashboard():
     return redirect(url_for('projects.list_projects'))
 
 
 @projects_bp.route('/projects')
 @login_required
+@tenant_required
 def list_projects():
     status_filter = request.args.get('status', '')
     search = request.args.get('search', '')
 
+    tenant_id = get_current_tenant_id()
     query = Project.query
+    if tenant_id:
+        query = query.filter_by(tenant_id=tenant_id)
+
     if status_filter:
         query = query.filter_by(status=status_filter)
     if search:
@@ -40,14 +55,26 @@ def list_projects():
 
     projects = query.order_by(Project.created_at.desc()).all()
 
-    # Stats
-    total = Project.query.count()
-    in_progress = Project.query.filter_by(status='Em Andamento').count()
-    completed = Project.query.filter_by(status='Concluído').count()
-    planning = Project.query.filter_by(status='Planejamento').count()
+    # Stats for current tenant
+    base_query = Project.query
+    if tenant_id:
+        base_query = base_query.filter_by(tenant_id=tenant_id)
 
-    total_budget = db.session.query(db.func.sum(Project.budget)).scalar() or 0
-    total_expenses = db.session.query(db.func.sum(Expense.amount)).filter(Expense.status != 'Rejeitada').scalar() or 0
+    total = base_query.count()
+    in_progress = base_query.filter_by(status='Em Andamento').count()
+    completed = base_query.filter_by(status='Concluído').count()
+    planning = base_query.filter_by(status='Planejamento').count()
+
+    # Budget stats for tenant
+    if tenant_id:
+        total_budget = db.session.query(db.func.sum(Project.budget)).filter(Project.tenant_id == tenant_id).scalar() or 0
+        total_expenses = db.session.query(db.func.sum(Expense.amount)).filter(
+            Expense.tenant_id == tenant_id,
+            Expense.status != 'Rejeitada'
+        ).scalar() or 0
+    else:
+        total_budget = db.session.query(db.func.sum(Project.budget)).scalar() or 0
+        total_expenses = db.session.query(db.func.sum(Expense.amount)).filter(Expense.status != 'Rejeitada').scalar() or 0
 
     return render_template('projects/list.html',
                            projects=projects,
@@ -63,7 +90,15 @@ def list_projects():
 
 @projects_bp.route('/projects/new', methods=['GET', 'POST'])
 @login_required
+@tenant_required
 def create_project():
+    tenant_id = get_current_tenant_id()
+
+    # Check tenant project limit
+    if tenant_id and current_user.tenant and not current_user.tenant.can_add_project():
+        flash(f'Limite de projetos atingido ({current_user.tenant.max_projects}). Entre em contato com o suporte.', 'warning')
+        return redirect(url_for('projects.list_projects'))
+
     if request.method == 'POST':
         code = request.form.get('code', '').strip()
         title = request.form.get('title', '').strip()
@@ -75,15 +110,20 @@ def create_project():
         budget = request.form.get('budget', 0)
         funding_source = request.form.get('funding_source', '')
 
+        users = User.query.filter_by(tenant_id=tenant_id).all() if tenant_id else User.query.all()
+
         if not all([code, title]):
             flash('Código e título são obrigatórios.', 'danger')
-            return render_template('projects/form.html', project=None, users=User.query.all())
+            return render_template('projects/form.html', project=None, users=users)
 
-        if Project.query.filter_by(code=code).first():
+        # Check code uniqueness within tenant
+        existing = Project.query.filter_by(tenant_id=tenant_id, code=code).first() if tenant_id else Project.query.filter_by(code=code).first()
+        if existing:
             flash('Código do projeto já existe.', 'danger')
-            return render_template('projects/form.html', project=None, users=User.query.all())
+            return render_template('projects/form.html', project=None, users=users)
 
         project = Project(
+            tenant_id=tenant_id,
             code=code,
             title=title,
             description=description,
@@ -104,13 +144,17 @@ def create_project():
         flash('Projeto criado com sucesso!', 'success')
         return redirect(url_for('projects.view_project', project_id=project.id))
 
-    return render_template('projects/form.html', project=None, users=User.query.all())
+    users = User.query.filter_by(tenant_id=tenant_id).all() if tenant_id else User.query.all()
+    return render_template('projects/form.html', project=None, users=users)
 
 
 @projects_bp.route('/projects/<int:project_id>')
 @login_required
+@tenant_required
 def view_project(project_id):
     project = Project.query.get_or_404(project_id)
+    ensure_tenant_access(project)
+
     total_expenses = sum(e.amount for e in project.expenses if e.status != 'Rejeitada')
     total_hours = sum(t.hours for t in project.timesheets)
     resource_count = len(project.resources)
@@ -128,11 +172,25 @@ def view_project(project_id):
 
 @projects_bp.route('/projects/<int:project_id>/edit', methods=['GET', 'POST'])
 @login_required
+@tenant_required
 def edit_project(project_id):
     project = Project.query.get_or_404(project_id)
+    ensure_tenant_access(project)
+
+    tenant_id = get_current_tenant_id()
 
     if request.method == 'POST':
-        project.code = request.form.get('code', '').strip()
+        new_code = request.form.get('code', '').strip()
+
+        # Check code uniqueness if changed
+        if new_code != project.code:
+            existing = Project.query.filter_by(tenant_id=tenant_id, code=new_code).first() if tenant_id else Project.query.filter_by(code=new_code).first()
+            if existing:
+                flash('Código do projeto já existe.', 'danger')
+                users = User.query.filter_by(tenant_id=tenant_id).all() if tenant_id else User.query.all()
+                return render_template('projects/form.html', project=project, users=users)
+
+        project.code = new_code
         project.title = request.form.get('title', '').strip()
         project.description = request.form.get('description', '').strip()
         project.status = request.form.get('status', 'Planejamento')
@@ -152,13 +210,17 @@ def edit_project(project_id):
         flash('Projeto atualizado com sucesso!', 'success')
         return redirect(url_for('projects.view_project', project_id=project.id))
 
-    return render_template('projects/form.html', project=project, users=User.query.all())
+    users = User.query.filter_by(tenant_id=tenant_id).all() if tenant_id else User.query.all()
+    return render_template('projects/form.html', project=project, users=users)
 
 
 @projects_bp.route('/projects/<int:project_id>/delete', methods=['POST'])
 @login_required
+@tenant_required
 def delete_project(project_id):
     project = Project.query.get_or_404(project_id)
+    ensure_tenant_access(project)
+
     db.session.delete(project)
     db.session.commit()
     flash('Projeto excluído com sucesso!', 'success')
@@ -167,13 +229,20 @@ def delete_project(project_id):
 
 @projects_bp.route('/projects/export-excel')
 @login_required
+@tenant_required
 def export_excel():
     """Export all projects to Excel with multiple sheets."""
     if not EXCEL_AVAILABLE:
         flash('Funcionalidade de exportação Excel não disponível. Instale openpyxl.', 'danger')
         return redirect(url_for('projects.list_projects'))
 
-    projects = Project.query.order_by(Project.created_at.desc()).all()
+    tenant_id = get_current_tenant_id()
+
+    # Filter all queries by tenant
+    if tenant_id:
+        projects = Project.query.filter_by(tenant_id=tenant_id).order_by(Project.created_at.desc()).all()
+    else:
+        projects = Project.query.order_by(Project.created_at.desc()).all()
 
     wb = Workbook()
 
@@ -219,7 +288,11 @@ def export_excel():
                        'Data', 'Nº Recibo', 'Fornecedor', 'Status', 'Notas', 'Criado por', 'Criado em']
     _write_headers(ws_expenses, expense_headers, header_font, header_fill, header_alignment, thin_border)
 
-    expenses = Expense.query.join(Project).order_by(Project.code, Expense.date.desc()).all()
+    if tenant_id:
+        expenses = Expense.query.filter_by(tenant_id=tenant_id).join(Project).order_by(Project.code, Expense.date.desc()).all()
+    else:
+        expenses = Expense.query.join(Project).order_by(Project.code, Expense.date.desc()).all()
+
     for row_idx, expense in enumerate(expenses, start=2):
         ws_expenses.cell(row=row_idx, column=1, value=expense.project.title)
         ws_expenses.cell(row=row_idx, column=2, value=expense.project.code)
@@ -242,7 +315,11 @@ def export_excel():
                         'Horas Alocadas', 'Custo/Hora (R$)', 'Data Início', 'Data Fim', 'Status', 'Notas']
     _write_headers(ws_resources, resource_headers, header_font, header_fill, header_alignment, thin_border)
 
-    resources = Resource.query.join(Project).order_by(Project.code).all()
+    if tenant_id:
+        resources = Resource.query.filter_by(tenant_id=tenant_id).join(Project).order_by(Project.code).all()
+    else:
+        resources = Resource.query.join(Project).order_by(Project.code).all()
+
     for row_idx, resource in enumerate(resources, start=2):
         ws_resources.cell(row=row_idx, column=1, value=resource.project.title)
         ws_resources.cell(row=row_idx, column=2, value=resource.project.code)
@@ -264,7 +341,11 @@ def export_excel():
                          'Data Início', 'Data Fim', 'Progresso (%)', 'Status', 'Ordem']
     _write_headers(ws_milestones, milestone_headers, header_font, header_fill, header_alignment, thin_border)
 
-    milestones = Milestone.query.join(Project).order_by(Project.code, Milestone.order).all()
+    if tenant_id:
+        milestones = Milestone.query.filter_by(tenant_id=tenant_id).join(Project).order_by(Project.code, Milestone.order).all()
+    else:
+        milestones = Milestone.query.join(Project).order_by(Project.code, Milestone.order).all()
+
     for row_idx, milestone in enumerate(milestones, start=2):
         ws_milestones.cell(row=row_idx, column=1, value=milestone.project.title)
         ws_milestones.cell(row=row_idx, column=2, value=milestone.project.code)
@@ -284,7 +365,11 @@ def export_excel():
                          'Atividade', 'Marco', 'Recurso', 'Notas']
     _write_headers(ws_timesheets, timesheet_headers, header_font, header_fill, header_alignment, thin_border)
 
-    timesheets = Timesheet.query.join(Project).order_by(Project.code, Timesheet.date.desc()).all()
+    if tenant_id:
+        timesheets = Timesheet.query.filter_by(tenant_id=tenant_id).join(Project).order_by(Project.code, Timesheet.date.desc()).all()
+    else:
+        timesheets = Timesheet.query.join(Project).order_by(Project.code, Timesheet.date.desc()).all()
+
     for row_idx, ts in enumerate(timesheets, start=2):
         ws_timesheets.cell(row=row_idx, column=1, value=ts.project.title)
         ws_timesheets.cell(row=row_idx, column=2, value=ts.project.code)
@@ -304,7 +389,11 @@ def export_excel():
                     'Data Vinculação', 'Status Vínculo', 'Notas']
     _write_headers(ws_calls, call_headers, header_font, header_fill, header_alignment, thin_border)
 
-    project_calls = ProjectCall.query.join(Project).order_by(Project.code).all()
+    if tenant_id:
+        project_calls = ProjectCall.query.filter_by(tenant_id=tenant_id).join(Project).order_by(Project.code).all()
+    else:
+        project_calls = ProjectCall.query.join(Project).order_by(Project.code).all()
+
     for row_idx, pc in enumerate(project_calls, start=2):
         ws_calls.cell(row=row_idx, column=1, value=pc.project.title)
         ws_calls.cell(row=row_idx, column=2, value=pc.project.code)
@@ -322,7 +411,8 @@ def export_excel():
     wb.save(output)
     output.seek(0)
 
-    filename = f'projetos_pd_{datetime.now().strftime("%Y%m%d_%H%M%S")}.xlsx'
+    tenant_name = current_user.tenant.slug if current_user.tenant else 'all'
+    filename = f'projetos_pd_{tenant_name}_{datetime.now().strftime("%Y%m%d_%H%M%S")}.xlsx'
 
     return send_file(
         output,

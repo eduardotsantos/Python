@@ -6,16 +6,63 @@ from werkzeug.security import generate_password_hash, check_password_hash
 db = SQLAlchemy()
 
 
+class Tenant(db.Model):
+    """Tenant model for multi-tenancy support."""
+    __tablename__ = 'tenants'
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(200), nullable=False)
+    slug = db.Column(db.String(100), unique=True, nullable=False)  # URL-friendly identifier
+    cnpj = db.Column(db.String(20))
+    email = db.Column(db.String(120))
+    phone = db.Column(db.String(20))
+    address = db.Column(db.Text)
+    logo_url = db.Column(db.String(500))
+    plan = db.Column(db.String(50), default='basic')  # basic, professional, enterprise
+    max_users = db.Column(db.Integer, default=5)
+    max_projects = db.Column(db.Integer, default=10)
+    active = db.Column(db.Boolean, default=True)
+    expires_at = db.Column(db.Date)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+
+    # Relationships
+    users = db.relationship('User', backref='tenant', lazy='dynamic')
+    projects = db.relationship('Project', backref='tenant', lazy='dynamic')
+    public_calls = db.relationship('PublicCall', backref='tenant', lazy='dynamic')
+
+    def is_active(self):
+        """Check if tenant subscription is active."""
+        if not self.active:
+            return False
+        if self.expires_at and self.expires_at < date.today():
+            return False
+        return True
+
+    def can_add_user(self):
+        """Check if tenant can add more users."""
+        return self.users.count() < self.max_users
+
+    def can_add_project(self):
+        """Check if tenant can add more projects."""
+        return self.projects.count() < self.max_projects
+
+
 class User(UserMixin, db.Model):
     __tablename__ = 'users'
     id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String(80), unique=True, nullable=False)
-    email = db.Column(db.String(120), unique=True, nullable=False)
+    tenant_id = db.Column(db.Integer, db.ForeignKey('tenants.id'), nullable=True)  # Null for super admin
+    username = db.Column(db.String(80), nullable=False)
+    email = db.Column(db.String(120), nullable=False)
     password_hash = db.Column(db.String(256), nullable=False)
     full_name = db.Column(db.String(200), nullable=False)
-    role = db.Column(db.String(50), default='user')  # admin, manager, user
+    role = db.Column(db.String(50), default='user')  # superadmin, admin, manager, user
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     active = db.Column(db.Boolean, default=True)
+
+    __table_args__ = (
+        db.UniqueConstraint('tenant_id', 'username', name='uq_tenant_username'),
+        db.UniqueConstraint('tenant_id', 'email', name='uq_tenant_email'),
+    )
 
     def set_password(self, password):
         self.password_hash = generate_password_hash(password)
@@ -23,22 +70,33 @@ class User(UserMixin, db.Model):
     def check_password(self, password):
         return check_password_hash(self.password_hash, password)
 
+    def is_superadmin(self):
+        return self.role == 'superadmin' and self.tenant_id is None
+
+    def is_tenant_admin(self):
+        return self.role == 'admin'
+
 
 class Project(db.Model):
     __tablename__ = 'projects'
     id = db.Column(db.Integer, primary_key=True)
-    code = db.Column(db.String(50), unique=True, nullable=False)
+    tenant_id = db.Column(db.Integer, db.ForeignKey('tenants.id'), nullable=False)
+    code = db.Column(db.String(50), nullable=False)
     title = db.Column(db.String(300), nullable=False)
     description = db.Column(db.Text)
-    status = db.Column(db.String(50), default='Planejamento')  # Planejamento, Em Andamento, Concluído, Cancelado
-    category = db.Column(db.String(100))  # Inovação, Pesquisa Básica, Desenvolvimento Experimental
+    status = db.Column(db.String(50), default='Planejamento')
+    category = db.Column(db.String(100))
     start_date = db.Column(db.Date)
     end_date = db.Column(db.Date)
     budget = db.Column(db.Float, default=0.0)
-    funding_source = db.Column(db.String(200))  # FINEP, BNDES, Próprio, etc.
+    funding_source = db.Column(db.String(200))
     responsible_id = db.Column(db.Integer, db.ForeignKey('users.id'))
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+
+    __table_args__ = (
+        db.UniqueConstraint('tenant_id', 'code', name='uq_tenant_project_code'),
+    )
 
     responsible = db.relationship('User', backref='projects')
     expenses = db.relationship('Expense', backref='project', cascade='all, delete-orphan')
@@ -50,14 +108,15 @@ class Project(db.Model):
 class Expense(db.Model):
     __tablename__ = 'expenses'
     id = db.Column(db.Integer, primary_key=True)
+    tenant_id = db.Column(db.Integer, db.ForeignKey('tenants.id'), nullable=False)
     project_id = db.Column(db.Integer, db.ForeignKey('projects.id'), nullable=False)
     description = db.Column(db.String(300), nullable=False)
-    category = db.Column(db.String(100), nullable=False)  # Pessoal, Equipamento, Material, Viagem, Serviço Terceiro, Outros
+    category = db.Column(db.String(100), nullable=False)
     amount = db.Column(db.Float, nullable=False)
     date = db.Column(db.Date, nullable=False, default=date.today)
     receipt_number = db.Column(db.String(100))
     supplier = db.Column(db.String(200))
-    status = db.Column(db.String(50), default='Pendente')  # Pendente, Aprovada, Rejeitada, Paga
+    status = db.Column(db.String(50), default='Pendente')
     notes = db.Column(db.Text)
     created_by_id = db.Column(db.Integer, db.ForeignKey('users.id'))
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
@@ -68,15 +127,16 @@ class Expense(db.Model):
 class Resource(db.Model):
     __tablename__ = 'resources'
     id = db.Column(db.Integer, primary_key=True)
+    tenant_id = db.Column(db.Integer, db.ForeignKey('tenants.id'), nullable=False)
     project_id = db.Column(db.Integer, db.ForeignKey('projects.id'), nullable=False)
-    type = db.Column(db.String(50), nullable=False)  # Pessoa, Máquina
+    type = db.Column(db.String(50), nullable=False)
     name = db.Column(db.String(200), nullable=False)
-    role = db.Column(db.String(100))  # Pesquisador, Técnico, Bolsista, etc.
+    role = db.Column(db.String(100))
     hours_allocated = db.Column(db.Float, default=0.0)
     hourly_cost = db.Column(db.Float, default=0.0)
     start_date = db.Column(db.Date)
     end_date = db.Column(db.Date)
-    status = db.Column(db.String(50), default='Ativo')  # Ativo, Inativo
+    status = db.Column(db.String(50), default='Ativo')
     notes = db.Column(db.Text)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
 
@@ -84,13 +144,14 @@ class Resource(db.Model):
 class Milestone(db.Model):
     __tablename__ = 'milestones'
     id = db.Column(db.Integer, primary_key=True)
+    tenant_id = db.Column(db.Integer, db.ForeignKey('tenants.id'), nullable=False)
     project_id = db.Column(db.Integer, db.ForeignKey('projects.id'), nullable=False)
     title = db.Column(db.String(300), nullable=False)
     description = db.Column(db.Text)
     start_date = db.Column(db.Date, nullable=False)
     end_date = db.Column(db.Date, nullable=False)
-    progress = db.Column(db.Integer, default=0)  # 0-100%
-    status = db.Column(db.String(50), default='Pendente')  # Pendente, Em Andamento, Concluído, Atrasado
+    progress = db.Column(db.Integer, default=0)
+    status = db.Column(db.String(50), default='Pendente')
     order = db.Column(db.Integer, default=0)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
 
@@ -98,6 +159,7 @@ class Milestone(db.Model):
 class Timesheet(db.Model):
     __tablename__ = 'timesheets'
     id = db.Column(db.Integer, primary_key=True)
+    tenant_id = db.Column(db.Integer, db.ForeignKey('tenants.id'), nullable=False)
     project_id = db.Column(db.Integer, db.ForeignKey('projects.id'), nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     resource_id = db.Column(db.Integer, db.ForeignKey('resources.id'), nullable=True)
@@ -116,7 +178,8 @@ class Timesheet(db.Model):
 class PublicCall(db.Model):
     __tablename__ = 'public_calls'
     id = db.Column(db.Integer, primary_key=True)
-    source = db.Column(db.String(50), nullable=False)  # FINEP, BNDES, Outro
+    tenant_id = db.Column(db.Integer, db.ForeignKey('tenants.id'), nullable=True)  # Null = global/shared
+    source = db.Column(db.String(50), nullable=False)
     title = db.Column(db.String(500), nullable=False)
     theme = db.Column(db.String(300))
     description = db.Column(db.Text)
@@ -125,7 +188,7 @@ class PublicCall(db.Model):
     funding_source = db.Column(db.String(200))
     target_audience = db.Column(db.String(300))
     url = db.Column(db.String(500))
-    status = db.Column(db.String(50), default='Aberta')  # Aberta, Encerrada, Em Análise
+    status = db.Column(db.String(50), default='Aberta')
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
 
@@ -133,19 +196,28 @@ class PublicCall(db.Model):
         db.UniqueConstraint('source', 'title', 'url', name='uq_public_call'),
     )
 
-    # Relationship to project links
     project_links = db.relationship('ProjectCall', backref='public_call', cascade='all, delete-orphan')
 
 
 class ProjectCall(db.Model):
-    """Links between public calls and projects (when a project is linked to a funding call)."""
+    """Links between public calls and projects."""
     __tablename__ = 'project_calls'
     id = db.Column(db.Integer, primary_key=True)
+    tenant_id = db.Column(db.Integer, db.ForeignKey('tenants.id'), nullable=False)
     project_id = db.Column(db.Integer, db.ForeignKey('projects.id'), nullable=False)
     public_call_id = db.Column(db.Integer, db.ForeignKey('public_calls.id'), nullable=False)
     linked_at = db.Column(db.Date, nullable=False, default=date.today)
     notes = db.Column(db.Text)
-    status = db.Column(db.String(50), default='Vinculado')  # Vinculado, Submetido, Aprovado, Rejeitado
+    status = db.Column(db.String(50), default='Vinculado')
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
 
     project = db.relationship('Project', backref='call_links')
+
+
+# Helper function to get current tenant
+def get_current_tenant_id():
+    """Get the current tenant ID from the logged-in user."""
+    from flask_login import current_user
+    if current_user.is_authenticated and current_user.tenant_id:
+        return current_user.tenant_id
+    return None

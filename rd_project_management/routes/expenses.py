@@ -1,6 +1,7 @@
 from flask import Blueprint, render_template, redirect, url_for, flash, request
 from flask_login import login_required, current_user
 from models import db, Expense, Project
+from services.tenant_utils import tenant_required, ensure_tenant_access, get_current_tenant_id
 from datetime import datetime
 
 expenses_bp = Blueprint('expenses', __name__)
@@ -8,8 +9,11 @@ expenses_bp = Blueprint('expenses', __name__)
 
 @expenses_bp.route('/projects/<int:project_id>/expenses')
 @login_required
+@tenant_required
 def list_expenses(project_id):
     project = Project.query.get_or_404(project_id)
+    ensure_tenant_access(project)
+
     category_filter = request.args.get('category', '')
     status_filter = request.args.get('status', '')
 
@@ -36,11 +40,16 @@ def list_expenses(project_id):
 
 @expenses_bp.route('/projects/<int:project_id>/expenses/new', methods=['GET', 'POST'])
 @login_required
+@tenant_required
 def create_expense(project_id):
     project = Project.query.get_or_404(project_id)
+    ensure_tenant_access(project)
+
+    tenant_id = get_current_tenant_id()
 
     if request.method == 'POST':
         expense = Expense(
+            tenant_id=tenant_id,
             project_id=project_id,
             description=request.form.get('description', '').strip(),
             category=request.form.get('category', ''),
@@ -62,9 +71,13 @@ def create_expense(project_id):
 
 @expenses_bp.route('/projects/<int:project_id>/expenses/<int:expense_id>/edit', methods=['GET', 'POST'])
 @login_required
+@tenant_required
 def edit_expense(project_id, expense_id):
     project = Project.query.get_or_404(project_id)
+    ensure_tenant_access(project)
+
     expense = Expense.query.get_or_404(expense_id)
+    ensure_tenant_access(expense)
 
     if request.method == 'POST':
         expense.description = request.form.get('description', '').strip()
@@ -85,8 +98,14 @@ def edit_expense(project_id, expense_id):
 
 @expenses_bp.route('/projects/<int:project_id>/expenses/<int:expense_id>/delete', methods=['POST'])
 @login_required
+@tenant_required
 def delete_expense(project_id, expense_id):
+    project = Project.query.get_or_404(project_id)
+    ensure_tenant_access(project)
+
     expense = Expense.query.get_or_404(expense_id)
+    ensure_tenant_access(expense)
+
     db.session.delete(expense)
     db.session.commit()
     flash('Despesa excluída com sucesso!', 'success')

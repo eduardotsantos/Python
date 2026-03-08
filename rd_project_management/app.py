@@ -1,13 +1,13 @@
 import os
 import sys
 import logging
-from flask import Flask, redirect, url_for
-from flask_login import LoginManager
+from flask import Flask, redirect, url_for, g
+from flask_login import LoginManager, current_user
 
 # Add project directory to path
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
-from models import db, User
+from models import db, User, Tenant
 
 # Configure logging
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
@@ -43,6 +43,7 @@ def create_app():
     from routes.timesheet import timesheet_bp
     from routes.public_calls import public_calls_bp
     from routes.users import users_bp
+    from routes.tenants import tenants_bp
 
     app.register_blueprint(auth_bp)
     app.register_blueprint(projects_bp)
@@ -52,6 +53,22 @@ def create_app():
     app.register_blueprint(timesheet_bp)
     app.register_blueprint(public_calls_bp)
     app.register_blueprint(users_bp)
+    app.register_blueprint(tenants_bp)
+
+    # Before request - set current tenant
+    @app.before_request
+    def set_tenant_context():
+        g.current_tenant = None
+        if current_user.is_authenticated and current_user.tenant_id:
+            g.current_tenant = current_user.tenant
+
+    # Context processor to make tenant available in templates
+    @app.context_processor
+    def inject_tenant():
+        return {
+            'current_tenant': getattr(g, 'current_tenant', None),
+            'is_superadmin': current_user.is_superadmin() if current_user.is_authenticated else False
+        }
 
     # Root redirect
     @app.route('/')
@@ -70,18 +87,20 @@ def create_app():
     with app.app_context():
         db.create_all()
 
-        # Create default admin if no users exist
-        if User.query.count() == 0:
-            admin = User(
-                username='admin',
-                email='admin@gestaopdp.com',
-                full_name='Administrador',
-                role='admin'
+        # Create default super admin if no superadmin exists
+        superadmin = User.query.filter_by(role='superadmin').first()
+        if not superadmin:
+            superadmin = User(
+                tenant_id=None,  # Super admin has no tenant
+                username='superadmin',
+                email='superadmin@gestaopdp.com',
+                full_name='Super Administrador',
+                role='superadmin'
             )
-            admin.set_password('admin123')
-            db.session.add(admin)
+            superadmin.set_password('super123')
+            db.session.add(superadmin)
             db.session.commit()
-            logging.info("Default admin user created: admin / admin123")
+            logging.info("Default super admin user created: superadmin / super123")
 
     return app
 

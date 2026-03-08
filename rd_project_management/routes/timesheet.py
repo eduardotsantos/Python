@@ -1,6 +1,7 @@
 from flask import Blueprint, render_template, redirect, url_for, flash, request
 from flask_login import login_required, current_user
 from models import db, Timesheet, Project, Milestone, Resource
+from services.tenant_utils import tenant_required, ensure_tenant_access, get_current_tenant_id
 from datetime import datetime, date
 
 timesheet_bp = Blueprint('timesheet', __name__)
@@ -8,8 +9,11 @@ timesheet_bp = Blueprint('timesheet', __name__)
 
 @timesheet_bp.route('/projects/<int:project_id>/timesheet')
 @login_required
+@tenant_required
 def list_timesheet(project_id):
     project = Project.query.get_or_404(project_id)
+    ensure_tenant_access(project)
+
     month_filter = request.args.get('month', '')
     user_filter = request.args.get('user_id', '')
 
@@ -43,11 +47,16 @@ def list_timesheet(project_id):
 
 @timesheet_bp.route('/projects/<int:project_id>/timesheet/new', methods=['GET', 'POST'])
 @login_required
+@tenant_required
 def create_entry(project_id):
     project = Project.query.get_or_404(project_id)
+    ensure_tenant_access(project)
+
+    tenant_id = get_current_tenant_id()
 
     if request.method == 'POST':
         entry = Timesheet(
+            tenant_id=tenant_id,
             project_id=project_id,
             user_id=current_user.id,
             date=datetime.strptime(request.form.get('date', ''), '%Y-%m-%d').date() if request.form.get('date') else date.today(),
@@ -75,9 +84,13 @@ def create_entry(project_id):
 
 @timesheet_bp.route('/projects/<int:project_id>/timesheet/<int:entry_id>/edit', methods=['GET', 'POST'])
 @login_required
+@tenant_required
 def edit_entry(project_id, entry_id):
     project = Project.query.get_or_404(project_id)
+    ensure_tenant_access(project)
+
     entry = Timesheet.query.get_or_404(entry_id)
+    ensure_tenant_access(entry)
 
     if request.method == 'POST':
         entry.date = datetime.strptime(request.form.get('date', ''), '%Y-%m-%d').date() if request.form.get('date') else entry.date
@@ -100,8 +113,14 @@ def edit_entry(project_id, entry_id):
 
 @timesheet_bp.route('/projects/<int:project_id>/timesheet/<int:entry_id>/delete', methods=['POST'])
 @login_required
+@tenant_required
 def delete_entry(project_id, entry_id):
+    project = Project.query.get_or_404(project_id)
+    ensure_tenant_access(project)
+
     entry = Timesheet.query.get_or_404(entry_id)
+    ensure_tenant_access(entry)
+
     db.session.delete(entry)
     db.session.commit()
     flash('Registro excluído com sucesso!', 'success')

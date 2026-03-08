@@ -1,8 +1,9 @@
 from flask import Blueprint, render_template, redirect, url_for, flash, request, jsonify
-from flask_login import login_required
+from flask_login import login_required, current_user
 from models import db, PublicCall, Project, ProjectCall
 from services.finep_scraper import scrape_finep_calls
 from services.bndes_scraper import scrape_bndes_calls
+from services.tenant_utils import tenant_required, get_current_tenant_id, ensure_tenant_access
 from datetime import datetime, date
 import logging
 import re
@@ -14,11 +15,22 @@ public_calls_bp = Blueprint('public_calls', __name__)
 
 @public_calls_bp.route('/public-calls')
 @login_required
+@tenant_required
 def list_calls():
     source_filter = request.args.get('source', '')
     search = request.args.get('search', '')
 
-    query = PublicCall.query
+    # Public calls are global (tenant_id is null for scraped ones)
+    # But tenant can also have their own calls
+    tenant_id = get_current_tenant_id()
+
+    query = PublicCall.query.filter(
+        db.or_(
+            PublicCall.tenant_id == None,  # Global calls
+            PublicCall.tenant_id == tenant_id  # Tenant-specific calls
+        )
+    )
+
     if source_filter:
         query = query.filter_by(source=source_filter)
     if search:
@@ -33,7 +45,6 @@ def list_calls():
     calls = query.order_by(PublicCall.updated_at.desc()).all()
     total_finep = PublicCall.query.filter_by(source='FINEP').count()
     total_bndes = PublicCall.query.filter_by(source='BNDES').count()
-
     total_other = PublicCall.query.filter(~PublicCall.source.in_(['FINEP', 'BNDES'])).count()
 
     return render_template('public_calls/list.html',
@@ -47,6 +58,7 @@ def list_calls():
 
 @public_calls_bp.route('/public-calls/refresh', methods=['POST'])
 @login_required
+@tenant_required
 def refresh_calls():
     """Manually trigger a refresh of public calls from FINEP and BNDES."""
     results = {'finep': 0, 'bndes': 0, 'errors': []}
@@ -86,6 +98,7 @@ def refresh_calls():
 
 @public_calls_bp.route('/public-calls/refresh-ajax', methods=['POST'])
 @login_required
+@tenant_required
 def refresh_calls_ajax():
     """AJAX endpoint for refreshing calls."""
     results = {'finep': 0, 'bndes': 0, 'errors': []}
@@ -112,10 +125,14 @@ def refresh_calls_ajax():
 
 @public_calls_bp.route('/public-calls/new', methods=['GET', 'POST'])
 @login_required
+@tenant_required
 def create_call():
     """Manually create a public call."""
+    tenant_id = get_current_tenant_id()
+
     if request.method == 'POST':
         call = PublicCall(
+            tenant_id=tenant_id,  # Tenant-specific call
             source=request.form.get('source', '').strip() or 'Outro',
             title=request.form.get('title', '').strip(),
             theme=request.form.get('theme', '').strip(),
@@ -137,9 +154,16 @@ def create_call():
 
 @public_calls_bp.route('/public-calls/<int:call_id>/edit', methods=['GET', 'POST'])
 @login_required
+@tenant_required
 def edit_call(call_id):
     """Edit a public call."""
     call = PublicCall.query.get_or_404(call_id)
+
+    # Only tenant-specific calls can be edited by tenant
+    tenant_id = get_current_tenant_id()
+    if call.tenant_id is not None and call.tenant_id != tenant_id:
+        flash('Você não tem permissão para editar esta chamada.', 'danger')
+        return redirect(url_for('public_calls.list_calls'))
 
     if request.method == 'POST':
         call.source = request.form.get('source', '').strip() or call.source
@@ -162,16 +186,37 @@ def edit_call(call_id):
 
 @public_calls_bp.route('/public-calls/<int:call_id>')
 @login_required
+@tenant_required
 def view_call(call_id):
     call = PublicCall.query.get_or_404(call_id)
-    projects = Project.query.order_by(Project.title).all()
+    tenant_id = get_current_tenant_id()
+
+    # Filter projects by tenant
+    if tenant_id:
+        projects = Project.query.filter_by(tenant_id=tenant_id).order_by(Project.title).all()
+    else:
+        projects = Project.query.order_by(Project.title).all()
+
     return render_template('public_calls/view.html', call=call, projects=projects)
 
 
 @public_calls_bp.route('/public-calls/<int:call_id>/delete', methods=['POST'])
 @login_required
+@tenant_required
 def delete_call(call_id):
     call = PublicCall.query.get_or_404(call_id)
+
+    # Only tenant-specific calls can be deleted by tenant
+    tenant_id = get_current_tenant_id()
+    if call.tenant_id is not None and call.tenant_id != tenant_id:
+        flash('Você não tem permissão para excluir esta chamada.', 'danger')
+        return redirect(url_for('public_calls.list_calls'))
+
+    # Global calls (tenant_id=None) can only be deleted by superadmin
+    if call.tenant_id is None and not current_user.is_superadmin():
+        flash('Apenas administradores do sistema podem excluir chamadas globais.', 'danger')
+        return redirect(url_for('public_calls.list_calls'))
+
     db.session.delete(call)
     db.session.commit()
     flash('Chamada removida com sucesso!', 'success')
@@ -180,6 +225,7 @@ def delete_call(call_id):
 
 @public_calls_bp.route('/public-calls/<int:call_id>/link', methods=['POST'])
 @login_required
+@tenant_required
 def link_to_project(call_id):
     """Link a public call to a project."""
     call = PublicCall.query.get_or_404(call_id)
@@ -188,8 +234,16 @@ def link_to_project(call_id):
     notes = request.form.get('link_notes', '').strip()
     status = request.form.get('link_status', 'Vinculado')
 
+    tenant_id = get_current_tenant_id()
+
     if not project_id:
         flash('Selecione um projeto para vincular.', 'warning')
+        return redirect(url_for('public_calls.view_call', call_id=call_id))
+
+    # Verify project belongs to tenant
+    project = Project.query.get(int(project_id))
+    if not project or (tenant_id and project.tenant_id != tenant_id):
+        flash('Projeto não encontrado.', 'danger')
         return redirect(url_for('public_calls.view_call', call_id=call_id))
 
     # Check if link already exists
@@ -203,6 +257,7 @@ def link_to_project(call_id):
         return redirect(url_for('public_calls.view_call', call_id=call_id))
 
     link = ProjectCall(
+        tenant_id=tenant_id,
         project_id=int(project_id),
         public_call_id=call_id,
         linked_at=datetime.strptime(linked_at, '%Y-%m-%d').date() if linked_at else date.today(),
@@ -217,9 +272,17 @@ def link_to_project(call_id):
 
 @public_calls_bp.route('/public-calls/<int:call_id>/unlink/<int:link_id>', methods=['POST'])
 @login_required
+@tenant_required
 def unlink_project(call_id, link_id):
     """Remove a project link."""
     link = ProjectCall.query.get_or_404(link_id)
+
+    # Verify link belongs to tenant
+    tenant_id = get_current_tenant_id()
+    if tenant_id and link.tenant_id != tenant_id:
+        flash('Vínculo não encontrado.', 'danger')
+        return redirect(url_for('public_calls.view_call', call_id=call_id))
+
     db.session.delete(link)
     db.session.commit()
     flash('Vínculo removido com sucesso!', 'success')
@@ -228,11 +291,25 @@ def unlink_project(call_id, link_id):
 
 @public_calls_bp.route('/public-calls/suggest-links', methods=['POST'])
 @login_required
+@tenant_required
 def suggest_links():
     """Automatically suggest links between projects and public calls based on keywords."""
     count = 0
-    projects = Project.query.all()
-    calls = PublicCall.query.all()
+    tenant_id = get_current_tenant_id()
+
+    # Get tenant's projects only
+    if tenant_id:
+        projects = Project.query.filter_by(tenant_id=tenant_id).all()
+    else:
+        projects = Project.query.all()
+
+    # Get all available calls (global + tenant-specific)
+    calls = PublicCall.query.filter(
+        db.or_(
+            PublicCall.tenant_id == None,
+            PublicCall.tenant_id == tenant_id
+        )
+    ).all()
 
     for call in calls:
         call_keywords = _extract_keywords(call.title + ' ' + (call.description or '') + ' ' + (call.theme or ''))
@@ -256,6 +333,7 @@ def suggest_links():
             common_keywords = call_keywords & project_keywords
             if len(common_keywords) >= 2:  # At least 2 matching keywords
                 link = ProjectCall(
+                    tenant_id=tenant_id,
                     project_id=project.id,
                     public_call_id=call.id,
                     linked_at=date.today(),
@@ -305,7 +383,7 @@ def _extract_keywords(text):
 
 
 def _upsert_call(call_data):
-    """Insert or update a public call."""
+    """Insert or update a public call (global, tenant_id=None)."""
     existing = PublicCall.query.filter_by(
         source=call_data['source'],
         title=call_data['title']
@@ -321,8 +399,9 @@ def _upsert_call(call_data):
         if call_data.get('url'):
             existing.url = call_data['url']
     else:
-        # Create new
+        # Create new global call
         new_call = PublicCall(
+            tenant_id=None,  # Global call
             source=call_data['source'],
             title=call_data['title'],
             theme=call_data.get('theme', ''),

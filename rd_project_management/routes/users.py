@@ -2,30 +2,49 @@ from flask import Blueprint, render_template, redirect, url_for, flash, request
 from flask_login import login_required, current_user
 from functools import wraps
 from models import db, User
+from services.tenant_utils import tenant_required, admin_required, get_current_tenant_id
 
 users_bp = Blueprint('users', __name__)
 
 
-def admin_required(f):
-    """Decorator to require admin role."""
+def tenant_admin_required(f):
+    """Decorator to require tenant admin role."""
     @wraps(f)
     def decorated_function(*args, **kwargs):
-        if not current_user.is_authenticated or current_user.role != 'admin':
+        if not current_user.is_authenticated:
+            return redirect(url_for('auth.login'))
+
+        # Super admins can access everything
+        if current_user.is_superadmin():
+            return f(*args, **kwargs)
+
+        # Tenant admins can manage users
+        if current_user.role not in ['admin', 'manager']:
             flash('Acesso restrito a administradores.', 'danger')
             return redirect(url_for('projects.list_projects'))
+
         return f(*args, **kwargs)
     return decorated_function
 
 
 @users_bp.route('/users')
 @login_required
-@admin_required
+@tenant_required
+@tenant_admin_required
 def list_users():
-    """List all users."""
+    """List all users in the tenant."""
     search = request.args.get('search', '')
     role_filter = request.args.get('role', '')
 
-    query = User.query
+    tenant_id = get_current_tenant_id()
+
+    # Filter users by tenant
+    if tenant_id:
+        query = User.query.filter_by(tenant_id=tenant_id)
+    else:
+        # Super admin sees all non-superadmin users
+        query = User.query.filter(User.role != 'superadmin')
+
     if search:
         query = query.filter(
             db.or_(
@@ -39,9 +58,11 @@ def list_users():
 
     users = query.order_by(User.full_name).all()
 
-    total_users = User.query.count()
-    total_admins = User.query.filter_by(role='admin').count()
-    total_active = User.query.filter_by(active=True).count()
+    # Stats for tenant
+    base_query = User.query.filter_by(tenant_id=tenant_id) if tenant_id else User.query.filter(User.role != 'superadmin')
+    total_users = base_query.count()
+    total_admins = base_query.filter_by(role='admin').count()
+    total_active = base_query.filter_by(active=True).count()
 
     return render_template('users/list.html',
                            users=users,
@@ -54,9 +75,17 @@ def list_users():
 
 @users_bp.route('/users/new', methods=['GET', 'POST'])
 @login_required
-@admin_required
+@tenant_required
+@tenant_admin_required
 def create_user():
-    """Create a new user."""
+    """Create a new user in the tenant."""
+    tenant_id = get_current_tenant_id()
+
+    # Check user limit for tenant
+    if tenant_id and current_user.tenant and not current_user.tenant.can_add_user():
+        flash(f'Limite de usuários atingido ({current_user.tenant.max_users}). Entre em contato com o suporte.', 'warning')
+        return redirect(url_for('users.list_users'))
+
     if request.method == 'POST':
         username = request.form.get('username', '').strip()
         email = request.form.get('email', '').strip()
@@ -64,6 +93,10 @@ def create_user():
         password = request.form.get('password', '')
         role = request.form.get('role', 'user')
         active = request.form.get('active') == 'on'
+
+        # Prevent creating superadmin
+        if role == 'superadmin':
+            role = 'admin'
 
         # Validations
         if not username or not email or not full_name or not password:
@@ -74,17 +107,26 @@ def create_user():
             flash('A senha deve ter pelo menos 6 caracteres.', 'danger')
             return render_template('users/form.html', user=None)
 
-        # Check if username exists
-        if User.query.filter_by(username=username).first():
+        # Check if username exists in tenant
+        if tenant_id:
+            existing = User.query.filter_by(tenant_id=tenant_id, username=username).first()
+        else:
+            existing = User.query.filter_by(username=username).first()
+        if existing:
             flash('Este nome de usuário já está em uso.', 'danger')
             return render_template('users/form.html', user=None)
 
-        # Check if email exists
-        if User.query.filter_by(email=email).first():
+        # Check if email exists in tenant
+        if tenant_id:
+            existing = User.query.filter_by(tenant_id=tenant_id, email=email).first()
+        else:
+            existing = User.query.filter_by(email=email).first()
+        if existing:
             flash('Este email já está cadastrado.', 'danger')
             return render_template('users/form.html', user=None)
 
         user = User(
+            tenant_id=tenant_id,
             username=username,
             email=email,
             full_name=full_name,
@@ -103,10 +145,17 @@ def create_user():
 
 @users_bp.route('/users/<int:user_id>')
 @login_required
-@admin_required
+@tenant_required
+@tenant_admin_required
 def view_user(user_id):
     """View user details."""
     user = User.query.get_or_404(user_id)
+
+    # Check tenant access
+    tenant_id = get_current_tenant_id()
+    if tenant_id and user.tenant_id != tenant_id:
+        flash('Usuário não encontrado.', 'danger')
+        return redirect(url_for('users.list_users'))
 
     # Count user activities
     projects_count = len(user.projects) if hasattr(user, 'projects') else 0
@@ -122,10 +171,17 @@ def view_user(user_id):
 
 @users_bp.route('/users/<int:user_id>/edit', methods=['GET', 'POST'])
 @login_required
-@admin_required
+@tenant_required
+@tenant_admin_required
 def edit_user(user_id):
     """Edit an existing user."""
     user = User.query.get_or_404(user_id)
+
+    # Check tenant access
+    tenant_id = get_current_tenant_id()
+    if tenant_id and user.tenant_id != tenant_id:
+        flash('Usuário não encontrado.', 'danger')
+        return redirect(url_for('users.list_users'))
 
     if request.method == 'POST':
         username = request.form.get('username', '').strip()
@@ -135,26 +191,36 @@ def edit_user(user_id):
         role = request.form.get('role', user.role)
         active = request.form.get('active') == 'on'
 
+        # Prevent changing to superadmin
+        if role == 'superadmin':
+            role = 'admin'
+
         # Validations
         if not username or not email or not full_name:
             flash('Todos os campos obrigatórios devem ser preenchidos.', 'danger')
             return render_template('users/form.html', user=user)
 
         # Check if username exists (excluding current user)
-        existing = User.query.filter_by(username=username).first()
+        if tenant_id:
+            existing = User.query.filter_by(tenant_id=tenant_id, username=username).first()
+        else:
+            existing = User.query.filter_by(username=username).first()
         if existing and existing.id != user.id:
             flash('Este nome de usuário já está em uso.', 'danger')
             return render_template('users/form.html', user=user)
 
         # Check if email exists (excluding current user)
-        existing = User.query.filter_by(email=email).first()
+        if tenant_id:
+            existing = User.query.filter_by(tenant_id=tenant_id, email=email).first()
+        else:
+            existing = User.query.filter_by(email=email).first()
         if existing and existing.id != user.id:
             flash('Este email já está cadastrado.', 'danger')
             return render_template('users/form.html', user=user)
 
-        # Prevent removing the last admin
+        # Prevent removing the last admin in tenant
         if user.role == 'admin' and role != 'admin':
-            admin_count = User.query.filter_by(role='admin').count()
+            admin_count = User.query.filter_by(tenant_id=tenant_id, role='admin').count() if tenant_id else User.query.filter_by(role='admin').count()
             if admin_count <= 1:
                 flash('Não é possível remover o papel de administrador do último admin.', 'danger')
                 return render_template('users/form.html', user=user)
@@ -186,10 +252,17 @@ def edit_user(user_id):
 
 @users_bp.route('/users/<int:user_id>/delete', methods=['POST'])
 @login_required
-@admin_required
+@tenant_required
+@tenant_admin_required
 def delete_user(user_id):
     """Delete a user."""
     user = User.query.get_or_404(user_id)
+
+    # Check tenant access
+    tenant_id = get_current_tenant_id()
+    if tenant_id and user.tenant_id != tenant_id:
+        flash('Usuário não encontrado.', 'danger')
+        return redirect(url_for('users.list_users'))
 
     # Prevent deleting self
     if user.id == current_user.id:
@@ -198,7 +271,7 @@ def delete_user(user_id):
 
     # Prevent deleting the last admin
     if user.role == 'admin':
-        admin_count = User.query.filter_by(role='admin').count()
+        admin_count = User.query.filter_by(tenant_id=tenant_id, role='admin').count() if tenant_id else User.query.filter_by(role='admin').count()
         if admin_count <= 1:
             flash('Não é possível excluir o último administrador.', 'danger')
             return redirect(url_for('users.list_users'))
@@ -223,10 +296,17 @@ def delete_user(user_id):
 
 @users_bp.route('/users/<int:user_id>/toggle-active', methods=['POST'])
 @login_required
-@admin_required
+@tenant_required
+@tenant_admin_required
 def toggle_active(user_id):
     """Toggle user active status."""
     user = User.query.get_or_404(user_id)
+
+    # Check tenant access
+    tenant_id = get_current_tenant_id()
+    if tenant_id and user.tenant_id != tenant_id:
+        flash('Usuário não encontrado.', 'danger')
+        return redirect(url_for('users.list_users'))
 
     # Prevent deactivating self
     if user.id == current_user.id:
@@ -256,8 +336,12 @@ def profile():
             flash('Nome e email são obrigatórios.', 'danger')
             return render_template('users/profile.html')
 
-        # Check if email exists (excluding current user)
-        existing = User.query.filter_by(email=email).first()
+        # Check if email exists (excluding current user, within tenant)
+        tenant_id = get_current_tenant_id()
+        if tenant_id:
+            existing = User.query.filter_by(tenant_id=tenant_id, email=email).first()
+        else:
+            existing = User.query.filter_by(email=email).first()
         if existing and existing.id != current_user.id:
             flash('Este email já está cadastrado.', 'danger')
             return render_template('users/profile.html')

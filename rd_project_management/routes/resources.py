@@ -1,6 +1,7 @@
 from flask import Blueprint, render_template, redirect, url_for, flash, request
 from flask_login import login_required
 from models import db, Resource, Project
+from services.tenant_utils import tenant_required, ensure_tenant_access, get_current_tenant_id
 from datetime import datetime
 
 resources_bp = Blueprint('resources', __name__)
@@ -8,8 +9,11 @@ resources_bp = Blueprint('resources', __name__)
 
 @resources_bp.route('/projects/<int:project_id>/resources')
 @login_required
+@tenant_required
 def list_resources(project_id):
     project = Project.query.get_or_404(project_id)
+    ensure_tenant_access(project)
+
     type_filter = request.args.get('type', '')
 
     query = Resource.query.filter_by(project_id=project_id)
@@ -32,11 +36,16 @@ def list_resources(project_id):
 
 @resources_bp.route('/projects/<int:project_id>/resources/new', methods=['GET', 'POST'])
 @login_required
+@tenant_required
 def create_resource(project_id):
     project = Project.query.get_or_404(project_id)
+    ensure_tenant_access(project)
+
+    tenant_id = get_current_tenant_id()
 
     if request.method == 'POST':
         resource = Resource(
+            tenant_id=tenant_id,
             project_id=project_id,
             type=request.form.get('type', 'Pessoa'),
             name=request.form.get('name', '').strip(),
@@ -63,9 +72,13 @@ def create_resource(project_id):
 
 @resources_bp.route('/projects/<int:project_id>/resources/<int:resource_id>/edit', methods=['GET', 'POST'])
 @login_required
+@tenant_required
 def edit_resource(project_id, resource_id):
     project = Project.query.get_or_404(project_id)
+    ensure_tenant_access(project)
+
     resource = Resource.query.get_or_404(resource_id)
+    ensure_tenant_access(resource)
 
     if request.method == 'POST':
         resource.type = request.form.get('type', 'Pessoa')
@@ -92,8 +105,14 @@ def edit_resource(project_id, resource_id):
 
 @resources_bp.route('/projects/<int:project_id>/resources/<int:resource_id>/delete', methods=['POST'])
 @login_required
+@tenant_required
 def delete_resource(project_id, resource_id):
+    project = Project.query.get_or_404(project_id)
+    ensure_tenant_access(project)
+
     resource = Resource.query.get_or_404(resource_id)
+    ensure_tenant_access(resource)
+
     db.session.delete(resource)
     db.session.commit()
     flash('Recurso excluído com sucesso!', 'success')

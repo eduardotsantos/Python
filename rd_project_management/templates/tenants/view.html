@@ -1,0 +1,296 @@
+{% extends "base.html" %}
+{% block title %}{{ tenant.name }} - Super Admin{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-lg-8">
+        <div class="d-flex align-items-center mb-4">
+            <a href="{{ url_for('tenants.list_tenants') }}" class="btn btn-outline-secondary btn-sm me-3">
+                <i class="bi bi-arrow-left"></i>
+            </a>
+            <div class="flex-grow-1">
+                <h4 class="fw-bold mb-0">{{ tenant.name }}</h4>
+                <small class="text-muted">{{ tenant.slug }}</small>
+            </div>
+            <a href="{{ url_for('tenants.edit_tenant', tenant_id=tenant.id) }}" class="btn btn-outline-primary btn-sm me-2">
+                <i class="bi bi-pencil"></i> Editar
+            </a>
+            <form method="POST" action="{{ url_for('tenants.toggle_tenant_status', tenant_id=tenant.id) }}" class="d-inline">
+                <button type="submit" class="btn btn-sm {{ 'btn-outline-danger' if tenant.active else 'btn-outline-success' }}">
+                    <i class="bi {{ 'bi-pause' if tenant.active else 'bi-play' }}"></i>
+                    {{ 'Desativar' if tenant.active else 'Ativar' }}
+                </button>
+            </form>
+        </div>
+
+        <!-- Tenant Info -->
+        <div class="card shadow-sm mb-4">
+            <div class="card-body p-4">
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <h6 class="text-muted small">Status</h6>
+                        {% if tenant.active and tenant.is_active() %}
+                            <span class="badge bg-success fs-6">Ativa</span>
+                        {% elif tenant.active and not tenant.is_active() %}
+                            <span class="badge bg-warning text-dark fs-6">Expirada</span>
+                        {% else %}
+                            <span class="badge bg-danger fs-6">Inativa</span>
+                        {% endif %}
+                    </div>
+                    <div class="col-md-6">
+                        <h6 class="text-muted small">Plano</h6>
+                        {% if tenant.plan == 'enterprise' %}
+                            <span class="badge bg-primary fs-6">Enterprise</span>
+                        {% elif tenant.plan == 'professional' %}
+                            <span class="badge bg-info fs-6">Professional</span>
+                        {% else %}
+                            <span class="badge bg-secondary fs-6">Basic</span>
+                        {% endif %}
+                    </div>
+                    {% if tenant.cnpj %}
+                    <div class="col-md-6">
+                        <h6 class="text-muted small">CNPJ</h6>
+                        <p class="fw-bold mb-0">{{ tenant.cnpj }}</p>
+                    </div>
+                    {% endif %}
+                    {% if tenant.email %}
+                    <div class="col-md-6">
+                        <h6 class="text-muted small">E-mail</h6>
+                        <p class="fw-bold mb-0">{{ tenant.email }}</p>
+                    </div>
+                    {% endif %}
+                    {% if tenant.phone %}
+                    <div class="col-md-6">
+                        <h6 class="text-muted small">Telefone</h6>
+                        <p class="fw-bold mb-0">{{ tenant.phone }}</p>
+                    </div>
+                    {% endif %}
+                    <div class="col-md-6">
+                        <h6 class="text-muted small">Validade</h6>
+                        <p class="fw-bold mb-0">
+                            {% if tenant.expires_at %}
+                                {{ tenant.expires_at.strftime('%d/%m/%Y') }}
+                            {% else %}
+                                Sem limite
+                            {% endif %}
+                        </p>
+                    </div>
+                    {% if tenant.address %}
+                    <div class="col-12">
+                        <h6 class="text-muted small">Endereço</h6>
+                        <p class="mb-0">{{ tenant.address }}</p>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Users List -->
+        <div class="card shadow-sm mb-4">
+            <div class="card-header bg-white d-flex justify-content-between align-items-center">
+                <h6 class="mb-0 fw-bold"><i class="bi bi-people"></i> Usuários ({{ users|length }}/{{ tenant.max_users }})</h6>
+                <button type="button" class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#addUserModal"
+                        {% if not tenant.can_add_user() %}disabled{% endif %}>
+                    <i class="bi bi-plus"></i> Adicionar
+                </button>
+            </div>
+            <div class="card-body p-0">
+                {% if users %}
+                <div class="table-responsive">
+                    <table class="table table-hover mb-0">
+                        <thead>
+                            <tr>
+                                <th>Nome</th>
+                                <th>E-mail</th>
+                                <th>Função</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for user in users %}
+                            <tr>
+                                <td><strong>{{ user.full_name }}</strong></td>
+                                <td>{{ user.email }}</td>
+                                <td>
+                                    {% if user.role == 'admin' %}
+                                        <span class="badge bg-primary">Admin</span>
+                                    {% elif user.role == 'manager' %}
+                                        <span class="badge bg-info">Gerente</span>
+                                    {% else %}
+                                        <span class="badge bg-secondary">Usuário</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {% if user.active %}
+                                        <span class="badge bg-success">Ativo</span>
+                                    {% else %}
+                                        <span class="badge bg-danger">Inativo</span>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% else %}
+                <div class="text-center py-4">
+                    <p class="text-muted mb-0">Nenhum usuário cadastrado.</p>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Projects List -->
+        <div class="card shadow-sm">
+            <div class="card-header bg-white">
+                <h6 class="mb-0 fw-bold"><i class="bi bi-folder"></i> Projetos ({{ projects|length }}/{{ tenant.max_projects }})</h6>
+            </div>
+            <div class="card-body p-0">
+                {% if projects %}
+                <div class="table-responsive">
+                    <table class="table table-hover mb-0">
+                        <thead>
+                            <tr>
+                                <th>Código</th>
+                                <th>Título</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for project in projects %}
+                            <tr>
+                                <td><strong>{{ project.code }}</strong></td>
+                                <td>{{ project.title }}</td>
+                                <td>
+                                    {% if project.status == 'Em Andamento' %}
+                                        <span class="badge bg-warning text-dark">{{ project.status }}</span>
+                                    {% elif project.status == 'Concluído' %}
+                                        <span class="badge bg-success">{{ project.status }}</span>
+                                    {% elif project.status == 'Cancelado' %}
+                                        <span class="badge bg-danger">{{ project.status }}</span>
+                                    {% else %}
+                                        <span class="badge bg-info">{{ project.status }}</span>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% else %}
+                <div class="text-center py-4">
+                    <p class="text-muted mb-0">Nenhum projeto cadastrado.</p>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <!-- Right Column: Actions -->
+    <div class="col-lg-4">
+        <div class="card shadow-sm mb-4">
+            <div class="card-header bg-white">
+                <h6 class="mb-0 fw-bold"><i class="bi bi-gear"></i> Ações</h6>
+            </div>
+            <div class="card-body">
+                <!-- Renew Subscription -->
+                <form method="POST" action="{{ url_for('tenants.renew_tenant', tenant_id=tenant.id) }}" class="mb-3">
+                    <label class="form-label small">Renovar Licença</label>
+                    <div class="input-group">
+                        <select name="months" class="form-select form-select-sm">
+                            <option value="1">1 mês</option>
+                            <option value="3">3 meses</option>
+                            <option value="6">6 meses</option>
+                            <option value="12" selected>12 meses</option>
+                            <option value="24">24 meses</option>
+                        </select>
+                        <button type="submit" class="btn btn-success btn-sm">
+                            <i class="bi bi-calendar-plus"></i> Renovar
+                        </button>
+                    </div>
+                </form>
+
+                <hr>
+
+                <!-- Delete -->
+                <form method="POST" action="{{ url_for('tenants.delete_tenant', tenant_id=tenant.id) }}">
+                    <button type="submit" class="btn btn-outline-danger btn-sm w-100"
+                            data-confirm="Tem certeza que deseja excluir esta empresa? Esta ação não pode ser desfeita.">
+                        <i class="bi bi-trash"></i> Excluir Empresa
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Stats -->
+        <div class="card shadow-sm">
+            <div class="card-header bg-white">
+                <h6 class="mb-0 fw-bold"><i class="bi bi-bar-chart"></i> Estatísticas</h6>
+            </div>
+            <div class="card-body">
+                <div class="mb-3">
+                    <label class="form-label small text-muted">Uso de Usuários</label>
+                    <div class="progress">
+                        <div class="progress-bar bg-primary" role="progressbar"
+                             style="width: {{ (users|length / tenant.max_users * 100)|int }}%">
+                        </div>
+                    </div>
+                    <small class="text-muted">{{ users|length }} de {{ tenant.max_users }}</small>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label small text-muted">Uso de Projetos</label>
+                    <div class="progress">
+                        <div class="progress-bar bg-success" role="progressbar"
+                             style="width: {{ (projects|length / tenant.max_projects * 100)|int }}%">
+                        </div>
+                    </div>
+                    <small class="text-muted">{{ projects|length }} de {{ tenant.max_projects }}</small>
+                </div>
+                <div>
+                    <small class="text-muted">Criado em: {{ tenant.created_at.strftime('%d/%m/%Y %H:%M') }}</small>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Add User Modal -->
+<div class="modal fade" id="addUserModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form method="POST" action="{{ url_for('tenants.add_tenant_user', tenant_id=tenant.id) }}">
+                <div class="modal-header">
+                    <h5 class="modal-title">Adicionar Usuário</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label class="form-label">Nome Completo *</label>
+                        <input type="text" class="form-control" name="full_name" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">E-mail *</label>
+                        <input type="email" class="form-control" name="email" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Senha *</label>
+                        <input type="password" class="form-control" name="password" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Função</label>
+                        <select class="form-select" name="role">
+                            <option value="user">Usuário</option>
+                            <option value="manager">Gerente</option>
+                            <option value="admin">Administrador</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-primary">Adicionar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
