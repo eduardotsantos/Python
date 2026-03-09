@@ -11,17 +11,32 @@ def login():
         return redirect(url_for('projects.list_projects'))
 
     if request.method == 'POST':
-        username = request.form.get('username', '').strip()
+        login_input = request.form.get('username', '').strip()
         password = request.form.get('password', '')
 
-        user = User.query.filter_by(username=username).first()
-        if user and user.check_password(password):
+        # Try to find user by email or username
+        user = User.query.filter(
+            db.or_(
+                User.email == login_input,
+                User.username == login_input
+            )
+        ).first()
+
+        if user and user.active and user.check_password(password):
+            # Check if tenant is active (for non-superadmin users)
+            if user.tenant_id and user.tenant:
+                if not user.tenant.is_active():
+                    flash('Sua empresa está com a licença expirada ou inativa. Entre em contato com o suporte.', 'danger')
+                    return render_template('auth/login.html')
+
             login_user(user)
             next_page = request.args.get('next')
             flash('Login realizado com sucesso!', 'success')
             return redirect(next_page or url_for('projects.list_projects'))
+        elif user and not user.active:
+            flash('Sua conta está desativada. Entre em contato com o administrador.', 'danger')
         else:
-            flash('Usuário ou senha incorretos.', 'danger')
+            flash('Email/usuário ou senha incorretos.', 'danger')
 
     return render_template('auth/login.html')
 

@@ -97,7 +97,8 @@
                     </td>
                     <td>
                         {% if tenant.expires_at %}
-                            {% if tenant.expires_at < today if today else false %}
+                            {% set is_expired = tenant.expires_at < today %}
+                            {% if is_expired %}
                                 <span class="text-danger">{{ tenant.expires_at.strftime('%d/%m/%Y') }}</span>
                             {% else %}
                                 {{ tenant.expires_at.strftime('%d/%m/%Y') }}
