@@ -1,0 +1,168 @@
+{% extends "base.html" %}
+{% block title %}Usuários - Gestão P&D{% endblock %}
+
+{% block content %}
+<div class="d-flex align-items-center mb-4">
+    <div class="flex-grow-1">
+        <h4 class="fw-bold mb-0"><i class="bi bi-people text-primary"></i> Usuários do Sistema</h4>
+        <span class="text-muted">Gerenciamento de contas e permissões</span>
+    </div>
+    <a href="{{ url_for('users.create_user') }}" class="btn btn-primary">
+        <i class="bi bi-plus-lg"></i> Novo Usuário
+    </a>
+</div>
+
+<!-- Stats -->
+<div class="row g-3 mb-4">
+    <div class="col-md-4">
+        <div class="card card-stats border-primary shadow-sm">
+            <div class="card-body">
+                <div class="d-flex justify-content-between">
+                    <div>
+                        <p class="text-muted mb-1 small">Total de Usuários</p>
+                        <h3 class="fw-bold mb-0">{{ total_users }}</h3>
+                    </div>
+                    <div class="text-primary opacity-50"><i class="bi bi-people" style="font-size:2rem"></i></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card card-stats border-danger shadow-sm">
+            <div class="card-body">
+                <div class="d-flex justify-content-between">
+                    <div>
+                        <p class="text-muted mb-1 small">Administradores</p>
+                        <h3 class="fw-bold mb-0">{{ total_admins }}</h3>
+                    </div>
+                    <div class="text-danger opacity-50"><i class="bi bi-shield-lock" style="font-size:2rem"></i></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card card-stats border-success shadow-sm">
+            <div class="card-body">
+                <div class="d-flex justify-content-between">
+                    <div>
+                        <p class="text-muted mb-1 small">Ativos</p>
+                        <h3 class="fw-bold mb-0">{{ total_active }}</h3>
+                    </div>
+                    <div class="text-success opacity-50"><i class="bi bi-person-check" style="font-size:2rem"></i></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Filters -->
+<div class="card shadow-sm mb-4">
+    <div class="card-body py-2">
+        <form method="GET" class="row g-2 align-items-center">
+            <div class="col-md-5">
+                <div class="search-box">
+                    <i class="bi bi-search"></i>
+                    <input type="text" class="form-control" name="search" placeholder="Buscar por nome, usuário ou email..." value="{{ search }}">
+                </div>
+            </div>
+            <div class="col-md-4">
+                <select name="role" class="form-select">
+                    <option value="">Todos os Papéis</option>
+                    <option value="admin" {{ 'selected' if role_filter == 'admin' }}>Administrador</option>
+                    <option value="manager" {{ 'selected' if role_filter == 'manager' }}>Gerente</option>
+                    <option value="user" {{ 'selected' if role_filter == 'user' }}>Usuário</option>
+                </select>
+            </div>
+            <div class="col-md-3 text-end">
+                <button type="submit" class="btn btn-outline-primary btn-sm"><i class="bi bi-filter"></i> Filtrar</button>
+                <a href="{{ url_for('users.list_users') }}" class="btn btn-outline-secondary btn-sm"><i class="bi bi-x"></i></a>
+            </div>
+        </form>
+    </div>
+</div>
+
+{% if users %}
+<div class="card shadow-sm">
+    <div class="table-responsive">
+        <table class="table table-hover mb-0">
+            <thead>
+                <tr>
+                    <th>Usuário</th>
+                    <th>Email</th>
+                    <th>Papel</th>
+                    <th>Status</th>
+                    <th>Criado em</th>
+                    <th class="text-end">Ações</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for user in users %}
+                <tr class="{{ 'table-secondary' if not user.active }}">
+                    <td>
+                        <div class="d-flex align-items-center">
+                            <div class="rounded-circle bg-{{ 'primary' if user.role == 'admin' else 'secondary' }} text-white d-flex align-items-center justify-content-center me-2" style="width: 36px; height: 36px;">
+                                <i class="bi bi-person"></i>
+                            </div>
+                            <div>
+                                <strong>{{ user.full_name }}</strong>
+                                <br><small class="text-muted">@{{ user.username }}</small>
+                            </div>
+                        </div>
+                    </td>
+                    <td>{{ user.email }}</td>
+                    <td>
+                        {% if user.role == 'admin' %}
+                            <span class="badge bg-danger"><i class="bi bi-shield-lock"></i> Administrador</span>
+                        {% elif user.role == 'manager' %}
+                            <span class="badge bg-warning text-dark"><i class="bi bi-briefcase"></i> Gerente</span>
+                        {% else %}
+                            <span class="badge bg-secondary"><i class="bi bi-person"></i> Usuário</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if user.active %}
+                            <span class="badge bg-success"><i class="bi bi-check-circle"></i> Ativo</span>
+                        {% else %}
+                            <span class="badge bg-secondary"><i class="bi bi-pause-circle"></i> Inativo</span>
+                        {% endif %}
+                    </td>
+                    <td class="text-muted small">{{ user.created_at.strftime('%d/%m/%Y') if user.created_at else '-' }}</td>
+                    <td class="text-end">
+                        <a href="{{ url_for('users.view_user', user_id=user.id) }}" class="btn btn-sm btn-outline-info" title="Ver detalhes">
+                            <i class="bi bi-eye"></i>
+                        </a>
+                        <a href="{{ url_for('users.edit_user', user_id=user.id) }}" class="btn btn-sm btn-outline-primary" title="Editar">
+                            <i class="bi bi-pencil"></i>
+                        </a>
+                        {% if user.id != current_user.id %}
+                        <form method="POST" action="{{ url_for('users.toggle_active', user_id=user.id) }}" class="d-inline">
+                            <button type="submit" class="btn btn-sm btn-outline-{{ 'warning' if user.active else 'success' }}" title="{{ 'Desativar' if user.active else 'Ativar' }}">
+                                <i class="bi bi-{{ 'pause' if user.active else 'play' }}"></i>
+                            </button>
+                        </form>
+                        <form method="POST" action="{{ url_for('users.delete_user', user_id=user.id) }}" class="d-inline">
+                            <button type="submit" class="btn btn-sm btn-outline-danger" data-confirm="Excluir usuário '{{ user.full_name }}'?" title="Excluir">
+                                <i class="bi bi-trash"></i>
+                            </button>
+                        </form>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% else %}
+<div class="card shadow-sm">
+    <div class="empty-state">
+        <i class="bi bi-people"></i>
+        <h5>Nenhum usuário encontrado</h5>
+        <p>Cadastre o primeiro usuário do sistema</p>
+        <a href="{{ url_for('users.create_user') }}" class="btn btn-primary">
+            <i class="bi bi-plus-lg"></i> Novo Usuário
+        </a>
+    </div>
+</div>
+{% endif %}
+{% endblock %}

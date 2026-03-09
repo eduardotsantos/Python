@@ -1,0 +1,144 @@
+{% extends "base.html" %}
+{% block title %}Empresas - Super Admin{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h4 class="fw-bold mb-0"><i class="bi bi-building text-primary"></i> Gestão de Empresas</h4>
+    <a href="{{ url_for('tenants.create_tenant') }}" class="btn btn-primary">
+        <i class="bi bi-plus-lg"></i> Nova Empresa
+    </a>
+</div>
+
+<!-- Stats -->
+<div class="row g-3 mb-4">
+    <div class="col-md-4">
+        <div class="card card-stats border-primary shadow-sm">
+            <div class="card-body">
+                <div class="d-flex justify-content-between">
+                    <div>
+                        <p class="text-muted mb-1 small">Total Empresas</p>
+                        <h3 class="fw-bold mb-0">{{ tenants|length }}</h3>
+                    </div>
+                    <div class="text-primary opacity-50"><i class="bi bi-building" style="font-size:2rem"></i></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card card-stats border-success shadow-sm">
+            <div class="card-body">
+                <div class="d-flex justify-content-between">
+                    <div>
+                        <p class="text-muted mb-1 small">Empresas Ativas</p>
+                        <h3 class="fw-bold mb-0">{{ tenants|selectattr('active')|list|length }}</h3>
+                    </div>
+                    <div class="text-success opacity-50"><i class="bi bi-check-circle" style="font-size:2rem"></i></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card card-stats border-warning shadow-sm">
+            <div class="card-body">
+                <div class="d-flex justify-content-between">
+                    <div>
+                        <p class="text-muted mb-1 small">Empresas Inativas</p>
+                        <h3 class="fw-bold mb-0">{{ tenants|rejectattr('active')|list|length }}</h3>
+                    </div>
+                    <div class="text-warning opacity-50"><i class="bi bi-pause-circle" style="font-size:2rem"></i></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Tenant List -->
+{% if tenants %}
+<div class="card shadow-sm">
+    <div class="table-responsive">
+        <table class="table table-hover mb-0">
+            <thead>
+                <tr>
+                    <th>Empresa</th>
+                    <th>Plano</th>
+                    <th>Usuários</th>
+                    <th>Projetos</th>
+                    <th>Validade</th>
+                    <th>Status</th>
+                    <th class="text-end">Ações</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for tenant in tenants %}
+                <tr>
+                    <td>
+                        <div>
+                            <strong>{{ tenant.name }}</strong>
+                            <br><small class="text-muted">{{ tenant.slug }}</small>
+                            {% if tenant.cnpj %}
+                            <br><small class="text-muted">CNPJ: {{ tenant.cnpj }}</small>
+                            {% endif %}
+                        </div>
+                    </td>
+                    <td>
+                        {% if tenant.plan == 'enterprise' %}
+                            <span class="badge bg-primary">Enterprise</span>
+                        {% elif tenant.plan == 'professional' %}
+                            <span class="badge bg-info">Professional</span>
+                        {% else %}
+                            <span class="badge bg-secondary">Basic</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        {{ tenant_stats[tenant.id].users }} / {{ tenant.max_users }}
+                    </td>
+                    <td>
+                        {{ tenant_stats[tenant.id].projects }} / {{ tenant.max_projects }}
+                    </td>
+                    <td>
+                        {% if tenant.expires_at %}
+                            {% if tenant.expires_at < today if today else false %}
+                                <span class="text-danger">{{ tenant.expires_at.strftime('%d/%m/%Y') }}</span>
+                            {% else %}
+                                {{ tenant.expires_at.strftime('%d/%m/%Y') }}
+                            {% endif %}
+                        {% else %}
+                            <span class="text-muted">Sem limite</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if tenant.active and tenant.is_active() %}
+                            <span class="badge bg-success">Ativa</span>
+                        {% elif tenant.active and not tenant.is_active() %}
+                            <span class="badge bg-warning text-dark">Expirada</span>
+                        {% else %}
+                            <span class="badge bg-danger">Inativa</span>
+                        {% endif %}
+                    </td>
+                    <td class="text-end">
+                        <a href="{{ url_for('tenants.view_tenant', tenant_id=tenant.id) }}" class="btn btn-sm btn-outline-primary" title="Ver">
+                            <i class="bi bi-eye"></i>
+                        </a>
+                        <a href="{{ url_for('tenants.edit_tenant', tenant_id=tenant.id) }}" class="btn btn-sm btn-outline-secondary" title="Editar">
+                            <i class="bi bi-pencil"></i>
+                        </a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% else %}
+<div class="card shadow-sm">
+    <div class="empty-state">
+        <i class="bi bi-building"></i>
+        <h5>Nenhuma empresa cadastrada</h5>
+        <p>Cadastre a primeira empresa para começar</p>
+        <a href="{{ url_for('tenants.create_tenant') }}" class="btn btn-primary">
+            <i class="bi bi-plus-lg"></i> Nova Empresa
+        </a>
+    </div>
+</div>
+{% endif %}
+{% endblock %}

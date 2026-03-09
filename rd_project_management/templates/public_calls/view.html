@@ -1,0 +1,165 @@
+{% extends "base.html" %}
+{% block title %}{{ call.title }} - Gestão P&D{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-lg-8">
+        <div class="d-flex align-items-center mb-4">
+            <a href="{{ url_for('public_calls.list_calls') }}" class="btn btn-outline-secondary btn-sm me-3">
+                <i class="bi bi-arrow-left"></i>
+            </a>
+            <div class="flex-grow-1">
+                <h4 class="fw-bold mb-0">Detalhes da Chamada</h4>
+            </div>
+            <a href="{{ url_for('public_calls.edit_call', call_id=call.id) }}" class="btn btn-outline-primary btn-sm me-2">
+                <i class="bi bi-pencil"></i> Editar
+            </a>
+            <form method="POST" action="{{ url_for('public_calls.delete_call', call_id=call.id) }}" class="d-inline">
+                <button type="submit" class="btn btn-outline-danger btn-sm" data-confirm="Excluir esta chamada?">
+                    <i class="bi bi-trash"></i>
+                </button>
+            </form>
+        </div>
+
+        <div class="card shadow-sm mb-4">
+            <div class="card-body p-4">
+                <div class="mb-3">
+                    <span class="badge {{ 'bg-primary' if call.source == 'FINEP' else 'bg-success' if call.source == 'BNDES' else 'bg-warning text-dark' }} fs-6">{{ call.source }}</span>
+                    {% if call.theme %}
+                    <span class="badge bg-secondary fs-6 ms-1">{{ call.theme }}</span>
+                    {% endif %}
+                    <span class="badge {{ 'bg-success' if call.status == 'Aberta' else 'bg-danger' if call.status == 'Encerrada' else 'bg-info' }} ms-1">{{ call.status }}</span>
+                </div>
+
+                <h4 class="fw-bold mb-3">{{ call.title }}</h4>
+
+                {% if call.description %}
+                <div class="mb-4">
+                    <h6 class="text-muted">Descrição</h6>
+                    <p>{{ call.description }}</p>
+                </div>
+                {% endif %}
+
+                <div class="row g-3 mb-4">
+                    {% if call.publication_date %}
+                    <div class="col-md-6">
+                        <h6 class="text-muted small">Data de Publicação</h6>
+                        <p class="fw-bold"><i class="bi bi-calendar"></i> {{ call.publication_date }}</p>
+                    </div>
+                    {% endif %}
+
+                    {% if call.deadline %}
+                    <div class="col-md-6">
+                        <h6 class="text-muted small">Prazo</h6>
+                        <p class="fw-bold text-danger"><i class="bi bi-alarm"></i> {{ call.deadline }}</p>
+                    </div>
+                    {% endif %}
+
+                    {% if call.funding_source %}
+                    <div class="col-md-6">
+                        <h6 class="text-muted small">Fonte de Recursos</h6>
+                        <p class="fw-bold"><i class="bi bi-cash"></i> {{ call.funding_source }}</p>
+                    </div>
+                    {% endif %}
+
+                    {% if call.target_audience %}
+                    <div class="col-md-6">
+                        <h6 class="text-muted small">Público Alvo</h6>
+                        <p class="fw-bold"><i class="bi bi-people"></i> {{ call.target_audience }}</p>
+                    </div>
+                    {% endif %}
+                </div>
+
+                {% if call.url %}
+                <div class="mb-4">
+                    <a href="{{ call.url }}" target="_blank" class="btn btn-primary">
+                        <i class="bi bi-box-arrow-up-right"></i> Acessar no Site Oficial
+                    </a>
+                </div>
+                {% endif %}
+
+                <div class="text-muted small">
+                    <p class="mb-0">Atualizado em: {{ call.updated_at.strftime('%d/%m/%Y %H:%M') if call.updated_at else '-' }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Right Column: Project Links -->
+    <div class="col-lg-4">
+        <div class="card shadow-sm mb-4">
+            <div class="card-header bg-white">
+                <h6 class="mb-0 fw-bold"><i class="bi bi-link-45deg"></i> Projetos Vinculados</h6>
+            </div>
+            <div class="card-body">
+                {% if call.project_links %}
+                <div class="list-group list-group-flush">
+                    {% for link in call.project_links %}
+                    <div class="list-group-item px-0">
+                        <div class="d-flex justify-content-between align-items-start">
+                            <div>
+                                <a href="{{ url_for('projects.view_project', project_id=link.project.id) }}" class="fw-bold text-decoration-none">
+                                    {{ link.project.title }}
+                                </a>
+                                <br><small class="text-muted">{{ link.project.code }}</small>
+                                <br><small class="text-muted"><i class="bi bi-calendar3"></i> Vinculado em: {{ link.linked_at.strftime('%d/%m/%Y') }}</small>
+                                {% if link.status and link.status != 'Vinculado' %}
+                                <br><span class="badge bg-info mt-1">{{ link.status }}</span>
+                                {% endif %}
+                                {% if link.notes %}
+                                <br><small class="text-muted fst-italic">{{ link.notes }}</small>
+                                {% endif %}
+                            </div>
+                            <form method="POST" action="{{ url_for('public_calls.unlink_project', call_id=call.id, link_id=link.id) }}">
+                                <button type="submit" class="btn btn-sm btn-outline-danger" title="Remover vínculo" data-confirm="Remover vínculo com este projeto?">
+                                    <i class="bi bi-x-lg"></i>
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% else %}
+                <p class="text-muted small mb-3">Nenhum projeto vinculado a esta chamada.</p>
+                {% endif %}
+
+                <hr>
+
+                <!-- Link New Project Form -->
+                <form method="POST" action="{{ url_for('public_calls.link_to_project', call_id=call.id) }}">
+                    <h6 class="small fw-bold">Vincular Projeto</h6>
+                    <div class="mb-2">
+                        <select name="project_id" class="form-select form-select-sm" required>
+                            <option value="">Selecione um projeto...</option>
+                            {% for project in projects %}
+                            <option value="{{ project.id }}">{{ project.code }} - {{ project.title[:40] }}{{ '...' if project.title|length > 40 }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="mb-2">
+                        <label class="form-label small">Data de Vinculação</label>
+                        <input type="date" name="linked_at" class="form-control form-control-sm" value="{{ today if today else '' }}">
+                    </div>
+                    <div class="mb-2">
+                        <label class="form-label small">Status</label>
+                        <select name="link_status" class="form-select form-select-sm">
+                            <option value="Vinculado">Vinculado</option>
+                            <option value="Em Elaboração">Em Elaboração</option>
+                            <option value="Submetido">Submetido</option>
+                            <option value="Aprovado">Aprovado</option>
+                            <option value="Rejeitado">Rejeitado</option>
+                        </select>
+                    </div>
+                    <div class="mb-2">
+                        <label class="form-label small">Observações</label>
+                        <textarea name="link_notes" class="form-control form-control-sm" rows="2" placeholder="Notas sobre a vinculação..."></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-sm btn-primary w-100">
+                        <i class="bi bi-link"></i> Vincular
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
