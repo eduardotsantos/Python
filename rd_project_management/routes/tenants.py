@@ -43,7 +43,8 @@ def list_tenants():
 
     return render_template('tenants/list.html',
                            tenants=tenants,
-                           tenant_stats=tenant_stats)
+                           tenant_stats=tenant_stats,
+                           today=date.today())
 
 
 @tenants_bp.route('/admin/tenants/new', methods=['GET', 'POST'])
