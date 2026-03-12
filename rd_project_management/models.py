@@ -103,6 +103,7 @@ class Project(db.Model):
     resources = db.relationship('Resource', backref='project', cascade='all, delete-orphan')
     milestones = db.relationship('Milestone', backref='project', cascade='all, delete-orphan')
     timesheets = db.relationship('Timesheet', backref='project', cascade='all, delete-orphan')
+    documents = db.relationship('ProjectDocument', backref='project', cascade='all, delete-orphan')
 
 
 class Expense(db.Model):
@@ -212,6 +213,49 @@ class ProjectCall(db.Model):
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
 
     project = db.relationship('Project', backref='call_links')
+
+
+class ProjectDocument(db.Model):
+    """Documents attached to projects (PDF, Word, Excel, PowerPoint)."""
+    __tablename__ = 'project_documents'
+    id = db.Column(db.Integer, primary_key=True)
+    tenant_id = db.Column(db.Integer, db.ForeignKey('tenants.id'), nullable=False)
+    project_id = db.Column(db.Integer, db.ForeignKey('projects.id'), nullable=False)
+    filename = db.Column(db.String(255), nullable=False)  # Original filename
+    stored_filename = db.Column(db.String(255), nullable=False)  # UUID filename on disk
+    file_type = db.Column(db.String(50), nullable=False)  # pdf, docx, xlsx, pptx
+    file_size = db.Column(db.Integer)  # Size in bytes
+    description = db.Column(db.String(300))
+    uploaded_by_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+
+    uploaded_by = db.relationship('User', backref='uploaded_documents')
+
+    @property
+    def file_size_display(self):
+        """Return human-readable file size."""
+        if not self.file_size:
+            return "0 B"
+        size = self.file_size
+        for unit in ['B', 'KB', 'MB', 'GB']:
+            if size < 1024:
+                return f"{size:.1f} {unit}"
+            size /= 1024
+        return f"{size:.1f} TB"
+
+    @property
+    def file_icon(self):
+        """Return Bootstrap icon class based on file type."""
+        icons = {
+            'pdf': 'bi-file-earmark-pdf text-danger',
+            'doc': 'bi-file-earmark-word text-primary',
+            'docx': 'bi-file-earmark-word text-primary',
+            'xls': 'bi-file-earmark-excel text-success',
+            'xlsx': 'bi-file-earmark-excel text-success',
+            'ppt': 'bi-file-earmark-ppt text-warning',
+            'pptx': 'bi-file-earmark-ppt text-warning',
+        }
+        return icons.get(self.file_type, 'bi-file-earmark')
 
 
 # Helper function to get current tenant
