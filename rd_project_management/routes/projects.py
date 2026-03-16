@@ -1,6 +1,6 @@
 from flask import Blueprint, render_template, redirect, url_for, flash, request, send_file, current_app
 from flask_login import login_required, current_user
-from models import db, Project, User, Expense, Resource, Milestone, Timesheet, ProjectCall, ProjectDocument
+from models import db, Project, User, Expense, Resource, Milestone, Timesheet, ProjectCall, ProjectDocument, Tenant
 from services.tenant_utils import tenant_required, ensure_tenant_access, get_current_tenant_id
 from datetime import datetime
 from io import BytesIO
@@ -113,6 +113,10 @@ def list_projects():
 @tenant_required
 def create_project():
     tenant_id = get_current_tenant_id()
+    is_superadmin = current_user.tenant_id is None
+
+    # Get tenants for superadmin selection
+    tenants = Tenant.query.filter_by(is_active=True).order_by(Tenant.name).all() if is_superadmin else []
 
     # Check tenant project limit
     if tenant_id and current_user.tenant and not current_user.tenant.can_add_project():
@@ -120,6 +124,15 @@ def create_project():
         return redirect(url_for('projects.list_projects'))
 
     if request.method == 'POST':
+        # For superadmin, get tenant from form
+        if is_superadmin:
+            selected_tenant_id = request.form.get('tenant_id')
+            if not selected_tenant_id:
+                flash('Selecione uma empresa para criar o projeto.', 'danger')
+                users = User.query.all()
+                return render_template('projects/form.html', project=None, users=users, tenants=tenants, is_superadmin=is_superadmin)
+            tenant_id = int(selected_tenant_id)
+
         code = request.form.get('code', '').strip()
         title = request.form.get('title', '').strip()
         description = request.form.get('description', '').strip()
@@ -134,13 +147,13 @@ def create_project():
 
         if not all([code, title]):
             flash('Código e título são obrigatórios.', 'danger')
-            return render_template('projects/form.html', project=None, users=users)
+            return render_template('projects/form.html', project=None, users=users, tenants=tenants, is_superadmin=is_superadmin)
 
         # Check code uniqueness within tenant
-        existing = Project.query.filter_by(tenant_id=tenant_id, code=code).first() if tenant_id else Project.query.filter_by(code=code).first()
+        existing = Project.query.filter_by(tenant_id=tenant_id, code=code).first()
         if existing:
-            flash('Código do projeto já existe.', 'danger')
-            return render_template('projects/form.html', project=None, users=users)
+            flash('Código do projeto já existe nesta empresa.', 'danger')
+            return render_template('projects/form.html', project=None, users=users, tenants=tenants, is_superadmin=is_superadmin)
 
         project = Project(
             tenant_id=tenant_id,
@@ -165,7 +178,7 @@ def create_project():
         return redirect(url_for('projects.view_project', project_id=project.id))
 
     users = User.query.filter_by(tenant_id=tenant_id).all() if tenant_id else User.query.all()
-    return render_template('projects/form.html', project=None, users=users)
+    return render_template('projects/form.html', project=None, users=users, tenants=tenants, is_superadmin=is_superadmin)
 
 
 @projects_bp.route('/projects/<int:project_id>')
@@ -197,18 +210,19 @@ def edit_project(project_id):
     project = Project.query.get_or_404(project_id)
     ensure_tenant_access(project)
 
-    tenant_id = get_current_tenant_id()
+    tenant_id = get_current_tenant_id() or project.tenant_id
+    is_superadmin = current_user.tenant_id is None
 
     if request.method == 'POST':
         new_code = request.form.get('code', '').strip()
 
         # Check code uniqueness if changed
         if new_code != project.code:
-            existing = Project.query.filter_by(tenant_id=tenant_id, code=new_code).first() if tenant_id else Project.query.filter_by(code=new_code).first()
+            existing = Project.query.filter_by(tenant_id=project.tenant_id, code=new_code).first()
             if existing:
                 flash('Código do projeto já existe.', 'danger')
                 users = User.query.filter_by(tenant_id=tenant_id).all() if tenant_id else User.query.all()
-                return render_template('projects/form.html', project=project, users=users)
+                return render_template('projects/form.html', project=project, users=users, tenants=[], is_superadmin=is_superadmin)
 
         project.code = new_code
         project.title = request.form.get('title', '').strip()
@@ -231,7 +245,7 @@ def edit_project(project_id):
         return redirect(url_for('projects.view_project', project_id=project.id))
 
     users = User.query.filter_by(tenant_id=tenant_id).all() if tenant_id else User.query.all()
-    return render_template('projects/form.html', project=project, users=users)
+    return render_template('projects/form.html', project=project, users=users, tenants=[], is_superadmin=is_superadmin)
 
 
 @projects_bp.route('/projects/<int:project_id>/delete', methods=['POST'])

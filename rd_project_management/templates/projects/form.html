@@ -15,6 +15,18 @@
             <div class="card-body p-4">
                 <form method="POST">
                     <div class="row g-3">
+                        {% if is_superadmin and not project %}
+                        <div class="col-12">
+                            <label for="tenant_id" class="form-label">Empresa *</label>
+                            <select class="form-select" id="tenant_id" name="tenant_id" required>
+                                <option value="">Selecione a empresa...</option>
+                                {% for tenant in tenants %}
+                                <option value="{{ tenant.id }}">{{ tenant.name }}</option>
+                                {% endfor %}
+                            </select>
+                            <small class="text-muted">Como superadmin, você precisa selecionar a empresa para criar o projeto.</small>
+                        </div>
+                        {% endif %}
                         <div class="col-md-4">
                             <label for="code" class="form-label">Código do Projeto *</label>
                             <input type="text" class="form-control" id="code" name="code"
