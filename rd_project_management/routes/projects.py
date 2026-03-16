@@ -567,8 +567,8 @@ def download_document(project_id, doc_id):
         flash('Documento não encontrado.', 'danger')
         return redirect(url_for('projects.view_project', project_id=project_id))
 
-    tenant_id = get_current_tenant_id()
-    tenant_folder = os.path.join(current_app.config['UPLOAD_FOLDER'], str(tenant_id or 'global'))
+    # Use document's tenant_id for file path (supports superadmin access)
+    tenant_folder = os.path.join(current_app.config['UPLOAD_FOLDER'], str(doc.tenant_id or 'global'))
     file_path = os.path.join(tenant_folder, doc.stored_filename)
 
     if not os.path.exists(file_path):
@@ -597,9 +597,8 @@ def delete_document(project_id, doc_id):
         flash('Documento não encontrado.', 'danger')
         return redirect(url_for('projects.view_project', project_id=project_id))
 
-    # Delete file from disk
-    tenant_id = get_current_tenant_id()
-    tenant_folder = os.path.join(current_app.config['UPLOAD_FOLDER'], str(tenant_id or 'global'))
+    # Delete file from disk - use document's tenant_id for file path
+    tenant_folder = os.path.join(current_app.config['UPLOAD_FOLDER'], str(doc.tenant_id or 'global'))
     file_path = os.path.join(tenant_folder, doc.stored_filename)
 
     if os.path.exists(file_path):

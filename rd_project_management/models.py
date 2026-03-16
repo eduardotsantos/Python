@@ -232,6 +232,11 @@ class ProjectDocument(db.Model):
     uploaded_by = db.relationship('User', backref='uploaded_documents')
 
     @property
+    def uploaded_at(self):
+        """Alias for created_at for template compatibility."""
+        return self.created_at
+
+    @property
     def file_size_display(self):
         """Return human-readable file size."""
         if not self.file_size:
