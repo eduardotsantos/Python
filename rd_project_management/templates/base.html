@@ -28,7 +28,12 @@
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="{{ url_for('public_calls.list_calls') }}">
-                            <i class="bi bi-megaphone"></i> Chamadas Públicas
+                            <i class="bi bi-megaphone"></i> Chamadas Publicas
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('ai.ai_dashboard') }}">
+                            <i class="bi bi-robot"></i> IA
                         </a>
                     </li>
                     {% if current_user.role in ['admin', 'manager'] %}

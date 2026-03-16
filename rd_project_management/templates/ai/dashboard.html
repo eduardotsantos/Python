@@ -1,0 +1,150 @@
+{% extends "base.html" %}
+{% block title %}Assistente de IA - Gestao P&D{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2><i class="bi bi-robot"></i> Assistente de IA</h2>
+    </div>
+
+    {% if not ai_configured %}
+    <div class="alert alert-warning">
+        <i class="bi bi-exclamation-triangle"></i>
+        <strong>API de IA nao configurada.</strong>
+        Configure a variavel de ambiente <code>ANTHROPIC_API_KEY</code> para habilitar as funcionalidades de IA.
+    </div>
+    {% endif %}
+
+    <div class="row">
+        <!-- Chat Assistant -->
+        <div class="col-md-6 col-lg-4 mb-4">
+            <div class="card h-100 border-primary">
+                <div class="card-body">
+                    <div class="d-flex align-items-center mb-3">
+                        <i class="bi bi-chat-dots fs-1 text-primary me-3"></i>
+                        <div>
+                            <h5 class="card-title mb-0">Assistente de Chat</h5>
+                            <small class="text-muted">Converse com a IA</small>
+                        </div>
+                    </div>
+                    <p class="card-text">
+                        Faca perguntas sobre seus projetos, despesas, prazos e obtenha insights em tempo real.
+                    </p>
+                    <ul class="small text-muted mb-3">
+                        <li>"Quanto gastamos em bolsas este mes?"</li>
+                        <li>"Quais projetos vencem em 30 dias?"</li>
+                        <li>"Resuma o progresso do projeto X"</li>
+                    </ul>
+                    <a href="{{ url_for('ai.chat_page') }}" class="btn btn-primary {% if not ai_configured %}disabled{% endif %}">
+                        <i class="bi bi-chat-dots"></i> Iniciar Chat
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Risk Analysis -->
+        <div class="col-md-6 col-lg-4 mb-4">
+            <div class="card h-100 border-danger">
+                <div class="card-body">
+                    <div class="d-flex align-items-center mb-3">
+                        <i class="bi bi-shield-exclamation fs-1 text-danger me-3"></i>
+                        <div>
+                            <h5 class="card-title mb-0">Analise de Riscos</h5>
+                            <small class="text-muted">Identifique riscos</small>
+                        </div>
+                    </div>
+                    <p class="card-text">
+                        Analise riscos de orcamento, cronograma e recursos de cada projeto automaticamente.
+                    </p>
+                    <ul class="small text-muted mb-3">
+                        <li>Burn rate e projecao de gastos</li>
+                        <li>Atrasos em milestones</li>
+                        <li>Recomendacoes de mitigacao</li>
+                    </ul>
+                    <a href="{{ url_for('projects.list_projects') }}" class="btn btn-outline-danger">
+                        <i class="bi bi-folder"></i> Selecionar Projeto
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Report Generation -->
+        <div class="col-md-6 col-lg-4 mb-4">
+            <div class="card h-100 border-success">
+                <div class="card-body">
+                    <div class="d-flex align-items-center mb-3">
+                        <i class="bi bi-file-earmark-text fs-1 text-success me-3"></i>
+                        <div>
+                            <h5 class="card-title mb-0">Geracao de Relatorios</h5>
+                            <small class="text-muted">Relatorios automaticos</small>
+                        </div>
+                    </div>
+                    <p class="card-text">
+                        Gere relatorios tecnicos parciais ou finais para agencias de fomento automaticamente.
+                    </p>
+                    <ul class="small text-muted mb-3">
+                        <li>Relatorios parciais e finais</li>
+                        <li>Resumo executivo</li>
+                        <li>Prestacao de contas narrativa</li>
+                    </ul>
+                    <a href="{{ url_for('projects.list_projects') }}" class="btn btn-outline-success">
+                        <i class="bi bi-folder"></i> Selecionar Projeto
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Document Analysis -->
+        <div class="col-md-6 col-lg-4 mb-4">
+            <div class="card h-100 border-info">
+                <div class="card-body">
+                    <div class="d-flex align-items-center mb-3">
+                        <i class="bi bi-file-earmark-pdf fs-1 text-info me-3"></i>
+                        <div>
+                            <h5 class="card-title mb-0">Analise de Editais</h5>
+                            <small class="text-muted">Extraia informacoes</small>
+                        </div>
+                    </div>
+                    <p class="card-text">
+                        Faca upload de editais em PDF e extraia automaticamente informacoes chave.
+                    </p>
+                    <ul class="small text-muted mb-3">
+                        <li>Prazos e valores</li>
+                        <li>Requisitos de elegibilidade</li>
+                        <li>Itens financiaveis</li>
+                    </ul>
+                    <a href="{{ url_for('projects.list_projects') }}" class="btn btn-outline-info">
+                        <i class="bi bi-folder"></i> Ver Documentos
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Project-Call Matching -->
+        <div class="col-md-6 col-lg-4 mb-4">
+            <div class="card h-100 border-warning">
+                <div class="card-body">
+                    <div class="d-flex align-items-center mb-3">
+                        <i class="bi bi-link-45deg fs-1 text-warning me-3"></i>
+                        <div>
+                            <h5 class="card-title mb-0">Matching Projeto-Edital</h5>
+                            <small class="text-muted">Encontre oportunidades</small>
+                        </div>
+                    </div>
+                    <p class="card-text">
+                        Encontre editais compativeis com seus projetos e receba recomendacoes de adaptacao.
+                    </p>
+                    <ul class="small text-muted mb-3">
+                        <li>Score de compatibilidade</li>
+                        <li>Adaptacoes necessarias</li>
+                        <li>Pontos fortes e riscos</li>
+                    </ul>
+                    <a href="{{ url_for('projects.list_projects') }}" class="btn btn-outline-warning">
+                        <i class="bi bi-folder"></i> Selecionar Projeto
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

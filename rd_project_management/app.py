@@ -52,6 +52,7 @@ def create_app():
     from routes.public_calls import public_calls_bp
     from routes.users import users_bp
     from routes.tenants import tenants_bp
+    from routes.ai import ai_bp
 
     app.register_blueprint(auth_bp)
     app.register_blueprint(projects_bp)
@@ -62,6 +63,7 @@ def create_app():
     app.register_blueprint(public_calls_bp)
     app.register_blueprint(users_bp)
     app.register_blueprint(tenants_bp)
+    app.register_blueprint(ai_bp)
 
     # Before request - set current tenant
     @app.before_request
