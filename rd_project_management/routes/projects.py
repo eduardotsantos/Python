@@ -1,9 +1,12 @@
-from flask import Blueprint, render_template, redirect, url_for, flash, request, send_file
+from flask import Blueprint, render_template, redirect, url_for, flash, request, send_file, current_app
 from flask_login import login_required, current_user
-from models import db, Project, User, Expense, Resource, Milestone, Timesheet, ProjectCall
+from models import db, Project, User, Expense, Resource, Milestone, Timesheet, ProjectCall, ProjectDocument
 from services.tenant_utils import tenant_required, ensure_tenant_access, get_current_tenant_id
 from datetime import datetime
 from io import BytesIO
+from werkzeug.utils import secure_filename
+import uuid
+import os
 try:
     from openpyxl import Workbook
     from openpyxl.styles import Font, PatternFill, Alignment, Border, Side
@@ -13,6 +16,23 @@ except ImportError:
     EXCEL_AVAILABLE = False
 
 projects_bp = Blueprint('projects', __name__)
+
+MAX_DOCUMENTS_PER_PROJECT = 3
+
+
+def allowed_file(filename):
+    """Check if file extension is allowed."""
+    if '.' not in filename:
+        return False
+    ext = filename.rsplit('.', 1)[1].lower()
+    return ext in current_app.config.get('ALLOWED_EXTENSIONS', {'pdf', 'doc', 'docx', 'xls', 'xlsx', 'ppt', 'pptx'})
+
+
+def get_file_extension(filename):
+    """Get file extension."""
+    if '.' in filename:
+        return filename.rsplit('.', 1)[1].lower()
+    return ''
 
 
 def get_tenant_filter():
@@ -447,3 +467,134 @@ def _auto_adjust_columns(ws):
                 pass
         adjusted_width = min(max_length + 2, 50)  # Cap at 50 characters
         ws.column_dimensions[column_letter].width = adjusted_width
+
+
+# ==================== Document Upload Routes ====================
+
+@projects_bp.route('/projects/<int:project_id>/documents/upload', methods=['POST'])
+@login_required
+@tenant_required
+def upload_document(project_id):
+    """Upload a document to a project."""
+    project = Project.query.get_or_404(project_id)
+    ensure_tenant_access(project)
+
+    tenant_id = get_current_tenant_id()
+
+    # Check document limit
+    current_docs = len(project.documents)
+    if current_docs >= MAX_DOCUMENTS_PER_PROJECT:
+        flash(f'Limite de {MAX_DOCUMENTS_PER_PROJECT} documentos por projeto atingido.', 'warning')
+        return redirect(url_for('projects.view_project', project_id=project_id))
+
+    if 'document' not in request.files:
+        flash('Nenhum arquivo selecionado.', 'danger')
+        return redirect(url_for('projects.view_project', project_id=project_id))
+
+    file = request.files['document']
+
+    if file.filename == '':
+        flash('Nenhum arquivo selecionado.', 'danger')
+        return redirect(url_for('projects.view_project', project_id=project_id))
+
+    if not allowed_file(file.filename):
+        flash('Tipo de arquivo não permitido. Use PDF, Word, Excel ou PowerPoint.', 'danger')
+        return redirect(url_for('projects.view_project', project_id=project_id))
+
+    # Secure the filename and generate unique stored filename
+    original_filename = secure_filename(file.filename)
+    file_ext = get_file_extension(original_filename)
+    stored_filename = f"{uuid.uuid4().hex}.{file_ext}"
+
+    # Create tenant subfolder
+    tenant_folder = os.path.join(current_app.config['UPLOAD_FOLDER'], str(tenant_id or 'global'))
+    os.makedirs(tenant_folder, exist_ok=True)
+
+    # Save file
+    file_path = os.path.join(tenant_folder, stored_filename)
+    file.save(file_path)
+
+    # Get file size
+    file_size = os.path.getsize(file_path)
+
+    # Get description
+    description = request.form.get('description', '').strip()
+
+    # Create document record
+    doc = ProjectDocument(
+        tenant_id=tenant_id,
+        project_id=project_id,
+        filename=original_filename,
+        stored_filename=stored_filename,
+        file_type=file_ext,
+        file_size=file_size,
+        description=description,
+        uploaded_by_id=current_user.id
+    )
+    db.session.add(doc)
+    db.session.commit()
+
+    flash(f'Documento "{original_filename}" enviado com sucesso!', 'success')
+    return redirect(url_for('projects.view_project', project_id=project_id))
+
+
+@projects_bp.route('/projects/<int:project_id>/documents/<int:doc_id>/download')
+@login_required
+@tenant_required
+def download_document(project_id, doc_id):
+    """Download a project document."""
+    project = Project.query.get_or_404(project_id)
+    ensure_tenant_access(project)
+
+    doc = ProjectDocument.query.get_or_404(doc_id)
+
+    # Verify document belongs to project
+    if doc.project_id != project_id:
+        flash('Documento não encontrado.', 'danger')
+        return redirect(url_for('projects.view_project', project_id=project_id))
+
+    tenant_id = get_current_tenant_id()
+    tenant_folder = os.path.join(current_app.config['UPLOAD_FOLDER'], str(tenant_id or 'global'))
+    file_path = os.path.join(tenant_folder, doc.stored_filename)
+
+    if not os.path.exists(file_path):
+        flash('Arquivo não encontrado no servidor.', 'danger')
+        return redirect(url_for('projects.view_project', project_id=project_id))
+
+    return send_file(
+        file_path,
+        as_attachment=True,
+        download_name=doc.filename
+    )
+
+
+@projects_bp.route('/projects/<int:project_id>/documents/<int:doc_id>/delete', methods=['POST'])
+@login_required
+@tenant_required
+def delete_document(project_id, doc_id):
+    """Delete a project document."""
+    project = Project.query.get_or_404(project_id)
+    ensure_tenant_access(project)
+
+    doc = ProjectDocument.query.get_or_404(doc_id)
+
+    # Verify document belongs to project
+    if doc.project_id != project_id:
+        flash('Documento não encontrado.', 'danger')
+        return redirect(url_for('projects.view_project', project_id=project_id))
+
+    # Delete file from disk
+    tenant_id = get_current_tenant_id()
+    tenant_folder = os.path.join(current_app.config['UPLOAD_FOLDER'], str(tenant_id or 'global'))
+    file_path = os.path.join(tenant_folder, doc.stored_filename)
+
+    if os.path.exists(file_path):
+        os.remove(file_path)
+
+    # Delete database record
+    filename = doc.filename
+    db.session.delete(doc)
+    db.session.commit()
+
+    flash(f'Documento "{filename}" excluído com sucesso!', 'success')
+    return redirect(url_for('projects.view_project', project_id=project_id))
