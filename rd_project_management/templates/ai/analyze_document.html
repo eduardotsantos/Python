@@ -1,0 +1,244 @@
+{% extends "base.html" %}
+{% block title %}Analisar Documento - {{ document.filename }}{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <a href="{{ url_for('projects.view_project', project_id=document.project_id) }}" class="btn btn-outline-secondary btn-sm">
+                <i class="bi bi-arrow-left"></i> Voltar ao Projeto
+            </a>
+            <h4 class="mt-2"><i class="bi bi-file-earmark-pdf text-info"></i> Analise de Documento</h4>
+            <p class="text-muted mb-0">{{ document.filename }}</p>
+        </div>
+    </div>
+
+    {% if not ai_configured %}
+    <div class="alert alert-warning">
+        <i class="bi bi-exclamation-triangle"></i>
+        <strong>API de IA nao configurada.</strong>
+        Configure a variavel de ambiente <code>ANTHROPIC_API_KEY</code>.
+    </div>
+    {% elif document.file_type != 'pdf' %}
+    <div class="alert alert-warning">
+        <i class="bi bi-exclamation-triangle"></i>
+        Apenas documentos PDF podem ser analisados pela IA.
+    </div>
+    {% else %}
+    <div class="row">
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-header">
+                    <i class="{{ document.file_icon }}"></i> Informacoes do Documento
+                </div>
+                <div class="card-body">
+                    <p><strong>Nome:</strong> {{ document.filename }}</p>
+                    <p><strong>Tamanho:</strong> {{ document.file_size_display }}</p>
+                    <p><strong>Upload:</strong> {{ document.uploaded_at.strftime('%d/%m/%Y %H:%M') if document.uploaded_at else 'N/A' }}</p>
+                    <p><strong>Por:</strong> {{ document.uploaded_by.full_name if document.uploaded_by else 'N/A' }}</p>
+                    {% if document.description %}
+                    <p><strong>Descricao:</strong> {{ document.description }}</p>
+                    {% endif %}
+
+                    <hr>
+
+                    <div class="text-center" id="analyzeSection">
+                        <p class="small text-muted">A IA extraira informacoes chave deste edital/documento.</p>
+                        <button class="btn btn-info" onclick="analyzeDocument()">
+                            <i class="bi bi-magic"></i> Analisar com IA
+                        </button>
+                    </div>
+
+                    <div class="text-center d-none" id="loadingSection">
+                        <div class="spinner-border text-info" role="status"></div>
+                        <p class="mt-2 small">Analisando documento...</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-8">
+            <div class="card d-none" id="resultsCard">
+                <div class="card-header bg-info text-white">
+                    <i class="bi bi-lightbulb"></i> Analise do Documento
+                </div>
+                <div class="card-body" id="analysisResults"></div>
+            </div>
+
+            <div class="card" id="placeholderCard">
+                <div class="card-body text-center text-muted py-5">
+                    <i class="bi bi-file-earmark-text fs-1"></i>
+                    <p class="mt-2">Clique em "Analisar com IA" para extrair informacoes do documento.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+async function analyzeDocument() {
+    document.getElementById('analyzeSection').classList.add('d-none');
+    document.getElementById('loadingSection').classList.remove('d-none');
+
+    try {
+        const response = await fetch('{{ url_for("ai.run_document_analysis", doc_id=document.id) }}', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' }
+        });
+
+        const data = await response.json();
+
+        if (data.error) {
+            alert('Erro: ' + data.error);
+            document.getElementById('analyzeSection').classList.remove('d-none');
+            document.getElementById('loadingSection').classList.add('d-none');
+            return;
+        }
+
+        displayAnalysis(data);
+
+    } catch (error) {
+        alert('Erro de conexao: ' + error.message);
+        document.getElementById('analyzeSection').classList.remove('d-none');
+    } finally {
+        document.getElementById('loadingSection').classList.add('d-none');
+    }
+}
+
+function displayAnalysis(data) {
+    document.getElementById('placeholderCard').classList.add('d-none');
+    document.getElementById('resultsCard').classList.remove('d-none');
+
+    let html = '';
+
+    // Titulo e Orgao
+    if (data.titulo) {
+        html += `<h5 class="text-primary">${data.titulo}</h5>`;
+    }
+    if (data.orgao) {
+        html += `<p><strong>Orgao:</strong> ${data.orgao}</p>`;
+    }
+
+    // Resumo
+    if (data.resumo) {
+        html += `
+            <div class="alert alert-info">
+                <strong><i class="bi bi-info-circle"></i> Resumo:</strong><br>
+                ${data.resumo}
+            </div>
+        `;
+    }
+
+    // Prazos e Valores
+    html += '<div class="row mb-3">';
+    if (data.prazo_submissao) {
+        html += `
+            <div class="col-md-6">
+                <div class="card bg-light">
+                    <div class="card-body py-2">
+                        <small class="text-muted">Prazo de Submissao</small>
+                        <h6 class="mb-0 text-danger">${data.prazo_submissao}</h6>
+                    </div>
+                </div>
+            </div>
+        `;
+    }
+    if (data.valor_maximo || data.valor_minimo) {
+        html += `
+            <div class="col-md-6">
+                <div class="card bg-light">
+                    <div class="card-body py-2">
+                        <small class="text-muted">Valor do Financiamento</small>
+                        <h6 class="mb-0 text-success">
+                            ${data.valor_minimo ? 'Min: R$ ' + data.valor_minimo.toLocaleString('pt-BR') : ''}
+                            ${data.valor_maximo ? ' - Max: R$ ' + data.valor_maximo.toLocaleString('pt-BR') : ''}
+                        </h6>
+                    </div>
+                </div>
+            </div>
+        `;
+    }
+    html += '</div>';
+
+    // Duracao
+    if (data.duracao_projeto) {
+        html += `<p><strong>Duracao do Projeto:</strong> ${data.duracao_projeto}</p>`;
+    }
+
+    // Contrapartida
+    if (data.contrapartida) {
+        html += `<p><strong>Contrapartida:</strong> ${data.contrapartida}</p>`;
+    }
+
+    // Areas Tematicas
+    if (data.areas_tematicas && data.areas_tematicas.length) {
+        html += `
+            <div class="mb-3">
+                <strong><i class="bi bi-tags"></i> Areas Tematicas:</strong>
+                <div class="mt-1">
+                    ${data.areas_tematicas.map(a => `<span class="badge bg-primary me-1">${a}</span>`).join('')}
+                </div>
+            </div>
+        `;
+    }
+
+    // Requisitos de Elegibilidade
+    if (data.requisitos_elegibilidade && data.requisitos_elegibilidade.length) {
+        html += `
+            <div class="mb-3">
+                <strong><i class="bi bi-check2-square"></i> Requisitos de Elegibilidade:</strong>
+                <ul class="mb-0 mt-1">
+                    ${data.requisitos_elegibilidade.map(r => `<li>${r}</li>`).join('')}
+                </ul>
+            </div>
+        `;
+    }
+
+    // Itens Financiaveis
+    if (data.itens_financiaveis && data.itens_financiaveis.length) {
+        html += `
+            <div class="mb-3">
+                <strong><i class="bi bi-currency-dollar"></i> Itens Financiaveis:</strong>
+                <ul class="mb-0 mt-1">
+                    ${data.itens_financiaveis.map(i => `<li>${i}</li>`).join('')}
+                </ul>
+            </div>
+        `;
+    }
+
+    // Documentos Necessarios
+    if (data.documentos_necessarios && data.documentos_necessarios.length) {
+        html += `
+            <div class="mb-3">
+                <strong><i class="bi bi-file-earmark-text"></i> Documentos Necessarios:</strong>
+                <ul class="mb-0 mt-1">
+                    ${data.documentos_necessarios.map(d => `<li>${d}</li>`).join('')}
+                </ul>
+            </div>
+        `;
+    }
+
+    // Pontos de Atencao
+    if (data.pontos_atencao && data.pontos_atencao.length) {
+        html += `
+            <div class="alert alert-warning">
+                <strong><i class="bi bi-exclamation-triangle"></i> Pontos de Atencao:</strong>
+                <ul class="mb-0 mt-1">
+                    ${data.pontos_atencao.map(p => `<li>${p}</li>`).join('')}
+                </ul>
+            </div>
+        `;
+    }
+
+    // Contato
+    if (data.contato) {
+        html += `<p><strong><i class="bi bi-envelope"></i> Contato:</strong> ${data.contato}</p>`;
+    }
+
+    document.getElementById('analysisResults').innerHTML = html;
+}
+</script>
+{% endblock %}

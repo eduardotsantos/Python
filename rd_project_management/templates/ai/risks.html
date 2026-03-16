@@ -1,0 +1,224 @@
+{% extends "base.html" %}
+{% block title %}Analise de Riscos - {{ project.title }}{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <a href="{{ url_for('projects.view_project', project_id=project.id) }}" class="btn btn-outline-secondary btn-sm">
+                <i class="bi bi-arrow-left"></i> Voltar ao Projeto
+            </a>
+            <h4 class="mt-2"><i class="bi bi-shield-exclamation text-danger"></i> Analise de Riscos</h4>
+            <p class="text-muted mb-0">{{ project.code }} - {{ project.title }}</p>
+        </div>
+    </div>
+
+    {% if not ai_configured %}
+    <div class="alert alert-warning">
+        <i class="bi bi-exclamation-triangle"></i>
+        <strong>API de IA nao configurada.</strong>
+        Configure a variavel de ambiente <code>ANTHROPIC_API_KEY</code>.
+    </div>
+    {% else %}
+    <div class="card mb-4">
+        <div class="card-body text-center" id="analyzeSection">
+            <p class="mb-3">Clique no botao abaixo para analisar os riscos do projeto com IA.</p>
+            <button class="btn btn-danger btn-lg" onclick="analyzeRisks()">
+                <i class="bi bi-shield-exclamation"></i> Analisar Riscos
+            </button>
+        </div>
+        <div class="card-body d-none" id="loadingSection">
+            <div class="text-center">
+                <div class="spinner-border text-danger" role="status"></div>
+                <p class="mt-2">Analisando riscos do projeto...</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="d-none" id="resultsSection">
+        <!-- Risk Level Overview -->
+        <div class="row mb-4">
+            <div class="col-md-4">
+                <div class="card text-center" id="riskLevelCard">
+                    <div class="card-body">
+                        <h6 class="text-muted">Nivel de Risco Geral</h6>
+                        <h2 id="riskLevel" class="mb-0">-</h2>
+                        <div class="progress mt-2" style="height: 10px;">
+                            <div class="progress-bar" id="riskBar" role="progressbar" style="width: 0%"></div>
+                        </div>
+                        <small class="text-muted">Score: <span id="riskScore">0</span>/100</small>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card text-center">
+                    <div class="card-body">
+                        <h6 class="text-muted">Previsao de Conclusao</h6>
+                        <h4 id="completionStatus" class="mb-1">-</h4>
+                        <p id="completionEstimate" class="text-muted small mb-0">-</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card text-center">
+                    <div class="card-body">
+                        <h6 class="text-muted">Burn Rate</h6>
+                        <h4 id="burnRateStatus" class="mb-1">-</h4>
+                        <p class="text-muted small mb-0">
+                            Mensal: <span id="burnRateMonthly">R$ 0</span><br>
+                            Projecao Final: <span id="burnRateProjection">R$ 0</span>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Alerts -->
+        <div id="alertsSection" class="mb-4"></div>
+
+        <!-- Identified Risks -->
+        <div class="card mb-4">
+            <div class="card-header bg-danger text-white">
+                <i class="bi bi-exclamation-triangle"></i> Riscos Identificados
+            </div>
+            <div class="card-body">
+                <div id="risksList"></div>
+            </div>
+        </div>
+
+        <!-- Recommendations -->
+        <div class="card">
+            <div class="card-header bg-success text-white">
+                <i class="bi bi-lightbulb"></i> Recomendacoes
+            </div>
+            <div class="card-body">
+                <ul id="recommendationsList" class="mb-0"></ul>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+async function analyzeRisks() {
+    document.getElementById('analyzeSection').classList.add('d-none');
+    document.getElementById('loadingSection').classList.remove('d-none');
+
+    try {
+        const response = await fetch('{{ url_for("ai.analyze_risks", project_id=project.id) }}', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' }
+        });
+
+        const data = await response.json();
+
+        if (data.error) {
+            alert('Erro: ' + data.error);
+            document.getElementById('analyzeSection').classList.remove('d-none');
+            document.getElementById('loadingSection').classList.add('d-none');
+            return;
+        }
+
+        displayResults(data);
+
+    } catch (error) {
+        alert('Erro de conexao: ' + error.message);
+        document.getElementById('analyzeSection').classList.remove('d-none');
+    } finally {
+        document.getElementById('loadingSection').classList.add('d-none');
+    }
+}
+
+function displayResults(data) {
+    document.getElementById('resultsSection').classList.remove('d-none');
+
+    // Risk level
+    const riskLevel = data.nivel_risco_geral || 'N/A';
+    const riskScore = data.score_risco || 0;
+    document.getElementById('riskLevel').textContent = riskLevel.toUpperCase();
+    document.getElementById('riskScore').textContent = riskScore;
+
+    const riskBar = document.getElementById('riskBar');
+    riskBar.style.width = riskScore + '%';
+
+    const riskColors = {
+        'baixo': 'success',
+        'medio': 'warning',
+        'alto': 'danger',
+        'critico': 'danger'
+    };
+    const color = riskColors[riskLevel.toLowerCase()] || 'secondary';
+    riskBar.className = `progress-bar bg-${color}`;
+    document.getElementById('riskLevelCard').className = `card text-center border-${color}`;
+
+    // Completion prediction
+    if (data.previsao_conclusao) {
+        const statusMap = {
+            'no_prazo': '<span class="text-success">No Prazo</span>',
+            'atrasado': '<span class="text-danger">Atrasado</span>',
+            'em_risco': '<span class="text-warning">Em Risco</span>'
+        };
+        document.getElementById('completionStatus').innerHTML = statusMap[data.previsao_conclusao.status] || data.previsao_conclusao.status;
+        document.getElementById('completionEstimate').textContent = data.previsao_conclusao.estimativa || '';
+    }
+
+    // Burn rate
+    if (data.burn_rate) {
+        const brStatusMap = {
+            'dentro_orcamento': '<span class="text-success">Dentro do Orcamento</span>',
+            'em_risco': '<span class="text-warning">Em Risco</span>',
+            'acima_orcamento': '<span class="text-danger">Acima do Orcamento</span>'
+        };
+        document.getElementById('burnRateStatus').innerHTML = brStatusMap[data.burn_rate.status] || data.burn_rate.status;
+        document.getElementById('burnRateMonthly').textContent = formatCurrency(data.burn_rate.mensal);
+        document.getElementById('burnRateProjection').textContent = formatCurrency(data.burn_rate.projecao_final);
+    }
+
+    // Alerts
+    const alertsHtml = (data.alertas || []).map(alert =>
+        `<div class="alert alert-warning"><i class="bi bi-exclamation-triangle"></i> ${alert}</div>`
+    ).join('');
+    document.getElementById('alertsSection').innerHTML = alertsHtml;
+
+    // Risks list
+    const risksHtml = (data.riscos_identificados || []).map(risk => {
+        const severityColors = {
+            'baixa': 'success',
+            'media': 'warning',
+            'alta': 'danger',
+            'critica': 'danger'
+        };
+        const sColor = severityColors[risk.severidade?.toLowerCase()] || 'secondary';
+
+        return `
+            <div class="card mb-2 border-${sColor}">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <h6 class="mb-1">
+                            <span class="badge bg-${sColor}">${risk.severidade?.toUpperCase()}</span>
+                            ${risk.categoria?.toUpperCase()}
+                        </h6>
+                        <small class="text-muted">Prob: ${risk.probabilidade}</small>
+                    </div>
+                    <p class="mb-1">${risk.descricao}</p>
+                    <small class="text-muted"><strong>Impacto:</strong> ${risk.impacto}</small><br>
+                    <small class="text-success"><strong>Mitigacao:</strong> ${risk.mitigacao}</small>
+                </div>
+            </div>
+        `;
+    }).join('');
+    document.getElementById('risksList').innerHTML = risksHtml || '<p class="text-muted">Nenhum risco critico identificado.</p>';
+
+    // Recommendations
+    const recsHtml = (data.recomendacoes || []).map(rec => `<li>${rec}</li>`).join('');
+    document.getElementById('recommendationsList').innerHTML = recsHtml || '<li>Nenhuma recomendacao adicional.</li>';
+}
+
+function formatCurrency(value) {
+    if (typeof value !== 'number') return 'R$ 0,00';
+    return 'R$ ' + value.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+}
+</script>
+{% endblock %}
