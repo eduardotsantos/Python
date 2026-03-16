@@ -31,7 +31,14 @@ def check_ai_configured():
 @tenant_required
 def ai_dashboard():
     """AI features dashboard."""
-    return render_template('ai/dashboard.html', ai_configured=check_ai_configured())
+    # Get projects for the current tenant
+    tenant_id = get_current_tenant_id()
+    if current_user.is_superadmin():
+        projects = Project.query.all()
+    else:
+        projects = Project.query.filter_by(tenant_id=tenant_id).all()
+
+    return render_template('ai/dashboard.html', ai_configured=check_ai_configured(), projects=projects)
 
 
 # --- Document Analysis ---

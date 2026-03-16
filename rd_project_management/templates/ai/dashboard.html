@@ -15,136 +15,127 @@
     </div>
     {% endif %}
 
-    <div class="row">
-        <!-- Chat Assistant -->
-        <div class="col-md-6 col-lg-4 mb-4">
-            <div class="card h-100 border-primary">
+    <!-- Chat Assistant Card -->
+    <div class="row mb-4">
+        <div class="col-md-6">
+            <div class="card border-primary h-100">
                 <div class="card-body">
                     <div class="d-flex align-items-center mb-3">
                         <i class="bi bi-chat-dots fs-1 text-primary me-3"></i>
                         <div>
                             <h5 class="card-title mb-0">Assistente de Chat</h5>
-                            <small class="text-muted">Converse com a IA</small>
+                            <small class="text-muted">Converse com a IA sobre seus projetos</small>
                         </div>
                     </div>
                     <p class="card-text">
-                        Faca perguntas sobre seus projetos, despesas, prazos e obtenha insights em tempo real.
+                        Faca perguntas como: "Quanto gastamos em bolsas?", "Quais projetos vencem em 30 dias?"
                     </p>
-                    <ul class="small text-muted mb-3">
-                        <li>"Quanto gastamos em bolsas este mes?"</li>
-                        <li>"Quais projetos vencem em 30 dias?"</li>
-                        <li>"Resuma o progresso do projeto X"</li>
-                    </ul>
                     <a href="{{ url_for('ai.chat_page') }}" class="btn btn-primary {% if not ai_configured %}disabled{% endif %}">
                         <i class="bi bi-chat-dots"></i> Iniciar Chat
                     </a>
                 </div>
             </div>
         </div>
-
-        <!-- Risk Analysis -->
-        <div class="col-md-6 col-lg-4 mb-4">
-            <div class="card h-100 border-danger">
+        <div class="col-md-6">
+            <div class="card bg-light h-100">
                 <div class="card-body">
-                    <div class="d-flex align-items-center mb-3">
-                        <i class="bi bi-shield-exclamation fs-1 text-danger me-3"></i>
-                        <div>
-                            <h5 class="card-title mb-0">Analise de Riscos</h5>
-                            <small class="text-muted">Identifique riscos</small>
-                        </div>
-                    </div>
-                    <p class="card-text">
-                        Analise riscos de orcamento, cronograma e recursos de cada projeto automaticamente.
-                    </p>
-                    <ul class="small text-muted mb-3">
-                        <li>Burn rate e projecao de gastos</li>
-                        <li>Atrasos em milestones</li>
-                        <li>Recomendacoes de mitigacao</li>
+                    <h6><i class="bi bi-lightbulb"></i> Funcionalidades Disponiveis</h6>
+                    <ul class="mb-0 small">
+                        <li><strong class="text-danger">Analise de Riscos</strong> - Identifique riscos de orcamento e cronograma</li>
+                        <li><strong class="text-success">Geracao de Relatorios</strong> - Crie relatorios tecnicos automaticamente</li>
+                        <li><strong class="text-warning">Matching Projeto-Edital</strong> - Encontre editais compativeis</li>
+                        <li><strong class="text-info">Analise de Documentos</strong> - Extraia dados de editais em PDF</li>
                     </ul>
-                    <a href="{{ url_for('projects.list_projects') }}" class="btn btn-outline-danger">
-                        <i class="bi bi-folder"></i> Selecionar Projeto
-                    </a>
                 </div>
             </div>
         </div>
+    </div>
 
-        <!-- Report Generation -->
-        <div class="col-md-6 col-lg-4 mb-4">
-            <div class="card h-100 border-success">
-                <div class="card-body">
-                    <div class="d-flex align-items-center mb-3">
-                        <i class="bi bi-file-earmark-text fs-1 text-success me-3"></i>
-                        <div>
-                            <h5 class="card-title mb-0">Geracao de Relatorios</h5>
-                            <small class="text-muted">Relatorios automaticos</small>
-                        </div>
-                    </div>
-                    <p class="card-text">
-                        Gere relatorios tecnicos parciais ou finais para agencias de fomento automaticamente.
-                    </p>
-                    <ul class="small text-muted mb-3">
-                        <li>Relatorios parciais e finais</li>
-                        <li>Resumo executivo</li>
-                        <li>Prestacao de contas narrativa</li>
-                    </ul>
-                    <a href="{{ url_for('projects.list_projects') }}" class="btn btn-outline-success">
-                        <i class="bi bi-folder"></i> Selecionar Projeto
-                    </a>
-                </div>
-            </div>
+    <!-- Projects List with AI Actions -->
+    <div class="card">
+        <div class="card-header bg-white d-flex justify-content-between align-items-center">
+            <h5 class="mb-0"><i class="bi bi-folder"></i> Selecione um Projeto</h5>
+            <span class="badge bg-secondary">{{ projects|length }} projetos</span>
         </div>
+        <div class="card-body p-0">
+            {% if projects %}
+            <div class="table-responsive">
+                <table class="table table-hover mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Projeto</th>
+                            <th>Status</th>
+                            <th class="text-center">Acoes de IA</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for project in projects %}
+                        <tr>
+                            <td>
+                                <strong>{{ project.code }}</strong><br>
+                                <small class="text-muted">{{ project.title|truncate(50) }}</small>
+                            </td>
+                            <td>
+                                {% if project.status == 'Em Andamento' %}
+                                    <span class="badge bg-warning text-dark">{{ project.status }}</span>
+                                {% elif project.status == 'Concluido' %}
+                                    <span class="badge bg-success">{{ project.status }}</span>
+                                {% elif project.status == 'Cancelado' %}
+                                    <span class="badge bg-danger">{{ project.status }}</span>
+                                {% else %}
+                                    <span class="badge bg-secondary">{{ project.status }}</span>
+                                {% endif %}
+                            </td>
+                            <td class="text-center">
+                                <div class="btn-group btn-group-sm">
+                                    <a href="{{ url_for('ai.risks_page', project_id=project.id) }}"
+                                       class="btn btn-outline-danger {% if not ai_configured %}disabled{% endif %}"
+                                       title="Analise de Riscos">
+                                        <i class="bi bi-shield-exclamation"></i>
+                                    </a>
+                                    <a href="{{ url_for('ai.report_page', project_id=project.id) }}"
+                                       class="btn btn-outline-success {% if not ai_configured %}disabled{% endif %}"
+                                       title="Gerar Relatorio">
+                                        <i class="bi bi-file-earmark-text"></i>
+                                    </a>
+                                    <a href="{{ url_for('ai.matching_page', project_id=project.id) }}"
+                                       class="btn btn-outline-warning {% if not ai_configured %}disabled{% endif %}"
+                                       title="Matching com Editais">
+                                        <i class="bi bi-link-45deg"></i>
+                                    </a>
+                                    <a href="{{ url_for('ai.project_ai_actions', project_id=project.id) }}"
+                                       class="btn btn-outline-info"
+                                       title="Todas as Acoes">
+                                        <i class="bi bi-three-dots"></i>
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% else %}
+            <div class="text-center py-5">
+                <i class="bi bi-folder-x fs-1 text-muted"></i>
+                <p class="text-muted mt-2">Nenhum projeto encontrado.</p>
+                <a href="{{ url_for('projects.new_project') }}" class="btn btn-primary">
+                    <i class="bi bi-plus"></i> Criar Projeto
+                </a>
+            </div>
+            {% endif %}
+        </div>
+    </div>
 
-        <!-- Document Analysis -->
-        <div class="col-md-6 col-lg-4 mb-4">
-            <div class="card h-100 border-info">
-                <div class="card-body">
-                    <div class="d-flex align-items-center mb-3">
-                        <i class="bi bi-file-earmark-pdf fs-1 text-info me-3"></i>
-                        <div>
-                            <h5 class="card-title mb-0">Analise de Editais</h5>
-                            <small class="text-muted">Extraia informacoes</small>
-                        </div>
-                    </div>
-                    <p class="card-text">
-                        Faca upload de editais em PDF e extraia automaticamente informacoes chave.
-                    </p>
-                    <ul class="small text-muted mb-3">
-                        <li>Prazos e valores</li>
-                        <li>Requisitos de elegibilidade</li>
-                        <li>Itens financiaveis</li>
-                    </ul>
-                    <a href="{{ url_for('projects.list_projects') }}" class="btn btn-outline-info">
-                        <i class="bi bi-folder"></i> Ver Documentos
-                    </a>
-                </div>
-            </div>
-        </div>
-
-        <!-- Project-Call Matching -->
-        <div class="col-md-6 col-lg-4 mb-4">
-            <div class="card h-100 border-warning">
-                <div class="card-body">
-                    <div class="d-flex align-items-center mb-3">
-                        <i class="bi bi-link-45deg fs-1 text-warning me-3"></i>
-                        <div>
-                            <h5 class="card-title mb-0">Matching Projeto-Edital</h5>
-                            <small class="text-muted">Encontre oportunidades</small>
-                        </div>
-                    </div>
-                    <p class="card-text">
-                        Encontre editais compativeis com seus projetos e receba recomendacoes de adaptacao.
-                    </p>
-                    <ul class="small text-muted mb-3">
-                        <li>Score de compatibilidade</li>
-                        <li>Adaptacoes necessarias</li>
-                        <li>Pontos fortes e riscos</li>
-                    </ul>
-                    <a href="{{ url_for('projects.list_projects') }}" class="btn btn-outline-warning">
-                        <i class="bi bi-folder"></i> Selecionar Projeto
-                    </a>
-                </div>
-            </div>
-        </div>
+    <!-- Legend -->
+    <div class="mt-3">
+        <small class="text-muted">
+            <strong>Legenda:</strong>
+            <span class="ms-2"><i class="bi bi-shield-exclamation text-danger"></i> Riscos</span>
+            <span class="ms-2"><i class="bi bi-file-earmark-text text-success"></i> Relatorio</span>
+            <span class="ms-2"><i class="bi bi-link-45deg text-warning"></i> Matching</span>
+            <span class="ms-2"><i class="bi bi-three-dots text-info"></i> Mais opcoes</span>
+        </small>
     </div>
 </div>
 {% endblock %}
