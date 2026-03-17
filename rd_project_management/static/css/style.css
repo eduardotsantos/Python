@@ -30,7 +30,45 @@ body {
 .card-stats.border-info { border-left-color: #0dcaf0; }
 .card-stats.border-danger { border-left-color: #dc3545; }
 
-/* Navbar */
+/* Navbar Orion - Universe Blue Theme */
+.navbar-orion {
+    background: linear-gradient(135deg, #0a1628 0%, #1a2a4a 50%, #0d1f3c 100%);
+    box-shadow: 0 2px 12px rgba(10, 22, 40, 0.5);
+}
+
+.navbar-orion .navbar-brand {
+    color: #ffffff;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+}
+
+.navbar-orion .navbar-brand i {
+    color: #ffd700;
+    text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+}
+
+.navbar-orion .nav-link {
+    color: rgba(255, 255, 255, 0.9) !important;
+    font-weight: 500;
+    transition: color 0.2s, background 0.2s;
+    border-radius: 6px;
+    margin: 0 2px;
+}
+
+.navbar-orion .nav-link:hover {
+    color: #ffffff !important;
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.navbar-orion .nav-link i {
+    color: #7eb8ff;
+}
+
+.navbar-orion .dropdown-toggle::after {
+    color: rgba(255, 255, 255, 0.7);
+}
+
+/* Legacy navbar support */
 .navbar {
     box-shadow: 0 2px 8px rgba(0,0,0,0.15);
 }
@@ -101,6 +139,26 @@ body {
 
 .btn-sm {
     border-radius: 6px;
+}
+
+/* Orion Theme Button */
+.btn-orion {
+    background: linear-gradient(135deg, #1a2a4a 0%, #0a1628 100%);
+    border: none;
+    color: #ffffff;
+    box-shadow: 0 2px 8px rgba(10, 22, 40, 0.3);
+    transition: all 0.3s ease;
+}
+
+.btn-orion:hover {
+    background: linear-gradient(135deg, #243654 0%, #142238 100%);
+    color: #ffffff;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(10, 22, 40, 0.4);
+}
+
+.btn-orion:active {
+    transform: translateY(0);
 }
 
 /* Search */
