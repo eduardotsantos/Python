@@ -123,6 +123,46 @@ class Expense(db.Model):
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
 
     created_by = db.relationship('User', backref='expenses')
+    attachments = db.relationship('ExpenseAttachment', backref='expense', cascade='all, delete-orphan')
+
+
+class ExpenseAttachment(db.Model):
+    """Attachments for expenses (boletos, notas fiscais, comprovantes)."""
+    __tablename__ = 'expense_attachments'
+    id = db.Column(db.Integer, primary_key=True)
+    tenant_id = db.Column(db.Integer, db.ForeignKey('tenants.id'), nullable=False)
+    expense_id = db.Column(db.Integer, db.ForeignKey('expenses.id'), nullable=False)
+    filename = db.Column(db.String(255), nullable=False)
+    stored_filename = db.Column(db.String(255), nullable=False)
+    file_type = db.Column(db.String(50), nullable=False)
+    file_size = db.Column(db.Integer)
+    attachment_type = db.Column(db.String(50), nullable=False)  # boleto, nota_fiscal, comprovante
+    uploaded_by_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+
+    uploaded_by = db.relationship('User', backref='expense_attachments')
+
+    @property
+    def file_size_display(self):
+        """Return human-readable file size."""
+        if not self.file_size:
+            return "0 B"
+        size = self.file_size
+        for unit in ['B', 'KB', 'MB', 'GB']:
+            if size < 1024:
+                return f"{size:.1f} {unit}"
+            size /= 1024
+        return f"{size:.1f} TB"
+
+    @property
+    def attachment_type_display(self):
+        """Return human-readable attachment type."""
+        types = {
+            'boleto': 'Boleto',
+            'nota_fiscal': 'Nota Fiscal',
+            'comprovante': 'Comprovante de Pagamento'
+        }
+        return types.get(self.attachment_type, self.attachment_type)
 
 
 class Resource(db.Model):

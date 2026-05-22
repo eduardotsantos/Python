@@ -72,6 +72,89 @@
                 </form>
             </div>
         </div>
+
+        {% if expense %}
+        <!-- Attachments Section -->
+        <div class="card shadow-sm mt-4">
+            <div class="card-header bg-white">
+                <h5 class="mb-0"><i class="bi bi-paperclip"></i> Anexos</h5>
+            </div>
+            <div class="card-body">
+                {% if expense.attachments %}
+                <div class="table-responsive mb-4">
+                    <table class="table table-sm">
+                        <thead>
+                            <tr>
+                                <th>Tipo</th>
+                                <th>Arquivo</th>
+                                <th>Tamanho</th>
+                                <th>Data</th>
+                                <th class="text-end">Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for att in expense.attachments %}
+                            <tr>
+                                <td>
+                                    {% if att.attachment_type == 'boleto' %}
+                                        <span class="badge bg-warning text-dark"><i class="bi bi-upc-scan"></i> Boleto</span>
+                                    {% elif att.attachment_type == 'nota_fiscal' %}
+                                        <span class="badge bg-info"><i class="bi bi-receipt"></i> Nota Fiscal</span>
+                                    {% else %}
+                                        <span class="badge bg-success"><i class="bi bi-check-circle"></i> Comprovante</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    <i class="bi bi-file-earmark-{{ 'pdf' if att.file_type == 'pdf' else 'image' if att.file_type in ['jpg', 'jpeg', 'png'] else 'text' }}"></i>
+                                    {{ att.filename|truncate(30) }}
+                                </td>
+                                <td class="text-muted small">{{ att.file_size_display }}</td>
+                                <td class="text-muted small">{{ att.created_at.strftime('%d/%m/%Y') }}</td>
+                                <td class="text-end">
+                                    <a href="{{ url_for('expenses.download_attachment', project_id=project.id, expense_id=expense.id, attachment_id=att.id) }}"
+                                       class="btn btn-sm btn-outline-primary" title="Baixar">
+                                        <i class="bi bi-download"></i>
+                                    </a>
+                                    <form method="POST" action="{{ url_for('expenses.delete_attachment', project_id=project.id, expense_id=expense.id, attachment_id=att.id) }}" class="d-inline">
+                                        <button type="submit" class="btn btn-sm btn-outline-danger" title="Excluir" data-confirm="Excluir este anexo?">
+                                            <i class="bi bi-trash"></i>
+                                        </button>
+                                    </form>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% else %}
+                <p class="text-muted mb-3"><i class="bi bi-info-circle"></i> Nenhum anexo adicionado.</p>
+                {% endif %}
+
+                <!-- Upload Form -->
+                <form method="POST" action="{{ url_for('expenses.upload_attachment', project_id=project.id, expense_id=expense.id) }}" enctype="multipart/form-data">
+                    <div class="row g-2 align-items-end">
+                        <div class="col-md-4">
+                            <label class="form-label small">Tipo de Anexo</label>
+                            <select name="attachment_type" class="form-select form-select-sm">
+                                <option value="boleto">Boleto</option>
+                                <option value="nota_fiscal">Nota Fiscal</option>
+                                <option value="comprovante">Comprovante de Pagamento</option>
+                            </select>
+                        </div>
+                        <div class="col-md-5">
+                            <label class="form-label small">Arquivo (PDF, JPG, PNG, Word)</label>
+                            <input type="file" name="attachment" class="form-control form-control-sm" accept=".pdf,.jpg,.jpeg,.png,.doc,.docx" required>
+                        </div>
+                        <div class="col-md-3">
+                            <button type="submit" class="btn btn-primary btn-sm w-100">
+                                <i class="bi bi-upload"></i> Enviar
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+        {% endif %}
     </div>
 </div>
 {% endblock %}

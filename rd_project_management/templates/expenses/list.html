@@ -98,7 +98,14 @@
                 {% for expense in expenses %}
                 <tr>
                     <td>{{ expense.date.strftime('%d/%m/%Y') }}</td>
-                    <td>{{ expense.description }}</td>
+                    <td>
+                        {{ expense.description }}
+                        {% if expense.attachments %}
+                        <span class="badge bg-light text-primary ms-1" title="{{ expense.attachments|length }} anexo(s)">
+                            <i class="bi bi-paperclip"></i> {{ expense.attachments|length }}
+                        </span>
+                        {% endif %}
+                    </td>
                     <td><span class="badge bg-secondary">{{ expense.category }}</span></td>
                     <td class="text-muted">{{ expense.supplier or '-' }}</td>
                     <td class="fw-bold">R$ {{ "{:,.2f}".format(expense.amount).replace(",", "X").replace(".", ",").replace("X", ".") }}</td>
