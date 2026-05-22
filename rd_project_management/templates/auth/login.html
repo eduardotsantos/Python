@@ -24,7 +24,8 @@
             100% { background-position: 0% 50%; }
         }
 
-        .stars {
+        /* Animated particles */
+        .particles {
             position: fixed;
             top: 0; left: 0;
             width: 100%; height: 100%;
@@ -33,19 +34,23 @@
             z-index: 0;
         }
 
-        .star {
+        .particle {
             position: absolute;
-            width: 2px; height: 2px;
-            background: white;
+            width: 4px; height: 4px;
+            background: linear-gradient(135deg, #4a9eff, #7c3aed);
             border-radius: 50%;
-            animation: twinkle 3s infinite;
+            animation: rise 8s infinite;
+            opacity: 0;
         }
 
-        @keyframes twinkle {
-            0%, 100% { opacity: 0.3; transform: scale(1); }
-            50% { opacity: 1; transform: scale(1.2); }
+        @keyframes rise {
+            0% { transform: translateY(100vh) scale(0); opacity: 0; }
+            10% { opacity: 0.8; }
+            90% { opacity: 0.8; }
+            100% { transform: translateY(-100vh) scale(1); opacity: 0; }
         }
 
+        /* Glowing orbs */
         .orb {
             position: fixed;
             border-radius: 50%;
@@ -54,12 +59,24 @@
             animation: float 20s ease-in-out infinite;
         }
 
-        .orb-1 { width: 400px; height: 400px; background: rgba(74, 158, 255, 0.15); top: -100px; right: -100px; }
-        .orb-2 { width: 300px; height: 300px; background: rgba(138, 43, 226, 0.1); bottom: -50px; left: -50px; animation-delay: -5s; }
+        .orb-1 { width: 500px; height: 500px; background: rgba(74, 158, 255, 0.12); top: -150px; right: -150px; }
+        .orb-2 { width: 400px; height: 400px; background: rgba(138, 43, 226, 0.08); bottom: -100px; left: -100px; animation-delay: -7s; }
+        .orb-3 { width: 300px; height: 300px; background: rgba(0, 255, 136, 0.06); top: 50%; left: 20%; animation-delay: -3s; }
 
         @keyframes float {
             0%, 100% { transform: translate(0, 0) scale(1); }
-            50% { transform: translate(-20px, 20px) scale(0.95); }
+            33% { transform: translate(30px, -30px) scale(1.05); }
+            66% { transform: translate(-20px, 20px) scale(0.95); }
+        }
+
+        /* Circuit lines */
+        .circuit-lines {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            pointer-events: none;
+            z-index: 1;
+            opacity: 0.1;
         }
 
         .main-container {
@@ -80,35 +97,37 @@
             box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
         }
 
-        .news-card {
-            background: rgba(255, 255, 255, 0.05);
+        .innovation-panel {
+            background: rgba(255, 255, 255, 0.02);
             backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            border-radius: 16px;
-            padding: 24px;
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 24px;
+            padding: 32px;
             height: 100%;
         }
 
         .logo-icon {
-            width: 70px; height: 70px;
-            background: linear-gradient(135deg, #4a9eff 0%, #7c3aed 100%);
-            border-radius: 18px;
+            width: 80px; height: 80px;
+            background: linear-gradient(135deg, #4a9eff 0%, #7c3aed 50%, #00ff88 100%);
+            background-size: 200% 200%;
+            animation: logoGradient 5s ease infinite;
+            border-radius: 20px;
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            margin-bottom: 16px;
-            box-shadow: 0 10px 40px rgba(74, 158, 255, 0.3);
-            animation: pulse 3s ease-in-out infinite;
+            margin-bottom: 20px;
+            box-shadow: 0 15px 50px rgba(74, 158, 255, 0.4);
         }
 
-        @keyframes pulse {
-            0%, 100% { box-shadow: 0 10px 40px rgba(74, 158, 255, 0.3); }
-            50% { box-shadow: 0 10px 60px rgba(74, 158, 255, 0.5); }
+        @keyframes logoGradient {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
         }
 
-        .logo-icon i { font-size: 2rem; color: white; }
-        .logo-title { color: white; font-size: 1.6rem; font-weight: 700; margin-bottom: 8px; }
-        .logo-subtitle { color: rgba(255, 255, 255, 0.5); font-size: 0.85rem; }
+        .logo-icon i { font-size: 2.5rem; color: white; }
+        .logo-title { color: white; font-size: 1.8rem; font-weight: 700; margin-bottom: 8px; }
+        .logo-subtitle { color: rgba(255, 255, 255, 0.5); font-size: 0.9rem; }
 
         .form-label { color: rgba(255, 255, 255, 0.7); font-size: 0.85rem; font-weight: 500; }
 
@@ -121,7 +140,7 @@
 
         .input-group:focus-within {
             border-color: rgba(74, 158, 255, 0.5);
-            box-shadow: 0 0 20px rgba(74, 158, 255, 0.15);
+            box-shadow: 0 0 30px rgba(74, 158, 255, 0.2);
         }
 
         .input-group-text {
@@ -135,7 +154,7 @@
             background: transparent;
             border: none;
             color: white;
-            padding: 12px 16px 12px 8px;
+            padding: 14px 16px 14px 8px;
         }
 
         .form-control::placeholder { color: rgba(255, 255, 255, 0.3); }
@@ -143,62 +162,154 @@
 
         .btn-login {
             width: 100%;
-            padding: 12px;
-            margin-top: 16px;
+            padding: 14px;
+            margin-top: 20px;
             background: linear-gradient(135deg, #4a9eff 0%, #7c3aed 100%);
             border: none;
             border-radius: 12px;
             color: white;
             font-weight: 600;
+            font-size: 1rem;
             transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
         }
+
+        .btn-login::before {
+            content: '';
+            position: absolute;
+            top: 0; left: -100%;
+            width: 100%; height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .btn-login:hover::before { left: 100%; }
 
         .btn-login:hover {
             transform: translateY(-2px);
-            box-shadow: 0 10px 40px rgba(74, 158, 255, 0.4);
+            box-shadow: 0 15px 50px rgba(74, 158, 255, 0.5);
             color: white;
         }
 
-        .news-title {
+        /* Innovation Section */
+        .innovation-title {
             color: white;
-            font-size: 1.1rem;
-            font-weight: 600;
-            margin-bottom: 20px;
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 24px;
+        }
+
+        .innovation-title span {
+            background: linear-gradient(135deg, #4a9eff, #00ff88);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .feature-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 16px;
+            transition: all 0.3s ease;
+        }
+
+        .feature-card:hover {
+            background: rgba(255, 255, 255, 0.06);
+            border-color: rgba(74, 158, 255, 0.3);
+            transform: translateX(8px);
+        }
+
+        .feature-icon {
+            width: 48px; height: 48px;
+            border-radius: 12px;
             display: flex;
             align-items: center;
-            gap: 8px;
+            justify-content: center;
+            margin-bottom: 12px;
+            font-size: 1.3rem;
         }
 
-        .news-title i { color: #4a9eff; }
+        .feature-icon.blue { background: rgba(74, 158, 255, 0.2); color: #4a9eff; }
+        .feature-icon.purple { background: rgba(138, 43, 226, 0.2); color: #a855f7; }
+        .feature-icon.green { background: rgba(0, 255, 136, 0.2); color: #00ff88; }
+        .feature-icon.orange { background: rgba(255, 159, 67, 0.2); color: #ff9f43; }
 
-        .news-item {
-            background: rgba(255, 255, 255, 0.03);
-            border: 1px solid rgba(255, 255, 255, 0.05);
+        .feature-card h6 { color: white; font-weight: 600; margin-bottom: 6px; }
+        .feature-card p { color: rgba(255, 255, 255, 0.5); font-size: 0.85rem; margin: 0; }
+
+        /* News ticker */
+        .news-ticker {
+            background: rgba(74, 158, 255, 0.1);
+            border: 1px solid rgba(74, 158, 255, 0.2);
             border-radius: 12px;
             padding: 16px;
-            margin-bottom: 12px;
-            transition: all 0.2s ease;
+            margin-top: 24px;
+            overflow: hidden;
         }
 
-        .news-item:hover {
-            background: rgba(255, 255, 255, 0.08);
-            border-color: rgba(74, 158, 255, 0.3);
-            transform: translateX(4px);
+        .news-ticker-title {
+            color: #4a9eff;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
         }
 
-        .news-item .badge {
-            font-size: 0.7rem;
-            padding: 4px 8px;
+        .news-scroll {
+            height: 120px;
+            overflow: hidden;
+            position: relative;
         }
 
-        .news-item h6 {
-            color: white;
-            font-size: 0.9rem;
-            margin: 8px 0 4px;
-            line-height: 1.4;
+        .news-scroll-inner {
+            animation: scrollNews 20s linear infinite;
         }
 
-        .news-item small { color: rgba(255, 255, 255, 0.5); }
+        @keyframes scrollNews {
+            0% { transform: translateY(0); }
+            100% { transform: translateY(-50%); }
+        }
+
+        .news-item {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 0.85rem;
+            padding: 8px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .news-item i { color: #4a9eff; margin-right: 8px; }
+
+        /* Stats bar */
+        .stats-bar {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 24px;
+            padding-top: 24px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #4a9eff, #00ff88);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .stat-label {
+            font-size: 0.75rem;
+            color: rgba(255, 255, 255, 0.5);
+        }
 
         .alert {
             background: rgba(220, 53, 69, 0.1);
@@ -207,23 +318,6 @@
             border-radius: 12px;
         }
 
-        .section-divider {
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
-            margin: 20px 0;
-        }
-
-        .gov-news {
-            color: rgba(255, 255, 255, 0.6);
-            font-size: 0.8rem;
-        }
-
-        .gov-news a {
-            color: #4a9eff;
-            text-decoration: none;
-        }
-
-        .gov-news a:hover { text-decoration: underline; }
-
         @media (max-width: 991px) {
             .main-container { flex-direction: column; }
             .login-card { margin-bottom: 2rem; }
@@ -231,9 +325,17 @@
     </style>
 </head>
 <body>
-    <div class="stars" id="stars"></div>
+    <div class="particles" id="particles"></div>
     <div class="orb orb-1"></div>
     <div class="orb orb-2"></div>
+    <div class="orb orb-3"></div>
+
+    <!-- Circuit lines SVG background -->
+    <svg class="circuit-lines" viewBox="0 0 1200 800" preserveAspectRatio="none">
+        <path d="M0,400 Q300,350 600,400 T1200,400" stroke="rgba(74,158,255,0.3)" fill="none" stroke-width="1"/>
+        <path d="M0,200 Q400,250 800,200 T1200,200" stroke="rgba(138,43,226,0.2)" fill="none" stroke-width="1"/>
+        <path d="M0,600 Q500,550 1000,600 T1200,600" stroke="rgba(0,255,136,0.2)" fill="none" stroke-width="1"/>
+    </svg>
 
     <div class="container main-container">
         <div class="row w-100 justify-content-center align-items-stretch g-4">
@@ -256,7 +358,7 @@
                             <i class="bi bi-stars"></i>
                         </div>
                         <h1 class="logo-title">Orion P&D</h1>
-                        <p class="logo-subtitle">Sistema de Gestao de Projetos de Pesquisa e Desenvolvimento</p>
+                        <p class="logo-subtitle">Plataforma Inteligente de Gestao de Projetos de Inovacao</p>
                     </div>
 
                     <form method="POST">
@@ -277,70 +379,81 @@
                         </div>
 
                         <button type="submit" class="btn btn-login">
-                            <i class="bi bi-box-arrow-in-right me-2"></i>Entrar
+                            <i class="bi bi-box-arrow-in-right me-2"></i>Acessar Plataforma
                         </button>
                     </form>
 
                     <div class="text-center mt-4">
                         <small style="color: rgba(255,255,255,0.4);">
-                            <i class="bi bi-shield-check me-1"></i> Acesso seguro e criptografado
+                            <i class="bi bi-shield-lock-fill me-1"></i> Conexao segura com criptografia de ponta
                         </small>
                     </div>
                 </div>
             </div>
 
-            <!-- News Panel -->
+            <!-- Innovation Panel -->
             <div class="col-lg-5 col-md-6">
-                <div class="news-card">
-                    <h5 class="news-title">
-                        <i class="bi bi-megaphone"></i> Chamadas Publicas Abertas
+                <div class="innovation-panel">
+                    <h5 class="innovation-title">
+                        <span>Inovacao</span> que transforma resultados
                     </h5>
 
-                    {% if recent_calls %}
-                        {% for call in recent_calls %}
-                        <div class="news-item">
-                            <div>
-                                {% if call.source == 'FINEP' %}
-                                <span class="badge bg-primary">FINEP</span>
-                                {% elif call.source == 'BNDES' %}
-                                <span class="badge bg-success">BNDES</span>
-                                {% elif call.source == 'FAPESC' %}
-                                <span class="badge bg-danger">FAPESC</span>
-                                {% else %}
-                                <span class="badge bg-secondary">{{ call.source }}</span>
-                                {% endif %}
-                                {% if call.theme %}
-                                <span class="badge bg-dark">{{ call.theme|truncate(20) }}</span>
-                                {% endif %}
+                    <div class="feature-card">
+                        <div class="feature-icon blue"><i class="bi bi-cpu"></i></div>
+                        <h6>Inteligencia Artificial Integrada</h6>
+                        <p>Analise automatica de editais, matching inteligente e geracao de propostas com IA</p>
+                    </div>
+
+                    <div class="feature-card">
+                        <div class="feature-icon purple"><i class="bi bi-graph-up-arrow"></i></div>
+                        <h6>Gestao de Recursos Otimizada</h6>
+                        <p>Controle financeiro completo com rastreabilidade de despesas e documentos</p>
+                    </div>
+
+                    <div class="feature-card">
+                        <div class="feature-icon green"><i class="bi bi-megaphone"></i></div>
+                        <h6>Monitoramento de Oportunidades</h6>
+                        <p>Acompanhamento automatico de chamadas FINEP, BNDES, FAPESC e outros orgaos</p>
+                    </div>
+
+                    <!-- News Ticker -->
+                    <div class="news-ticker">
+                        <div class="news-ticker-title">
+                            <i class="bi bi-broadcast"></i> Noticias de Inovacao
+                        </div>
+                        <div class="news-scroll">
+                            <div class="news-scroll-inner">
+                                <div class="news-item"><i class="bi bi-arrow-right-short"></i>Brasil investe R$ 4,5 bilhoes em P&D em 2026</div>
+                                <div class="news-item"><i class="bi bi-arrow-right-short"></i>FINEP lanca programa de apoio a startups deeptech</div>
+                                <div class="news-item"><i class="bi bi-arrow-right-short"></i>Industria 4.0: empresas ampliam investimentos em automacao</div>
+                                <div class="news-item"><i class="bi bi-arrow-right-short"></i>BNDES disponibiliza R$ 2 bi para inovacao verde</div>
+                                <div class="news-item"><i class="bi bi-arrow-right-short"></i>Lei do Bem: 15% mais empresas utilizam incentivos fiscais</div>
+                                <div class="news-item"><i class="bi bi-arrow-right-short"></i>Embrapii aprova 120 novos projetos de pesquisa aplicada</div>
+                                <!-- Duplicate for seamless scroll -->
+                                <div class="news-item"><i class="bi bi-arrow-right-short"></i>Brasil investe R$ 4,5 bilhoes em P&D em 2026</div>
+                                <div class="news-item"><i class="bi bi-arrow-right-short"></i>FINEP lanca programa de apoio a startups deeptech</div>
+                                <div class="news-item"><i class="bi bi-arrow-right-short"></i>Industria 4.0: empresas ampliam investimentos em automacao</div>
+                                <div class="news-item"><i class="bi bi-arrow-right-short"></i>BNDES disponibiliza R$ 2 bi para inovacao verde</div>
+                                <div class="news-item"><i class="bi bi-arrow-right-short"></i>Lei do Bem: 15% mais empresas utilizam incentivos fiscais</div>
+                                <div class="news-item"><i class="bi bi-arrow-right-short"></i>Embrapii aprova 120 novos projetos de pesquisa aplicada</div>
                             </div>
-                            <h6>{{ call.title|truncate(70) }}</h6>
-                            {% if call.deadline %}
-                            <small><i class="bi bi-clock"></i> Prazo: {{ call.deadline }}</small>
-                            {% endif %}
                         </div>
-                        {% endfor %}
-                    {% else %}
-                        <div class="news-item">
-                            <h6><i class="bi bi-info-circle"></i> Nenhuma chamada aberta no momento</h6>
-                            <small>Faca login para sincronizar chamadas publicas</small>
+                    </div>
+
+                    <!-- Stats -->
+                    <div class="stats-bar">
+                        <div class="stat-item">
+                            <div class="stat-value">R$ 50bi+</div>
+                            <div class="stat-label">Recursos Disponiveis</div>
                         </div>
-                    {% endif %}
-
-                    <div class="section-divider"></div>
-
-                    <h5 class="news-title">
-                        <i class="bi bi-newspaper"></i> Noticias de P&D
-                    </h5>
-
-                    <div class="gov-news">
-                        <p><i class="bi bi-arrow-right-short"></i> Acompanhe editais e programas de fomento:</p>
-                        <ul class="ps-3">
-                            <li><a href="https://www.gov.br/mcti" target="_blank">MCTI - Ministerio da Ciencia e Tecnologia</a></li>
-                            <li><a href="https://www.finep.gov.br" target="_blank">FINEP - Financiadora de Estudos e Projetos</a></li>
-                            <li><a href="https://www.bndes.gov.br" target="_blank">BNDES - Banco Nacional de Desenvolvimento</a></li>
-                            <li><a href="https://www.gov.br/cnpq" target="_blank">CNPq - Conselho Nacional de Pesquisa</a></li>
-                            <li><a href="https://www.gov.br/capes" target="_blank">CAPES - Coordenacao de Aperfeicoamento</a></li>
-                        </ul>
+                        <div class="stat-item">
+                            <div class="stat-value">500+</div>
+                            <div class="stat-label">Editais/Ano</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value">24/7</div>
+                            <div class="stat-label">Monitoramento</div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -349,19 +462,25 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-        function createStars() {
-            const container = document.getElementById('stars');
-            for (let i = 0; i < 80; i++) {
-                const star = document.createElement('div');
-                star.className = 'star';
-                star.style.left = Math.random() * 100 + '%';
-                star.style.top = Math.random() * 100 + '%';
-                star.style.animationDelay = Math.random() * 3 + 's';
-                star.style.animationDuration = (2 + Math.random() * 3) + 's';
-                container.appendChild(star);
+        // Create floating particles
+        function createParticles() {
+            const container = document.getElementById('particles');
+            for (let i = 0; i < 50; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.animationDelay = Math.random() * 8 + 's';
+                particle.style.animationDuration = (6 + Math.random() * 4) + 's';
+                container.appendChild(particle);
             }
         }
-        createStars();
+        createParticles();
+
+        // Pause news scroll on hover
+        const newsScroll = document.querySelector('.news-scroll');
+        const newsInner = document.querySelector('.news-scroll-inner');
+        newsScroll.addEventListener('mouseenter', () => newsInner.style.animationPlayState = 'paused');
+        newsScroll.addEventListener('mouseleave', () => newsInner.style.animationPlayState = 'running');
     </script>
 </body>
 </html>

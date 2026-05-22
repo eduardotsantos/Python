@@ -1,6 +1,6 @@
 from flask import Blueprint, render_template, redirect, url_for, flash, request
 from flask_login import login_user, logout_user, login_required, current_user
-from models import db, User, PublicCall
+from models import db, User
 
 auth_bp = Blueprint('auth', __name__)
 
@@ -10,16 +10,10 @@ def login():
     if current_user.is_authenticated:
         return redirect(url_for('home.dashboard'))
 
-    # Get recent public calls for the login page
-    recent_calls = PublicCall.query.filter_by(status='Aberta').order_by(
-        PublicCall.updated_at.desc()
-    ).limit(5).all()
-
     if request.method == 'POST':
         login_input = request.form.get('username', '').strip()
         password = request.form.get('password', '')
 
-        # Try to find user by email or username
         user = User.query.filter(
             db.or_(
                 User.email == login_input,
@@ -28,11 +22,10 @@ def login():
         ).first()
 
         if user and user.active and user.check_password(password):
-            # Check if tenant is active (for non-superadmin users)
             if user.tenant_id and user.tenant:
                 if not user.tenant.is_active():
                     flash('Sua empresa está com a licença expirada ou inativa. Entre em contato com o suporte.', 'danger')
-                    return render_template('auth/login.html', recent_calls=recent_calls)
+                    return render_template('auth/login.html')
 
             login_user(user)
             next_page = request.args.get('next')
@@ -43,7 +36,7 @@ def login():
         else:
             flash('Email/usuário ou senha incorretos.', 'danger')
 
-    return render_template('auth/login.html', recent_calls=recent_calls)
+    return render_template('auth/login.html')
 
 
 @auth_bp.route('/register', methods=['GET', 'POST'])

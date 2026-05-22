@@ -16,7 +16,7 @@
                             </h2>
                             <p class="mb-0 opacity-75">
                                 <i class="bi bi-calendar3 me-1"></i>
-                                {{ "now"|date("d/m/Y") }} -
+                                <span id="currentDate"></span> -
                                 Bem-vindo, {{ current_user.full_name }}
                             </p>
                         </div>
@@ -256,6 +256,9 @@
 
 {% block extra_js %}
 <script>
+// Set current date
+document.getElementById('currentDate').textContent = new Date().toLocaleDateString('pt-BR');
+
 function generateInsights() {
     const section = document.getElementById('insightsSection');
     const content = document.getElementById('insightsContent');
