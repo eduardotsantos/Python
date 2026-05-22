@@ -1,0 +1,338 @@
+{% extends "base.html" %}
+{% block title %}Home - Orion P&D{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <!-- Header -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card bg-gradient-orion text-white">
+                <div class="card-body py-4">
+                    <div class="row align-items-center">
+                        <div class="col-md-8">
+                            <h2 class="mb-1">
+                                <i class="bi bi-building me-2"></i>
+                                {% if tenant %}{{ tenant.name }}{% else %}Orion P&D{% endif %}
+                            </h2>
+                            <p class="mb-0 opacity-75">
+                                <i class="bi bi-calendar3 me-1"></i>
+                                {{ "now"|date("d/m/Y") }} -
+                                Bem-vindo, {{ current_user.full_name }}
+                            </p>
+                        </div>
+                        <div class="col-md-4 text-md-end mt-3 mt-md-0">
+                            {% if ai_configured %}
+                            <button class="btn btn-light" onclick="generateInsights()">
+                                <i class="bi bi-lightbulb"></i> Gerar Insights IA
+                            </button>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quick Stats -->
+    <div class="row g-3 mb-4">
+        <div class="col-6 col-md-3">
+            <div class="card card-stats border-primary shadow-sm h-100">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <p class="text-muted mb-1 small">Projetos Ativos</p>
+                            <h3 class="fw-bold mb-0">{{ active_projects }}</h3>
+                            <small class="text-muted">de {{ total_projects }} total</small>
+                        </div>
+                        <i class="bi bi-folder-check text-primary opacity-50" style="font-size:2.5rem"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-6 col-md-3">
+            <div class="card card-stats border-success shadow-sm h-100">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <p class="text-muted mb-1 small">Orcamento Total</p>
+                            <h3 class="fw-bold mb-0">{{ "R$ {:,.0f}".format(total_budget).replace(",", ".") }}</h3>
+                        </div>
+                        <i class="bi bi-cash-stack text-success opacity-50" style="font-size:2.5rem"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-6 col-md-3">
+            <div class="card card-stats border-danger shadow-sm h-100">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <p class="text-muted mb-1 small">Despesas</p>
+                            <h3 class="fw-bold mb-0">{{ "R$ {:,.0f}".format(total_expenses).replace(",", ".") }}</h3>
+                        </div>
+                        <i class="bi bi-receipt text-danger opacity-50" style="font-size:2.5rem"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-6 col-md-3">
+            <div class="card card-stats border-warning shadow-sm h-100">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <p class="text-muted mb-1 small">Chamadas Abertas</p>
+                            <h3 class="fw-bold mb-0">{{ recent_calls|length }}</h3>
+                        </div>
+                        <i class="bi bi-megaphone text-warning opacity-50" style="font-size:2.5rem"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- AI Insights Section (Hidden by default) -->
+    <div class="row mb-4 d-none" id="insightsSection">
+        <div class="col-12">
+            <div class="card border-info shadow-sm">
+                <div class="card-header bg-info text-white d-flex justify-content-between align-items-center">
+                    <span><i class="bi bi-lightbulb"></i> Insights de IA para seu setor de P&D</span>
+                    <button type="button" class="btn-close btn-close-white" onclick="hideInsights()"></button>
+                </div>
+                <div class="card-body" id="insightsContent">
+                    <div class="text-center py-4">
+                        <div class="spinner-border text-info"></div>
+                        <p class="mt-2">Analisando dados e gerando insights...</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row g-4">
+        <!-- Recent Public Calls -->
+        <div class="col-lg-8">
+            <div class="card shadow-sm h-100">
+                <div class="card-header bg-white d-flex justify-content-between align-items-center">
+                    <h6 class="mb-0 fw-bold"><i class="bi bi-megaphone text-primary"></i> Chamadas Publicas Recentes</h6>
+                    <a href="{{ url_for('public_calls.list_calls') }}" class="btn btn-sm btn-outline-primary">Ver Todas</a>
+                </div>
+                <div class="card-body p-0">
+                    {% if recent_calls %}
+                    <div class="list-group list-group-flush">
+                        {% for call in recent_calls %}
+                        <a href="{{ url_for('public_calls.view_call', call_id=call.id) }}" class="list-group-item list-group-item-action">
+                            <div class="d-flex justify-content-between align-items-start">
+                                <div class="flex-grow-1">
+                                    <div class="mb-1">
+                                        {% if call.source == 'FINEP' %}
+                                        <span class="badge bg-primary me-1">FINEP</span>
+                                        {% elif call.source == 'BNDES' %}
+                                        <span class="badge bg-success me-1">BNDES</span>
+                                        {% elif call.source == 'FAPESC' %}
+                                        <span class="badge bg-danger me-1">FAPESC</span>
+                                        {% else %}
+                                        <span class="badge bg-secondary me-1">{{ call.source }}</span>
+                                        {% endif %}
+                                        {% if call.theme %}
+                                        <span class="badge bg-light text-dark">{{ call.theme }}</span>
+                                        {% endif %}
+                                    </div>
+                                    <h6 class="mb-1">{{ call.title|truncate(80) }}</h6>
+                                    {% if call.deadline %}
+                                    <small class="text-danger"><i class="bi bi-clock"></i> Prazo: {{ call.deadline }}</small>
+                                    {% endif %}
+                                </div>
+                                <i class="bi bi-chevron-right text-muted"></i>
+                            </div>
+                        </a>
+                        {% endfor %}
+                    </div>
+                    {% else %}
+                    <div class="text-center py-4">
+                        <i class="bi bi-megaphone text-muted" style="font-size:2rem"></i>
+                        <p class="text-muted mb-2">Nenhuma chamada publica recente</p>
+                        <a href="{{ url_for('public_calls.list_calls') }}" class="btn btn-sm btn-outline-primary">
+                            <i class="bi bi-arrow-clockwise"></i> Sincronizar Chamadas
+                        </a>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Sidebar -->
+        <div class="col-lg-4">
+            <!-- Upcoming Milestones -->
+            <div class="card shadow-sm mb-4">
+                <div class="card-header bg-white">
+                    <h6 class="mb-0 fw-bold"><i class="bi bi-flag text-warning"></i> Proximos Marcos (30 dias)</h6>
+                </div>
+                <div class="card-body p-0">
+                    {% if upcoming_milestones %}
+                    <ul class="list-group list-group-flush">
+                        {% for m in upcoming_milestones %}
+                        <li class="list-group-item">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <strong class="small">{{ m.title|truncate(35) }}</strong>
+                                    <br>
+                                    <small class="text-muted">{{ m.project.code }}</small>
+                                </div>
+                                <div class="text-end">
+                                    <span class="badge bg-warning text-dark">{{ m.end_date.strftime('%d/%m') }}</span>
+                                    <br>
+                                    <small class="text-muted">{{ m.progress }}%</small>
+                                </div>
+                            </div>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                    {% else %}
+                    <div class="text-center py-3">
+                        <i class="bi bi-check-circle text-success"></i>
+                        <small class="text-muted d-block">Nenhum marco nos proximos 30 dias</small>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Projects Ending Soon -->
+            {% if projects_ending_soon %}
+            <div class="card shadow-sm mb-4 border-warning">
+                <div class="card-header bg-warning text-dark">
+                    <h6 class="mb-0 fw-bold"><i class="bi bi-exclamation-triangle"></i> Projetos Encerrando</h6>
+                </div>
+                <div class="card-body p-0">
+                    <ul class="list-group list-group-flush">
+                        {% for p in projects_ending_soon[:3] %}
+                        <li class="list-group-item">
+                            <a href="{{ url_for('projects.view_project', project_id=p.id) }}" class="text-decoration-none">
+                                <strong>{{ p.code }}</strong> - {{ p.title|truncate(30) }}
+                            </a>
+                            <br>
+                            <small class="text-danger">Encerra: {{ p.end_date.strftime('%d/%m/%Y') }}</small>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+            {% endif %}
+
+            <!-- Quick Actions -->
+            <div class="card shadow-sm">
+                <div class="card-header bg-white">
+                    <h6 class="mb-0 fw-bold"><i class="bi bi-lightning"></i> Acoes Rapidas</h6>
+                </div>
+                <div class="card-body">
+                    <div class="d-grid gap-2">
+                        <a href="{{ url_for('projects.create_project') }}" class="btn btn-outline-primary btn-sm">
+                            <i class="bi bi-plus-lg"></i> Novo Projeto
+                        </a>
+                        <a href="{{ url_for('public_calls.list_calls') }}" class="btn btn-outline-success btn-sm">
+                            <i class="bi bi-megaphone"></i> Ver Chamadas
+                        </a>
+                        <a href="{{ url_for('ai.ai_dashboard') }}" class="btn btn-outline-info btn-sm">
+                            <i class="bi bi-robot"></i> Assistente IA
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.bg-gradient-orion {
+    background: linear-gradient(135deg, #0a1628 0%, #1a2a4a 50%, #0d1f3c 100%);
+}
+.card-stats {
+    transition: transform 0.2s;
+}
+.card-stats:hover {
+    transform: translateY(-2px);
+}
+</style>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+function generateInsights() {
+    const section = document.getElementById('insightsSection');
+    const content = document.getElementById('insightsContent');
+
+    section.classList.remove('d-none');
+    content.innerHTML = `
+        <div class="text-center py-4">
+            <div class="spinner-border text-info"></div>
+            <p class="mt-2">Analisando dados e gerando insights...</p>
+        </div>
+    `;
+
+    fetch('{{ url_for("home.generate_insights") }}', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' }
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.error) {
+            content.innerHTML = `<div class="alert alert-danger">${data.error}</div>`;
+            return;
+        }
+
+        let html = '';
+
+        if (data.resumo_setor) {
+            html += `<p class="lead mb-3">${data.resumo_setor}</p>`;
+        }
+
+        html += '<div class="row">';
+
+        if (data.tendencias && data.tendencias.length) {
+            html += `
+                <div class="col-md-6 mb-3">
+                    <h6><i class="bi bi-graph-up text-primary"></i> Tendencias</h6>
+                    <ul class="small">${data.tendencias.map(t => `<li>${t}</li>`).join('')}</ul>
+                </div>
+            `;
+        }
+
+        if (data.oportunidades && data.oportunidades.length) {
+            html += `
+                <div class="col-md-6 mb-3">
+                    <h6><i class="bi bi-star text-warning"></i> Oportunidades</h6>
+                    <ul class="small">${data.oportunidades.map(o => `<li>${o}</li>`).join('')}</ul>
+                </div>
+            `;
+        }
+
+        if (data.recomendacoes && data.recomendacoes.length) {
+            html += `
+                <div class="col-md-6 mb-3">
+                    <h6><i class="bi bi-check-circle text-success"></i> Recomendacoes</h6>
+                    <ul class="small">${data.recomendacoes.map(r => `<li>${r}</li>`).join('')}</ul>
+                </div>
+            `;
+        }
+
+        if (data.alertas && data.alertas.length) {
+            html += `
+                <div class="col-md-6 mb-3">
+                    <h6><i class="bi bi-exclamation-triangle text-danger"></i> Alertas</h6>
+                    <ul class="small">${data.alertas.map(a => `<li>${a}</li>`).join('')}</ul>
+                </div>
+            `;
+        }
+
+        html += '</div>';
+        content.innerHTML = html;
+    })
+    .catch(error => {
+        content.innerHTML = `<div class="alert alert-danger">Erro: ${error.message}</div>`;
+    });
+}
+
+function hideInsights() {
+    document.getElementById('insightsSection').classList.add('d-none');
+}
+</script>
+{% endblock %}

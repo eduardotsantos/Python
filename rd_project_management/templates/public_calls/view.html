@@ -109,6 +109,11 @@
                                 {% if link.notes %}
                                 <br><small class="text-muted fst-italic">{{ link.notes }}</small>
                                 {% endif %}
+                                <div class="mt-2">
+                                    <a href="{{ url_for('ai.proposal_page', project_id=link.project.id, call_id=call.id) }}" class="btn btn-sm btn-outline-success">
+                                        <i class="bi bi-file-earmark-richtext"></i> Gerar Proposta
+                                    </a>
+                                </div>
                             </div>
                             <form method="POST" action="{{ url_for('public_calls.unlink_project', call_id=call.id, link_id=link.id) }}">
                                 <button type="submit" class="btn btn-sm btn-outline-danger" title="Remover vínculo" data-confirm="Remover vínculo com este projeto?">

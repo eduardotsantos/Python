@@ -364,3 +364,230 @@ def project_ai_actions(project_id):
     ensure_tenant_access(project)
 
     return render_template('ai/project_actions.html', project=project, ai_configured=check_ai_configured())
+
+
+# --- Proposal Generation ---
+
+@ai_bp.route('/ai/proposal/<int:project_id>/<int:call_id>')
+@login_required
+@tenant_required
+def proposal_page(project_id, call_id):
+    """Page to generate proposal for a public call."""
+    project = Project.query.get_or_404(project_id)
+    ensure_tenant_access(project)
+
+    call = PublicCall.query.get_or_404(call_id)
+
+    return render_template('ai/proposal.html',
+                           project=project,
+                           call=call,
+                           ai_configured=check_ai_configured())
+
+
+@ai_bp.route('/ai/proposal/<int:project_id>/<int:call_id>/generate', methods=['POST'])
+@login_required
+@tenant_required
+def generate_proposal(project_id, call_id):
+    """Generate proposal content using AI."""
+    if not check_ai_configured():
+        return jsonify({'error': 'API de IA não configurada.'}), 400
+
+    project = Project.query.get_or_404(project_id)
+    ensure_tenant_access(project)
+
+    call = PublicCall.query.get_or_404(call_id)
+
+    # Get additional info from request
+    additional_info = request.json.get('additional_info', {})
+
+    # Gather project data
+    project_data = {
+        'code': project.code,
+        'title': project.title,
+        'description': project.description,
+        'category': project.category,
+        'start_date': str(project.start_date) if project.start_date else None,
+        'end_date': str(project.end_date) if project.end_date else None,
+        'budget': project.budget,
+        'funding_source': project.funding_source,
+        'responsible': project.responsible.full_name if project.responsible else None,
+        'milestones': [{
+            'title': m.title,
+            'description': m.description,
+            'start_date': str(m.start_date),
+            'end_date': str(m.end_date)
+        } for m in project.milestones],
+        'resources': [{
+            'name': r.name,
+            'type': r.type,
+            'role': r.role
+        } for r in project.resources]
+    }
+
+    # Gather call data
+    call_data = {
+        'source': call.source,
+        'title': call.title,
+        'theme': call.theme,
+        'description': call.description,
+        'deadline': call.deadline,
+        'funding_source': call.funding_source,
+        'target_audience': call.target_audience
+    }
+
+    # Get tenant info
+    tenant = current_user.tenant
+    company_info = {
+        'name': tenant.name if tenant else 'Empresa',
+        'cnpj': tenant.cnpj if tenant else additional_info.get('cnpj', ''),
+    }
+
+    # Merge additional info
+    company_info.update(additional_info)
+
+    # Generate proposal using AI
+    from services.ai_service import get_anthropic_client
+    client = get_anthropic_client()
+
+    prompt = f"""Você é um especialista em elaboração de propostas para editais de P&D.
+Gere uma proposta estruturada para o seguinte projeto se candidatar à chamada pública.
+
+DADOS DA EMPRESA:
+- Nome: {company_info.get('name', 'N/A')}
+- CNPJ: {company_info.get('cnpj', 'N/A')}
+- Área de Atuação: {company_info.get('area_atuacao', 'N/A')}
+- Experiência em P&D: {company_info.get('experiencia_pd', 'N/A')}
+
+DADOS DO PROJETO:
+- Código: {project_data.get('code', 'N/A')}
+- Título: {project_data.get('title', 'N/A')}
+- Descrição: {project_data.get('description', 'N/A')}
+- Categoria: {project_data.get('category', 'N/A')}
+- Período: {project_data.get('start_date', 'N/A')} a {project_data.get('end_date', 'N/A')}
+- Orçamento: R$ {project_data.get('budget', 0):,.2f}
+- Responsável: {project_data.get('responsible', 'N/A')}
+
+CHAMADA PÚBLICA:
+- Fonte: {call_data.get('source', 'N/A')}
+- Título: {call_data.get('title', 'N/A')}
+- Tema: {call_data.get('theme', 'N/A')}
+- Descrição: {call_data.get('description', 'N/A')}
+- Prazo: {call_data.get('deadline', 'N/A')}
+- Público-alvo: {call_data.get('target_audience', 'N/A')}
+
+INFORMAÇÕES ADICIONAIS:
+- Objetivo do Projeto: {company_info.get('objetivo_projeto', 'N/A')}
+- Resultados Esperados: {company_info.get('resultados_esperados', 'N/A')}
+- Metodologia: {company_info.get('metodologia', 'N/A')}
+- Diferenciais: {company_info.get('diferenciais', 'N/A')}
+- Impacto Esperado: {company_info.get('impacto', 'N/A')}
+
+Gere uma proposta completa em formato markdown com as seguintes seções:
+
+1. RESUMO EXECUTIVO (máx. 300 palavras)
+2. IDENTIFICAÇÃO DO PROPONENTE
+3. OBJETIVOS DO PROJETO (Geral e Específicos)
+4. JUSTIFICATIVA E RELEVÂNCIA
+5. METODOLOGIA
+6. RESULTADOS ESPERADOS E METAS
+7. CRONOGRAMA DE EXECUÇÃO
+8. EQUIPE TÉCNICA
+9. ORÇAMENTO DETALHADO
+10. IMPACTOS ESPERADOS (Científico, Tecnológico, Econômico, Social)
+11. RISCOS E ESTRATÉGIAS DE MITIGAÇÃO
+12. CONSIDERAÇÕES FINAIS
+
+Seja específico, profissional e alinhado com os requisitos da chamada.
+Use linguagem técnica apropriada para editais de P&D.
+"""
+
+    try:
+        response = client.messages.create(
+            model="claude-sonnet-4-20250514",
+            max_tokens=6000,
+            messages=[{"role": "user", "content": prompt}]
+        )
+
+        proposal = response.content[0].text
+        return jsonify({'proposal': proposal})
+
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+
+@ai_bp.route('/ai/proposal/<int:project_id>/<int:call_id>/questions', methods=['POST'])
+@login_required
+@tenant_required
+def get_proposal_questions(project_id, call_id):
+    """Get questions for additional info needed for proposal."""
+    project = Project.query.get_or_404(project_id)
+    ensure_tenant_access(project)
+
+    call = PublicCall.query.get_or_404(call_id)
+    tenant = current_user.tenant
+
+    # Determine what info is missing
+    questions = []
+
+    if not tenant or not tenant.cnpj:
+        questions.append({
+            'field': 'cnpj',
+            'label': 'CNPJ da Empresa',
+            'type': 'text',
+            'placeholder': '00.000.000/0000-00',
+            'required': True
+        })
+
+    questions.extend([
+        {
+            'field': 'area_atuacao',
+            'label': 'Área de Atuação da Empresa',
+            'type': 'text',
+            'placeholder': 'Ex: Tecnologia da Informação, Biotecnologia...',
+            'required': True
+        },
+        {
+            'field': 'experiencia_pd',
+            'label': 'Experiência em P&D (breve descrição)',
+            'type': 'textarea',
+            'placeholder': 'Descreva projetos anteriores, parcerias com ICTs, patentes...',
+            'required': False
+        },
+        {
+            'field': 'objetivo_projeto',
+            'label': 'Objetivo Principal do Projeto',
+            'type': 'textarea',
+            'placeholder': 'Qual o principal objetivo a ser alcançado?',
+            'required': True
+        },
+        {
+            'field': 'resultados_esperados',
+            'label': 'Resultados Esperados',
+            'type': 'textarea',
+            'placeholder': 'Liste os principais resultados e entregas esperadas...',
+            'required': True
+        },
+        {
+            'field': 'metodologia',
+            'label': 'Metodologia (resumo)',
+            'type': 'textarea',
+            'placeholder': 'Descreva brevemente a metodologia a ser utilizada...',
+            'required': False
+        },
+        {
+            'field': 'diferenciais',
+            'label': 'Diferenciais e Inovação',
+            'type': 'textarea',
+            'placeholder': 'O que torna este projeto inovador?',
+            'required': False
+        },
+        {
+            'field': 'impacto',
+            'label': 'Impacto Esperado',
+            'type': 'textarea',
+            'placeholder': 'Descreva o impacto científico, tecnológico, econômico e social...',
+            'required': False
+        }
+    ])
+
+    return jsonify({'questions': questions})
