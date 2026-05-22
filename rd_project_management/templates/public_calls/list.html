@@ -1,74 +1,62 @@
 {% extends "base.html" %}
-{% block title %}Chamadas Públicas - Gestão P&D{% endblock %}
+{% block title %}Chamadas Publicas - Orion P&D{% endblock %}
 
 {% block content %}
 <div class="d-flex align-items-center mb-4">
     <div class="flex-grow-1">
-        <h4 class="fw-bold mb-0"><i class="bi bi-megaphone text-primary"></i> Chamadas Públicas</h4>
-        <span class="text-muted">FINEP, BNDES e outras fontes de fomento</span>
+        <h4 class="fw-bold mb-0"><i class="bi bi-megaphone text-primary"></i> Chamadas Publicas</h4>
+        <span class="text-muted">FINEP, BNDES, FAPESC e outras fontes de fomento</span>
     </div>
     <a href="{{ url_for('public_calls.create_call') }}" class="btn btn-primary me-2">
         <i class="bi bi-plus-lg"></i> Nova Chamada
     </a>
     <button type="button" class="btn btn-success me-2" onclick="refreshPublicCalls(this)">
-        <i class="bi bi-arrow-clockwise"></i> Atualizar do FINEP
+        <i class="bi bi-arrow-clockwise"></i> Sincronizar Chamadas
     </button>
     <button type="button" class="btn btn-info" onclick="suggestAutoLinks(this)">
-        <i class="bi bi-link-45deg"></i> Sugerir Vínculos
+        <i class="bi bi-link-45deg"></i> Sugerir Vinculos
     </button>
 </div>
 
 <!-- Stats -->
 <div class="row g-3 mb-4">
-    <div class="col-md-3">
+    <div class="col-6 col-md-2">
         <div class="card card-stats border-primary shadow-sm">
-            <div class="card-body">
-                <div class="d-flex justify-content-between">
-                    <div>
-                        <p class="text-muted mb-1 small">Total Chamadas</p>
-                        <h3 class="fw-bold mb-0">{{ calls|length }}</h3>
-                    </div>
-                    <div class="text-primary opacity-50"><i class="bi bi-megaphone" style="font-size:2rem"></i></div>
-                </div>
+            <div class="card-body py-2">
+                <p class="text-muted mb-0 small">Total</p>
+                <h4 class="fw-bold mb-0">{{ calls|length }}</h4>
             </div>
         </div>
     </div>
-    <div class="col-md-3">
+    <div class="col-6 col-md-2">
         <div class="card card-stats border-info shadow-sm">
-            <div class="card-body">
-                <div class="d-flex justify-content-between">
-                    <div>
-                        <p class="text-muted mb-1 small">FINEP</p>
-                        <h3 class="fw-bold mb-0">{{ total_finep }}</h3>
-                    </div>
-                    <div class="text-info opacity-50"><i class="bi bi-building" style="font-size:2rem"></i></div>
-                </div>
+            <div class="card-body py-2">
+                <p class="text-muted mb-0 small">FINEP</p>
+                <h4 class="fw-bold mb-0">{{ total_finep }}</h4>
             </div>
         </div>
     </div>
-    <div class="col-md-3">
+    <div class="col-6 col-md-2">
         <div class="card card-stats border-success shadow-sm">
-            <div class="card-body">
-                <div class="d-flex justify-content-between">
-                    <div>
-                        <p class="text-muted mb-1 small">BNDES</p>
-                        <h3 class="fw-bold mb-0">{{ total_bndes }}</h3>
-                    </div>
-                    <div class="text-success opacity-50"><i class="bi bi-bank" style="font-size:2rem"></i></div>
-                </div>
+            <div class="card-body py-2">
+                <p class="text-muted mb-0 small">BNDES</p>
+                <h4 class="fw-bold mb-0">{{ total_bndes }}</h4>
             </div>
         </div>
     </div>
-    <div class="col-md-3">
+    <div class="col-6 col-md-2">
+        <div class="card card-stats border-danger shadow-sm">
+            <div class="card-body py-2">
+                <p class="text-muted mb-0 small">FAPESC</p>
+                <h4 class="fw-bold mb-0">{{ total_fapesc }}</h4>
+            </div>
+        </div>
+    </div>
+    <div class="col-6 col-md-2">
         <div class="card card-stats border-warning shadow-sm">
-            <div class="card-body">
-                <div class="d-flex justify-content-between">
-                    <div>
-                        <p class="text-muted mb-1 small">Outras</p>
-                        <h3 class="fw-bold mb-0">{{ total_other }}</h3>
-                    </div>
-                    <div class="text-warning opacity-50"><i class="bi bi-globe" style="font-size:2rem"></i></div>
-                </div>
+            <div class="card-body py-2">
+                <p class="text-muted mb-0 small">Outras</p>
+                <h4 class="fw-bold mb-0">{{ total_other }}</h4>
             </div>
         </div>
     </div>
@@ -89,6 +77,7 @@
                     <option value="">Todas as Fontes</option>
                     <option value="FINEP" {{ 'selected' if source_filter == 'FINEP' }}>FINEP</option>
                     <option value="BNDES" {{ 'selected' if source_filter == 'BNDES' }}>BNDES</option>
+                    <option value="FAPESC" {{ 'selected' if source_filter == 'FAPESC' }}>FAPESC</option>
                     <option value="Outro" {{ 'selected' if source_filter == 'Outro' }}>Outras</option>
                 </select>
             </div>
@@ -109,7 +98,15 @@
                 <div class="d-flex justify-content-between align-items-start">
                     <div class="flex-grow-1">
                         <div class="d-flex align-items-center mb-2">
-                            <span class="badge {{ 'bg-primary' if call.source == 'FINEP' else 'bg-success' if call.source == 'BNDES' else 'bg-warning text-dark' }} me-2">{{ call.source }}</span>
+                            {% if call.source == 'FINEP' %}
+                            <span class="badge bg-primary me-2">{{ call.source }}</span>
+                            {% elif call.source == 'BNDES' %}
+                            <span class="badge bg-success me-2">{{ call.source }}</span>
+                            {% elif call.source == 'FAPESC' %}
+                            <span class="badge bg-danger me-2">{{ call.source }}</span>
+                            {% else %}
+                            <span class="badge bg-warning text-dark me-2">{{ call.source }}</span>
+                            {% endif %}
                             {% if call.theme %}
                             <span class="badge bg-secondary me-2">{{ call.theme }}</span>
                             {% endif %}
@@ -156,14 +153,67 @@
 <div class="card shadow-sm">
     <div class="empty-state">
         <i class="bi bi-megaphone"></i>
-        <h5>Nenhuma chamada pública encontrada</h5>
-        <p>Clique no botão "Atualizar do FINEP" para buscar chamadas disponíveis</p>
+        <h5>Nenhuma chamada publica encontrada</h5>
+        <p>Clique no botao "Sincronizar Chamadas" para buscar chamadas disponiveis</p>
         <form method="POST" action="{{ url_for('public_calls.refresh_calls') }}" class="d-inline">
             <button type="submit" class="btn btn-success">
-                <i class="bi bi-arrow-clockwise"></i> Atualizar Agora
+                <i class="bi bi-arrow-clockwise"></i> Sincronizar Agora
             </button>
         </form>
     </div>
 </div>
 {% endif %}
+{% endblock %}
+
+{% block extra_js %}
+<script>
+async function refreshPublicCalls(btn) {
+    const originalHtml = btn.innerHTML;
+    btn.disabled = true;
+    btn.innerHTML = '<span class="spinner-border spinner-border-sm"></span> Sincronizando...';
+
+    try {
+        const response = await fetch('{{ url_for("public_calls.refresh_calls_ajax") }}', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' }
+        });
+        const data = await response.json();
+
+        let msg = `FINEP: ${data.finep}, BNDES: ${data.bndes}, FAPESC: ${data.fapesc} chamadas`;
+        if (data.errors && data.errors.length > 0) {
+            alert('Sincronização parcial. ' + msg + '\nErros: ' + data.errors.join('; '));
+        } else {
+            alert('Sincronização concluída! ' + msg);
+        }
+        location.reload();
+    } catch (error) {
+        alert('Erro ao sincronizar: ' + error.message);
+        btn.disabled = false;
+        btn.innerHTML = originalHtml;
+    }
+}
+
+async function suggestAutoLinks(btn) {
+    const originalHtml = btn.innerHTML;
+    btn.disabled = true;
+    btn.innerHTML = '<span class="spinner-border spinner-border-sm"></span> Analisando...';
+
+    try {
+        const response = await fetch('{{ url_for("public_calls.suggest_links") }}', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' }
+        });
+        const data = await response.json();
+        alert(data.message);
+        if (data.count > 0) {
+            location.reload();
+        }
+    } catch (error) {
+        alert('Erro ao sugerir vinculos: ' + error.message);
+    } finally {
+        btn.disabled = false;
+        btn.innerHTML = originalHtml;
+    }
+}
+</script>
 {% endblock %}
