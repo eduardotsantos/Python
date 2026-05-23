@@ -5,10 +5,21 @@ from models import db, User
 auth_bp = Blueprint('auth', __name__)
 
 
+def get_portal_news():
+    """Get news for the login portal."""
+    try:
+        from services.news_scraper import get_innovation_news
+        return get_innovation_news(finep_limit=3, fapesc_limit=3)
+    except Exception:
+        return []
+
+
 @auth_bp.route('/login', methods=['GET', 'POST'])
 def login():
     if current_user.is_authenticated:
         return redirect(url_for('home.dashboard'))
+
+    news = get_portal_news()
 
     if request.method == 'POST':
         login_input = request.form.get('username', '').strip()
@@ -25,7 +36,7 @@ def login():
             if user.tenant_id and user.tenant:
                 if not user.tenant.is_active():
                     flash('Sua empresa está com a licença expirada ou inativa. Entre em contato com o suporte.', 'danger')
-                    return render_template('auth/login.html')
+                    return render_template('auth/login.html', news=news)
 
             login_user(user)
             next_page = request.args.get('next')
@@ -36,7 +47,7 @@ def login():
         else:
             flash('Email/usuário ou senha incorretos.', 'danger')
 
-    return render_template('auth/login.html')
+    return render_template('auth/login.html', news=news)
 
 
 @auth_bp.route('/register', methods=['GET', 'POST'])
