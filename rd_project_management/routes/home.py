@@ -66,20 +66,60 @@ def dashboard():
             Milestone.status != 'Concluído'
         ).order_by(Milestone.end_date).limit(5).all()
 
-    # Get recent public calls
-    recent_calls = PublicCall.query.filter(
-        db.or_(
-            PublicCall.tenant_id == None,
-            PublicCall.tenant_id == tenant_id
-        ),
-        PublicCall.status == 'Aberta'
-    ).order_by(PublicCall.updated_at.desc()).limit(6).all()
+    # Get top 10 active projects with progress
+    if tenant_id:
+        active_projects_list = Project.query.filter_by(tenant_id=tenant_id).filter(
+            Project.status.in_(['Em Andamento', 'Planejamento'])
+        ).order_by(Project.updated_at.desc()).limit(10).all()
+    else:
+        active_projects_list = Project.query.filter(
+            Project.status.in_(['Em Andamento', 'Planejamento'])
+        ).order_by(Project.updated_at.desc()).limit(10).all()
+
+    # Calculate progress and budget usage for each project
+    projects_with_stats = []
+    for p in active_projects_list:
+        # Calculate milestone progress
+        milestones = Milestone.query.filter_by(project_id=p.id).all()
+        if milestones:
+            total_progress = sum(m.progress or 0 for m in milestones)
+            milestone_progress = round(total_progress / len(milestones))
+        else:
+            milestone_progress = 0
+
+        # Calculate budget usage
+        project_expenses = db.session.query(func.sum(Expense.amount)).filter_by(project_id=p.id).scalar() or 0
+        budget_used = round((project_expenses / p.budget * 100)) if p.budget and p.budget > 0 else 0
+
+        # Days remaining
+        days_remaining = None
+        if p.end_date:
+            days_remaining = (p.end_date - today).days
+
+        projects_with_stats.append({
+            'project': p,
+            'progress': milestone_progress,
+            'budget_used': min(budget_used, 100),
+            'expenses': project_expenses,
+            'days_remaining': days_remaining,
+            'milestones_count': len(milestones),
+            'milestones_done': len([m for m in milestones if m.status == 'Concluído'])
+        })
 
     # Get projects ending soon
     projects_ending_soon = []
     for p in projects:
         if p.end_date and p.end_date >= today and p.end_date <= next_30_days:
             projects_ending_soon.append(p)
+
+    # Count open calls for stats
+    open_calls_count = PublicCall.query.filter(
+        db.or_(
+            PublicCall.tenant_id == None,
+            PublicCall.tenant_id == tenant_id
+        ),
+        PublicCall.status == 'Aberta'
+    ).count()
 
     return render_template('home/dashboard.html',
                            tenant=tenant,
@@ -88,7 +128,8 @@ def dashboard():
                            total_budget=total_budget,
                            total_expenses=total_expenses,
                            upcoming_milestones=upcoming_milestones,
-                           recent_calls=recent_calls,
+                           projects_with_stats=projects_with_stats,
+                           open_calls_count=open_calls_count,
                            projects_ending_soon=projects_ending_soon,
                            ai_configured=bool(os.environ.get('ANTHROPIC_API_KEY')))
 
