@@ -322,6 +322,72 @@
             padding: 20px;
             color: #28a745;
         }
+
+        /* EVM Section */
+        .evm-grid {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .evm-box {
+            flex: 1;
+            text-align: center;
+            padding: 10px;
+            background: #f8f9fa;
+            border-radius: 6px;
+            border: 1px solid #dee2e6;
+        }
+
+        .evm-box.highlight {
+            border: 2px solid #0d6efd;
+            background: #e7f1ff;
+        }
+
+        .evm-value {
+            font-size: 16pt;
+            font-weight: bold;
+        }
+
+        .evm-value.good { color: #28a745; }
+        .evm-value.warning { color: #ffc107; }
+        .evm-value.bad { color: #dc3545; }
+
+        .evm-label {
+            font-size: 8pt;
+            color: #666;
+            font-weight: bold;
+        }
+
+        .evm-desc {
+            font-size: 7pt;
+            color: #888;
+        }
+
+        .evm-secondary {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .evm-mini {
+            flex: 1;
+            min-width: 60px;
+            text-align: center;
+            padding: 6px;
+            background: #f8f9fa;
+            border-radius: 4px;
+        }
+
+        .evm-mini .value {
+            font-size: 10pt;
+            font-weight: bold;
+        }
+
+        .evm-mini .label {
+            font-size: 7pt;
+            color: #888;
+        }
     </style>
 </head>
 <body>
@@ -369,6 +435,67 @@
             <div class="metric-detail">{{ risks|selectattr('severity', 'equalto', 'high')|list|length }} criticos</div>
         </div>
     </div>
+
+    <!-- EVM Metrics -->
+    {% if evm_metrics and evm_metrics.has_data %}
+    <div class="section">
+        <div class="section-title">Indicadores de Valor Agregado (EVM)</div>
+        <div class="evm-grid">
+            <div class="evm-box highlight">
+                <div class="evm-value {{ 'good' if evm_metrics.cpi >= 1 else 'warning' if evm_metrics.cpi >= 0.9 else 'bad' }}">
+                    {{ evm_metrics.cpi }}
+                </div>
+                <div class="evm-label">CPI</div>
+                <div class="evm-desc">Desempenho de Custo</div>
+            </div>
+            <div class="evm-box highlight">
+                <div class="evm-value {{ 'good' if evm_metrics.spi >= 1 else 'warning' if evm_metrics.spi >= 0.9 else 'bad' }}">
+                    {{ evm_metrics.spi }}
+                </div>
+                <div class="evm-label">SPI</div>
+                <div class="evm-desc">Desempenho de Prazo</div>
+            </div>
+            <div class="evm-box">
+                <div class="evm-value" style="color: #0d6efd;">R$ {{ "{:,.0f}".format(evm_metrics.etc) }}</div>
+                <div class="evm-label">ETC</div>
+                <div class="evm-desc">Estimativa p/ Terminar</div>
+            </div>
+            <div class="evm-box">
+                <div class="evm-value {{ 'good' if evm_metrics.eac <= evm_metrics.bac else 'bad' }}">
+                    R$ {{ "{:,.0f}".format(evm_metrics.eac) }}
+                </div>
+                <div class="evm-label">EAC</div>
+                <div class="evm-desc">Estimativa no Termino</div>
+            </div>
+        </div>
+        <div class="evm-secondary">
+            <div class="evm-mini">
+                <div class="value">R$ {{ "{:,.0f}".format(evm_metrics.bac) }}</div>
+                <div class="label">BAC (Orcamento)</div>
+            </div>
+            <div class="evm-mini">
+                <div class="value">R$ {{ "{:,.0f}".format(evm_metrics.ev) }}</div>
+                <div class="label">EV (Valor Agregado)</div>
+            </div>
+            <div class="evm-mini">
+                <div class="value">R$ {{ "{:,.0f}".format(evm_metrics.ac) }}</div>
+                <div class="label">AC (Custo Real)</div>
+            </div>
+            <div class="evm-mini">
+                <div class="value {{ 'good' if evm_metrics.cv >= 0 else 'bad' }}">R$ {{ "{:,.0f}".format(evm_metrics.cv) }}</div>
+                <div class="label">CV (Var. Custo)</div>
+            </div>
+            <div class="evm-mini">
+                <div class="value {{ 'good' if evm_metrics.sv >= 0 else 'bad' }}">R$ {{ "{:,.0f}".format(evm_metrics.sv) }}</div>
+                <div class="label">SV (Var. Prazo)</div>
+            </div>
+            <div class="evm-mini">
+                <div class="value {{ 'good' if evm_metrics.vac >= 0 else 'bad' }}">R$ {{ "{:,.0f}".format(evm_metrics.vac) }}</div>
+                <div class="label">VAC (Var. Termino)</div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
 
     <!-- Two Columns -->
     <div class="two-columns">

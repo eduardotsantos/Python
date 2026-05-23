@@ -135,6 +135,122 @@
     </div>
 </div>
 
+<!-- EVM Metrics -->
+{% if evm_metrics and evm_metrics.has_data %}
+<div class="card shadow-sm mb-4">
+    <div class="card-header bg-white d-flex justify-content-between align-items-center">
+        <h6 class="mb-0 fw-bold"><i class="bi bi-graph-up-arrow text-info"></i> Indicadores de Valor Agregado (EVM)</h6>
+        <span class="status-badge {{ evm_metrics.status }}">
+            {% if evm_metrics.status == 'green' %}Saudavel{% elif evm_metrics.status == 'yellow' %}Atencao{% else %}Critico{% endif %}
+        </span>
+    </div>
+    <div class="card-body">
+        <div class="row g-3">
+            <!-- Primary EVM Indicators -->
+            <div class="col-md-3">
+                <div class="border rounded p-3 text-center h-100">
+                    <div class="fw-bold text-{{ 'success' if evm_metrics.cpi >= 1 else 'warning' if evm_metrics.cpi >= 0.9 else 'danger' }}" style="font-size: 1.5rem;">
+                        {{ evm_metrics.cpi }}
+                    </div>
+                    <div class="small text-muted">CPI</div>
+                    <div class="small text-muted">Indice de Desempenho de Custo</div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="border rounded p-3 text-center h-100">
+                    <div class="fw-bold text-{{ 'success' if evm_metrics.spi >= 1 else 'warning' if evm_metrics.spi >= 0.9 else 'danger' }}" style="font-size: 1.5rem;">
+                        {{ evm_metrics.spi }}
+                    </div>
+                    <div class="small text-muted">SPI</div>
+                    <div class="small text-muted">Indice de Desempenho de Prazo</div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="border rounded p-3 text-center h-100">
+                    <div class="fw-bold text-primary" style="font-size: 1.5rem;">
+                        R$ {{ "{:,.0f}".format(evm_metrics.etc) }}
+                    </div>
+                    <div class="small text-muted">ETC</div>
+                    <div class="small text-muted">Estimativa para Terminar</div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="border rounded p-3 text-center h-100">
+                    <div class="fw-bold text-{{ 'success' if evm_metrics.eac <= evm_metrics.bac else 'danger' }}" style="font-size: 1.5rem;">
+                        R$ {{ "{:,.0f}".format(evm_metrics.eac) }}
+                    </div>
+                    <div class="small text-muted">EAC</div>
+                    <div class="small text-muted">Estimativa no Termino</div>
+                </div>
+            </div>
+        </div>
+
+        <hr class="my-3">
+
+        <!-- Secondary EVM Values -->
+        <div class="row g-2">
+            <div class="col-md-2 col-4">
+                <div class="text-center">
+                    <div class="small text-muted">BAC</div>
+                    <div class="fw-bold">R$ {{ "{:,.0f}".format(evm_metrics.bac) }}</div>
+                    <div class="small text-muted">Orcamento Total</div>
+                </div>
+            </div>
+            <div class="col-md-2 col-4">
+                <div class="text-center">
+                    <div class="small text-muted">EV</div>
+                    <div class="fw-bold">R$ {{ "{:,.0f}".format(evm_metrics.ev) }}</div>
+                    <div class="small text-muted">Valor Agregado</div>
+                </div>
+            </div>
+            <div class="col-md-2 col-4">
+                <div class="text-center">
+                    <div class="small text-muted">AC</div>
+                    <div class="fw-bold">R$ {{ "{:,.0f}".format(evm_metrics.ac) }}</div>
+                    <div class="small text-muted">Custo Real</div>
+                </div>
+            </div>
+            <div class="col-md-2 col-4">
+                <div class="text-center">
+                    <div class="small text-muted">CV</div>
+                    <div class="fw-bold text-{{ 'success' if evm_metrics.cv >= 0 else 'danger' }}">
+                        R$ {{ "{:,.0f}".format(evm_metrics.cv) }}
+                    </div>
+                    <div class="small text-muted">Variacao de Custo</div>
+                </div>
+            </div>
+            <div class="col-md-2 col-4">
+                <div class="text-center">
+                    <div class="small text-muted">SV</div>
+                    <div class="fw-bold text-{{ 'success' if evm_metrics.sv >= 0 else 'danger' }}">
+                        R$ {{ "{:,.0f}".format(evm_metrics.sv) }}
+                    </div>
+                    <div class="small text-muted">Variacao de Prazo</div>
+                </div>
+            </div>
+            <div class="col-md-2 col-4">
+                <div class="text-center">
+                    <div class="small text-muted">VAC</div>
+                    <div class="fw-bold text-{{ 'success' if evm_metrics.vac >= 0 else 'danger' }}">
+                        R$ {{ "{:,.0f}".format(evm_metrics.vac) }}
+                    </div>
+                    <div class="small text-muted">Variacao no Termino</div>
+                </div>
+            </div>
+        </div>
+
+        {% if evm_metrics.time_elapsed_pct > 0 %}
+        <div class="mt-3">
+            <small class="text-muted">Tempo decorrido: {{ evm_metrics.time_elapsed_pct }}%</small>
+            <div class="progress progress-thin mt-1">
+                <div class="progress-bar bg-secondary" style="width: {{ evm_metrics.time_elapsed_pct }}%"></div>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endif %}
+
 <div class="row g-4">
     <!-- Left Column -->
     <div class="col-lg-6">

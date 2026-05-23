@@ -113,6 +113,98 @@ def calculate_cost_status(project):
     }
 
 
+def calculate_evm_metrics(project, schedule_status, cost_status):
+    """Calculate Earned Value Management metrics (ETC, EAC, CPI, SPI, etc.)."""
+    bac = cost_status['budget']  # Budget at Completion
+    ac = cost_status['spent']     # Actual Cost
+    progress = schedule_status['progress'] / 100 if schedule_status['progress'] > 0 else 0
+
+    # If no budget, return empty metrics
+    if bac == 0:
+        return {
+            'bac': 0,
+            'ac': ac,
+            'ev': 0,
+            'pv': 0,
+            'cpi': 0,
+            'spi': 0,
+            'cv': 0,
+            'sv': 0,
+            'etc': 0,
+            'eac': ac,
+            'vac': 0,
+            'tcpi': 0,
+            'status': 'gray',
+            'has_data': False
+        }
+
+    # Earned Value = BAC × Progress %
+    ev = bac * progress
+
+    # Planned Value - based on time elapsed
+    pv = 0
+    time_elapsed_pct = 0
+    if project.start_date and project.end_date:
+        total_days = (project.end_date - project.start_date).days
+        if total_days > 0:
+            days_elapsed = (date.today() - project.start_date).days
+            time_elapsed_pct = min(max(days_elapsed / total_days, 0), 1)
+            pv = bac * time_elapsed_pct
+
+    # Cost Performance Index (CPI) = EV / AC
+    cpi = ev / ac if ac > 0 else (1.0 if ev == 0 else float('inf'))
+
+    # Schedule Performance Index (SPI) = EV / PV
+    spi = ev / pv if pv > 0 else (1.0 if ev == 0 else float('inf'))
+
+    # Cost Variance (CV) = EV - AC
+    cv = ev - ac
+
+    # Schedule Variance (SV) = EV - PV
+    sv = ev - pv
+
+    # Estimate to Complete (ETC)
+    if cpi > 0 and cpi != float('inf'):
+        etc = (bac - ev) / cpi
+    else:
+        etc = bac - ev
+
+    # Estimate at Completion (EAC) = AC + ETC
+    eac = ac + etc
+
+    # Variance at Completion (VAC) = BAC - EAC
+    vac = bac - eac
+
+    # To Complete Performance Index (TCPI) = (BAC - EV) / (BAC - AC)
+    tcpi = (bac - ev) / (bac - ac) if (bac - ac) > 0 else float('inf')
+
+    # Determine status
+    if cpi >= 1.0 and spi >= 1.0:
+        status = 'green'
+    elif cpi >= 0.9 and spi >= 0.9:
+        status = 'yellow'
+    else:
+        status = 'red'
+
+    return {
+        'bac': round(bac, 2),
+        'ac': round(ac, 2),
+        'ev': round(ev, 2),
+        'pv': round(pv, 2),
+        'cpi': round(cpi, 2) if cpi != float('inf') else 0,
+        'spi': round(spi, 2) if spi != float('inf') else 0,
+        'cv': round(cv, 2),
+        'sv': round(sv, 2),
+        'etc': round(etc, 2),
+        'eac': round(eac, 2),
+        'vac': round(vac, 2),
+        'tcpi': round(tcpi, 2) if tcpi != float('inf') else 0,
+        'time_elapsed_pct': round(time_elapsed_pct * 100, 1),
+        'status': status,
+        'has_data': True
+    }
+
+
 def identify_risks(project, schedule_status, cost_status):
     """Identify project risks based on current status."""
     risks = []
@@ -239,6 +331,7 @@ def view_report(project_id):
     # Calculate statuses
     schedule_status = calculate_schedule_status(project)
     cost_status = calculate_cost_status(project)
+    evm_metrics = calculate_evm_metrics(project, schedule_status, cost_status)
     risks = identify_risks(project, schedule_status, cost_status)
 
     # Get additional data
@@ -272,6 +365,7 @@ def view_report(project_id):
         report_date=datetime.now(),
         schedule_status=schedule_status,
         cost_status=cost_status,
+        evm_metrics=evm_metrics,
         risks=risks,
         overall_health=overall_health,
         overall_label=overall_label,
@@ -295,6 +389,7 @@ def print_report(project_id):
     # Calculate statuses
     schedule_status = calculate_schedule_status(project)
     cost_status = calculate_cost_status(project)
+    evm_metrics = calculate_evm_metrics(project, schedule_status, cost_status)
     risks = identify_risks(project, schedule_status, cost_status)
 
     # Get additional data
@@ -322,6 +417,7 @@ def print_report(project_id):
         report_date=datetime.now(),
         schedule_status=schedule_status,
         cost_status=cost_status,
+        evm_metrics=evm_metrics,
         risks=risks,
         overall_health=overall_health,
         overall_label=overall_label,
