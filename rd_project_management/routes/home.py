@@ -15,6 +15,12 @@ from services.ai_service import get_anthropic_client
 home_bp = Blueprint('home', __name__)
 
 
+@home_bp.route('/planos')
+def pricing():
+    """Public pricing page."""
+    return render_template('pages/pricing.html')
+
+
 @home_bp.route('/home')
 @login_required
 @tenant_required
