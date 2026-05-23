@@ -261,6 +261,58 @@ def delete_project(project_id):
     return redirect(url_for('projects.list_projects'))
 
 
+@projects_bp.route('/projects/<int:project_id>/export-msproject')
+@login_required
+@tenant_required
+def export_to_msproject(project_id):
+    """Export project schedule to MS Project XML format."""
+    from flask import Response
+    project = Project.query.get_or_404(project_id)
+    ensure_tenant_access(project)
+
+    from services.msproject_service import export_project_to_xml
+    xml_content = export_project_to_xml(project)
+
+    response = Response(
+        xml_content,
+        mimetype='application/xml',
+        headers={'Content-Disposition': f'attachment; filename=project_{project.code}.xml'}
+    )
+    return response
+
+
+@projects_bp.route('/projects/<int:project_id>/import-msproject', methods=['POST'])
+@login_required
+@tenant_required
+def import_from_msproject(project_id):
+    """Import milestones from MS Project XML file."""
+    project = Project.query.get_or_404(project_id)
+    ensure_tenant_access(project)
+
+    if 'file' not in request.files:
+        flash('Nenhum arquivo selecionado.', 'danger')
+        return redirect(url_for('schedule.schedule_view', project_id=project_id))
+
+    file = request.files['file']
+    if file.filename == '':
+        flash('Nenhum arquivo selecionado.', 'danger')
+        return redirect(url_for('schedule.schedule_view', project_id=project_id))
+
+    if not file.filename.lower().endswith('.xml'):
+        flash('Arquivo deve ser XML do MS Project.', 'danger')
+        return redirect(url_for('schedule.schedule_view', project_id=project_id))
+
+    try:
+        xml_content = file.read().decode('utf-8')
+        from services.msproject_service import import_project_from_xml
+        count, message = import_project_from_xml(xml_content, project)
+        flash(message, 'success' if count > 0 else 'warning')
+    except Exception as e:
+        flash(f'Erro ao importar arquivo: {str(e)}', 'danger')
+
+    return redirect(url_for('schedule.schedule_view', project_id=project_id))
+
+
 @projects_bp.route('/projects/export-excel')
 @login_required
 @tenant_required

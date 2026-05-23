@@ -94,6 +94,7 @@ class Project(db.Model):
     __tablename__ = 'projects'
     id = db.Column(db.Integer, primary_key=True)
     tenant_id = db.Column(db.Integer, db.ForeignKey('tenants.id'), nullable=False)
+    program_id = db.Column(db.Integer, db.ForeignKey('programs.id'), nullable=True)
     code = db.Column(db.String(50), nullable=False)
     title = db.Column(db.String(300), nullable=False)
     description = db.Column(db.Text)
@@ -353,6 +354,68 @@ class AuditLog(db.Model):
         )
         db.session.add(log_entry)
         return log_entry
+
+
+class Program(db.Model):
+    """Program model - groups related projects."""
+    __tablename__ = 'programs'
+    id = db.Column(db.Integer, primary_key=True)
+    tenant_id = db.Column(db.Integer, db.ForeignKey('tenants.id'), nullable=False)
+    code = db.Column(db.String(50), nullable=False)
+    name = db.Column(db.String(300), nullable=False)
+    description = db.Column(db.Text)
+    objective = db.Column(db.Text)
+    start_date = db.Column(db.Date)
+    end_date = db.Column(db.Date)
+    budget = db.Column(db.Float, default=0.0)
+    status = db.Column(db.String(50), default='Ativo')
+    manager_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+
+    __table_args__ = (
+        db.UniqueConstraint('tenant_id', 'code', name='uq_tenant_program_code'),
+    )
+
+    manager = db.relationship('User', backref='managed_programs')
+    tenant = db.relationship('Tenant', backref='programs')
+    projects = db.relationship('Project', backref='program', lazy='dynamic')
+
+    @property
+    def total_budget(self):
+        """Sum of all project budgets."""
+        return sum(p.budget or 0 for p in self.projects)
+
+    @property
+    def total_spent(self):
+        """Sum of all project expenses."""
+        from sqlalchemy import func
+        return db.session.query(func.sum(Expense.amount)).filter(
+            Expense.project_id.in_([p.id for p in self.projects])
+        ).scalar() or 0
+
+    @property
+    def project_count(self):
+        """Number of projects in this program."""
+        return self.projects.count()
+
+
+class SyncSchedule(db.Model):
+    """Schedule for automatic sync of public calls."""
+    __tablename__ = 'sync_schedules'
+    id = db.Column(db.Integer, primary_key=True)
+    tenant_id = db.Column(db.Integer, db.ForeignKey('tenants.id'), nullable=True)
+    source = db.Column(db.String(50), nullable=False)  # fapesc, finep, cnpq, etc.
+    frequency = db.Column(db.String(20), default='weekly')  # daily, weekly, monthly
+    day_of_week = db.Column(db.Integer, default=0)  # 0=Monday, 6=Sunday
+    hour = db.Column(db.Integer, default=8)  # Hour to run (0-23)
+    last_run = db.Column(db.DateTime)
+    next_run = db.Column(db.DateTime)
+    enabled = db.Column(db.Boolean, default=True)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+
+    tenant = db.relationship('Tenant', backref='sync_schedules')
 
 
 class MeetingMinutes(db.Model):

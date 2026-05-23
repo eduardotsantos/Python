@@ -110,88 +110,51 @@
     </div>
 
     <div class="row g-4">
-        <!-- Top 10 Active Projects -->
+        <!-- Charts Section -->
         <div class="col-lg-8">
-            <div class="card shadow-sm h-100">
+            <!-- Cost Distribution Chart -->
+            <div class="card shadow-sm mb-4">
                 <div class="card-header bg-white d-flex justify-content-between align-items-center">
-                    <h6 class="mb-0 fw-bold"><i class="bi bi-folder-check text-primary"></i> Projetos em Andamento</h6>
-                    <a href="{{ url_for('projects.list_projects') }}" class="btn btn-sm btn-outline-primary">Ver Todos</a>
+                    <h6 class="mb-0 fw-bold"><i class="bi bi-pie-chart text-primary"></i> Distribuicao de Custos por Projeto</h6>
+                    <a href="{{ url_for('portfolio.dashboard') }}" class="btn btn-sm btn-outline-primary">Ver Portfolio</a>
+                </div>
+                <div class="card-body">
+                    {% if expenses_by_project %}
+                    <canvas id="costPieChart" height="180"></canvas>
+                    {% else %}
+                    <div class="text-center py-4 text-muted">
+                        <i class="bi bi-pie-chart" style="font-size: 2rem;"></i>
+                        <p class="mt-2 mb-0">Nenhuma despesa registrada</p>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Gantt Chart -->
+            <div class="card shadow-sm">
+                <div class="card-header bg-white d-flex justify-content-between align-items-center">
+                    <h6 class="mb-0 fw-bold"><i class="bi bi-calendar-range text-info"></i> Timeline de Marcos</h6>
+                    <a href="{{ url_for('projects.list_projects') }}" class="btn btn-sm btn-outline-primary">Ver Projetos</a>
                 </div>
                 <div class="card-body p-0">
-                    {% if projects_with_stats %}
-                    <div class="table-responsive">
-                        <table class="table table-hover mb-0 align-middle">
-                            <thead class="table-light">
+                    {% if gantt_data %}
+                    <div class="table-responsive" style="max-height: 280px; overflow-y: auto;">
+                        <table class="table table-sm table-hover mb-0">
+                            <thead class="table-light sticky-top">
                                 <tr>
+                                    <th>Marco</th>
                                     <th>Projeto</th>
-                                    <th class="text-center" style="width:120px">Progresso</th>
-                                    <th class="text-center" style="width:120px">Orçamento</th>
-                                    <th class="text-center" style="width:100px">Prazo</th>
-                                    <th class="text-center" style="width:60px"></th>
+                                    <th class="text-center">Prazo</th>
+                                    <th style="width: 150px;">Progresso</th>
                                 </tr>
                             </thead>
-                            <tbody>
-                                {% for item in projects_with_stats %}
-                                <tr>
-                                    <td>
-                                        <a href="{{ url_for('projects.view_project', project_id=item.project.id) }}" class="text-decoration-none">
-                                            <strong>{{ item.project.code }}</strong>
-                                        </a>
-                                        <br>
-                                        <small class="text-muted">{{ item.project.title|truncate(40) }}</small>
-                                    </td>
-                                    <td class="text-center">
-                                        <div class="d-flex align-items-center justify-content-center">
-                                            <div class="progress flex-grow-1 me-2" style="height: 8px; max-width: 80px;">
-                                                <div class="progress-bar {{ 'bg-success' if item.progress >= 70 else 'bg-warning' if item.progress >= 40 else 'bg-danger' }}"
-                                                     style="width: {{ item.progress }}%"></div>
-                                            </div>
-                                            <small class="fw-bold">{{ item.progress }}%</small>
-                                        </div>
-                                        <small class="text-muted">{{ item.milestones_done }}/{{ item.milestones_count }} marcos</small>
-                                    </td>
-                                    <td class="text-center">
-                                        <div class="d-flex align-items-center justify-content-center">
-                                            <div class="progress flex-grow-1 me-2" style="height: 8px; max-width: 80px;">
-                                                <div class="progress-bar {{ 'bg-danger' if item.budget_used > 90 else 'bg-warning' if item.budget_used > 70 else 'bg-success' }}"
-                                                     style="width: {{ item.budget_used }}%"></div>
-                                            </div>
-                                            <small class="fw-bold">{{ item.budget_used }}%</small>
-                                        </div>
-                                        <small class="text-muted">R$ {{ "{:,.0f}".format(item.expenses).replace(",", ".") }}</small>
-                                    </td>
-                                    <td class="text-center">
-                                        {% if item.days_remaining is not none %}
-                                            {% if item.days_remaining < 0 %}
-                                                <span class="badge bg-danger">Vencido</span>
-                                            {% elif item.days_remaining <= 30 %}
-                                                <span class="badge bg-warning text-dark">{{ item.days_remaining }}d</span>
-                                            {% else %}
-                                                <span class="badge bg-light text-dark">{{ item.days_remaining }}d</span>
-                                            {% endif %}
-                                        {% else %}
-                                            <span class="text-muted">-</span>
-                                        {% endif %}
-                                    </td>
-                                    <td class="text-center">
-                                        <a href="{{ url_for('status_report.view_report', project_id=item.project.id) }}"
-                                           class="btn btn-sm btn-outline-success" title="Status Report">
-                                            <i class="bi bi-clipboard-data"></i>
-                                        </a>
-                                    </td>
-                                </tr>
-                                {% endfor %}
-                            </tbody>
+                            <tbody id="ganttBody"></tbody>
                         </table>
                     </div>
                     {% else %}
-                    <div class="text-center py-5">
-                        <i class="bi bi-folder-x text-muted" style="font-size:2.5rem"></i>
-                        <h6 class="mt-3">Nenhum projeto em andamento</h6>
-                        <p class="text-muted mb-3">Crie seu primeiro projeto para começar</p>
-                        <a href="{{ url_for('projects.create_project') }}" class="btn btn-primary">
-                            <i class="bi bi-plus-lg"></i> Novo Projeto
-                        </a>
+                    <div class="text-center py-4 text-muted">
+                        <i class="bi bi-calendar-x" style="font-size: 2rem;"></i>
+                        <p class="mt-2 mb-0">Nenhum marco cadastrado</p>
                     </div>
                     {% endif %}
                 </div>
@@ -200,35 +163,67 @@
 
         <!-- Sidebar -->
         <div class="col-lg-4">
+            <!-- Recent News from Entities -->
+            <div class="card shadow-sm mb-4">
+                <div class="card-header bg-white">
+                    <h6 class="mb-0 fw-bold"><i class="bi bi-newspaper text-success"></i> Noticias de Editais</h6>
+                </div>
+                <div class="card-body p-0">
+                    {% if recent_calls %}
+                    <ul class="list-group list-group-flush">
+                        {% for call in recent_calls %}
+                        <li class="list-group-item">
+                            <span class="badge bg-{{ 'primary' if call.source == 'FINEP' else 'success' if call.source == 'FAPESC' else 'info' }} mb-1">{{ call.source }}</span>
+                            <br>
+                            <a href="{{ call.url }}" target="_blank" class="text-decoration-none small">
+                                {{ call.title|truncate(55) }}
+                            </a>
+                            {% if call.deadline %}
+                            <br><small class="text-danger"><i class="bi bi-clock"></i> {{ call.deadline }}</small>
+                            {% endif %}
+                        </li>
+                        {% endfor %}
+                    </ul>
+                    {% else %}
+                    <div class="text-center py-3 text-muted">
+                        <small>Nenhuma chamada recente</small>
+                    </div>
+                    {% endif %}
+                </div>
+                <div class="card-footer bg-white text-center">
+                    <a href="{{ url_for('public_calls.list_calls') }}" class="btn btn-sm btn-outline-success">
+                        <i class="bi bi-megaphone"></i> Ver Todas
+                    </a>
+                </div>
+            </div>
+
             <!-- Upcoming Milestones -->
             <div class="card shadow-sm mb-4">
                 <div class="card-header bg-white">
-                    <h6 class="mb-0 fw-bold"><i class="bi bi-flag text-warning"></i> Próximos Marcos (30 dias)</h6>
+                    <h6 class="mb-0 fw-bold"><i class="bi bi-flag text-warning"></i> Proximos Marcos</h6>
                 </div>
                 <div class="card-body p-0">
                     {% if upcoming_milestones %}
                     <ul class="list-group list-group-flush">
                         {% for m in upcoming_milestones %}
-                        <li class="list-group-item">
+                        <li class="list-group-item py-2">
                             <div class="d-flex justify-content-between align-items-center">
                                 <div>
-                                    <strong class="small">{{ m.title|truncate(35) }}</strong>
-                                    <br>
-                                    <small class="text-muted">{{ m.project.code }}</small>
+                                    <strong class="small">{{ m.title|truncate(30) }}</strong>
+                                    <br><small class="text-muted">{{ m.project.code }}</small>
                                 </div>
                                 <div class="text-end">
                                     <span class="badge bg-warning text-dark">{{ m.end_date.strftime('%d/%m') }}</span>
-                                    <br>
-                                    <small class="text-muted">{{ m.progress }}%</small>
+                                    <br><small>{{ m.progress }}%</small>
                                 </div>
                             </div>
                         </li>
                         {% endfor %}
                     </ul>
                     {% else %}
-                    <div class="text-center py-3">
-                        <i class="bi bi-check-circle text-success"></i>
-                        <small class="text-muted d-block">Nenhum marco nos próximos 30 dias</small>
+                    <div class="text-center py-3 text-success">
+                        <i class="bi bi-check-circle"></i>
+                        <small class="d-block text-muted">Nenhum marco proximo</small>
                     </div>
                     {% endif %}
                 </div>
@@ -245,10 +240,9 @@
                         {% for p in projects_ending_soon[:3] %}
                         <li class="list-group-item">
                             <a href="{{ url_for('projects.view_project', project_id=p.id) }}" class="text-decoration-none">
-                                <strong>{{ p.code }}</strong> - {{ p.title|truncate(30) }}
+                                <strong>{{ p.code }}</strong> - {{ p.title|truncate(25) }}
                             </a>
-                            <br>
-                            <small class="text-danger">Encerra: {{ p.end_date.strftime('%d/%m/%Y') }}</small>
+                            <br><small class="text-danger">{{ p.end_date.strftime('%d/%m/%Y') }}</small>
                         </li>
                         {% endfor %}
                     </ul>
@@ -259,17 +253,20 @@
             <!-- Quick Actions -->
             <div class="card shadow-sm">
                 <div class="card-header bg-white">
-                    <h6 class="mb-0 fw-bold"><i class="bi bi-lightning"></i> Ações Rápidas</h6>
+                    <h6 class="mb-0 fw-bold"><i class="bi bi-lightning"></i> Acoes Rapidas</h6>
                 </div>
                 <div class="card-body">
                     <div class="d-grid gap-2">
                         <a href="{{ url_for('projects.create_project') }}" class="btn btn-outline-primary btn-sm">
                             <i class="bi bi-plus-lg"></i> Novo Projeto
                         </a>
-                        <a href="{{ url_for('public_calls.list_calls') }}" class="btn btn-outline-success btn-sm">
-                            <i class="bi bi-megaphone"></i> Ver Chamadas
+                        <a href="{{ url_for('programs.list_programs') }}" class="btn btn-outline-info btn-sm">
+                            <i class="bi bi-collection"></i> Programas
                         </a>
-                        <a href="{{ url_for('ai.ai_dashboard') }}" class="btn btn-outline-info btn-sm">
+                        <a href="{{ url_for('portfolio.dashboard') }}" class="btn btn-outline-success btn-sm">
+                            <i class="bi bi-pie-chart"></i> Portfolio
+                        </a>
+                        <a href="{{ url_for('ai.ai_dashboard') }}" class="btn btn-outline-secondary btn-sm">
                             <i class="bi bi-robot"></i> Assistente IA
                         </a>
                     </div>
@@ -293,9 +290,58 @@
 {% endblock %}
 
 {% block extra_js %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
 // Set current date
 document.getElementById('currentDate').textContent = new Date().toLocaleDateString('pt-BR');
+
+// Cost Pie Chart
+{% if expenses_by_project %}
+const costData = {{ expenses_by_project|tojson }};
+if (costData.length > 0) {
+    new Chart(document.getElementById('costPieChart'), {
+        type: 'doughnut',
+        data: {
+            labels: costData.slice(0, 8).map(d => d.code),
+            datasets: [{
+                data: costData.slice(0, 8).map(d => d.spent),
+                backgroundColor: ['#0d6efd', '#28a745', '#ffc107', '#dc3545', '#17a2b8', '#6610f2', '#fd7e14', '#20c997']
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: { legend: { position: 'right', labels: { boxWidth: 12, font: { size: 10 } } } }
+        }
+    });
+}
+{% endif %}
+
+// Gantt Table
+{% if gantt_data %}
+const ganttData = {{ gantt_data|tojson }};
+const ganttBody = document.getElementById('ganttBody');
+const today = new Date();
+ganttData.forEach(m => {
+    const endDate = new Date(m.end);
+    const isOverdue = endDate < today && m.status !== 'Concluido';
+    const progressClass = m.progress >= 100 ? 'bg-success' : m.progress > 0 ? 'bg-primary' : 'bg-secondary';
+    ganttBody.innerHTML += `
+        <tr>
+            <td class="small">${m.name}</td>
+            <td><span class="badge bg-secondary">${m.project_code}</span></td>
+            <td class="text-center ${isOverdue ? 'text-danger fw-bold' : ''}">${endDate.toLocaleDateString('pt-BR')}</td>
+            <td>
+                <div class="d-flex align-items-center">
+                    <div class="progress flex-grow-1 me-2" style="height: 6px;">
+                        <div class="progress-bar ${progressClass}" style="width: ${m.progress}%"></div>
+                    </div>
+                    <small>${m.progress}%</small>
+                </div>
+            </td>
+        </tr>
+    `;
+});
+{% endif %}
 
 function generateInsights() {
     const section = document.getElementById('insightsSection');

@@ -1,0 +1,265 @@
+{% extends "base.html" %}
+{% block title %}Status Report - Portfolio{% endblock %}
+
+{% block extra_css %}
+<style>
+    .status-indicator { width: 20px; height: 20px; border-radius: 50%; display: inline-block; }
+    .status-indicator.red { background-color: #dc3545; }
+    .status-indicator.yellow { background-color: #ffc107; }
+    .status-indicator.green { background-color: #28a745; }
+    .status-badge { padding: 4px 12px; border-radius: 20px; font-weight: bold; }
+    .status-badge.red { background-color: #f8d7da; color: #721c24; }
+    .status-badge.yellow { background-color: #fff3cd; color: #856404; }
+    .status-badge.green { background-color: #d4edda; color: #155724; }
+    .metric-card { text-align: center; padding: 15px; }
+    .metric-value { font-size: 2rem; font-weight: bold; }
+    .metric-label { font-size: 0.85rem; color: #6c757d; }
+    .risk-card { border-left: 4px solid; margin-bottom: 10px; }
+    .risk-card.high { border-left-color: #dc3545; }
+    .risk-card.medium { border-left-color: #ffc107; }
+    @media print {
+        .no-print { display: none !important; }
+        .card { break-inside: avoid; }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="d-flex align-items-center mb-4 no-print">
+    <a href="{{ url_for('portfolio.dashboard') }}" class="btn btn-outline-secondary btn-sm me-3">
+        <i class="bi bi-arrow-left"></i>
+    </a>
+    <div class="flex-grow-1">
+        <h4 class="fw-bold mb-0"><i class="bi bi-clipboard-data text-primary"></i> Status Report - Portfolio</h4>
+        <span class="text-muted">Visao consolidada de todos os projetos</span>
+    </div>
+    <button onclick="window.print()" class="btn btn-success">
+        <i class="bi bi-file-earmark-pdf"></i> Exportar PDF
+    </button>
+</div>
+
+<!-- Header -->
+<div class="card shadow-sm mb-4">
+    <div class="card-body">
+        <div class="row align-items-center">
+            <div class="col-md-5">
+                <h5 class="fw-bold mb-1"><i class="bi bi-building"></i> {{ tenant.name if tenant else 'Portfolio' }}</h5>
+                <p class="text-muted mb-0">
+                    <i class="bi bi-folder"></i> {{ total_projects }} projetos ({{ active_projects }} ativos)
+                </p>
+            </div>
+            <div class="col-md-4 text-center">
+                <small class="text-muted d-block">Data do Relatorio</small>
+                <strong>{{ report_date.strftime('%d/%m/%Y %H:%M') }}</strong>
+            </div>
+            <div class="col-md-3 text-center">
+                <small class="text-muted d-block">Status Geral</small>
+                <span class="status-badge {{ overall_health }}">
+                    <span class="status-indicator {{ overall_health }} me-1"></span>
+                    {{ overall_label }}
+                </span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Key Metrics -->
+<div class="row g-3 mb-4">
+    <div class="col-6 col-md-3">
+        <div class="card shadow-sm h-100">
+            <div class="card-body metric-card">
+                <div class="status-indicator {{ schedule_status.status }} mb-2"></div>
+                <div class="metric-value">{{ schedule_status.progress }}%</div>
+                <div class="metric-label">Progresso Geral</div>
+                <small class="text-muted">{{ schedule_status.completed }}/{{ schedule_status.total }} marcos</small>
+            </div>
+        </div>
+    </div>
+    <div class="col-6 col-md-3">
+        <div class="card shadow-sm h-100">
+            <div class="card-body metric-card">
+                <div class="status-indicator {{ cost_status.status }} mb-2"></div>
+                <div class="metric-value">{{ cost_status.percent_used }}%</div>
+                <div class="metric-label">Orcamento</div>
+                <small class="text-muted">R$ {{ "{:,.0f}".format(cost_status.spent) }} / {{ "{:,.0f}".format(cost_status.budget) }}</small>
+            </div>
+        </div>
+    </div>
+    <div class="col-6 col-md-3">
+        <div class="card shadow-sm h-100">
+            <div class="card-body metric-card">
+                <div class="metric-value text-primary">{{ total_hours|round(0)|int }}</div>
+                <div class="metric-label">Horas Trabalhadas</div>
+            </div>
+        </div>
+    </div>
+    <div class="col-6 col-md-3">
+        <div class="card shadow-sm h-100">
+            <div class="card-body metric-card">
+                <div class="metric-value text-info">{{ team|length }}</div>
+                <div class="metric-label">Equipe Total</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row g-4">
+    <div class="col-lg-6">
+        <!-- Schedule -->
+        <div class="card shadow-sm mb-4">
+            <div class="card-header bg-white">
+                <h6 class="mb-0 fw-bold"><i class="bi bi-calendar-check text-primary"></i> Cronograma</h6>
+            </div>
+            <div class="card-body">
+                <div class="progress mb-3" style="height: 12px;">
+                    <div class="progress-bar bg-{{ 'success' if schedule_status.progress >= 70 else 'warning' }}"
+                         style="width: {{ schedule_status.progress }}%"></div>
+                </div>
+                <div class="row text-center">
+                    <div class="col-4">
+                        <div class="fw-bold text-success">{{ schedule_status.completed }}</div>
+                        <small class="text-muted">Concluidos</small>
+                    </div>
+                    <div class="col-4">
+                        <div class="fw-bold text-primary">{{ schedule_status.on_track }}</div>
+                        <small class="text-muted">No prazo</small>
+                    </div>
+                    <div class="col-4">
+                        <div class="fw-bold text-danger">{{ schedule_status.delayed }}</div>
+                        <small class="text-muted">Atrasados</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Budget -->
+        <div class="card shadow-sm">
+            <div class="card-header bg-white">
+                <h6 class="mb-0 fw-bold"><i class="bi bi-cash-stack text-success"></i> Orcamento</h6>
+            </div>
+            <div class="card-body">
+                <div class="progress mb-3" style="height: 12px;">
+                    <div class="progress-bar bg-{{ 'danger' if cost_status.percent_used > 100 else 'warning' if cost_status.percent_used > 85 else 'success' }}"
+                         style="width: {{ [cost_status.percent_used, 100]|min }}%"></div>
+                </div>
+                <div class="row text-center">
+                    <div class="col-4">
+                        <div class="fw-bold">R$ {{ "{:,.0f}".format(cost_status.budget) }}</div>
+                        <small class="text-muted">Total</small>
+                    </div>
+                    <div class="col-4">
+                        <div class="fw-bold text-primary">R$ {{ "{:,.0f}".format(cost_status.spent) }}</div>
+                        <small class="text-muted">Gasto</small>
+                    </div>
+                    <div class="col-4">
+                        <div class="fw-bold text-{{ 'danger' if cost_status.remaining < 0 else 'success' }}">
+                            R$ {{ "{:,.0f}".format(cost_status.remaining) }}
+                        </div>
+                        <small class="text-muted">Saldo</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-6">
+        <!-- Risks -->
+        <div class="card shadow-sm mb-4">
+            <div class="card-header bg-white">
+                <h6 class="mb-0 fw-bold"><i class="bi bi-exclamation-triangle text-warning"></i> Riscos</h6>
+            </div>
+            <div class="card-body">
+                {% if risks %}
+                {% for risk in risks %}
+                <div class="card risk-card {{ risk.severity }} mb-2">
+                    <div class="card-body py-2 px-3">
+                        <strong>{{ risk.title }}</strong>
+                        <p class="mb-1 small text-muted">{{ risk.description }}</p>
+                        <small class="text-primary"><i class="bi bi-lightbulb"></i> {{ risk.action }}</small>
+                    </div>
+                </div>
+                {% endfor %}
+                {% else %}
+                <div class="text-center py-3 text-success">
+                    <i class="bi bi-shield-check fs-3"></i>
+                    <p class="mb-0 mt-2">Nenhum risco critico</p>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Milestones -->
+        <div class="card shadow-sm">
+            <div class="card-header bg-white">
+                <h6 class="mb-0 fw-bold"><i class="bi bi-flag text-info"></i> Proximos Marcos</h6>
+            </div>
+            <div class="card-body p-0">
+                {% if upcoming_milestones %}
+                <div class="list-group list-group-flush">
+                    {% for m in upcoming_milestones %}
+                    <div class="list-group-item py-2">
+                        <div class="d-flex justify-content-between">
+                            <div>
+                                <strong class="small">{{ m.title|truncate(30) }}</strong>
+                                <br><small class="text-muted">{{ m.project.code }}</small>
+                            </div>
+                            <div class="text-end">
+                                <small>{{ m.end_date.strftime('%d/%m') }}</small>
+                                <br><small class="text-muted">{{ m.progress }}%</small>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% else %}
+                <p class="text-center py-3 text-muted mb-0">Nenhum marco pendente</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Projects Summary -->
+<div class="card shadow-sm mt-4">
+    <div class="card-header bg-white">
+        <h6 class="mb-0 fw-bold"><i class="bi bi-folder"></i> Projetos Principais</h6>
+    </div>
+    <div class="card-body p-0">
+        <div class="table-responsive">
+            <table class="table table-sm mb-0">
+                <thead class="table-light">
+                    <tr>
+                        <th>Codigo</th>
+                        <th>Titulo</th>
+                        <th class="text-center">Progresso</th>
+                        <th class="text-center">Orcamento</th>
+                        <th class="text-end">Gasto</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in projects_summary %}
+                    <tr>
+                        <td><strong>{{ item.project.code }}</strong></td>
+                        <td>{{ item.project.title|truncate(35) }}</td>
+                        <td class="text-center">
+                            <div class="d-flex align-items-center justify-content-center">
+                                <div class="progress me-2" style="height: 6px; width: 50px;">
+                                    <div class="progress-bar" style="width: {{ item.progress }}%"></div>
+                                </div>
+                                <small>{{ item.progress }}%</small>
+                            </div>
+                        </td>
+                        <td class="text-center">
+                            <small class="text-{{ 'danger' if item.budget_used > 100 else 'warning' if item.budget_used > 85 else 'muted' }}">
+                                {{ item.budget_used }}%
+                            </small>
+                        </td>
+                        <td class="text-end">R$ {{ "{:,.0f}".format(item.spent) }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

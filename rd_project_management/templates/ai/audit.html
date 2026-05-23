@@ -1,0 +1,258 @@
+{% extends "base.html" %}
+{% block title %}Auditoria de Projeto - {{ project.title }}{% endblock %}
+
+{% block content %}
+<div class="d-flex align-items-center mb-4">
+    <a href="{{ url_for('projects.view_project', project_id=project.id) }}" class="btn btn-outline-secondary btn-sm me-3">
+        <i class="bi bi-arrow-left"></i>
+    </a>
+    <div class="flex-grow-1">
+        <h4 class="fw-bold mb-0"><i class="bi bi-shield-check text-primary"></i> Auditoria de Projeto</h4>
+        <span class="text-muted">{{ project.code }} - {{ project.title }}</span>
+    </div>
+</div>
+
+{% if not ai_configured %}
+<div class="alert alert-warning">
+    <i class="bi bi-exclamation-triangle"></i> API de IA nao configurada. Configure a variavel ANTHROPIC_API_KEY.
+</div>
+{% else %}
+
+<div class="row">
+    <div class="col-lg-4">
+        <div class="card shadow-sm mb-4">
+            <div class="card-header bg-white">
+                <h6 class="mb-0 fw-bold"><i class="bi bi-megaphone"></i> Chamada Vinculada</h6>
+            </div>
+            <div class="card-body">
+                <select class="form-select mb-3" id="callSelect">
+                    {% for call in linked_calls %}
+                    <option value="{{ call.id }}">{{ call.source }} - {{ call.title|truncate(50) }}</option>
+                    {% endfor %}
+                </select>
+
+                <button class="btn btn-primary w-100" onclick="runAudit()" id="auditBtn">
+                    <i class="bi bi-play-fill"></i> Executar Auditoria
+                </button>
+            </div>
+        </div>
+
+        <div class="card shadow-sm">
+            <div class="card-header bg-white">
+                <h6 class="mb-0 fw-bold"><i class="bi bi-info-circle"></i> Sobre</h6>
+            </div>
+            <div class="card-body small">
+                <p>A auditoria de projeto analisa:</p>
+                <ul class="mb-0">
+                    <li>Conformidade com requisitos da chamada</li>
+                    <li>Execucao orcamentaria</li>
+                    <li>Cumprimento de cronograma</li>
+                    <li>Documentacao necessaria</li>
+                    <li>Alocacao de recursos</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-8">
+        <div class="card shadow-sm">
+            <div class="card-header bg-white d-flex justify-content-between align-items-center">
+                <h6 class="mb-0 fw-bold"><i class="bi bi-clipboard-check"></i> Resultado da Auditoria</h6>
+                <span id="auditScore" class="badge bg-secondary d-none">--</span>
+            </div>
+            <div class="card-body" id="auditResults">
+                <div class="text-center py-5 text-muted">
+                    <i class="bi bi-shield-check" style="font-size: 3rem;"></i>
+                    <p class="mt-3">Selecione a chamada e clique em "Executar Auditoria"</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
+{% endblock %}
+
+{% block extra_js %}
+<script>
+function runAudit() {
+    const btn = document.getElementById('auditBtn');
+    const results = document.getElementById('auditResults');
+    const scoreEl = document.getElementById('auditScore');
+    const callId = document.getElementById('callSelect').value;
+
+    btn.disabled = true;
+    btn.innerHTML = '<span class="spinner-border spinner-border-sm"></span> Analisando...';
+
+    results.innerHTML = `
+        <div class="text-center py-5">
+            <div class="spinner-border text-primary"></div>
+            <p class="mt-3">Analisando conformidade do projeto...</p>
+            <small class="text-muted">Isso pode levar alguns segundos</small>
+        </div>
+    `;
+
+    fetch('{{ url_for("ai.run_audit", project_id=project.id) }}', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ call_id: callId })
+    })
+    .then(response => response.json())
+    .then(data => {
+        btn.disabled = false;
+        btn.innerHTML = '<i class="bi bi-play-fill"></i> Executar Auditoria';
+
+        if (data.error) {
+            results.innerHTML = `<div class="alert alert-danger">${data.error}</div>`;
+            return;
+        }
+
+        // Show score badge
+        scoreEl.classList.remove('d-none', 'bg-secondary', 'bg-success', 'bg-warning', 'bg-danger');
+        if (data.score >= 80) {
+            scoreEl.classList.add('bg-success');
+        } else if (data.score >= 60) {
+            scoreEl.classList.add('bg-warning');
+        } else {
+            scoreEl.classList.add('bg-danger');
+        }
+        scoreEl.textContent = `Score: ${data.score}/100`;
+
+        let html = `
+            <div class="mb-4">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h5 class="mb-0">
+                        <span class="badge bg-${data.status === 'Conforme' ? 'success' : data.status === 'Parcialmente Conforme' ? 'warning' : 'danger'} me-2">
+                            ${data.status}
+                        </span>
+                    </h5>
+                    <div class="text-end">
+                        <span class="display-6 fw-bold text-${data.score >= 80 ? 'success' : data.score >= 60 ? 'warning' : 'danger'}">${data.score}</span>
+                        <small class="text-muted">/100</small>
+                    </div>
+                </div>
+                <p class="lead">${data.resumo}</p>
+            </div>
+        `;
+
+        // Analysis cards
+        html += '<div class="row g-3 mb-4">';
+
+        if (data.analise_orcamentaria) {
+            const budgetStatus = data.analise_orcamentaria.status;
+            html += `
+                <div class="col-md-4">
+                    <div class="card border-${budgetStatus === 'Adequado' ? 'success' : budgetStatus === 'Atencao' ? 'warning' : 'danger'}">
+                        <div class="card-body">
+                            <h6 class="card-title"><i class="bi bi-cash-stack"></i> Orcamento</h6>
+                            <span class="badge bg-${budgetStatus === 'Adequado' ? 'success' : budgetStatus === 'Atencao' ? 'warning' : 'danger'}">${budgetStatus}</span>
+                            <p class="small mt-2 mb-0">${data.analise_orcamentaria.observacoes}</p>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        if (data.analise_cronograma) {
+            const scheduleStatus = data.analise_cronograma.status;
+            html += `
+                <div class="col-md-4">
+                    <div class="card border-${scheduleStatus === 'No prazo' ? 'success' : scheduleStatus === 'Atrasado' ? 'warning' : 'danger'}">
+                        <div class="card-body">
+                            <h6 class="card-title"><i class="bi bi-calendar-check"></i> Cronograma</h6>
+                            <span class="badge bg-${scheduleStatus === 'No prazo' ? 'success' : scheduleStatus === 'Atrasado' ? 'warning' : 'danger'}">${scheduleStatus}</span>
+                            <p class="small mt-2 mb-0">${data.analise_cronograma.observacoes}</p>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        if (data.documentacao) {
+            const docStatus = data.documentacao.status;
+            html += `
+                <div class="col-md-4">
+                    <div class="card border-${docStatus === 'Completa' ? 'success' : docStatus === 'Parcial' ? 'warning' : 'danger'}">
+                        <div class="card-body">
+                            <h6 class="card-title"><i class="bi bi-file-text"></i> Documentacao</h6>
+                            <span class="badge bg-${docStatus === 'Completa' ? 'success' : docStatus === 'Parcial' ? 'warning' : 'danger'}">${docStatus}</span>
+                            ${data.documentacao.documentos_faltantes && data.documentacao.documentos_faltantes.length > 0 ?
+                                `<p class="small mt-2 mb-0">Faltando: ${data.documentacao.documentos_faltantes.join(', ')}</p>` : ''}
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+        html += '</div>';
+
+        // Details sections
+        if (data.pontos_positivos && data.pontos_positivos.length > 0) {
+            html += `
+                <div class="mb-3">
+                    <h6 class="text-success"><i class="bi bi-check-circle"></i> Pontos Positivos</h6>
+                    <ul class="small mb-0">${data.pontos_positivos.map(p => `<li>${p}</li>`).join('')}</ul>
+                </div>
+            `;
+        }
+
+        if (data.pontos_atencao && data.pontos_atencao.length > 0) {
+            html += `
+                <div class="mb-3">
+                    <h6 class="text-warning"><i class="bi bi-exclamation-triangle"></i> Pontos de Atencao</h6>
+                    <ul class="small mb-0">${data.pontos_atencao.map(p => `<li>${p}</li>`).join('')}</ul>
+                </div>
+            `;
+        }
+
+        if (data.nao_conformidades && data.nao_conformidades.length > 0) {
+            html += `
+                <div class="mb-3">
+                    <h6 class="text-danger"><i class="bi bi-x-circle"></i> Nao Conformidades</h6>
+                    <ul class="small mb-0">${data.nao_conformidades.map(p => `<li>${p}</li>`).join('')}</ul>
+                </div>
+            `;
+        }
+
+        if (data.recomendacoes && data.recomendacoes.length > 0) {
+            html += `
+                <div class="mb-3">
+                    <h6 class="text-primary"><i class="bi bi-lightbulb"></i> Recomendacoes</h6>
+                    <ul class="small mb-0">${data.recomendacoes.map(p => `<li>${p}</li>`).join('')}</ul>
+                </div>
+            `;
+        }
+
+        // Checklist
+        if (data.checklist && data.checklist.length > 0) {
+            html += `
+                <div class="mt-4">
+                    <h6><i class="bi bi-list-check"></i> Checklist de Conformidade</h6>
+                    <table class="table table-sm">
+                        <thead class="table-light">
+                            <tr><th>Item</th><th class="text-center" style="width:100px">Status</th><th>Obs</th></tr>
+                        </thead>
+                        <tbody>
+                            ${data.checklist.map(c => `
+                                <tr>
+                                    <td>${c.item}</td>
+                                    <td class="text-center">
+                                        <span class="badge bg-${c.status === 'OK' ? 'success' : c.status === 'Pendente' ? 'warning' : 'danger'}">${c.status}</span>
+                                    </td>
+                                    <td class="small text-muted">${c.obs || ''}</td>
+                                </tr>
+                            `).join('')}
+                        </tbody>
+                    </table>
+                </div>
+            `;
+        }
+
+        results.innerHTML = html;
+    })
+    .catch(error => {
+        btn.disabled = false;
+        btn.innerHTML = '<i class="bi bi-play-fill"></i> Executar Auditoria';
+        results.innerHTML = `<div class="alert alert-danger">Erro: ${error.message}</div>`;
+    });
+}
+</script>
+{% endblock %}

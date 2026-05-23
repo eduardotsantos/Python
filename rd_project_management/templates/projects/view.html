@@ -10,9 +10,17 @@
         <h4 class="fw-bold mb-0">{{ project.title }}</h4>
         <span class="text-muted">{{ project.code }}</span>
     </div>
-    <div>
+    <div class="btn-group">
         <a href="{{ url_for('status_report.view_report', project_id=project.id) }}" class="btn btn-outline-success btn-sm">
             <i class="bi bi-clipboard-data"></i> Status Report
+        </a>
+        {% if project.call_links %}
+        <a href="{{ url_for('ai.audit_page', project_id=project.id) }}" class="btn btn-outline-warning btn-sm" title="Auditoria de Conformidade">
+            <i class="bi bi-shield-check"></i> Auditoria
+        </a>
+        {% endif %}
+        <a href="{{ url_for('projects.export_to_msproject', project_id=project.id) }}" class="btn btn-outline-secondary btn-sm" title="Exportar MS Project">
+            <i class="bi bi-download"></i> MS Project
         </a>
         <a href="{{ url_for('ai.project_ai_actions', project_id=project.id) }}" class="btn btn-outline-info btn-sm">
             <i class="bi bi-robot"></i> IA
@@ -22,7 +30,7 @@
         </a>
         <form method="POST" action="{{ url_for('projects.delete_project', project_id=project.id) }}" class="d-inline">
             <button type="submit" class="btn btn-outline-danger btn-sm" data-confirm="Tem certeza que deseja excluir este projeto e todos os dados associados?">
-                <i class="bi bi-trash"></i> Excluir
+                <i class="bi bi-trash"></i>
             </button>
         </form>
     </div>

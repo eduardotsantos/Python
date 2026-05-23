@@ -1,0 +1,280 @@
+{% extends "base.html" %}
+{% block title %}Portfolio - Orion P&D{% endblock %}
+
+{% block extra_css %}
+<style>
+    .stat-card {
+        border-left: 4px solid;
+        transition: transform 0.2s;
+    }
+    .stat-card:hover { transform: translateY(-2px); }
+    .stat-card.primary { border-left-color: #0d6efd; }
+    .stat-card.success { border-left-color: #28a745; }
+    .stat-card.warning { border-left-color: #ffc107; }
+    .stat-card.danger { border-left-color: #dc3545; }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h4 class="fw-bold mb-0"><i class="bi bi-pie-chart text-primary"></i> Portfolio</h4>
+        <small class="text-muted">Visao consolidada de todos os projetos</small>
+    </div>
+    <div class="d-flex gap-2">
+        <a href="{{ url_for('portfolio.status_report') }}" class="btn btn-success">
+            <i class="bi bi-clipboard-data"></i> Status Report
+        </a>
+        <a href="{{ url_for('portfolio.export_portfolio_to_project') }}" class="btn btn-outline-info">
+            <i class="bi bi-download"></i> Exportar MS Project
+        </a>
+    </div>
+</div>
+
+<!-- Stats -->
+<div class="row g-3 mb-4">
+    <div class="col-md-3">
+        <div class="card shadow-sm stat-card primary">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h3 class="fw-bold mb-0">{{ total_projects }}</h3>
+                        <small class="text-muted">Projetos Totais</small>
+                        <div class="small text-success">{{ active_projects }} ativos</div>
+                    </div>
+                    <i class="bi bi-folder-check text-primary opacity-50" style="font-size: 2rem;"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card shadow-sm stat-card success">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h3 class="fw-bold mb-0">R$ {{ "{:,.0f}".format(total_budget) }}</h3>
+                        <small class="text-muted">Orcamento Total</small>
+                        <div class="small text-{{ 'danger' if budget_percent > 100 else 'warning' if budget_percent > 85 else 'success' }}">
+                            {{ budget_percent }}% utilizado
+                        </div>
+                    </div>
+                    <i class="bi bi-cash-stack text-success opacity-50" style="font-size: 2rem;"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card shadow-sm stat-card warning">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h3 class="fw-bold mb-0">{{ overall_progress }}%</h3>
+                        <small class="text-muted">Progresso Geral</small>
+                        <div class="progress mt-2" style="height: 6px; width: 80px;">
+                            <div class="progress-bar" style="width: {{ overall_progress }}%"></div>
+                        </div>
+                    </div>
+                    <i class="bi bi-graph-up text-warning opacity-50" style="font-size: 2rem;"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card shadow-sm stat-card {{ 'danger' if delayed_count > 0 else 'success' }}">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h3 class="fw-bold mb-0 text-{{ 'danger' if delayed_count > 0 else 'success' }}">{{ delayed_count }}</h3>
+                        <small class="text-muted">Marcos Atrasados</small>
+                        <div class="small text-muted">{{ total_hours|round(0)|int }}h trabalhadas</div>
+                    </div>
+                    <i class="bi bi-exclamation-triangle text-{{ 'danger' if delayed_count > 0 else 'success' }} opacity-50" style="font-size: 2rem;"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row g-4">
+    <!-- Cost Distribution Chart -->
+    <div class="col-lg-6">
+        <div class="card shadow-sm h-100">
+            <div class="card-header bg-white">
+                <h6 class="mb-0 fw-bold"><i class="bi bi-pie-chart text-primary"></i> Distribuicao de Custos por Projeto</h6>
+            </div>
+            <div class="card-body">
+                <canvas id="costPieChart" height="250"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <!-- Budget by Category -->
+    <div class="col-lg-6">
+        <div class="card shadow-sm h-100">
+            <div class="card-header bg-white">
+                <h6 class="mb-0 fw-bold"><i class="bi bi-bar-chart text-success"></i> Despesas por Categoria</h6>
+            </div>
+            <div class="card-body">
+                <canvas id="categoryChart" height="250"></canvas>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Gantt Chart -->
+<div class="card shadow-sm mt-4">
+    <div class="card-header bg-white">
+        <h6 class="mb-0 fw-bold"><i class="bi bi-calendar-range text-info"></i> Timeline dos Marcos</h6>
+    </div>
+    <div class="card-body">
+        <div id="ganttChart" style="height: 400px; overflow-x: auto;"></div>
+    </div>
+</div>
+
+<!-- Projects Status -->
+<div class="row g-4 mt-2">
+    <div class="col-lg-6">
+        <div class="card shadow-sm">
+            <div class="card-header bg-white">
+                <h6 class="mb-0 fw-bold"><i class="bi bi-diagram-3"></i> Projetos por Status</h6>
+            </div>
+            <div class="card-body">
+                <canvas id="statusChart" height="200"></canvas>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-6">
+        <div class="card shadow-sm">
+            <div class="card-header bg-white">
+                <h6 class="mb-0 fw-bold"><i class="bi bi-collection"></i> Programas</h6>
+            </div>
+            <div class="card-body p-0">
+                {% if programs %}
+                <ul class="list-group list-group-flush">
+                    {% for p in programs %}
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        <div>
+                            <strong>{{ p.code }}</strong> - {{ p.name|truncate(30) }}
+                            <br><small class="text-muted">{{ p.projects.count() }} projetos</small>
+                        </div>
+                        <a href="{{ url_for('programs.view_program', program_id=p.id) }}" class="btn btn-sm btn-outline-primary">
+                            <i class="bi bi-eye"></i>
+                        </a>
+                    </li>
+                    {% endfor %}
+                </ul>
+                {% else %}
+                <div class="text-center py-4 text-muted">
+                    <p class="mb-0">Nenhum programa criado</p>
+                    <a href="{{ url_for('programs.create_program') }}" class="btn btn-sm btn-primary mt-2">Criar Programa</a>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+// Cost Pie Chart
+const costData = {{ expenses_by_project|tojson }};
+new Chart(document.getElementById('costPieChart'), {
+    type: 'doughnut',
+    data: {
+        labels: costData.map(d => d[0]),
+        datasets: [{
+            data: costData.map(d => d[2]),
+            backgroundColor: [
+                '#0d6efd', '#28a745', '#ffc107', '#dc3545', '#17a2b8',
+                '#6610f2', '#fd7e14', '#20c997', '#e83e8c', '#6c757d'
+            ]
+        }]
+    },
+    options: {
+        responsive: true,
+        plugins: {
+            legend: { position: 'right' }
+        }
+    }
+});
+
+// Category Chart
+const categoryData = {{ expenses_by_category|tojson }};
+new Chart(document.getElementById('categoryChart'), {
+    type: 'bar',
+    data: {
+        labels: categoryData.map(d => d[0] || 'Outros'),
+        datasets: [{
+            label: 'R$',
+            data: categoryData.map(d => d[1]),
+            backgroundColor: '#28a745'
+        }]
+    },
+    options: {
+        responsive: true,
+        plugins: { legend: { display: false } },
+        scales: { y: { beginAtZero: true } }
+    }
+});
+
+// Status Chart
+const statusData = {{ projects_by_status|tojson }};
+new Chart(document.getElementById('statusChart'), {
+    type: 'doughnut',
+    data: {
+        labels: Object.keys(statusData),
+        datasets: [{
+            data: Object.values(statusData),
+            backgroundColor: ['#28a745', '#17a2b8', '#ffc107', '#6c757d', '#dc3545']
+        }]
+    },
+    options: {
+        responsive: true,
+        plugins: { legend: { position: 'right' } }
+    }
+});
+
+// Simple Gantt Chart
+const ganttData = {{ gantt_data|tojson }};
+const ganttContainer = document.getElementById('ganttChart');
+
+if (ganttData.length > 0) {
+    // Find date range
+    const dates = ganttData.filter(d => d.end).map(d => new Date(d.end));
+    const minDate = new Date(Math.min(...dates.map(d => d.getTime())));
+    const maxDate = new Date(Math.max(...dates.map(d => d.getTime())));
+
+    let html = '<table class="table table-sm table-bordered" style="font-size: 0.85rem;">';
+    html += '<thead><tr><th style="width: 200px;">Marco</th><th style="width: 100px;">Projeto</th><th style="width: 80px;">Data</th><th>Progresso</th></tr></thead>';
+    html += '<tbody>';
+
+    ganttData.slice(0, 20).forEach(m => {
+        if (m.end) {
+            const endDate = new Date(m.end);
+            const isOverdue = endDate < new Date() && m.status !== 'Concluido';
+            html += `<tr>
+                <td>${m.name}</td>
+                <td><span class="badge bg-secondary">${m.project_code}</span></td>
+                <td class="${isOverdue ? 'text-danger' : ''}">${endDate.toLocaleDateString('pt-BR')}</td>
+                <td>
+                    <div class="d-flex align-items-center">
+                        <div class="progress flex-grow-1 me-2" style="height: 8px;">
+                            <div class="progress-bar bg-${m.progress >= 100 ? 'success' : m.progress > 0 ? 'primary' : 'secondary'}"
+                                 style="width: ${m.progress}%"></div>
+                        </div>
+                        <small>${m.progress}%</small>
+                    </div>
+                </td>
+            </tr>`;
+        }
+    });
+
+    html += '</tbody></table>';
+    ganttContainer.innerHTML = html;
+} else {
+    ganttContainer.innerHTML = '<div class="text-center py-5 text-muted">Nenhum marco cadastrado</div>';
+}
+</script>
+{% endblock %}

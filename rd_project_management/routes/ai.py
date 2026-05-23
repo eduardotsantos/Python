@@ -613,3 +613,202 @@ def get_proposal_questions(project_id, call_id):
     ])
 
     return jsonify({'questions': questions})
+
+
+# --- Project Audit (for projects linked to public calls) ---
+
+@ai_bp.route('/ai/audit/<int:project_id>')
+@login_required
+@tenant_required
+def audit_page(project_id):
+    """Page to audit project compliance with public call requirements."""
+    project = Project.query.get_or_404(project_id)
+    ensure_tenant_access(project)
+
+    # Check if project is linked to any public call
+    from models import ProjectCall
+    call_links = ProjectCall.query.filter_by(project_id=project_id).all()
+
+    if not call_links:
+        flash('Auditoria disponivel apenas para projetos vinculados a chamadas publicas.', 'warning')
+        return redirect(url_for('projects.view_project', project_id=project_id))
+
+    linked_calls = [link.public_call for link in call_links]
+
+    return render_template('ai/audit.html',
+                           project=project,
+                           linked_calls=linked_calls,
+                           ai_configured=check_ai_configured())
+
+
+@ai_bp.route('/ai/audit/<int:project_id>/run', methods=['POST'])
+@login_required
+@tenant_required
+def run_audit(project_id):
+    """Run AI audit on project compliance."""
+    if not check_ai_configured():
+        return jsonify({'error': 'API de IA nao configurada.'}), 400
+
+    project = Project.query.get_or_404(project_id)
+    ensure_tenant_access(project)
+
+    # Check if linked to call
+    from models import ProjectCall
+    call_links = ProjectCall.query.filter_by(project_id=project_id).all()
+    if not call_links:
+        return jsonify({'error': 'Projeto nao vinculado a chamadas publicas.'}), 400
+
+    call_id = request.json.get('call_id')
+    if call_id:
+        call = PublicCall.query.get(call_id)
+    else:
+        call = call_links[0].public_call
+
+    if not call:
+        return jsonify({'error': 'Chamada publica nao encontrada.'}), 404
+
+    # Gather comprehensive project data
+    from sqlalchemy import func
+    total_spent = db.session.query(func.sum(Expense.amount)).filter_by(project_id=project_id).scalar() or 0
+    total_hours = db.session.query(func.sum(Timesheet.hours)).filter_by(project_id=project_id).scalar() or 0
+
+    project_data = {
+        'code': project.code,
+        'title': project.title,
+        'description': project.description,
+        'status': project.status,
+        'category': project.category,
+        'start_date': str(project.start_date) if project.start_date else None,
+        'end_date': str(project.end_date) if project.end_date else None,
+        'budget': project.budget,
+        'total_spent': total_spent,
+        'budget_remaining': (project.budget or 0) - total_spent,
+        'funding_source': project.funding_source,
+        'total_hours': total_hours,
+        'expenses': [{
+            'description': e.description,
+            'category': e.category,
+            'amount': e.amount,
+            'date': str(e.date),
+            'status': e.status,
+            'supplier': e.supplier
+        } for e in project.expenses],
+        'milestones': [{
+            'title': m.title,
+            'description': m.description,
+            'progress': m.progress,
+            'status': m.status,
+            'start_date': str(m.start_date),
+            'end_date': str(m.end_date)
+        } for m in project.milestones],
+        'resources': [{
+            'name': r.name,
+            'type': r.type,
+            'role': r.role,
+            'hours_allocated': r.hours_allocated,
+            'hourly_cost': r.hourly_cost
+        } for r in project.resources],
+        'documents': [{
+            'filename': d.filename,
+            'file_type': d.file_type,
+            'description': d.description
+        } for d in project.documents]
+    }
+
+    call_data = {
+        'source': call.source,
+        'title': call.title,
+        'theme': call.theme,
+        'description': call.description,
+        'deadline': call.deadline,
+        'funding_source': call.funding_source,
+        'target_audience': call.target_audience
+    }
+
+    # Generate audit with AI
+    from services.ai_service import get_anthropic_client
+    client = get_anthropic_client()
+
+    prompt = f"""Voce e um auditor especializado em projetos de P&D financiados por editais publicos.
+Realize uma auditoria completa do projeto abaixo verificando conformidade com a chamada publica.
+
+DADOS DO PROJETO:
+- Codigo: {project_data['code']}
+- Titulo: {project_data['title']}
+- Status: {project_data['status']}
+- Categoria: {project_data['category']}
+- Periodo: {project_data['start_date']} a {project_data['end_date']}
+- Orcamento: R$ {project_data['budget']:,.2f}
+- Total Gasto: R$ {project_data['total_spent']:,.2f}
+- Saldo: R$ {project_data['budget_remaining']:,.2f}
+- Horas Trabalhadas: {project_data['total_hours']}
+
+MARCOS DO PROJETO ({len(project_data['milestones'])}):
+{chr(10).join([f"- {m['title']}: {m['progress']}% ({m['status']}) - ate {m['end_date']}" for m in project_data['milestones']])}
+
+RECURSOS ({len(project_data['resources'])}):
+{chr(10).join([f"- {r['name']} ({r['type']}) - {r['role']}" for r in project_data['resources']])}
+
+DESPESAS ({len(project_data['expenses'])}):
+{chr(10).join([f"- {e['date']}: {e['description']} - R$ {e['amount']:,.2f} ({e['category']})" for e in project_data['expenses'][:20]])}
+
+DOCUMENTOS ({len(project_data['documents'])}):
+{chr(10).join([f"- {d['filename']} ({d['file_type']})" for d in project_data['documents']])}
+
+CHAMADA PUBLICA:
+- Fonte: {call_data['source']}
+- Titulo: {call_data['title']}
+- Tema: {call_data['theme']}
+- Descricao: {call_data['description']}
+- Prazo: {call_data['deadline']}
+- Publico-alvo: {call_data['target_audience']}
+
+Gere um relatorio de auditoria em JSON com a seguinte estrutura:
+{{
+    "score": (0-100),
+    "status": "Conforme" | "Parcialmente Conforme" | "Nao Conforme",
+    "resumo": "Resumo executivo da auditoria em 2-3 frases",
+    "pontos_positivos": ["lista de pontos positivos"],
+    "pontos_atencao": ["lista de pontos que precisam de atencao"],
+    "nao_conformidades": ["lista de nao conformidades graves"],
+    "recomendacoes": ["lista de recomendacoes de melhorias"],
+    "analise_orcamentaria": {{
+        "status": "Adequado" | "Atencao" | "Critico",
+        "observacoes": "observacoes sobre execucao orcamentaria"
+    }},
+    "analise_cronograma": {{
+        "status": "No prazo" | "Atrasado" | "Critico",
+        "observacoes": "observacoes sobre cronograma"
+    }},
+    "documentacao": {{
+        "status": "Completa" | "Parcial" | "Insuficiente",
+        "documentos_faltantes": ["lista de documentos que podem estar faltando"]
+    }},
+    "checklist": [
+        {{"item": "Descricao do item", "status": "OK" | "Pendente" | "Nao Conforme", "obs": "observacao"}}
+    ]
+}}
+
+Seja rigoroso mas justo na avaliacao. Considere requisitos tipicos de editais de P&D."""
+
+    try:
+        response = client.messages.create(
+            model="claude-sonnet-4-20250514",
+            max_tokens=4000,
+            messages=[{"role": "user", "content": prompt}]
+        )
+
+        response_text = response.content[0].text
+
+        # Extract JSON
+        import json
+        start = response_text.find('{')
+        end = response_text.rfind('}') + 1
+        if start != -1 and end > start:
+            audit_result = json.loads(response_text[start:end])
+            return jsonify(audit_result)
+
+        return jsonify({'error': 'Erro ao processar resposta da IA.'}), 500
+
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500

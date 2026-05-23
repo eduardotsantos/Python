@@ -8,7 +8,7 @@ from flask_login import login_required, current_user
 from sqlalchemy import func
 from datetime import datetime, timedelta
 
-from models import db, Project, PublicCall, Expense, Milestone, Tenant
+from models import db, Project, PublicCall, Expense, Milestone, Tenant, Resource
 from services.tenant_utils import tenant_required, get_current_tenant_id
 from services.ai_service import get_anthropic_client
 
@@ -121,6 +121,47 @@ def dashboard():
         PublicCall.status == 'Aberta'
     ).count()
 
+    # Expenses by project for pie chart
+    expenses_by_project = []
+    for p in projects:
+        spent = db.session.query(func.sum(Expense.amount)).filter_by(project_id=p.id).scalar() or 0
+        if spent > 0:
+            expenses_by_project.append({
+                'code': p.code,
+                'title': p.title,
+                'spent': float(spent)
+            })
+    expenses_by_project.sort(key=lambda x: x['spent'], reverse=True)
+
+    # All milestones for Gantt (final dates)
+    if tenant_id:
+        all_milestones = Milestone.query.filter_by(tenant_id=tenant_id).order_by(Milestone.end_date).limit(50).all()
+    else:
+        all_milestones = Milestone.query.order_by(Milestone.end_date).limit(50).all()
+
+    gantt_data = []
+    for m in all_milestones:
+        project = Project.query.get(m.project_id)
+        if project and m.end_date:
+            gantt_data.append({
+                'id': m.id,
+                'name': m.title[:40],
+                'project_code': project.code,
+                'start': m.start_date.isoformat() if m.start_date else m.end_date.isoformat(),
+                'end': m.end_date.isoformat(),
+                'progress': m.progress or 0,
+                'status': m.status
+            })
+
+    # Recent news from entities (open calls)
+    recent_calls = PublicCall.query.filter(
+        db.or_(
+            PublicCall.tenant_id == None,
+            PublicCall.tenant_id == tenant_id
+        ),
+        PublicCall.status == 'Aberta'
+    ).order_by(PublicCall.created_at.desc()).limit(5).all()
+
     return render_template('home/dashboard.html',
                            tenant=tenant,
                            total_projects=total_projects,
@@ -131,6 +172,9 @@ def dashboard():
                            projects_with_stats=projects_with_stats,
                            open_calls_count=open_calls_count,
                            projects_ending_soon=projects_ending_soon,
+                           expenses_by_project=expenses_by_project,
+                           gantt_data=gantt_data,
+                           recent_calls=recent_calls,
                            ai_configured=bool(os.environ.get('ANTHROPIC_API_KEY')))
 
 
