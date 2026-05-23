@@ -26,6 +26,15 @@ def check_ai_configured():
     return bool(os.environ.get('ANTHROPIC_API_KEY'))
 
 
+def can_generate_proposals():
+    """Check if current user's tenant can generate proposals (Professional/Enterprise only)."""
+    if current_user.is_superadmin():
+        return True
+    if current_user.tenant:
+        return current_user.tenant.can_generate_proposals()
+    return False
+
+
 @ai_bp.route('/ai')
 @login_required
 @tenant_required
@@ -38,7 +47,10 @@ def ai_dashboard():
     else:
         projects = Project.query.filter_by(tenant_id=tenant_id).all()
 
-    return render_template('ai/dashboard.html', ai_configured=check_ai_configured(), projects=projects)
+    return render_template('ai/dashboard.html',
+                           ai_configured=check_ai_configured(),
+                           projects=projects,
+                           can_generate_proposals=can_generate_proposals())
 
 
 # --- Document Analysis ---
@@ -373,6 +385,10 @@ def project_ai_actions(project_id):
 @tenant_required
 def proposal_page(project_id, call_id):
     """Page to generate proposal for a public call."""
+    if not can_generate_proposals():
+        flash('Geracao de propostas disponivel apenas nos planos Profissional e Enterprise.', 'warning')
+        return redirect(url_for('ai.ai_dashboard'))
+
     project = Project.query.get_or_404(project_id)
     ensure_tenant_access(project)
 
@@ -389,6 +405,9 @@ def proposal_page(project_id, call_id):
 @tenant_required
 def generate_proposal(project_id, call_id):
     """Generate proposal content using AI."""
+    if not can_generate_proposals():
+        return jsonify({'error': 'Geracao de propostas disponivel apenas nos planos Profissional e Enterprise.'}), 403
+
     if not check_ai_configured():
         return jsonify({'error': 'API de IA não configurada.'}), 400
 
@@ -520,6 +539,9 @@ Use linguagem técnica apropriada para editais de P&D.
 @tenant_required
 def get_proposal_questions(project_id, call_id):
     """Get questions for additional info needed for proposal."""
+    if not can_generate_proposals():
+        return jsonify({'error': 'Geracao de propostas disponivel apenas nos planos Profissional e Enterprise.'}), 403
+
     project = Project.query.get_or_404(project_id)
     ensure_tenant_access(project)
 

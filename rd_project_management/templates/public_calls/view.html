@@ -110,9 +110,15 @@
                                 <br><small class="text-muted fst-italic">{{ link.notes }}</small>
                                 {% endif %}
                                 <div class="mt-2">
+                                    {% if can_generate_proposals %}
                                     <a href="{{ url_for('ai.proposal_page', project_id=link.project.id, call_id=call.id) }}" class="btn btn-sm btn-outline-success">
                                         <i class="bi bi-file-earmark-richtext"></i> Gerar Proposta
                                     </a>
+                                    {% else %}
+                                    <span class="btn btn-sm btn-outline-secondary disabled" title="Disponivel nos planos Profissional e Enterprise">
+                                        <i class="bi bi-lock"></i> Gerar Proposta <span class="badge bg-warning text-dark">PRO</span>
+                                    </span>
+                                    {% endif %}
                                 </div>
                             </div>
                             <form method="POST" action="{{ url_for('public_calls.unlink_project', call_id=call.id, link_id=link.id) }}">

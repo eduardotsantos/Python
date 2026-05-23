@@ -48,6 +48,10 @@ class Tenant(db.Model):
         """Check if tenant can add more projects."""
         return self.projects.count() < self.max_projects
 
+    def can_generate_proposals(self):
+        """Check if tenant plan allows AI proposal generation."""
+        return self.plan in ('professional', 'enterprise')
+
 
 class User(UserMixin, db.Model):
     __tablename__ = 'users'

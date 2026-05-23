@@ -218,7 +218,14 @@ def view_call(call_id):
     else:
         projects = Project.query.order_by(Project.title).all()
 
-    return render_template('public_calls/view.html', call=call, projects=projects)
+    # Check if tenant can generate proposals (Professional/Enterprise only)
+    can_generate_proposals = False
+    if current_user.is_superadmin():
+        can_generate_proposals = True
+    elif current_user.tenant:
+        can_generate_proposals = current_user.tenant.can_generate_proposals()
+
+    return render_template('public_calls/view.html', call=call, projects=projects, can_generate_proposals=can_generate_proposals)
 
 
 @public_calls_bp.route('/public-calls/<int:call_id>/delete', methods=['POST'])
