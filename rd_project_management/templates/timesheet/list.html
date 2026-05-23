@@ -10,7 +10,15 @@
         <h4 class="fw-bold mb-0"><i class="bi bi-clock text-success"></i> Timesheet</h4>
         <span class="text-muted">{{ project.title }}</span>
     </div>
-    <a href="{{ url_for('timesheet.create_entry', project_id=project.id) }}" class="btn btn-primary">
+    <div class="btn-group">
+        <a href="{{ url_for('timesheet.download_template', project_id=project.id) }}" class="btn btn-outline-success" title="Baixar Template Excel">
+            <i class="bi bi-download"></i>
+        </a>
+        <a href="{{ url_for('timesheet.upload_excel', project_id=project.id) }}" class="btn btn-outline-success" title="Importar Excel">
+            <i class="bi bi-file-earmark-excel"></i> Importar
+        </a>
+    </div>
+    <a href="{{ url_for('timesheet.create_entry', project_id=project.id) }}" class="btn btn-primary ms-2">
         <i class="bi bi-plus-lg"></i> Registrar Horas
     </a>
 </div>
@@ -136,9 +144,14 @@
         <i class="bi bi-clock"></i>
         <h5>Nenhum registro de horas</h5>
         <p>Registre horas trabalhadas neste projeto</p>
-        <a href="{{ url_for('timesheet.create_entry', project_id=project.id) }}" class="btn btn-primary">
-            <i class="bi bi-plus-lg"></i> Registrar Horas
-        </a>
+        <div class="d-flex gap-2 justify-content-center">
+            <a href="{{ url_for('timesheet.create_entry', project_id=project.id) }}" class="btn btn-primary">
+                <i class="bi bi-plus-lg"></i> Registrar Horas
+            </a>
+            <a href="{{ url_for('timesheet.upload_excel', project_id=project.id) }}" class="btn btn-success">
+                <i class="bi bi-file-earmark-excel"></i> Importar Excel
+            </a>
+        </div>
     </div>
 </div>
 {% endif %}
