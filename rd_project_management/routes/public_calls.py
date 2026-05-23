@@ -278,7 +278,7 @@ def link_to_project(call_id):
         return redirect(url_for('public_calls.view_call', call_id=call_id))
 
     link = ProjectCall(
-        tenant_id=tenant_id,
+        tenant_id=project.tenant_id,  # Use project's tenant_id
         project_id=int(project_id),
         public_call_id=call_id,
         linked_at=datetime.strptime(linked_at, '%Y-%m-%d').date() if linked_at else date.today(),
@@ -354,7 +354,7 @@ def suggest_links():
             common_keywords = call_keywords & project_keywords
             if len(common_keywords) >= 2:  # At least 2 matching keywords
                 link = ProjectCall(
-                    tenant_id=tenant_id,
+                    tenant_id=project.tenant_id,  # Use project's tenant_id
                     project_id=project.id,
                     public_call_id=call.id,
                     linked_at=date.today(),
