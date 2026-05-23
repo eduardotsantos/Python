@@ -144,6 +144,9 @@
                         {% endif %}
                     </td>
                     <td class="text-end">
+                        <a href="{{ url_for('status_report.view_report', project_id=project.id) }}" class="btn btn-sm btn-outline-success" title="Status Report">
+                            <i class="bi bi-clipboard-data"></i>
+                        </a>
                         <a href="{{ url_for('projects.view_project', project_id=project.id) }}" class="btn btn-sm btn-outline-primary" title="Ver">
                             <i class="bi bi-eye"></i>
                         </a>

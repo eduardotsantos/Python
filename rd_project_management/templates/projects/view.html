@@ -11,6 +11,9 @@
         <span class="text-muted">{{ project.code }}</span>
     </div>
     <div>
+        <a href="{{ url_for('status_report.view_report', project_id=project.id) }}" class="btn btn-outline-success btn-sm">
+            <i class="bi bi-clipboard-data"></i> Status Report
+        </a>
         <a href="{{ url_for('ai.project_ai_actions', project_id=project.id) }}" class="btn btn-outline-info btn-sm">
             <i class="bi bi-robot"></i> IA
         </a>
