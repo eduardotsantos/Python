@@ -141,6 +141,10 @@
                     <span><i class="bi bi-clock text-success"></i> Timesheet</span>
                     <span class="badge bg-success rounded-pill">{{ project.timesheets|length }}</span>
                 </a>
+                <a href="{{ url_for('meeting_minutes.list_minutes', project_id=project.id) }}" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+                    <span><i class="bi bi-journal-text text-primary"></i> Atas de Reunião</span>
+                    <span class="badge bg-primary rounded-pill">{{ project.meeting_minutes|length }}</span>
+                </a>
             </div>
         </div>
     </div>

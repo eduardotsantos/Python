@@ -56,6 +56,7 @@ def create_app():
     from routes.home import home_bp
     from routes.audit import audit_bp
     from routes.status_report import status_report_bp
+    from routes.meeting_minutes import meeting_minutes_bp
 
     app.register_blueprint(auth_bp)
     app.register_blueprint(projects_bp)
@@ -70,6 +71,7 @@ def create_app():
     app.register_blueprint(home_bp)
     app.register_blueprint(audit_bp)
     app.register_blueprint(status_report_bp)
+    app.register_blueprint(meeting_minutes_bp)
 
     # Before request - set current tenant
     @app.before_request

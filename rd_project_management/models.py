@@ -355,6 +355,30 @@ class AuditLog(db.Model):
         return log_entry
 
 
+class MeetingMinutes(db.Model):
+    """Meeting minutes for projects."""
+    __tablename__ = 'meeting_minutes'
+    id = db.Column(db.Integer, primary_key=True)
+    tenant_id = db.Column(db.Integer, db.ForeignKey('tenants.id'), nullable=False)
+    project_id = db.Column(db.Integer, db.ForeignKey('projects.id'), nullable=False)
+    title = db.Column(db.String(300), nullable=False)
+    meeting_date = db.Column(db.Date, nullable=False)
+    meeting_time = db.Column(db.String(10))
+    location = db.Column(db.String(200))
+    participants = db.Column(db.Text)
+    transcription = db.Column(db.Text)
+    generated_minutes = db.Column(db.Text)
+    status = db.Column(db.String(50), default='Rascunho')
+    attachment_filename = db.Column(db.String(255))
+    attachment_stored = db.Column(db.String(255))
+    created_by_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+
+    created_by = db.relationship('User', backref='meeting_minutes')
+    project = db.relationship('Project', backref='meeting_minutes')
+
+
 # Helper function to get current tenant
 def get_current_tenant_id():
     """Get the current tenant ID from the logged-in user."""

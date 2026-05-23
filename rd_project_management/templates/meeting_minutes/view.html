@@ -1,0 +1,303 @@
+{% extends "base.html" %}
+{% block title %}{{ minutes.title }} - Ata{% endblock %}
+
+{% block extra_css %}
+<style>
+    .minutes-content {
+        background: #f8f9fa;
+        border-radius: 8px;
+        padding: 20px;
+    }
+    .minutes-content h1, .minutes-content h2, .minutes-content h3 {
+        color: #0d6efd;
+    }
+    .minutes-content table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 15px 0;
+    }
+    .minutes-content th, .minutes-content td {
+        border: 1px solid #dee2e6;
+        padding: 8px 12px;
+        text-align: left;
+    }
+    .minutes-content th {
+        background: #e9ecef;
+    }
+    .generating {
+        text-align: center;
+        padding: 40px;
+    }
+    .generating .spinner-border {
+        width: 3rem;
+        height: 3rem;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="d-flex align-items-center mb-4">
+    <a href="{{ url_for('meeting_minutes.list_minutes', project_id=project.id) }}" class="btn btn-outline-secondary btn-sm me-3">
+        <i class="bi bi-arrow-left"></i>
+    </a>
+    <div class="flex-grow-1">
+        <h4 class="fw-bold mb-0">{{ minutes.title }}</h4>
+        <span class="text-muted">{{ project.title }} | {{ minutes.meeting_date.strftime('%d/%m/%Y') }}</span>
+    </div>
+    <div class="btn-group">
+        <a href="{{ url_for('meeting_minutes.edit_minutes', project_id=project.id, minutes_id=minutes.id) }}" class="btn btn-outline-primary">
+            <i class="bi bi-pencil"></i> Editar
+        </a>
+        {% if minutes.generated_minutes %}
+        <a href="{{ url_for('meeting_minutes.print_minutes', project_id=project.id, minutes_id=minutes.id) }}" class="btn btn-success" target="_blank">
+            <i class="bi bi-file-earmark-pdf"></i> Exportar PDF
+        </a>
+        {% endif %}
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-lg-4">
+        <!-- Info Card -->
+        <div class="card shadow-sm mb-4">
+            <div class="card-header bg-white">
+                <h6 class="mb-0 fw-bold"><i class="bi bi-info-circle"></i> Informações</h6>
+            </div>
+            <div class="card-body">
+                <div class="mb-3">
+                    <small class="text-muted d-block">Status</small>
+                    {% if minutes.status == 'Finalizada' %}
+                        <span class="badge bg-success">Finalizada</span>
+                    {% elif minutes.status == 'Gerada' %}
+                        <span class="badge bg-info">Gerada</span>
+                    {% else %}
+                        <span class="badge bg-warning text-dark">Rascunho</span>
+                    {% endif %}
+                </div>
+                <div class="mb-3">
+                    <small class="text-muted d-block">Data</small>
+                    <strong>{{ minutes.meeting_date.strftime('%d/%m/%Y') }}</strong>
+                    {% if minutes.meeting_time %}
+                    <span class="text-muted">às {{ minutes.meeting_time }}</span>
+                    {% endif %}
+                </div>
+                {% if minutes.location %}
+                <div class="mb-3">
+                    <small class="text-muted d-block">Local</small>
+                    <strong>{{ minutes.location }}</strong>
+                </div>
+                {% endif %}
+                {% if minutes.participants %}
+                <div class="mb-3">
+                    <small class="text-muted d-block">Participantes</small>
+                    <strong>{{ minutes.participants }}</strong>
+                </div>
+                {% endif %}
+                {% if minutes.attachment_filename %}
+                <div class="mb-3">
+                    <small class="text-muted d-block">Anexo</small>
+                    <i class="bi bi-paperclip"></i> {{ minutes.attachment_filename }}
+                </div>
+                {% endif %}
+                <div>
+                    <small class="text-muted d-block">Criado por</small>
+                    <strong>{{ minutes.created_by.full_name if minutes.created_by else '-' }}</strong>
+                    <br><small class="text-muted">{{ minutes.created_at.strftime('%d/%m/%Y %H:%M') }}</small>
+                </div>
+            </div>
+        </div>
+
+        <!-- AI Generate -->
+        {% if minutes.transcription and not minutes.generated_minutes %}
+        <div class="card shadow-sm border-primary mb-4">
+            <div class="card-body text-center">
+                <i class="bi bi-robot fs-1 text-primary"></i>
+                <h6 class="mt-2 fw-bold">Gerar Ata com IA</h6>
+                <p class="small text-muted">A IA irá criar uma ata formal baseada na transcrição</p>
+                <button id="btnGenerate" class="btn btn-primary w-100" onclick="generateMinutes()">
+                    <i class="bi bi-magic"></i> Gerar Ata
+                </button>
+            </div>
+        </div>
+        {% endif %}
+
+        <!-- Transcription -->
+        {% if minutes.transcription %}
+        <div class="card shadow-sm">
+            <div class="card-header bg-white">
+                <h6 class="mb-0 fw-bold"><i class="bi bi-chat-quote"></i> Transcrição</h6>
+            </div>
+            <div class="card-body">
+                <div style="max-height: 300px; overflow-y: auto;">
+                    <pre style="white-space: pre-wrap; font-size: 0.85em;">{{ minutes.transcription }}</pre>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+
+    <div class="col-lg-8">
+        <!-- Generated Minutes -->
+        <div class="card shadow-sm">
+            <div class="card-header bg-white d-flex justify-content-between align-items-center">
+                <h6 class="mb-0 fw-bold"><i class="bi bi-journal-text"></i> Ata de Reunião</h6>
+                {% if minutes.generated_minutes %}
+                <button class="btn btn-sm btn-outline-primary" onclick="toggleEdit()">
+                    <i class="bi bi-pencil"></i> Editar
+                </button>
+                {% endif %}
+            </div>
+            <div class="card-body">
+                <div id="generatingSpinner" class="generating d-none">
+                    <div class="spinner-border text-primary" role="status">
+                        <span class="visually-hidden">Gerando...</span>
+                    </div>
+                    <p class="mt-3 text-muted">Gerando ata com inteligência artificial...</p>
+                </div>
+
+                <div id="minutesView">
+                    {% if minutes.generated_minutes %}
+                    <div class="minutes-content" id="minutesContent">
+                        {{ minutes.generated_minutes | safe }}
+                    </div>
+                    {% else %}
+                    <div class="text-center py-5 text-muted">
+                        <i class="bi bi-journal-text fs-1"></i>
+                        <h5 class="mt-3">Ata não gerada</h5>
+                        {% if minutes.transcription %}
+                        <p>Clique em "Gerar Ata" para criar a ata automaticamente</p>
+                        {% else %}
+                        <p>Adicione uma transcrição ou anotações para gerar a ata</p>
+                        <a href="{{ url_for('meeting_minutes.edit_minutes', project_id=project.id, minutes_id=minutes.id) }}" class="btn btn-primary">
+                            <i class="bi bi-pencil"></i> Adicionar Transcrição
+                        </a>
+                        {% endif %}
+                    </div>
+                    {% endif %}
+                </div>
+
+                <div id="minutesEdit" class="d-none">
+                    <textarea id="minutesTextarea" class="form-control" rows="20" style="font-family: monospace;">{{ minutes.generated_minutes if minutes.generated_minutes else '' }}</textarea>
+                    <div class="mt-3 d-flex gap-2">
+                        <button class="btn btn-primary" onclick="saveMinutes()">
+                            <i class="bi bi-check-lg"></i> Salvar
+                        </button>
+                        <button class="btn btn-outline-secondary" onclick="toggleEdit()">
+                            Cancelar
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+<script>
+    let isEditing = false;
+
+    // Render markdown on load
+    document.addEventListener('DOMContentLoaded', function() {
+        renderMarkdown();
+    });
+
+    function renderMarkdown() {
+        const content = document.getElementById('minutesContent');
+        if (content && content.textContent.trim()) {
+            const rawText = `{{ minutes.generated_minutes | e if minutes.generated_minutes else '' }}`;
+            if (rawText) {
+                content.innerHTML = marked.parse(rawText);
+            }
+        }
+    }
+
+    function toggleEdit() {
+        const view = document.getElementById('minutesView');
+        const edit = document.getElementById('minutesEdit');
+
+        if (isEditing) {
+            view.classList.remove('d-none');
+            edit.classList.add('d-none');
+        } else {
+            view.classList.add('d-none');
+            edit.classList.remove('d-none');
+        }
+        isEditing = !isEditing;
+    }
+
+    function generateMinutes() {
+        const btn = document.getElementById('btnGenerate');
+        const spinner = document.getElementById('generatingSpinner');
+        const view = document.getElementById('minutesView');
+
+        btn.disabled = true;
+        btn.innerHTML = '<span class="spinner-border spinner-border-sm"></span> Gerando...';
+        spinner.classList.remove('d-none');
+        view.classList.add('d-none');
+
+        fetch('{{ url_for("meeting_minutes.generate_minutes", project_id=project.id, minutes_id=minutes.id) }}', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            spinner.classList.add('d-none');
+            view.classList.remove('d-none');
+
+            if (data.success) {
+                const content = document.getElementById('minutesContent');
+                if (!content) {
+                    location.reload();
+                    return;
+                }
+                content.innerHTML = marked.parse(data.minutes);
+                document.getElementById('minutesTextarea').value = data.minutes;
+                btn.innerHTML = '<i class="bi bi-check-circle"></i> Gerada!';
+                btn.classList.remove('btn-primary');
+                btn.classList.add('btn-success');
+            } else {
+                alert('Erro: ' + data.error);
+                btn.disabled = false;
+                btn.innerHTML = '<i class="bi bi-magic"></i> Gerar Ata';
+            }
+        })
+        .catch(error => {
+            spinner.classList.add('d-none');
+            view.classList.remove('d-none');
+            alert('Erro ao gerar ata: ' + error);
+            btn.disabled = false;
+            btn.innerHTML = '<i class="bi bi-magic"></i> Gerar Ata';
+        });
+    }
+
+    function saveMinutes() {
+        const textarea = document.getElementById('minutesTextarea');
+        const content = textarea.value;
+
+        fetch('{{ url_for("meeting_minutes.save_generated", project_id=project.id, minutes_id=minutes.id) }}', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ minutes: content })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                const contentDiv = document.getElementById('minutesContent');
+                contentDiv.innerHTML = marked.parse(content);
+                toggleEdit();
+            } else {
+                alert('Erro ao salvar: ' + data.error);
+            }
+        })
+        .catch(error => {
+            alert('Erro ao salvar: ' + error);
+        });
+    }
+</script>
+{% endblock %}

@@ -1,0 +1,122 @@
+{% extends "base.html" %}
+{% block title %}Atas de Reunião - {{ project.title }}{% endblock %}
+
+{% block content %}
+<div class="d-flex align-items-center mb-4">
+    <a href="{{ url_for('projects.view_project', project_id=project.id) }}" class="btn btn-outline-secondary btn-sm me-3">
+        <i class="bi bi-arrow-left"></i>
+    </a>
+    <div class="flex-grow-1">
+        <h4 class="fw-bold mb-0"><i class="bi bi-journal-text text-primary"></i> Atas de Reunião</h4>
+        <span class="text-muted">{{ project.title }}</span>
+    </div>
+    <a href="{{ url_for('meeting_minutes.create_minutes', project_id=project.id) }}" class="btn btn-primary">
+        <i class="bi bi-plus-lg"></i> Nova Ata
+    </a>
+</div>
+
+<!-- Stats -->
+<div class="row g-3 mb-4">
+    <div class="col-md-4">
+        <div class="card card-stats border-primary shadow-sm">
+            <div class="card-body">
+                <p class="text-muted mb-1 small">Total de Atas</p>
+                <h3 class="fw-bold mb-0">{{ minutes|length }}</h3>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card card-stats border-success shadow-sm">
+            <div class="card-body">
+                <p class="text-muted mb-1 small">Finalizadas</p>
+                <h3 class="fw-bold mb-0">{{ minutes|selectattr('status', 'equalto', 'Finalizada')|list|length }}</h3>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card card-stats border-warning shadow-sm">
+            <div class="card-body">
+                <p class="text-muted mb-1 small">Rascunhos</p>
+                <h3 class="fw-bold mb-0">{{ minutes|selectattr('status', 'equalto', 'Rascunho')|list|length }}</h3>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% if minutes %}
+<div class="card shadow-sm">
+    <div class="table-responsive">
+        <table class="table table-hover mb-0">
+            <thead class="table-light">
+                <tr>
+                    <th>Data</th>
+                    <th>Título</th>
+                    <th>Local</th>
+                    <th>Status</th>
+                    <th class="text-end">Ações</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for m in minutes %}
+                <tr>
+                    <td>
+                        <strong>{{ m.meeting_date.strftime('%d/%m/%Y') }}</strong>
+                        {% if m.meeting_time %}
+                        <br><small class="text-muted">{{ m.meeting_time }}</small>
+                        {% endif %}
+                    </td>
+                    <td>
+                        <a href="{{ url_for('meeting_minutes.view_minutes', project_id=project.id, minutes_id=m.id) }}" class="text-decoration-none fw-bold">
+                            {{ m.title }}
+                        </a>
+                        {% if m.attachment_filename %}
+                        <br><small class="text-muted"><i class="bi bi-paperclip"></i> {{ m.attachment_filename }}</small>
+                        {% endif %}
+                    </td>
+                    <td>{{ m.location or '-' }}</td>
+                    <td>
+                        {% if m.status == 'Finalizada' %}
+                            <span class="badge bg-success">Finalizada</span>
+                        {% elif m.status == 'Gerada' %}
+                            <span class="badge bg-info">Gerada</span>
+                        {% else %}
+                            <span class="badge bg-warning text-dark">Rascunho</span>
+                        {% endif %}
+                    </td>
+                    <td class="text-end">
+                        <a href="{{ url_for('meeting_minutes.view_minutes', project_id=project.id, minutes_id=m.id) }}" class="btn btn-sm btn-outline-primary" title="Ver">
+                            <i class="bi bi-eye"></i>
+                        </a>
+                        <a href="{{ url_for('meeting_minutes.edit_minutes', project_id=project.id, minutes_id=m.id) }}" class="btn btn-sm btn-outline-secondary" title="Editar">
+                            <i class="bi bi-pencil"></i>
+                        </a>
+                        {% if m.generated_minutes %}
+                        <a href="{{ url_for('meeting_minutes.print_minutes', project_id=project.id, minutes_id=m.id) }}" class="btn btn-sm btn-outline-success" title="PDF" target="_blank">
+                            <i class="bi bi-file-earmark-pdf"></i>
+                        </a>
+                        {% endif %}
+                        <form method="POST" action="{{ url_for('meeting_minutes.delete_minutes', project_id=project.id, minutes_id=m.id) }}" class="d-inline">
+                            <button type="submit" class="btn btn-sm btn-outline-danger" title="Excluir" data-confirm="Excluir esta ata?">
+                                <i class="bi bi-trash"></i>
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% else %}
+<div class="card shadow-sm">
+    <div class="empty-state">
+        <i class="bi bi-journal-text"></i>
+        <h5>Nenhuma ata registrada</h5>
+        <p>Registre as atas das reuniões do projeto</p>
+        <a href="{{ url_for('meeting_minutes.create_minutes', project_id=project.id) }}" class="btn btn-primary">
+            <i class="bi bi-plus-lg"></i> Nova Ata
+        </a>
+    </div>
+</div>
+{% endif %}
+{% endblock %}
