@@ -16,6 +16,8 @@ class Tenant(db.Model):
     email = db.Column(db.String(120))
     phone = db.Column(db.String(20))
     address = db.Column(db.Text)
+    state = db.Column(db.String(2))  # UF - sigla do estado
+    municipality = db.Column(db.String(200))  # Município
     logo_url = db.Column(db.String(500))
     plan = db.Column(db.String(50), default='basic')  # basic, professional, enterprise
     max_users = db.Column(db.Integer, default=5)
@@ -55,7 +57,7 @@ class User(UserMixin, db.Model):
     email = db.Column(db.String(120), nullable=False)
     password_hash = db.Column(db.String(256), nullable=False)
     full_name = db.Column(db.String(200), nullable=False)
-    role = db.Column(db.String(50), default='user')  # superadmin, admin, manager, user
+    role = db.Column(db.String(50), default='user')  # superadmin, admin, manager, user, viewer
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     active = db.Column(db.Boolean, default=True)
 
@@ -75,6 +77,13 @@ class User(UserMixin, db.Model):
 
     def is_tenant_admin(self):
         return self.role == 'admin'
+
+    def is_viewer(self):
+        return self.role == 'viewer'
+
+    def can_edit(self):
+        """Check if user can edit/create content."""
+        return self.role in ['superadmin', 'admin', 'manager', 'user']
 
 
 class Project(db.Model):
@@ -301,6 +310,45 @@ class ProjectDocument(db.Model):
             'pptx': 'bi-file-earmark-ppt text-warning',
         }
         return icons.get(self.file_type, 'bi-file-earmark')
+
+
+class AuditLog(db.Model):
+    """Audit log for tracking user actions."""
+    __tablename__ = 'audit_logs'
+    id = db.Column(db.Integer, primary_key=True)
+    tenant_id = db.Column(db.Integer, db.ForeignKey('tenants.id'), nullable=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=True)
+    action = db.Column(db.String(50), nullable=False)  # login, logout, create, update, delete
+    entity_type = db.Column(db.String(100))  # project, expense, user, etc.
+    entity_id = db.Column(db.Integer)
+    entity_name = db.Column(db.String(300))  # Human-readable name
+    details = db.Column(db.Text)  # JSON with changed fields
+    ip_address = db.Column(db.String(50))
+    user_agent = db.Column(db.String(500))
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+
+    user = db.relationship('User', backref='audit_logs')
+    tenant = db.relationship('Tenant', backref='audit_logs')
+
+    @staticmethod
+    def log(action, entity_type=None, entity_id=None, entity_name=None, details=None):
+        """Create an audit log entry."""
+        from flask_login import current_user
+        from flask import request
+
+        log_entry = AuditLog(
+            tenant_id=current_user.tenant_id if current_user.is_authenticated else None,
+            user_id=current_user.id if current_user.is_authenticated else None,
+            action=action,
+            entity_type=entity_type,
+            entity_id=entity_id,
+            entity_name=entity_name,
+            details=details,
+            ip_address=request.remote_addr if request else None,
+            user_agent=request.user_agent.string[:500] if request and request.user_agent else None
+        )
+        db.session.add(log_entry)
+        return log_entry
 
 
 # Helper function to get current tenant

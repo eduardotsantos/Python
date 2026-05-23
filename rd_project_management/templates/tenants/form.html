@@ -44,6 +44,20 @@
                             <input type="text" class="form-control" name="phone"
                                    value="{{ tenant.phone if tenant else '' }}" placeholder="(00) 00000-0000">
                         </div>
+                        <div class="col-md-4">
+                            <label class="form-label">Estado (UF)</label>
+                            <select class="form-select" name="state">
+                                <option value="">Selecione...</option>
+                                {% for uf, nome in [('AC','Acre'),('AL','Alagoas'),('AP','Amapá'),('AM','Amazonas'),('BA','Bahia'),('CE','Ceará'),('DF','Distrito Federal'),('ES','Espírito Santo'),('GO','Goiás'),('MA','Maranhão'),('MT','Mato Grosso'),('MS','Mato Grosso do Sul'),('MG','Minas Gerais'),('PA','Pará'),('PB','Paraíba'),('PR','Paraná'),('PE','Pernambuco'),('PI','Piauí'),('RJ','Rio de Janeiro'),('RN','Rio Grande do Norte'),('RS','Rio Grande do Sul'),('RO','Rondônia'),('RR','Roraima'),('SC','Santa Catarina'),('SP','São Paulo'),('SE','Sergipe'),('TO','Tocantins')] %}
+                                <option value="{{ uf }}" {{ 'selected' if tenant and tenant.state == uf }}>{{ uf }} - {{ nome }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="col-md-8">
+                            <label class="form-label">Município</label>
+                            <input type="text" class="form-control" name="municipality"
+                                   value="{{ tenant.municipality if tenant else '' }}" placeholder="Nome do município">
+                        </div>
                         <div class="col-12">
                             <label class="form-label">Endereço</label>
                             <textarea class="form-control" name="address" rows="2"

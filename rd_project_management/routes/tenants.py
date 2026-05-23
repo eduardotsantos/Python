@@ -59,6 +59,8 @@ def create_tenant():
         email = request.form.get('email', '').strip()
         phone = request.form.get('phone', '').strip()
         address = request.form.get('address', '').strip()
+        state = request.form.get('state', '').strip()
+        municipality = request.form.get('municipality', '').strip()
         plan = request.form.get('plan', 'basic')
         max_users = int(request.form.get('max_users', 5))
         max_projects = int(request.form.get('max_projects', 10))
@@ -91,6 +93,8 @@ def create_tenant():
             email=email,
             phone=phone,
             address=address,
+            state=state,
+            municipality=municipality,
             plan=plan,
             max_users=max_users,
             max_projects=max_projects,
@@ -164,6 +168,8 @@ def edit_tenant(tenant_id):
         tenant.email = request.form.get('email', '').strip()
         tenant.phone = request.form.get('phone', '').strip()
         tenant.address = request.form.get('address', '').strip()
+        tenant.state = request.form.get('state', '').strip()
+        tenant.municipality = request.form.get('municipality', '').strip()
         tenant.plan = request.form.get('plan', tenant.plan)
         tenant.max_users = int(request.form.get('max_users', tenant.max_users))
         tenant.max_projects = int(request.form.get('max_projects', tenant.max_projects))

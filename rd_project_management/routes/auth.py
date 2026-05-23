@@ -1,6 +1,6 @@
 from flask import Blueprint, render_template, redirect, url_for, flash, request
 from flask_login import login_user, logout_user, login_required, current_user
-from models import db, User
+from models import db, User, AuditLog
 
 auth_bp = Blueprint('auth', __name__)
 
@@ -39,6 +39,14 @@ def login():
                     return render_template('auth/login.html', news=news)
 
             login_user(user)
+
+            # Log login
+            try:
+                AuditLog.log(action='login', entity_type='user', entity_id=user.id, entity_name=user.full_name)
+                db.session.commit()
+            except Exception:
+                pass
+
             next_page = request.args.get('next')
             flash('Login realizado com sucesso!', 'success')
             return redirect(next_page or url_for('home.dashboard'))
@@ -101,6 +109,13 @@ def register():
 @auth_bp.route('/logout')
 @login_required
 def logout():
+    # Log logout before clearing session
+    try:
+        AuditLog.log(action='logout', entity_type='user', entity_id=current_user.id, entity_name=current_user.full_name)
+        db.session.commit()
+    except Exception:
+        pass
+
     logout_user()
     flash('Logout realizado com sucesso.', 'info')
     return redirect(url_for('auth.login'))

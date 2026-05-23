@@ -49,11 +49,13 @@
                         <div class="col-md-6">
                             <label for="role" class="form-label">Papel/Função *</label>
                             <select class="form-select" id="role" name="role" required>
+                                <option value="viewer" {{ 'selected' if user and user.role == 'viewer' }}>Visualizador</option>
                                 <option value="user" {{ 'selected' if not user or user.role == 'user' }}>Usuário</option>
                                 <option value="manager" {{ 'selected' if user and user.role == 'manager' }}>Gerente</option>
                                 <option value="admin" {{ 'selected' if user and user.role == 'admin' }}>Administrador</option>
                             </select>
                             <div class="form-text">
+                                <strong>Visualizador:</strong> Apenas leitura |
                                 <strong>Usuário:</strong> Acesso básico |
                                 <strong>Gerente:</strong> Gerencia projetos |
                                 <strong>Admin:</strong> Acesso total
