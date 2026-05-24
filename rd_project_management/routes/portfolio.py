@@ -20,28 +20,49 @@ def dashboard():
     tenant_id = get_current_tenant_id()
     tenant = current_user.tenant
 
-    # Get all projects
-    projects = Project.query.filter_by(tenant_id=tenant_id).all()
+    # Get all projects (superadmin sees all)
+    if tenant_id:
+        projects = Project.query.filter_by(tenant_id=tenant_id).all()
+    else:
+        projects = Project.query.all()
+
     active_projects = [p for p in projects if p.status in ['Em Andamento', 'Planejamento']]
 
     # Budget and expenses
     total_budget = sum(p.budget or 0 for p in projects)
-    total_spent = db.session.query(func.sum(Expense.amount)).filter_by(tenant_id=tenant_id).scalar() or 0
+
+    if tenant_id:
+        total_spent = db.session.query(func.sum(Expense.amount)).filter_by(tenant_id=tenant_id).scalar() or 0
+    else:
+        total_spent = db.session.query(func.sum(Expense.amount)).scalar() or 0
 
     # Expenses by category
-    expenses_by_category = db.session.query(
-        Expense.category,
-        func.sum(Expense.amount)
-    ).filter_by(tenant_id=tenant_id).group_by(Expense.category).all()
+    if tenant_id:
+        expenses_by_category = db.session.query(
+            Expense.category,
+            func.sum(Expense.amount)
+        ).filter_by(tenant_id=tenant_id).group_by(Expense.category).all()
+    else:
+        expenses_by_category = db.session.query(
+            Expense.category,
+            func.sum(Expense.amount)
+        ).group_by(Expense.category).all()
 
     # Expenses by project
-    expenses_by_project = db.session.query(
-        Project.code,
-        Project.title,
-        func.sum(Expense.amount)
-    ).join(Expense, Project.id == Expense.project_id).filter(
-        Project.tenant_id == tenant_id
-    ).group_by(Project.id).all()
+    if tenant_id:
+        expenses_by_project = db.session.query(
+            Project.code,
+            Project.title,
+            func.sum(Expense.amount)
+        ).join(Expense, Project.id == Expense.project_id).filter(
+            Project.tenant_id == tenant_id
+        ).group_by(Project.id).all()
+    else:
+        expenses_by_project = db.session.query(
+            Project.code,
+            Project.title,
+            func.sum(Expense.amount)
+        ).join(Expense, Project.id == Expense.project_id).group_by(Project.id).all()
 
     # Projects by status
     projects_by_status = {}
@@ -49,7 +70,10 @@ def dashboard():
         projects_by_status[p.status] = projects_by_status.get(p.status, 0) + 1
 
     # All milestones for Gantt
-    milestones = Milestone.query.filter_by(tenant_id=tenant_id).order_by(Milestone.end_date).all()
+    if tenant_id:
+        milestones = Milestone.query.filter_by(tenant_id=tenant_id).order_by(Milestone.end_date).all()
+    else:
+        milestones = Milestone.query.order_by(Milestone.end_date).all()
 
     # Milestones with project info for Gantt
     gantt_data = []
@@ -68,20 +92,32 @@ def dashboard():
             })
 
     # Programs summary
-    programs = Program.query.filter_by(tenant_id=tenant_id).all()
+    if tenant_id:
+        programs = Program.query.filter_by(tenant_id=tenant_id).all()
+    else:
+        programs = Program.query.all()
 
     # Total hours
-    total_hours = db.session.query(func.sum(Timesheet.hours)).filter_by(tenant_id=tenant_id).scalar() or 0
+    if tenant_id:
+        total_hours = db.session.query(func.sum(Timesheet.hours)).filter_by(tenant_id=tenant_id).scalar() or 0
+    else:
+        total_hours = db.session.query(func.sum(Timesheet.hours)).scalar() or 0
 
     # Team size
-    total_resources = Resource.query.filter_by(
-        tenant_id=tenant_id,
-        type='Pessoa',
-        status='Ativo'
-    ).count()
+    if tenant_id:
+        total_resources = Resource.query.filter_by(
+            tenant_id=tenant_id,
+            type='Pessoa',
+            status='Ativo'
+        ).count()
+    else:
+        total_resources = Resource.query.filter_by(
+            type='Pessoa',
+            status='Ativo'
+        ).count()
 
     # Calculate overall progress
-    all_milestones = Milestone.query.filter_by(tenant_id=tenant_id).all()
+    all_milestones = milestones  # Reuse from above
     overall_progress = sum(m.progress or 0 for m in all_milestones) / len(all_milestones) if all_milestones else 0
 
     # Delayed milestones
