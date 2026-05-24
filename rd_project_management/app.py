@@ -74,15 +74,20 @@ def create_app():
     app.register_blueprint(meeting_minutes_bp)
 
     # Optional blueprints (Programs and Portfolio modules)
+    has_programs = False
+    has_portfolio = False
+
     try:
         from routes.programs import programs_bp
         app.register_blueprint(programs_bp)
+        has_programs = True
     except ImportError:
         pass
 
     try:
         from routes.portfolio import portfolio_bp
         app.register_blueprint(portfolio_bp)
+        has_portfolio = True
     except ImportError:
         pass
 
@@ -98,7 +103,9 @@ def create_app():
     def inject_tenant():
         return {
             'current_tenant': getattr(g, 'current_tenant', None),
-            'is_superadmin': current_user.is_superadmin() if current_user.is_authenticated else False
+            'is_superadmin': current_user.is_superadmin() if current_user.is_authenticated else False,
+            'has_programs_module': has_programs,
+            'has_portfolio_module': has_portfolio
         }
 
     # Root redirect
