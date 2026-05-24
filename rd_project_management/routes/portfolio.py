@@ -153,15 +153,27 @@ def status_report():
     tenant_id = get_current_tenant_id()
     tenant = current_user.tenant
 
-    projects = Project.query.filter_by(tenant_id=tenant_id).all()
+    # Get all projects (superadmin sees all)
+    if tenant_id:
+        projects = Project.query.filter_by(tenant_id=tenant_id).all()
+    else:
+        projects = Project.query.all()
+
     active_projects = [p for p in projects if p.status in ['Em Andamento', 'Planejamento']]
 
     # Budget
     total_budget = sum(p.budget or 0 for p in projects)
-    total_spent = db.session.query(func.sum(Expense.amount)).filter_by(tenant_id=tenant_id).scalar() or 0
+    if tenant_id:
+        total_spent = db.session.query(func.sum(Expense.amount)).filter_by(tenant_id=tenant_id).scalar() or 0
+    else:
+        total_spent = db.session.query(func.sum(Expense.amount)).scalar() or 0
 
     # Schedule
-    all_milestones = Milestone.query.filter_by(tenant_id=tenant_id).all()
+    if tenant_id:
+        all_milestones = Milestone.query.filter_by(tenant_id=tenant_id).all()
+    else:
+        all_milestones = Milestone.query.all()
+
     today = date.today()
 
     completed = len([m for m in all_milestones if m.status == 'Concluido'])
@@ -232,20 +244,22 @@ def status_report():
         overall_label = 'Saudavel'
 
     # Hours and team
-    total_hours = db.session.query(func.sum(Timesheet.hours)).filter_by(tenant_id=tenant_id).scalar() or 0
+    if tenant_id:
+        total_hours = db.session.query(func.sum(Timesheet.hours)).filter_by(tenant_id=tenant_id).scalar() or 0
+        team = Resource.query.filter_by(tenant_id=tenant_id, type='Pessoa', status='Ativo').all()
+        upcoming_milestones = Milestone.query.filter_by(tenant_id=tenant_id).filter(
+            Milestone.status != 'Concluido',
+            Milestone.end_date >= today
+        ).order_by(Milestone.end_date).limit(10).all()
+    else:
+        total_hours = db.session.query(func.sum(Timesheet.hours)).scalar() or 0
+        team = Resource.query.filter_by(type='Pessoa', status='Ativo').all()
+        upcoming_milestones = Milestone.query.filter(
+            Milestone.status != 'Concluido',
+            Milestone.end_date >= today
+        ).order_by(Milestone.end_date).limit(10).all()
 
-    team = Resource.query.filter_by(
-        tenant_id=tenant_id,
-        type='Pessoa',
-        status='Ativo'
-    ).all()
     unique_team = {r.name: r for r in team}.values()
-
-    # Upcoming milestones
-    upcoming_milestones = Milestone.query.filter_by(tenant_id=tenant_id).filter(
-        Milestone.status != 'Concluido',
-        Milestone.end_date >= today
-    ).order_by(Milestone.end_date).limit(10).all()
 
     # Projects summary for the report
     projects_summary = []
@@ -303,15 +317,24 @@ def analytics():
     tenant_id = get_current_tenant_id()
 
     # Expenses by month
-    expenses_by_month = db.session.query(
-        func.strftime('%Y-%m', Expense.date),
-        func.sum(Expense.amount)
-    ).filter_by(tenant_id=tenant_id).group_by(
-        func.strftime('%Y-%m', Expense.date)
-    ).order_by(func.strftime('%Y-%m', Expense.date)).all()
+    if tenant_id:
+        expenses_by_month = db.session.query(
+            func.strftime('%Y-%m', Expense.date),
+            func.sum(Expense.amount)
+        ).filter_by(tenant_id=tenant_id).group_by(
+            func.strftime('%Y-%m', Expense.date)
+        ).order_by(func.strftime('%Y-%m', Expense.date)).all()
+        projects = Project.query.filter_by(tenant_id=tenant_id).all()
+    else:
+        expenses_by_month = db.session.query(
+            func.strftime('%Y-%m', Expense.date),
+            func.sum(Expense.amount)
+        ).group_by(
+            func.strftime('%Y-%m', Expense.date)
+        ).order_by(func.strftime('%Y-%m', Expense.date)).all()
+        projects = Project.query.all()
 
     # Budget vs Spent by project
-    projects = Project.query.filter_by(tenant_id=tenant_id).all()
     budget_vs_spent = []
     for p in projects:
         spent = db.session.query(func.sum(Expense.amount)).filter_by(project_id=p.id).scalar() or 0
