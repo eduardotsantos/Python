@@ -1,6 +1,6 @@
 from flask import Blueprint, render_template, redirect, url_for, flash, request, jsonify, send_file, Response
 from flask_login import login_required
-from models import db, Milestone, Project, User
+from models import db, Milestone, Project, User, Resource
 from services.tenant_utils import tenant_required, ensure_tenant_access, get_current_tenant_id
 from datetime import datetime
 import xml.etree.ElementTree as ET
@@ -123,11 +123,12 @@ def update_progress(project_id, milestone_id):
 @login_required
 @tenant_required
 def export_schedule(project_id):
-    """Export schedule to MS Project XML."""
+    """Export schedule to MS Project XML with resources."""
     project = Project.query.get_or_404(project_id)
     ensure_tenant_access(project)
 
     milestones = Milestone.query.filter_by(project_id=project_id).order_by(Milestone.order, Milestone.start_date).all()
+    resources = Resource.query.filter_by(project_id=project_id, type='Pessoa', status='Ativo').all()
 
     # Create MS Project XML
     root = ET.Element('Project')
@@ -140,6 +141,36 @@ def export_schedule(project_id):
     if project.end_date:
         ET.SubElement(root, 'FinishDate').text = project.end_date.isoformat()
 
+    # Resources section
+    resources_elem = ET.SubElement(root, 'Resources')
+    resource_uid_map = {}
+    for i, resource in enumerate(resources, 1):
+        res_elem = ET.SubElement(resources_elem, 'Resource')
+        ET.SubElement(res_elem, 'UID').text = str(i)
+        ET.SubElement(res_elem, 'ID').text = str(i)
+        ET.SubElement(res_elem, 'Name').text = resource.name
+        ET.SubElement(res_elem, 'Type').text = '1'  # Work resource
+        if resource.role:
+            ET.SubElement(res_elem, 'Group').text = resource.role
+        if resource.hourly_cost:
+            ET.SubElement(res_elem, 'StandardRate').text = str(resource.hourly_cost)
+        resource_uid_map[resource.id] = i
+
+    # Also add users as resources (for responsible field)
+    user_uid_map = {}
+    user_offset = len(resources)
+    users_with_milestones = set(m.responsible_id for m in milestones if m.responsible_id)
+    for i, user_id in enumerate(users_with_milestones, user_offset + 1):
+        user = User.query.get(user_id)
+        if user:
+            res_elem = ET.SubElement(resources_elem, 'Resource')
+            ET.SubElement(res_elem, 'UID').text = str(i)
+            ET.SubElement(res_elem, 'ID').text = str(i)
+            ET.SubElement(res_elem, 'Name').text = user.full_name
+            ET.SubElement(res_elem, 'Type').text = '1'
+            user_uid_map[user_id] = i
+
+    # Tasks section
     tasks = ET.SubElement(root, 'Tasks')
     for i, milestone in enumerate(milestones, 1):
         task = ET.SubElement(tasks, 'Task')
@@ -155,6 +186,17 @@ def export_schedule(project_id):
         ET.SubElement(task, 'PercentComplete').text = str(milestone.progress or 0)
         ET.SubElement(task, 'Priority').text = '500'
 
+    # Assignments section (links tasks to resources)
+    assignments = ET.SubElement(root, 'Assignments')
+    assign_uid = 1
+    for i, milestone in enumerate(milestones, 1):
+        if milestone.responsible_id and milestone.responsible_id in user_uid_map:
+            assign = ET.SubElement(assignments, 'Assignment')
+            ET.SubElement(assign, 'UID').text = str(assign_uid)
+            ET.SubElement(assign, 'TaskUID').text = str(i)
+            ET.SubElement(assign, 'ResourceUID').text = str(user_uid_map[milestone.responsible_id])
+            assign_uid += 1
+
     xml_str = ET.tostring(root, encoding='unicode', method='xml')
     xml_content = '<?xml version="1.0" encoding="UTF-8"?>\n' + xml_str
 
@@ -169,7 +211,7 @@ def export_schedule(project_id):
 @login_required
 @tenant_required
 def import_schedule(project_id):
-    """Import schedule from MS Project XML."""
+    """Import schedule from MS Project XML with resource assignments."""
     project = Project.query.get_or_404(project_id)
     ensure_tenant_access(project)
     tenant_id = get_current_tenant_id()
@@ -194,17 +236,40 @@ def import_schedule(project_id):
 
             # Handle namespace
             ns = {'ms': 'http://schemas.microsoft.com/project'}
-            tasks = root.findall('.//ms:Task', ns) or root.findall('.//Task')
 
+            def find_all(parent, tag):
+                return parent.findall(f'.//ms:{tag}', ns) or parent.findall(f'.//{tag}')
+
+            def get_text(elem, tag):
+                el = elem.find(f'ms:{tag}', ns) or elem.find(tag)
+                return el.text if el is not None else None
+
+            # Build resource map (UID -> name)
+            resource_uid_to_name = {}
+            for res in find_all(root, 'Resource'):
+                uid = get_text(res, 'UID')
+                name = get_text(res, 'Name')
+                if uid and name:
+                    resource_uid_to_name[uid] = name.strip()
+
+            # Build assignment map (TaskUID -> ResourceUID)
+            task_to_resource = {}
+            for assign in find_all(root, 'Assignment'):
+                task_uid = get_text(assign, 'TaskUID')
+                res_uid = get_text(assign, 'ResourceUID')
+                if task_uid and res_uid:
+                    task_to_resource[task_uid] = res_uid
+
+            # Map resource names to user IDs
+            users = User.query.filter_by(tenant_id=tenant_id, active=True).all()
+            user_name_to_id = {u.full_name.lower(): u.id for u in users}
+
+            tasks = find_all(root, 'Task')
             imported = 0
             existing_count = Milestone.query.filter_by(project_id=project_id).count()
 
             for task in tasks:
-                # Try with and without namespace
-                def get_text(elem, tag):
-                    el = elem.find(f'ms:{tag}', ns) or elem.find(tag)
-                    return el.text if el is not None else None
-
+                task_uid = get_text(task, 'UID')
                 name = get_text(task, 'Name')
                 if not name or name.strip() == '':
                     continue
@@ -238,6 +303,14 @@ def import_schedule(project_id):
                 else:
                     status = 'Pendente'
 
+                # Find responsible from assignment
+                responsible_id = None
+                if task_uid and task_uid in task_to_resource:
+                    res_uid = task_to_resource[task_uid]
+                    res_name = resource_uid_to_name.get(res_uid, '').lower()
+                    if res_name and res_name in user_name_to_id:
+                        responsible_id = user_name_to_id[res_name]
+
                 milestone = Milestone(
                     tenant_id=tenant_id,
                     project_id=project_id,
@@ -247,7 +320,8 @@ def import_schedule(project_id):
                     end_date=end_date,
                     progress=progress,
                     status=status,
-                    order=existing_count + imported
+                    order=existing_count + imported,
+                    responsible_id=responsible_id
                 )
                 db.session.add(milestone)
                 imported += 1
