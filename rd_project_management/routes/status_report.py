@@ -113,6 +113,78 @@ def calculate_cost_status(project):
     }
 
 
+def calculate_resource_cost_status(project):
+    """Calculate resource costs: planned (allocated) vs realized (timesheet)."""
+    resources = Resource.query.filter_by(project_id=project.id).all()
+    timesheets = Timesheet.query.filter_by(project_id=project.id).all()
+
+    # Build resource cost map
+    resource_costs = {r.id: r.hourly_cost or 0 for r in resources}
+
+    # Planned cost: hours_allocated × hourly_cost
+    planned_cost = sum((r.hours_allocated or 0) * (r.hourly_cost or 0) for r in resources)
+    planned_hours = sum(r.hours_allocated or 0 for r in resources)
+
+    # Realized cost from timesheet
+    realized_cost = 0
+    realized_hours = 0
+    cost_by_resource = {}
+    hours_by_resource = {}
+
+    for t in timesheets:
+        hours = t.hours or 0
+        realized_hours += hours
+
+        # Get hourly cost from resource if linked
+        if t.resource_id and t.resource_id in resource_costs:
+            hourly = resource_costs[t.resource_id]
+            cost = hours * hourly
+            realized_cost += cost
+
+            # Track by resource
+            res = Resource.query.get(t.resource_id)
+            if res:
+                name = res.name
+                cost_by_resource[name] = cost_by_resource.get(name, 0) + cost
+                hours_by_resource[name] = hours_by_resource.get(name, 0) + hours
+
+    # Calculate variance
+    cost_variance = planned_cost - realized_cost
+    hours_variance = planned_hours - realized_hours
+
+    # Determine status
+    if planned_cost > 0:
+        cost_percent = (realized_cost / planned_cost) * 100
+        if cost_percent > 100:
+            status = 'red'
+            label = 'Acima do planejado'
+        elif cost_percent > 85:
+            status = 'yellow'
+            label = 'Atenção'
+        else:
+            status = 'green'
+            label = 'Dentro do planejado'
+    else:
+        cost_percent = 0
+        status = 'gray'
+        label = 'Sem planejamento'
+
+    return {
+        'status': status,
+        'label': label,
+        'planned_cost': round(planned_cost, 2),
+        'realized_cost': round(realized_cost, 2),
+        'cost_variance': round(cost_variance, 2),
+        'cost_percent': round(cost_percent, 1),
+        'planned_hours': round(planned_hours, 1),
+        'realized_hours': round(realized_hours, 1),
+        'hours_variance': round(hours_variance, 1),
+        'cost_by_resource': cost_by_resource,
+        'hours_by_resource': hours_by_resource,
+        'has_data': planned_cost > 0 or realized_cost > 0
+    }
+
+
 def calculate_evm_metrics(project, schedule_status, cost_status):
     """Calculate Earned Value Management metrics (ETC, EAC, CPI, SPI, etc.)."""
     bac = cost_status['budget']  # Budget at Completion
@@ -331,6 +403,7 @@ def view_report(project_id):
     # Calculate statuses
     schedule_status = calculate_schedule_status(project)
     cost_status = calculate_cost_status(project)
+    resource_cost_status = calculate_resource_cost_status(project)
     evm_metrics = calculate_evm_metrics(project, schedule_status, cost_status)
     risks = identify_risks(project, schedule_status, cost_status)
 
@@ -365,6 +438,7 @@ def view_report(project_id):
         report_date=datetime.now(),
         schedule_status=schedule_status,
         cost_status=cost_status,
+        resource_cost_status=resource_cost_status,
         evm_metrics=evm_metrics,
         risks=risks,
         overall_health=overall_health,
@@ -389,6 +463,7 @@ def print_report(project_id):
     # Calculate statuses
     schedule_status = calculate_schedule_status(project)
     cost_status = calculate_cost_status(project)
+    resource_cost_status = calculate_resource_cost_status(project)
     evm_metrics = calculate_evm_metrics(project, schedule_status, cost_status)
     risks = identify_risks(project, schedule_status, cost_status)
 
@@ -417,6 +492,7 @@ def print_report(project_id):
         report_date=datetime.now(),
         schedule_status=schedule_status,
         cost_status=cost_status,
+        resource_cost_status=resource_cost_status,
         evm_metrics=evm_metrics,
         risks=risks,
         overall_health=overall_health,

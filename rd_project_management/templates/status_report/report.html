@@ -352,6 +352,76 @@
                 {% endif %}
             </div>
         </div>
+
+        <!-- Resource Cost: Planned vs Realized -->
+        {% if resource_cost_status and resource_cost_status.has_data %}
+        <div class="card shadow-sm mb-4">
+            <div class="card-header bg-white d-flex justify-content-between align-items-center">
+                <h6 class="mb-0 fw-bold"><i class="bi bi-people-fill text-info"></i> Custo de Recursos</h6>
+                <span class="status-badge {{ resource_cost_status.status }}">{{ resource_cost_status.label }}</span>
+            </div>
+            <div class="card-body">
+                <div class="mb-3">
+                    <div class="d-flex justify-content-between mb-1">
+                        <small>Realizado vs Planejado</small>
+                        <small class="fw-bold">{{ resource_cost_status.cost_percent }}%</small>
+                    </div>
+                    <div class="progress progress-thin">
+                        <div class="progress-bar bg-{{ 'danger' if resource_cost_status.cost_percent > 100 else 'warning' if resource_cost_status.cost_percent > 85 else 'success' }}"
+                             style="width: {{ [resource_cost_status.cost_percent, 100]|min }}%"></div>
+                    </div>
+                </div>
+
+                <div class="row text-center mb-3">
+                    <div class="col-4">
+                        <div class="fw-bold text-secondary">R$ {{ "{:,.0f}".format(resource_cost_status.planned_cost) }}</div>
+                        <small class="text-muted">Planejado</small>
+                    </div>
+                    <div class="col-4">
+                        <div class="fw-bold text-primary">R$ {{ "{:,.0f}".format(resource_cost_status.realized_cost) }}</div>
+                        <small class="text-muted">Realizado</small>
+                    </div>
+                    <div class="col-4">
+                        <div class="fw-bold {% if resource_cost_status.cost_variance < 0 %}text-danger{% else %}text-success{% endif %}">
+                            R$ {{ "{:,.0f}".format(resource_cost_status.cost_variance) }}
+                        </div>
+                        <small class="text-muted">Variação</small>
+                    </div>
+                </div>
+
+                <hr>
+                <div class="row text-center">
+                    <div class="col-4">
+                        <div class="fw-bold text-secondary">{{ resource_cost_status.planned_hours }}h</div>
+                        <small class="text-muted">Horas Plan.</small>
+                    </div>
+                    <div class="col-4">
+                        <div class="fw-bold text-primary">{{ resource_cost_status.realized_hours }}h</div>
+                        <small class="text-muted">Horas Real.</small>
+                    </div>
+                    <div class="col-4">
+                        <div class="fw-bold {% if resource_cost_status.hours_variance < 0 %}text-danger{% else %}text-success{% endif %}">
+                            {{ resource_cost_status.hours_variance }}h
+                        </div>
+                        <small class="text-muted">Variação</small>
+                    </div>
+                </div>
+
+                {% if resource_cost_status.cost_by_resource %}
+                <hr>
+                <small class="text-muted fw-bold">Custo por Recurso:</small>
+                <div class="mt-2">
+                    {% for name, cost in resource_cost_status.cost_by_resource.items() %}
+                    <div class="d-flex justify-content-between small">
+                        <span>{{ name }}</span>
+                        <span class="fw-bold">R$ {{ "{:,.2f}".format(cost) }} ({{ resource_cost_status.hours_by_resource.get(name, 0)|round(1) }}h)</span>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% endif %}
+            </div>
+        </div>
+        {% endif %}
     </div>
 
     <!-- Right Column -->

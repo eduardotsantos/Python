@@ -17,7 +17,7 @@
 
 <!-- Stats -->
 <div class="row g-3 mb-4">
-    <div class="col-md-4">
+    <div class="col-md-3">
         <div class="card card-stats border-primary shadow-sm">
             <div class="card-body">
                 <p class="text-muted mb-1 small">Pessoas</p>
@@ -25,19 +25,31 @@
             </div>
         </div>
     </div>
-    <div class="col-md-4">
+    <div class="col-md-3">
         <div class="card card-stats border-warning shadow-sm">
             <div class="card-body">
-                <p class="text-muted mb-1 small">Máquinas/Equipamentos</p>
+                <p class="text-muted mb-1 small">Máquinas/Equip.</p>
                 <h3 class="fw-bold mb-0">{{ machines|length }}</h3>
             </div>
         </div>
     </div>
-    <div class="col-md-4">
+    <div class="col-md-3">
+        <div class="card card-stats border-secondary shadow-sm">
+            <div class="card-body">
+                <p class="text-muted mb-1 small">Custo Planejado</p>
+                <h6 class="fw-bold mb-0">R$ {{ "{:,.2f}".format(total_planned_cost).replace(",", "X").replace(".", ",").replace("X", ".") }}</h6>
+                <small class="text-muted">{{ total_planned_hours }}h alocadas</small>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
         <div class="card card-stats border-success shadow-sm">
             <div class="card-body">
-                <p class="text-muted mb-1 small">Custo Estimado Total</p>
-                <h5 class="fw-bold mb-0">R$ {{ "{:,.2f}".format(total_cost).replace(",", "X").replace(".", ",").replace("X", ".") }}</h5>
+                <p class="text-muted mb-1 small">Custo Realizado</p>
+                <h6 class="fw-bold mb-0 {% if total_realized_cost > total_planned_cost %}text-danger{% else %}text-success{% endif %}">
+                    R$ {{ "{:,.2f}".format(total_realized_cost).replace(",", "X").replace(".", ",").replace("X", ".") }}
+                </h6>
+                <small class="text-muted">{{ total_realized_hours }}h trabalhadas</small>
             </div>
         </div>
     </div>
@@ -74,6 +86,15 @@
                             {% endif %}
                             {% if resource.hourly_cost %}
                             <div><i class="bi bi-cash"></i> R$ {{ "{:,.2f}".format(resource.hourly_cost).replace(",", "X").replace(".", ",").replace("X", ".") }}/h</div>
+                            {% endif %}
+                            {% if resource_realized.get(resource.id) %}
+                            <div class="mt-1 pt-1 border-top">
+                                <i class="bi bi-check2-circle text-success"></i>
+                                <strong>{{ resource_realized[resource.id].hours }}h</strong> realizadas
+                                <span class="{% if resource_realized[resource.id].hours > (resource.hours_allocated or 0) %}text-danger{% else %}text-success{% endif %}">
+                                    (R$ {{ "{:,.0f}".format(resource_realized[resource.id].cost) }})
+                                </span>
+                            </div>
                             {% endif %}
                         </div>
                         <div class="mt-2">
