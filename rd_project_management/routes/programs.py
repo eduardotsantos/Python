@@ -18,7 +18,12 @@ programs_bp = Blueprint('programs', __name__)
 def list_programs():
     """List all programs."""
     tenant_id = get_current_tenant_id()
-    programs = Program.query.filter_by(tenant_id=tenant_id).order_by(Program.name).all()
+
+    if tenant_id:
+        programs = Program.query.filter_by(tenant_id=tenant_id).order_by(Program.name).all()
+    else:
+        # Superadmin sees all programs
+        programs = Program.query.order_by(Program.name).all()
 
     programs_data = []
     for program in programs:
@@ -50,6 +55,10 @@ def list_programs():
 def create_program():
     """Create a new program."""
     tenant_id = get_current_tenant_id()
+
+    if not tenant_id:
+        flash('Superadmins devem acessar via contexto de uma empresa para criar programas.', 'warning')
+        return redirect(url_for('programs.list_programs'))
 
     if request.method == 'POST':
         program = Program(
