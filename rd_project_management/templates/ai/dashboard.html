@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% block title %}Assistente de IA - Gestao P&D{% endblock %}
+{% block title %}Assistente de IA - Gestão P&D{% endblock %}
 
 {% block content %}
 <div class="container-fluid">
@@ -41,11 +41,11 @@
                 <div class="card-body">
                     <h6><i class="bi bi-lightbulb"></i> Funcionalidades Disponiveis</h6>
                     <ul class="mb-0 small">
-                        <li><strong class="text-danger">Analise de Riscos</strong> - Identifique riscos de orcamento e cronograma</li>
-                        <li><strong class="text-success">Geracao de Relatorios</strong> - Crie relatorios tecnicos automaticamente</li>
+                        <li><strong class="text-danger">Análise de Riscos</strong> - Identifique riscos de orçamento e cronograma</li>
+                        <li><strong class="text-success">Geração de Relatórios</strong> - Crie relatórios técnicos automaticamente</li>
                         <li><strong class="text-warning">Matching Projeto-Edital</strong> - Encontre editais compativeis</li>
-                        <li><strong class="text-info">Analise de Documentos</strong> - Extraia dados de editais em PDF</li>
-                        <li><strong class="text-primary">Geracao de Propostas</strong> <span class="badge bg-warning text-dark">PRO</span> - Crie propostas para chamadas publicas</li>
+                        <li><strong class="text-info">Análise de Documentos</strong> - Extraia dados de editais em PDF</li>
+                        <li><strong class="text-primary">Geração de Propostas</strong> <span class="badge bg-warning text-dark">PRO</span> - Crie propostas para chamadas públicas</li>
                     </ul>
                 </div>
             </div>
@@ -58,7 +58,7 @@
             {% if can_generate_proposals %}
             <div class="card border-success">
                 <div class="card-header bg-success text-white">
-                    <h5 class="mb-0"><i class="bi bi-file-earmark-richtext"></i> Geracao de Propostas</h5>
+                    <h5 class="mb-0"><i class="bi bi-file-earmark-richtext"></i> Geração de Propostas</h5>
                 </div>
                 <div class="card-body">
                     <p>Para gerar uma proposta, vincule um projeto a uma chamada publica e clique em "Gerar Proposta".</p>
@@ -80,12 +80,12 @@
             {% else %}
             <div class="card border-secondary">
                 <div class="card-header bg-secondary text-white">
-                    <h5 class="mb-0"><i class="bi bi-file-earmark-richtext"></i> Geracao de Propostas <span class="badge bg-warning text-dark ms-2">PRO</span></h5>
+                    <h5 class="mb-0"><i class="bi bi-file-earmark-richtext"></i> Geração de Propostas <span class="badge bg-warning text-dark ms-2">PRO</span></h5>
                 </div>
                 <div class="card-body text-center py-4">
                     <i class="bi bi-lock fs-1 text-muted"></i>
                     <h5 class="mt-3">Recurso exclusivo dos planos Profissional e Enterprise</h5>
-                    <p class="text-muted">Gere propostas completas para chamadas publicas utilizando inteligencia artificial.</p>
+                    <p class="text-muted">Gere propostas completas para chamadas públicas utilizando inteligencia artificial.</p>
                     <p class="small text-muted mb-0">Entre em contato para fazer upgrade do seu plano.</p>
                 </div>
             </div>
@@ -132,12 +132,12 @@
                                 <div class="btn-group btn-group-sm">
                                     <a href="{{ url_for('ai.risks_page', project_id=project.id) }}"
                                        class="btn btn-outline-danger {% if not ai_configured %}disabled{% endif %}"
-                                       title="Analise de Riscos">
+                                       title="Análise de Riscos">
                                         <i class="bi bi-shield-exclamation"></i>
                                     </a>
                                     <a href="{{ url_for('ai.report_page', project_id=project.id) }}"
                                        class="btn btn-outline-success {% if not ai_configured %}disabled{% endif %}"
-                                       title="Gerar Relatorio">
+                                       title="Gerar Relatório">
                                         <i class="bi bi-file-earmark-text"></i>
                                     </a>
                                     <a href="{{ url_for('ai.matching_page', project_id=project.id) }}"
@@ -174,7 +174,7 @@
         <small class="text-muted">
             <strong>Legenda:</strong>
             <span class="ms-2"><i class="bi bi-shield-exclamation text-danger"></i> Riscos</span>
-            <span class="ms-2"><i class="bi bi-file-earmark-text text-success"></i> Relatorio</span>
+            <span class="ms-2"><i class="bi bi-file-earmark-text text-success"></i> Relatório</span>
             <span class="ms-2"><i class="bi bi-link-45deg text-warning"></i> Matching</span>
             <span class="ms-2"><i class="bi bi-three-dots text-info"></i> Mais opcoes</span>
         </small>

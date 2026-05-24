@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% block title %}Analise de Riscos - {{ project.title }}{% endblock %}
+{% block title %}Análise de Riscos - {{ project.title }}{% endblock %}
 
 {% block content %}
 <div class="container-fluid">
@@ -8,7 +8,7 @@
             <a href="{{ url_for('projects.view_project', project_id=project.id) }}" class="btn btn-outline-secondary btn-sm">
                 <i class="bi bi-arrow-left"></i> Voltar ao Projeto
             </a>
-            <h4 class="mt-2"><i class="bi bi-shield-exclamation text-danger"></i> Analise de Riscos</h4>
+            <h4 class="mt-2"><i class="bi bi-shield-exclamation text-danger"></i> Análise de Riscos</h4>
             <p class="text-muted mb-0">{{ project.code }} - {{ project.title }}</p>
         </div>
     </div>
@@ -167,9 +167,9 @@ function displayResults(data) {
     // Burn rate
     if (data.burn_rate) {
         const brStatusMap = {
-            'dentro_orcamento': '<span class="text-success">Dentro do Orcamento</span>',
+            'dentro_orçamento': '<span class="text-success">Dentro do Orçamento</span>',
             'em_risco': '<span class="text-warning">Em Risco</span>',
-            'acima_orcamento': '<span class="text-danger">Acima do Orcamento</span>'
+            'acima_orçamento': '<span class="text-danger">Acima do Orçamento</span>'
         };
         document.getElementById('burnRateStatus').innerHTML = brStatusMap[data.burn_rate.status] || data.burn_rate.status;
         document.getElementById('burnRateMonthly').textContent = formatCurrency(data.burn_rate.mensal);

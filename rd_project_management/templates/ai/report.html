@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% block title %}Gerar Relatorio - {{ project.title }}{% endblock %}
+{% block title %}Gerar Relatório - {{ project.title }}{% endblock %}
 
 {% block extra_css %}
 <style>
@@ -32,7 +32,7 @@
             <a href="{{ url_for('projects.view_project', project_id=project.id) }}" class="btn btn-outline-secondary btn-sm">
                 <i class="bi bi-arrow-left"></i> Voltar ao Projeto
             </a>
-            <h4 class="mt-2"><i class="bi bi-file-earmark-text text-success"></i> Geracao de Relatorio</h4>
+            <h4 class="mt-2"><i class="bi bi-file-earmark-text text-success"></i> Geração de Relatório</h4>
             <p class="text-muted mb-0">{{ project.code }} - {{ project.title }}</p>
         </div>
     </div>
@@ -46,13 +46,13 @@
     {% else %}
     <div class="card mb-4 no-print" id="generateSection">
         <div class="card-body">
-            <h5>Selecione o tipo de relatorio:</h5>
+            <h5>Selecione o tipo de relatório:</h5>
             <div class="row">
                 <div class="col-md-6">
                     <div class="card border-primary h-100">
                         <div class="card-body text-center">
                             <i class="bi bi-file-earmark-text fs-1 text-primary"></i>
-                            <h5 class="mt-2">Relatorio Parcial</h5>
+                            <h5 class="mt-2">Relatório Parcial</h5>
                             <p class="text-muted small">Para prestacao de contas intermediaria com foco em progresso e proximas etapas.</p>
                             <button class="btn btn-primary" onclick="generateReport('parcial')">
                                 <i class="bi bi-file-earmark-plus"></i> Gerar Parcial
@@ -64,7 +64,7 @@
                     <div class="card border-success h-100">
                         <div class="card-body text-center">
                             <i class="bi bi-file-earmark-check fs-1 text-success"></i>
-                            <h5 class="mt-2">Relatorio Final</h5>
+                            <h5 class="mt-2">Relatório Final</h5>
                             <p class="text-muted small">Para conclusao do projeto com foco em resultados e impactos.</p>
                             <button class="btn btn-success" onclick="generateReport('final')">
                                 <i class="bi bi-file-earmark-check"></i> Gerar Final
@@ -78,7 +78,7 @@
 
     <div class="text-center d-none" id="loadingSection">
         <div class="spinner-border text-success" role="status"></div>
-        <p class="mt-2">Gerando relatorio com IA... Isso pode levar alguns segundos.</p>
+        <p class="mt-2">Gerando relatório com IA... Isso pode levar alguns segundos.</p>
     </div>
 
     <div class="d-none" id="reportSection">
@@ -147,7 +147,7 @@ function resetReport() {
 
 function copyReport() {
     navigator.clipboard.writeText(currentReport).then(() => {
-        alert('Relatorio copiado para a area de transferencia!');
+        alert('Relatório copiado para a area de transferencia!');
     });
 }
 
@@ -156,7 +156,7 @@ function downloadReport() {
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = '{{ project.code }}_relatorio.txt';
+    a.download = '{{ project.code }}_relatório.txt';
     a.click();
     URL.revokeObjectURL(url);
 }

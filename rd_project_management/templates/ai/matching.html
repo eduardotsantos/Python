@@ -29,7 +29,7 @@
                 <div class="card-body">
                     <p><strong>Titulo:</strong> {{ project.title }}</p>
                     <p><strong>Categoria:</strong> {{ project.category or 'Nao definida' }}</p>
-                    <p><strong>Orcamento:</strong> {{ project.budget|currency_brl }}</p>
+                    <p><strong>Orçamento:</strong> {{ project.budget|currency_brl }}</p>
                     <p><strong>Descricao:</strong></p>
                     <p class="text-muted small">{{ project.description or 'Sem descricao' }}</p>
                 </div>
@@ -40,7 +40,7 @@
                 <div class="card-body text-center" id="searchSection">
                     <i class="bi bi-search fs-1 text-warning"></i>
                     <h5 class="mt-2">Encontrar Editais Compativeis</h5>
-                    <p class="text-muted">A IA analisara seu projeto e encontrara as melhores chamadas publicas.</p>
+                    <p class="text-muted">A IA analisara seu projeto e encontrara as melhores chamadas públicas.</p>
                     <button class="btn btn-warning btn-lg" onclick="runMatching()">
                         <i class="bi bi-magic"></i> Buscar Correspondencias
                     </button>
@@ -58,7 +58,7 @@
         <div id="matchesList"></div>
         <div id="noMatches" class="alert alert-info d-none">
             <i class="bi bi-info-circle"></i>
-            Nenhum edital compativel encontrado. Verifique se ha chamadas publicas abertas cadastradas no sistema.
+            Nenhum edital compativel encontrado. Verifique se ha chamadas públicas abertas cadastradas no sistema.
         </div>
     </div>
     {% endif %}

@@ -137,30 +137,30 @@ function runAudit() {
         // Analysis cards
         html += '<div class="row g-3 mb-4">';
 
-        if (data.analise_orcamentaria) {
-            const budgetStatus = data.analise_orcamentaria.status;
+        if (data.análise_orcamentaria) {
+            const budgetStatus = data.análise_orcamentaria.status;
             html += `
                 <div class="col-md-4">
                     <div class="card border-${budgetStatus === 'Adequado' ? 'success' : budgetStatus === 'Atencao' ? 'warning' : 'danger'}">
                         <div class="card-body">
-                            <h6 class="card-title"><i class="bi bi-cash-stack"></i> Orcamento</h6>
+                            <h6 class="card-title"><i class="bi bi-cash-stack"></i> Orçamento</h6>
                             <span class="badge bg-${budgetStatus === 'Adequado' ? 'success' : budgetStatus === 'Atencao' ? 'warning' : 'danger'}">${budgetStatus}</span>
-                            <p class="small mt-2 mb-0">${data.analise_orcamentaria.observacoes}</p>
+                            <p class="small mt-2 mb-0">${data.análise_orcamentaria.observacoes}</p>
                         </div>
                     </div>
                 </div>
             `;
         }
 
-        if (data.analise_cronograma) {
-            const scheduleStatus = data.analise_cronograma.status;
+        if (data.análise_cronograma) {
+            const scheduleStatus = data.análise_cronograma.status;
             html += `
                 <div class="col-md-4">
                     <div class="card border-${scheduleStatus === 'No prazo' ? 'success' : scheduleStatus === 'Atrasado' ? 'warning' : 'danger'}">
                         <div class="card-body">
                             <h6 class="card-title"><i class="bi bi-calendar-check"></i> Cronograma</h6>
                             <span class="badge bg-${scheduleStatus === 'No prazo' ? 'success' : scheduleStatus === 'Atrasado' ? 'warning' : 'danger'}">${scheduleStatus}</span>
-                            <p class="small mt-2 mb-0">${data.analise_cronograma.observacoes}</p>
+                            <p class="small mt-2 mb-0">${data.análise_cronograma.observacoes}</p>
                         </div>
                     </div>
                 </div>

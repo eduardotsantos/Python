@@ -421,7 +421,7 @@
         </div>
         <div class="metric-box cost">
             <div class="metric-value">{{ cost_status.percent_used }}%</div>
-            <div class="metric-label">Orcamento</div>
+            <div class="metric-label">Orçamento</div>
             <div class="metric-detail">R$ {{ "{:,.0f}".format(cost_status.spent) }} de R$ {{ "{:,.0f}".format(cost_status.budget) }}</div>
         </div>
         <div class="metric-box hours">
@@ -471,7 +471,7 @@
         <div class="evm-secondary">
             <div class="evm-mini">
                 <div class="value">R$ {{ "{:,.0f}".format(evm_metrics.bac) }}</div>
-                <div class="label">BAC (Orcamento)</div>
+                <div class="label">BAC (Orçamento)</div>
             </div>
             <div class="evm-mini">
                 <div class="value">R$ {{ "{:,.0f}".format(evm_metrics.ev) }}</div>
@@ -536,7 +536,7 @@
 
             <!-- Budget -->
             <div class="section">
-                <div class="section-title">Orcamento</div>
+                <div class="section-title">Orçamento</div>
                 <div class="progress-bar-container">
                     <div class="progress-bar-fill {{ 'red' if cost_status.percent_used > 100 else 'yellow' if cost_status.percent_used > 85 else 'green' }}"
                          style="width: {{ [cost_status.percent_used, 100]|min }}%"></div>
@@ -544,7 +544,7 @@
                 <div class="stats-row">
                     <div class="stat-item">
                         <div class="stat-value">R$ {{ "{:,.0f}".format(cost_status.budget) }}</div>
-                        <div class="stat-label">Orcamento</div>
+                        <div class="stat-label">Orçamento</div>
                     </div>
                     <div class="stat-item">
                         <div class="stat-value" style="color: #0d6efd;">R$ {{ "{:,.0f}".format(cost_status.spent) }}</div>
@@ -652,7 +652,7 @@
 
     <!-- Footer -->
     <div class="footer">
-        Gerado por Orion Gestao de P&D em {{ report_date.strftime('%d/%m/%Y as %H:%M') }}
+        Gerado por Orion Gestão de P&D em {{ report_date.strftime('%d/%m/%Y as %H:%M') }}
         {% if tenant %} | {{ tenant.name }}{% endif %}
     </div>
 

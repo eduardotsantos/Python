@@ -49,7 +49,7 @@
                 </p>
             </div>
             <div class="col-md-4 text-center">
-                <small class="text-muted d-block">Data do Relatorio</small>
+                <small class="text-muted d-block">Data do Relatório</small>
                 <strong>{{ report_date.strftime('%d/%m/%Y %H:%M') }}</strong>
             </div>
             <div class="col-md-3 text-center">
@@ -80,7 +80,7 @@
             <div class="card-body metric-card">
                 <div class="status-indicator {{ cost_status.status }} mb-2"></div>
                 <div class="metric-value">{{ cost_status.percent_used }}%</div>
-                <div class="metric-label">Orcamento</div>
+                <div class="metric-label">Orçamento</div>
                 <small class="text-muted">R$ {{ "{:,.0f}".format(cost_status.spent) }} / {{ "{:,.0f}".format(cost_status.budget) }}</small>
             </div>
         </div>
@@ -135,7 +135,7 @@
         <!-- Budget -->
         <div class="card shadow-sm">
             <div class="card-header bg-white">
-                <h6 class="mb-0 fw-bold"><i class="bi bi-cash-stack text-success"></i> Orcamento</h6>
+                <h6 class="mb-0 fw-bold"><i class="bi bi-cash-stack text-success"></i> Orçamento</h6>
             </div>
             <div class="card-body">
                 <div class="progress mb-3" style="height: 12px;">
@@ -232,7 +232,7 @@
                         <th>Codigo</th>
                         <th>Titulo</th>
                         <th class="text-center">Progresso</th>
-                        <th class="text-center">Orcamento</th>
+                        <th class="text-center">Orçamento</th>
                         <th class="text-end">Gasto</th>
                     </tr>
                 </thead>
