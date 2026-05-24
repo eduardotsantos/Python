@@ -26,20 +26,6 @@
                             <i class="bi bi-folder"></i> Projetos
                         </a>
                     </li>
-                    {% if has_programs_module %}
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ url_for('programs.list_programs') }}">
-                            <i class="bi bi-collection"></i> Programas
-                        </a>
-                    </li>
-                    {% endif %}
-                    {% if has_portfolio_module %}
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ url_for('portfolio.dashboard') }}">
-                            <i class="bi bi-pie-chart"></i> Portfolio
-                        </a>
-                    </li>
-                    {% endif %}
                     <li class="nav-item">
                         <a class="nav-link" href="{{ url_for('public_calls.list_calls') }}">
                             <i class="bi bi-megaphone"></i> Chamadas
