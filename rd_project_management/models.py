@@ -214,13 +214,29 @@ class Sprint(db.Model):
     milestones = db.relationship('Milestone', backref='sprint', lazy='dynamic')
 
 
+class MilestoneResource(db.Model):
+    """Association table linking milestones to resources with allocation percentage."""
+    __tablename__ = 'milestone_resources'
+    id = db.Column(db.Integer, primary_key=True)
+    milestone_id = db.Column(db.Integer, db.ForeignKey('milestones.id'), nullable=False)
+    resource_id = db.Column(db.Integer, db.ForeignKey('resources.id'), nullable=False)
+    allocation = db.Column(db.Integer, default=100)  # % de alocação (0-100)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+
+    milestone = db.relationship('Milestone', backref=db.backref('resource_assignments', cascade='all, delete-orphan'))
+    resource = db.relationship('Resource', backref='milestone_assignments')
+
+    __table_args__ = (
+        db.UniqueConstraint('milestone_id', 'resource_id', name='uq_milestone_resource'),
+    )
+
+
 class Milestone(db.Model):
     __tablename__ = 'milestones'
     id = db.Column(db.Integer, primary_key=True)
     tenant_id = db.Column(db.Integer, db.ForeignKey('tenants.id'), nullable=False)
     project_id = db.Column(db.Integer, db.ForeignKey('projects.id'), nullable=False)
     sprint_id = db.Column(db.Integer, db.ForeignKey('sprints.id'), nullable=True)
-    responsible_id = db.Column(db.Integer, db.ForeignKey('resources.id'), nullable=True)
     title = db.Column(db.String(300), nullable=False)
     description = db.Column(db.Text)
     start_date = db.Column(db.Date, nullable=False)
@@ -232,7 +248,15 @@ class Milestone(db.Model):
     order = db.Column(db.Integer, default=0)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
 
-    responsible = db.relationship('Resource', backref='assigned_milestones')
+    @property
+    def responsibles(self):
+        """Return list of responsible resources with allocation."""
+        return [(ra.resource, ra.allocation) for ra in self.resource_assignments]
+
+    @property
+    def responsible_names(self):
+        """Return comma-separated list of responsible names."""
+        return ', '.join([ra.resource.name for ra in self.resource_assignments])
 
 
 class Timesheet(db.Model):

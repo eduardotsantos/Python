@@ -90,11 +90,16 @@
                     {% endif %}
                 </div>
                 <div class="kanban-card-footer">
-                    <div>
-                        {% if m.responsible %}
-                        <span class="kanban-avatar" title="{{ m.responsible.name }}">
-                            {{ m.responsible.name[:2]|upper }}
-                        </span>
+                    <div class="d-flex">
+                        {% if m.resource_assignments %}
+                            {% for ra in m.resource_assignments[:3] %}
+                            <span class="kanban-avatar" title="{{ ra.resource.name }} ({{ ra.allocation }}%)" style="margin-left: {{ '-8px' if not loop.first else '0' }};">
+                                {{ ra.resource.name[:2]|upper }}
+                            </span>
+                            {% endfor %}
+                            {% if m.resource_assignments|length > 3 %}
+                            <span class="kanban-avatar bg-secondary" style="margin-left: -8px;">+{{ m.resource_assignments|length - 3 }}</span>
+                            {% endif %}
                         {% else %}
                         <span class="kanban-avatar bg-secondary" title="Não atribuído">?</span>
                         {% endif %}
@@ -135,11 +140,16 @@
                     <div class="progress-bar" style="width: {{ m.progress }}%"></div>
                 </div>
                 <div class="kanban-card-footer">
-                    <div>
-                        {% if m.responsible %}
-                        <span class="kanban-avatar bg-primary" title="{{ m.responsible.name }}">
-                            {{ m.responsible.name[:2]|upper }}
-                        </span>
+                    <div class="d-flex">
+                        {% if m.resource_assignments %}
+                            {% for ra in m.resource_assignments[:3] %}
+                            <span class="kanban-avatar bg-primary" title="{{ ra.resource.name }} ({{ ra.allocation }}%)" style="margin-left: {{ '-8px' if not loop.first else '0' }};">
+                                {{ ra.resource.name[:2]|upper }}
+                            </span>
+                            {% endfor %}
+                            {% if m.resource_assignments|length > 3 %}
+                            <span class="kanban-avatar bg-secondary" style="margin-left: -8px;">+{{ m.resource_assignments|length - 3 }}</span>
+                            {% endif %}
                         {% else %}
                         <span class="kanban-avatar bg-secondary" title="Não atribuído">?</span>
                         {% endif %}
@@ -176,11 +186,16 @@
                     {% endif %}
                 </div>
                 <div class="kanban-card-footer">
-                    <div>
-                        {% if m.responsible %}
-                        <span class="kanban-avatar bg-success" title="{{ m.responsible.name }}">
-                            {{ m.responsible.name[:2]|upper }}
-                        </span>
+                    <div class="d-flex">
+                        {% if m.resource_assignments %}
+                            {% for ra in m.resource_assignments[:3] %}
+                            <span class="kanban-avatar bg-success" title="{{ ra.resource.name }} ({{ ra.allocation }}%)" style="margin-left: {{ '-8px' if not loop.first else '0' }};">
+                                {{ ra.resource.name[:2]|upper }}
+                            </span>
+                            {% endfor %}
+                            {% if m.resource_assignments|length > 3 %}
+                            <span class="kanban-avatar bg-secondary" style="margin-left: -8px;">+{{ m.resource_assignments|length - 3 }}</span>
+                            {% endif %}
                         {% endif %}
                     </div>
                     {% if m.story_points %}

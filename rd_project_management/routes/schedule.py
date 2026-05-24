@@ -1,6 +1,6 @@
 from flask import Blueprint, render_template, redirect, url_for, flash, request, jsonify, send_file, Response
 from flask_login import login_required
-from models import db, Milestone, Project, User, Resource
+from models import db, Milestone, MilestoneResource, Project, User, Resource
 from services.tenant_utils import tenant_required, ensure_tenant_access, get_current_tenant_id
 from datetime import datetime
 import xml.etree.ElementTree as ET
@@ -30,7 +30,6 @@ def create_milestone(project_id):
     tenant_id = get_current_tenant_id()
 
     if request.method == 'POST':
-        responsible_id = request.form.get('responsible_id')
         milestone = Milestone(
             tenant_id=tenant_id,
             project_id=project_id,
@@ -40,16 +39,30 @@ def create_milestone(project_id):
             end_date=datetime.strptime(request.form.get('end_date', ''), '%Y-%m-%d').date(),
             progress=int(request.form.get('progress', 0)),
             status=request.form.get('status', 'Pendente'),
-            order=int(request.form.get('order', 0) or 0),
-            responsible_id=int(responsible_id) if responsible_id else None
+            order=int(request.form.get('order', 0) or 0)
         )
         db.session.add(milestone)
+        db.session.flush()  # Get milestone.id
+
+        # Add responsible resources with allocation
+        resource_ids = request.form.getlist('resource_ids')
+        allocations = request.form.getlist('allocations')
+        for i, res_id in enumerate(resource_ids):
+            if res_id:
+                alloc = int(allocations[i]) if i < len(allocations) and allocations[i] else 100
+                mr = MilestoneResource(
+                    milestone_id=milestone.id,
+                    resource_id=int(res_id),
+                    allocation=alloc
+                )
+                db.session.add(mr)
+
         db.session.commit()
         flash('Marco adicionado com sucesso!', 'success')
         return redirect(url_for('schedule.view_schedule', project_id=project_id))
 
-    users = User.query.filter_by(tenant_id=tenant_id, active=True).order_by(User.full_name).all()
-    return render_template('schedule/form.html', project=project, milestone=None, users=users)
+    resources = Resource.query.filter_by(project_id=project_id, type='Pessoa', status='Ativo').order_by(Resource.name).all()
+    return render_template('schedule/form.html', project=project, milestone=None, resources=resources)
 
 
 @schedule_bp.route('/projects/<int:project_id>/schedule/<int:milestone_id>/edit', methods=['GET', 'POST'])
@@ -62,10 +75,7 @@ def edit_milestone(project_id, milestone_id):
     milestone = Milestone.query.get_or_404(milestone_id)
     ensure_tenant_access(milestone)
 
-    tenant_id = get_current_tenant_id()
-
     if request.method == 'POST':
-        responsible_id = request.form.get('responsible_id')
         milestone.title = request.form.get('title', '').strip()
         milestone.description = request.form.get('description', '').strip()
         milestone.start_date = datetime.strptime(request.form.get('start_date', ''), '%Y-%m-%d').date()
@@ -73,14 +83,27 @@ def edit_milestone(project_id, milestone_id):
         milestone.progress = int(request.form.get('progress', 0))
         milestone.status = request.form.get('status', 'Pendente')
         milestone.order = int(request.form.get('order', 0) or 0)
-        milestone.responsible_id = int(responsible_id) if responsible_id else None
+
+        # Update responsible resources
+        MilestoneResource.query.filter_by(milestone_id=milestone.id).delete()
+        resource_ids = request.form.getlist('resource_ids')
+        allocations = request.form.getlist('allocations')
+        for i, res_id in enumerate(resource_ids):
+            if res_id:
+                alloc = int(allocations[i]) if i < len(allocations) and allocations[i] else 100
+                mr = MilestoneResource(
+                    milestone_id=milestone.id,
+                    resource_id=int(res_id),
+                    allocation=alloc
+                )
+                db.session.add(mr)
 
         db.session.commit()
         flash('Marco atualizado com sucesso!', 'success')
         return redirect(url_for('schedule.view_schedule', project_id=project_id))
 
-    users = User.query.filter_by(tenant_id=tenant_id, active=True).order_by(User.full_name).all()
-    return render_template('schedule/form.html', project=project, milestone=milestone, users=users)
+    resources = Resource.query.filter_by(project_id=project_id, type='Pessoa', status='Ativo').order_by(Resource.name).all()
+    return render_template('schedule/form.html', project=project, milestone=milestone, resources=resources)
 
 
 @schedule_bp.route('/projects/<int:project_id>/schedule/<int:milestone_id>/delete', methods=['POST'])
@@ -172,16 +195,18 @@ def export_schedule(project_id):
         ET.SubElement(task, 'PercentComplete').text = str(milestone.progress or 0)
         ET.SubElement(task, 'Priority').text = '500'
 
-    # Assignments section (links tasks to resources)
+    # Assignments section (links tasks to resources - supports multiple per task)
     assignments = ET.SubElement(root, 'Assignments')
     assign_uid = 1
     for i, milestone in enumerate(milestones, 1):
-        if milestone.responsible_id and milestone.responsible_id in resource_uid_map:
-            assign = ET.SubElement(assignments, 'Assignment')
-            ET.SubElement(assign, 'UID').text = str(assign_uid)
-            ET.SubElement(assign, 'TaskUID').text = str(i)
-            ET.SubElement(assign, 'ResourceUID').text = str(resource_uid_map[milestone.responsible_id])
-            assign_uid += 1
+        for ra in milestone.resource_assignments:
+            if ra.resource_id in resource_uid_map:
+                assign = ET.SubElement(assignments, 'Assignment')
+                ET.SubElement(assign, 'UID').text = str(assign_uid)
+                ET.SubElement(assign, 'TaskUID').text = str(i)
+                ET.SubElement(assign, 'ResourceUID').text = str(resource_uid_map[ra.resource_id])
+                ET.SubElement(assign, 'Units').text = str(ra.allocation / 100)  # MS Project uses decimal (1.0 = 100%)
+                assign_uid += 1
 
     xml_str = ET.tostring(root, encoding='unicode', method='xml')
     xml_content = '<?xml version="1.0" encoding="UTF-8"?>\n' + xml_str
@@ -238,13 +263,17 @@ def import_schedule(project_id):
                 if uid and name:
                     resource_uid_to_name[uid] = name.strip()
 
-            # Build assignment map (TaskUID -> ResourceUID)
-            task_to_resource = {}
+            # Build assignment map (TaskUID -> list of (ResourceUID, allocation))
+            task_to_resources = {}
             for assign in find_all(root, 'Assignment'):
                 task_uid = get_text(assign, 'TaskUID')
                 res_uid = get_text(assign, 'ResourceUID')
+                units = get_text(assign, 'Units')
                 if task_uid and res_uid:
-                    task_to_resource[task_uid] = res_uid
+                    allocation = int(float(units or 1) * 100)  # Convert from decimal to percentage
+                    if task_uid not in task_to_resources:
+                        task_to_resources[task_uid] = []
+                    task_to_resources[task_uid].append((res_uid, allocation))
 
             # Map resource names to project resource IDs
             project_resources = Resource.query.filter_by(project_id=project_id, type='Pessoa').all()
@@ -289,14 +318,6 @@ def import_schedule(project_id):
                 else:
                     status = 'Pendente'
 
-                # Find responsible from assignment (match to project resource)
-                responsible_id = None
-                if task_uid and task_uid in task_to_resource:
-                    res_uid = task_to_resource[task_uid]
-                    res_name = resource_uid_to_name.get(res_uid, '').lower()
-                    if res_name and res_name in resource_name_to_id:
-                        responsible_id = resource_name_to_id[res_name]
-
                 milestone = Milestone(
                     tenant_id=tenant_id,
                     project_id=project_id,
@@ -306,10 +327,23 @@ def import_schedule(project_id):
                     end_date=end_date,
                     progress=progress,
                     status=status,
-                    order=existing_count + imported,
-                    responsible_id=responsible_id
+                    order=existing_count + imported
                 )
                 db.session.add(milestone)
+                db.session.flush()  # Get milestone.id
+
+                # Add responsible resources from assignments
+                if task_uid and task_uid in task_to_resources:
+                    for res_uid, allocation in task_to_resources[task_uid]:
+                        res_name = resource_uid_to_name.get(res_uid, '').lower()
+                        if res_name and res_name in resource_name_to_id:
+                            mr = MilestoneResource(
+                                milestone_id=milestone.id,
+                                resource_id=resource_name_to_id[res_name],
+                                allocation=allocation
+                            )
+                            db.session.add(mr)
+
                 imported += 1
 
             db.session.commit()

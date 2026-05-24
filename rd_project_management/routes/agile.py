@@ -6,7 +6,7 @@ from flask_login import login_required, current_user
 from datetime import datetime, date, timedelta
 from sqlalchemy import func
 
-from models import db, Project, Milestone, Sprint, User, Timesheet, Resource
+from models import db, Project, Milestone, MilestoneResource, Sprint, User, Timesheet, Resource
 from services.tenant_utils import tenant_required, ensure_tenant_access, get_current_tenant_id
 
 agile_bp = Blueprint('agile', __name__)
@@ -314,14 +314,15 @@ def agile_charts(project_id):
         'Baixa': len([m for m in milestones if m.priority == 'Baixa'])
     }
 
-    # Team workload
+    # Team workload (handles multiple responsibles per milestone)
     workload = {}
     for m in milestones:
-        if m.responsible:
-            name = m.responsible.name
+        for ra in m.resource_assignments:
+            name = ra.resource.name
             if name not in workload:
-                workload[name] = {'total': 0, 'completed': 0}
+                workload[name] = {'total': 0, 'completed': 0, 'allocation': 0}
             workload[name]['total'] += 1
+            workload[name]['allocation'] += ra.allocation
             if m.status in ['Concluído', 'Concluido']:
                 workload[name]['completed'] += 1
 
@@ -342,7 +343,7 @@ def agile_charts(project_id):
 @login_required
 @tenant_required
 def assign_milestone(project_id, milestone_id):
-    """Assign a milestone to a user."""
+    """Assign milestone to resources or sprint."""
     project = Project.query.get_or_404(project_id)
     ensure_tenant_access(project)
 
@@ -350,11 +351,32 @@ def assign_milestone(project_id, milestone_id):
     ensure_tenant_access(milestone)
 
     data = request.json
-    user_id = data.get('user_id')
+    resource_id = data.get('resource_id')
+    allocation = data.get('allocation', 100)
     sprint_id = data.get('sprint_id')
+    action = data.get('action', 'add')  # 'add' or 'remove'
 
-    if user_id:
-        milestone.responsible_id = int(user_id) if user_id else None
+    if resource_id:
+        if action == 'remove':
+            MilestoneResource.query.filter_by(
+                milestone_id=milestone.id,
+                resource_id=int(resource_id)
+            ).delete()
+        else:
+            existing = MilestoneResource.query.filter_by(
+                milestone_id=milestone.id,
+                resource_id=int(resource_id)
+            ).first()
+            if existing:
+                existing.allocation = int(allocation)
+            else:
+                mr = MilestoneResource(
+                    milestone_id=milestone.id,
+                    resource_id=int(resource_id),
+                    allocation=int(allocation)
+                )
+                db.session.add(mr)
+
     if sprint_id is not None:
         milestone.sprint_id = int(sprint_id) if sprint_id else None
 

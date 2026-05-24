@@ -54,14 +54,62 @@
                                 {% endfor %}
                             </select>
                         </div>
-                        <div class="col-md-6">
-                            <label for="responsible_id" class="form-label">Responsável</label>
-                            <select class="form-select" id="responsible_id" name="responsible_id">
-                                <option value="">-- Selecione --</option>
-                                {% for user in users %}
-                                <option value="{{ user.id }}" {{ 'selected' if milestone and milestone.responsible_id == user.id }}>{{ user.full_name }}</option>
-                                {% endfor %}
-                            </select>
+
+                        <!-- Responsáveis (múltiplos com % alocação) -->
+                        <div class="col-12">
+                            <label class="form-label">Responsáveis <small class="text-muted">(opcional)</small></label>
+                            <div id="responsibles-container">
+                                {% if milestone and milestone.resource_assignments %}
+                                    {% for ra in milestone.resource_assignments %}
+                                    <div class="row g-2 mb-2 responsible-row">
+                                        <div class="col-md-7">
+                                            <select class="form-select" name="resource_ids">
+                                                <option value="">-- Selecione --</option>
+                                                {% for r in resources %}
+                                                <option value="{{ r.id }}" {{ 'selected' if ra.resource_id == r.id }}>{{ r.name }} ({{ r.role or 'Equipe' }})</option>
+                                                {% endfor %}
+                                            </select>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <div class="input-group">
+                                                <input type="number" class="form-control" name="allocations" min="0" max="100" value="{{ ra.allocation }}">
+                                                <span class="input-group-text">%</span>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-2">
+                                            <button type="button" class="btn btn-outline-danger w-100" onclick="this.closest('.responsible-row').remove()">
+                                                <i class="bi bi-trash"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                    {% endfor %}
+                                {% else %}
+                                    <div class="row g-2 mb-2 responsible-row">
+                                        <div class="col-md-7">
+                                            <select class="form-select" name="resource_ids">
+                                                <option value="">-- Selecione --</option>
+                                                {% for r in resources %}
+                                                <option value="{{ r.id }}">{{ r.name }} ({{ r.role or 'Equipe' }})</option>
+                                                {% endfor %}
+                                            </select>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <div class="input-group">
+                                                <input type="number" class="form-control" name="allocations" min="0" max="100" value="100">
+                                                <span class="input-group-text">%</span>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-2">
+                                            <button type="button" class="btn btn-outline-danger w-100" onclick="this.closest('.responsible-row').remove()">
+                                                <i class="bi bi-trash"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                {% endif %}
+                            </div>
+                            <button type="button" class="btn btn-outline-secondary btn-sm mt-2" onclick="addResponsible()">
+                                <i class="bi bi-plus-lg"></i> Adicionar Responsável
+                            </button>
                         </div>
                     </div>
                     <hr class="my-4">
@@ -76,4 +124,36 @@
         </div>
     </div>
 </div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+function addResponsible() {
+    const container = document.getElementById('responsibles-container');
+    const row = document.createElement('div');
+    row.className = 'row g-2 mb-2 responsible-row';
+    row.innerHTML = `
+        <div class="col-md-7">
+            <select class="form-select" name="resource_ids">
+                <option value="">-- Selecione --</option>
+                {% for r in resources %}
+                <option value="{{ r.id }}">{{ r.name }} ({{ r.role or 'Equipe' }})</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="col-md-3">
+            <div class="input-group">
+                <input type="number" class="form-control" name="allocations" min="0" max="100" value="100">
+                <span class="input-group-text">%</span>
+            </div>
+        </div>
+        <div class="col-md-2">
+            <button type="button" class="btn btn-outline-danger w-100" onclick="this.closest('.responsible-row').remove()">
+                <i class="bi bi-trash"></i>
+            </button>
+        </div>
+    `;
+    container.appendChild(row);
+}
+</script>
 {% endblock %}

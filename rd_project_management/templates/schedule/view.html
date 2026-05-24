@@ -104,8 +104,12 @@
                         {% endif %}
                     </td>
                     <td>
-                        {% if milestone.responsible %}
-                        <span class="badge bg-light text-dark"><i class="bi bi-person"></i> {{ milestone.responsible.name }}</span>
+                        {% if milestone.resource_assignments %}
+                            {% for ra in milestone.resource_assignments %}
+                            <span class="badge bg-light text-dark mb-1" title="{{ ra.allocation }}% alocação">
+                                <i class="bi bi-person"></i> {{ ra.resource.name }} <small>({{ ra.allocation }}%)</small>
+                            </span>
+                            {% endfor %}
                         {% else %}
                         <span class="text-muted">-</span>
                         {% endif %}
