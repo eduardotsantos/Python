@@ -141,7 +141,7 @@ def export_schedule(project_id):
     if project.end_date:
         ET.SubElement(root, 'FinishDate').text = project.end_date.isoformat()
 
-    # Resources section
+    # Resources section (pessoas do projeto)
     resources_elem = ET.SubElement(root, 'Resources')
     resource_uid_map = {}
     for i, resource in enumerate(resources, 1):
@@ -155,20 +155,6 @@ def export_schedule(project_id):
         if resource.hourly_cost:
             ET.SubElement(res_elem, 'StandardRate').text = str(resource.hourly_cost)
         resource_uid_map[resource.id] = i
-
-    # Also add users as resources (for responsible field)
-    user_uid_map = {}
-    user_offset = len(resources)
-    users_with_milestones = set(m.responsible_id for m in milestones if m.responsible_id)
-    for i, user_id in enumerate(users_with_milestones, user_offset + 1):
-        user = User.query.get(user_id)
-        if user:
-            res_elem = ET.SubElement(resources_elem, 'Resource')
-            ET.SubElement(res_elem, 'UID').text = str(i)
-            ET.SubElement(res_elem, 'ID').text = str(i)
-            ET.SubElement(res_elem, 'Name').text = user.full_name
-            ET.SubElement(res_elem, 'Type').text = '1'
-            user_uid_map[user_id] = i
 
     # Tasks section
     tasks = ET.SubElement(root, 'Tasks')
@@ -190,11 +176,11 @@ def export_schedule(project_id):
     assignments = ET.SubElement(root, 'Assignments')
     assign_uid = 1
     for i, milestone in enumerate(milestones, 1):
-        if milestone.responsible_id and milestone.responsible_id in user_uid_map:
+        if milestone.responsible_id and milestone.responsible_id in resource_uid_map:
             assign = ET.SubElement(assignments, 'Assignment')
             ET.SubElement(assign, 'UID').text = str(assign_uid)
             ET.SubElement(assign, 'TaskUID').text = str(i)
-            ET.SubElement(assign, 'ResourceUID').text = str(user_uid_map[milestone.responsible_id])
+            ET.SubElement(assign, 'ResourceUID').text = str(resource_uid_map[milestone.responsible_id])
             assign_uid += 1
 
     xml_str = ET.tostring(root, encoding='unicode', method='xml')
@@ -260,9 +246,9 @@ def import_schedule(project_id):
                 if task_uid and res_uid:
                     task_to_resource[task_uid] = res_uid
 
-            # Map resource names to user IDs
-            users = User.query.filter_by(tenant_id=tenant_id, active=True).all()
-            user_name_to_id = {u.full_name.lower(): u.id for u in users}
+            # Map resource names to project resource IDs
+            project_resources = Resource.query.filter_by(project_id=project_id, type='Pessoa').all()
+            resource_name_to_id = {r.name.lower(): r.id for r in project_resources}
 
             tasks = find_all(root, 'Task')
             imported = 0
@@ -303,13 +289,13 @@ def import_schedule(project_id):
                 else:
                     status = 'Pendente'
 
-                # Find responsible from assignment
+                # Find responsible from assignment (match to project resource)
                 responsible_id = None
                 if task_uid and task_uid in task_to_resource:
                     res_uid = task_to_resource[task_uid]
                     res_name = resource_uid_to_name.get(res_uid, '').lower()
-                    if res_name and res_name in user_name_to_id:
-                        responsible_id = user_name_to_id[res_name]
+                    if res_name and res_name in resource_name_to_id:
+                        responsible_id = resource_name_to_id[res_name]
 
                 milestone = Milestone(
                     tenant_id=tenant_id,

@@ -6,7 +6,7 @@ from flask_login import login_required, current_user
 from datetime import datetime, date, timedelta
 from sqlalchemy import func
 
-from models import db, Project, Milestone, Sprint, User, Timesheet
+from models import db, Project, Milestone, Sprint, User, Timesheet, Resource
 from services.tenant_utils import tenant_required, ensure_tenant_access, get_current_tenant_id
 
 agile_bp = Blueprint('agile', __name__)
@@ -38,12 +38,8 @@ def kanban_board(project_id):
     sprints = Sprint.query.filter_by(project_id=project_id).order_by(Sprint.number.desc()).all()
     current_sprint = Sprint.query.filter_by(project_id=project_id, status='Ativo').first()
 
-    # Get team members for assignment
-    tenant_id = get_current_tenant_id()
-    if tenant_id:
-        team = User.query.filter_by(tenant_id=tenant_id, active=True).all()
-    else:
-        team = User.query.filter_by(active=True).all()
+    # Get team members (resources) for assignment
+    team = Resource.query.filter_by(project_id=project_id, type='Pessoa', status='Ativo').all()
 
     return render_template('agile/kanban.html',
         project=project,
@@ -322,7 +318,7 @@ def agile_charts(project_id):
     workload = {}
     for m in milestones:
         if m.responsible:
-            name = m.responsible.full_name
+            name = m.responsible.name
             if name not in workload:
                 workload[name] = {'total': 0, 'completed': 0}
             workload[name]['total'] += 1

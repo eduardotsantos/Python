@@ -92,8 +92,8 @@
                 <div class="kanban-card-footer">
                     <div>
                         {% if m.responsible %}
-                        <span class="kanban-avatar" title="{{ m.responsible.full_name }}">
-                            {{ m.responsible.full_name[:2]|upper }}
+                        <span class="kanban-avatar" title="{{ m.responsible.name }}">
+                            {{ m.responsible.name[:2]|upper }}
                         </span>
                         {% else %}
                         <span class="kanban-avatar bg-secondary" title="Não atribuído">?</span>
@@ -137,8 +137,8 @@
                 <div class="kanban-card-footer">
                     <div>
                         {% if m.responsible %}
-                        <span class="kanban-avatar bg-primary" title="{{ m.responsible.full_name }}">
-                            {{ m.responsible.full_name[:2]|upper }}
+                        <span class="kanban-avatar bg-primary" title="{{ m.responsible.name }}">
+                            {{ m.responsible.name[:2]|upper }}
                         </span>
                         {% else %}
                         <span class="kanban-avatar bg-secondary" title="Não atribuído">?</span>
@@ -178,8 +178,8 @@
                 <div class="kanban-card-footer">
                     <div>
                         {% if m.responsible %}
-                        <span class="kanban-avatar bg-success" title="{{ m.responsible.full_name }}">
-                            {{ m.responsible.full_name[:2]|upper }}
+                        <span class="kanban-avatar bg-success" title="{{ m.responsible.name }}">
+                            {{ m.responsible.name[:2]|upper }}
                         </span>
                         {% endif %}
                     </div>
