@@ -57,8 +57,6 @@ def create_app():
     from routes.audit import audit_bp
     from routes.status_report import status_report_bp
     from routes.meeting_minutes import meeting_minutes_bp
-    from routes.programs import programs_bp
-    from routes.portfolio import portfolio_bp
 
     app.register_blueprint(auth_bp)
     app.register_blueprint(projects_bp)
@@ -74,8 +72,19 @@ def create_app():
     app.register_blueprint(audit_bp)
     app.register_blueprint(status_report_bp)
     app.register_blueprint(meeting_minutes_bp)
-    app.register_blueprint(programs_bp)
-    app.register_blueprint(portfolio_bp)
+
+    # Optional blueprints (Programs and Portfolio modules)
+    try:
+        from routes.programs import programs_bp
+        app.register_blueprint(programs_bp)
+    except ImportError:
+        pass
+
+    try:
+        from routes.portfolio import portfolio_bp
+        app.register_blueprint(portfolio_bp)
+    except ImportError:
+        pass
 
     # Before request - set current tenant
     @app.before_request
