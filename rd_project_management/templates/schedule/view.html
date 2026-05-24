@@ -85,6 +85,7 @@
                 <tr>
                     <th>#</th>
                     <th>Marco</th>
+                    <th>Responsável</th>
                     <th>Início</th>
                     <th>Término</th>
                     <th>Progresso</th>
@@ -100,6 +101,13 @@
                         <strong>{{ milestone.title }}</strong>
                         {% if milestone.description %}
                         <br><small class="text-muted">{{ milestone.description[:80] }}{{ '...' if milestone.description|length > 80 }}</small>
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if milestone.responsible %}
+                        <span class="badge bg-light text-dark"><i class="bi bi-person"></i> {{ milestone.responsible.full_name }}</span>
+                        {% else %}
+                        <span class="text-muted">-</span>
                         {% endif %}
                     </td>
                     <td>{{ milestone.start_date.strftime('%d/%m/%Y') }}</td>

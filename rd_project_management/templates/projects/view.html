@@ -153,6 +153,12 @@
                     <span><i class="bi bi-journal-text text-primary"></i> Atas de Reunião</span>
                     <span class="badge bg-primary rounded-pill">{{ project.meeting_minutes|length }}</span>
                 </a>
+                {% if has_agile_module %}
+                <a href="{{ url_for('agile.kanban_board', project_id=project.id) }}" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+                    <span><i class="bi bi-kanban text-purple"></i> Ágil / Kanban</span>
+                    <span class="badge bg-secondary rounded-pill"><i class="bi bi-lightning"></i></span>
+                </a>
+                {% endif %}
             </div>
         </div>
     </div>

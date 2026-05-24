@@ -1,6 +1,6 @@
 from flask import Blueprint, render_template, redirect, url_for, flash, request, jsonify, send_file, Response
 from flask_login import login_required
-from models import db, Milestone, Project
+from models import db, Milestone, Project, User
 from services.tenant_utils import tenant_required, ensure_tenant_access, get_current_tenant_id
 from datetime import datetime
 import xml.etree.ElementTree as ET
@@ -30,6 +30,7 @@ def create_milestone(project_id):
     tenant_id = get_current_tenant_id()
 
     if request.method == 'POST':
+        responsible_id = request.form.get('responsible_id')
         milestone = Milestone(
             tenant_id=tenant_id,
             project_id=project_id,
@@ -39,14 +40,16 @@ def create_milestone(project_id):
             end_date=datetime.strptime(request.form.get('end_date', ''), '%Y-%m-%d').date(),
             progress=int(request.form.get('progress', 0)),
             status=request.form.get('status', 'Pendente'),
-            order=int(request.form.get('order', 0) or 0)
+            order=int(request.form.get('order', 0) or 0),
+            responsible_id=int(responsible_id) if responsible_id else None
         )
         db.session.add(milestone)
         db.session.commit()
         flash('Marco adicionado com sucesso!', 'success')
         return redirect(url_for('schedule.view_schedule', project_id=project_id))
 
-    return render_template('schedule/form.html', project=project, milestone=None)
+    users = User.query.filter_by(tenant_id=tenant_id, active=True).order_by(User.full_name).all()
+    return render_template('schedule/form.html', project=project, milestone=None, users=users)
 
 
 @schedule_bp.route('/projects/<int:project_id>/schedule/<int:milestone_id>/edit', methods=['GET', 'POST'])
@@ -59,7 +62,10 @@ def edit_milestone(project_id, milestone_id):
     milestone = Milestone.query.get_or_404(milestone_id)
     ensure_tenant_access(milestone)
 
+    tenant_id = get_current_tenant_id()
+
     if request.method == 'POST':
+        responsible_id = request.form.get('responsible_id')
         milestone.title = request.form.get('title', '').strip()
         milestone.description = request.form.get('description', '').strip()
         milestone.start_date = datetime.strptime(request.form.get('start_date', ''), '%Y-%m-%d').date()
@@ -67,12 +73,14 @@ def edit_milestone(project_id, milestone_id):
         milestone.progress = int(request.form.get('progress', 0))
         milestone.status = request.form.get('status', 'Pendente')
         milestone.order = int(request.form.get('order', 0) or 0)
+        milestone.responsible_id = int(responsible_id) if responsible_id else None
 
         db.session.commit()
         flash('Marco atualizado com sucesso!', 'success')
         return redirect(url_for('schedule.view_schedule', project_id=project_id))
 
-    return render_template('schedule/form.html', project=project, milestone=milestone)
+    users = User.query.filter_by(tenant_id=tenant_id, active=True).order_by(User.full_name).all()
+    return render_template('schedule/form.html', project=project, milestone=milestone, users=users)
 
 
 @schedule_bp.route('/projects/<int:project_id>/schedule/<int:milestone_id>/delete', methods=['POST'])

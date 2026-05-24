@@ -98,6 +98,15 @@ def create_app():
     except ImportError:
         pass
 
+    # Optional Agile blueprint
+    has_agile = False
+    try:
+        from routes.agile import agile_bp
+        app.register_blueprint(agile_bp)
+        has_agile = True
+    except ImportError:
+        pass
+
     # Before request - set current tenant
     @app.before_request
     def set_tenant_context():
@@ -113,7 +122,8 @@ def create_app():
             'is_superadmin': current_user.is_superadmin() if current_user.is_authenticated else False,
             'has_programs_module': has_programs,
             'has_portfolio_module': has_portfolio,
-            'has_audit_module': has_audit
+            'has_audit_module': has_audit,
+            'has_agile_module': has_agile
         }
 
     # Root redirect

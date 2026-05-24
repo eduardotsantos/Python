@@ -1,0 +1,270 @@
+{% extends "base.html" %}
+{% block title %}Kanban - {{ project.title }}{% endblock %}
+
+{% block extra_css %}
+<style>
+.kanban-board { display: flex; gap: 16px; min-height: 500px; }
+.kanban-column { flex: 1; min-width: 280px; background: #f8f9fa; border-radius: 12px; padding: 16px; }
+.kanban-column.backlog { border-top: 4px solid #6c757d; }
+.kanban-column.progress { border-top: 4px solid #0d6efd; }
+.kanban-column.done { border-top: 4px solid #198754; }
+.kanban-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
+.kanban-header h6 { margin: 0; font-weight: 600; }
+.kanban-count { background: rgba(0,0,0,0.1); padding: 2px 10px; border-radius: 20px; font-size: 0.8rem; }
+.kanban-cards { min-height: 400px; }
+.kanban-card { background: white; border-radius: 8px; padding: 12px; margin-bottom: 10px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); cursor: grab; border-left: 4px solid #dee2e6; transition: all 0.2s; }
+.kanban-card:hover { box-shadow: 0 4px 12px rgba(0,0,0,0.1); transform: translateY(-2px); }
+.kanban-card.priority-critica { border-left-color: #dc3545; }
+.kanban-card.priority-alta { border-left-color: #fd7e14; }
+.kanban-card.priority-media { border-left-color: #ffc107; }
+.kanban-card.priority-baixa { border-left-color: #20c997; }
+.kanban-card.dragging { opacity: 0.5; }
+.kanban-card-title { font-weight: 600; font-size: 0.9rem; margin-bottom: 8px; }
+.kanban-card-meta { display: flex; gap: 8px; flex-wrap: wrap; font-size: 0.75rem; color: #6c757d; }
+.kanban-card-meta span { display: flex; align-items: center; gap: 4px; }
+.kanban-card-footer { display: flex; justify-content: space-between; align-items: center; margin-top: 10px; padding-top: 10px; border-top: 1px solid #eee; }
+.kanban-avatar { width: 24px; height: 24px; border-radius: 50%; background: #6c757d; color: white; display: flex; align-items: center; justify-content: center; font-size: 0.7rem; }
+.story-points { background: #e9ecef; padding: 2px 8px; border-radius: 4px; font-weight: 600; font-size: 0.75rem; }
+.drop-zone { border: 2px dashed #dee2e6; border-radius: 8px; padding: 20px; text-align: center; color: #adb5bd; margin-top: 10px; display: none; }
+.kanban-column.drag-over .drop-zone { display: block; border-color: #0d6efd; background: rgba(13,110,253,0.05); }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="d-flex align-items-center mb-4">
+    <a href="{{ url_for('projects.view_project', project_id=project.id) }}" class="btn btn-outline-secondary btn-sm me-3">
+        <i class="bi bi-arrow-left"></i>
+    </a>
+    <div class="flex-grow-1">
+        <h4 class="fw-bold mb-0"><i class="bi bi-kanban text-primary"></i> Kanban Board</h4>
+        <span class="text-muted">{{ project.title }}</span>
+    </div>
+    <div class="btn-group">
+        <select class="form-select form-select-sm" id="sprintFilter" style="width: 200px;">
+            <option value="">Todos os Marcos</option>
+            {% for sprint in sprints %}
+            <option value="{{ sprint.id }}" {{ 'selected' if selected_sprint_id == sprint.id }}>
+                {{ sprint.name }} {% if sprint.status == 'Ativo' %}(Ativo){% endif %}
+            </option>
+            {% endfor %}
+        </select>
+        <a href="{{ url_for('agile.list_sprints', project_id=project.id) }}" class="btn btn-outline-info btn-sm">
+            <i class="bi bi-speedometer2"></i> Sprints
+        </a>
+        <a href="{{ url_for('agile.agile_charts', project_id=project.id) }}" class="btn btn-outline-success btn-sm">
+            <i class="bi bi-graph-up"></i> Gráficos
+        </a>
+        <a href="{{ url_for('schedule.create_milestone', project_id=project.id) }}" class="btn btn-primary btn-sm">
+            <i class="bi bi-plus-lg"></i> Nova Tarefa
+        </a>
+    </div>
+</div>
+
+{% if current_sprint %}
+<div class="alert alert-info py-2 mb-4">
+    <div class="d-flex justify-content-between align-items-center">
+        <span><i class="bi bi-lightning-charge"></i> <strong>Sprint Ativo:</strong> {{ current_sprint.name }}</span>
+        <span class="text-muted">{{ current_sprint.start_date.strftime('%d/%m') }} - {{ current_sprint.end_date.strftime('%d/%m/%Y') }}</span>
+    </div>
+</div>
+{% endif %}
+
+<div class="kanban-board">
+    <!-- Backlog / Pendente -->
+    <div class="kanban-column backlog" data-status="Pendente">
+        <div class="kanban-header">
+            <h6><i class="bi bi-inbox text-secondary"></i> Não Iniciado</h6>
+            <span class="kanban-count">{{ backlog|length }}</span>
+        </div>
+        <div class="kanban-cards" id="backlog">
+            {% for m in backlog %}
+            <div class="kanban-card priority-{{ m.priority|lower|replace('í','i')|replace('é','e') }}" 
+                 data-id="{{ m.id }}" draggable="true">
+                <div class="kanban-card-title">{{ m.title }}</div>
+                <div class="kanban-card-meta">
+                    {% if m.end_date %}
+                    <span><i class="bi bi-calendar"></i> {{ m.end_date.strftime('%d/%m') }}</span>
+                    {% endif %}
+                    {% if m.sprint %}
+                    <span><i class="bi bi-speedometer2"></i> {{ m.sprint.name }}</span>
+                    {% endif %}
+                </div>
+                <div class="kanban-card-footer">
+                    <div>
+                        {% if m.responsible %}
+                        <span class="kanban-avatar" title="{{ m.responsible.full_name }}">
+                            {{ m.responsible.full_name[:2]|upper }}
+                        </span>
+                        {% else %}
+                        <span class="kanban-avatar bg-secondary" title="Não atribuído">?</span>
+                        {% endif %}
+                    </div>
+                    <div class="d-flex gap-2">
+                        {% if m.story_points %}
+                        <span class="story-points">{{ m.story_points }} pts</span>
+                        {% endif %}
+                        <span class="badge bg-{{ 'danger' if m.priority == 'Crítica' else 'warning text-dark' if m.priority == 'Alta' else 'info' if m.priority == 'Média' else 'secondary' }}">
+                            {{ m.priority }}
+                        </span>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        <div class="drop-zone">Solte aqui</div>
+    </div>
+
+    <!-- Em Andamento -->
+    <div class="kanban-column progress" data-status="Em Andamento">
+        <div class="kanban-header">
+            <h6><i class="bi bi-play-circle text-primary"></i> Em Andamento</h6>
+            <span class="kanban-count">{{ in_progress|length }}</span>
+        </div>
+        <div class="kanban-cards" id="inprogress">
+            {% for m in in_progress %}
+            <div class="kanban-card priority-{{ m.priority|lower|replace('í','i')|replace('é','e') }}" 
+                 data-id="{{ m.id }}" draggable="true">
+                <div class="kanban-card-title">{{ m.title }}</div>
+                <div class="kanban-card-meta">
+                    {% if m.end_date %}
+                    <span><i class="bi bi-calendar"></i> {{ m.end_date.strftime('%d/%m') }}</span>
+                    {% endif %}
+                    <span><i class="bi bi-percent"></i> {{ m.progress }}%</span>
+                </div>
+                <div class="progress mt-2" style="height: 4px;">
+                    <div class="progress-bar" style="width: {{ m.progress }}%"></div>
+                </div>
+                <div class="kanban-card-footer">
+                    <div>
+                        {% if m.responsible %}
+                        <span class="kanban-avatar bg-primary" title="{{ m.responsible.full_name }}">
+                            {{ m.responsible.full_name[:2]|upper }}
+                        </span>
+                        {% else %}
+                        <span class="kanban-avatar bg-secondary" title="Não atribuído">?</span>
+                        {% endif %}
+                    </div>
+                    <div class="d-flex gap-2">
+                        {% if m.story_points %}
+                        <span class="story-points">{{ m.story_points }} pts</span>
+                        {% endif %}
+                        <span class="badge bg-{{ 'danger' if m.priority == 'Crítica' else 'warning text-dark' if m.priority == 'Alta' else 'info' if m.priority == 'Média' else 'secondary' }}">
+                            {{ m.priority }}
+                        </span>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        <div class="drop-zone">Solte aqui</div>
+    </div>
+
+    <!-- Concluído -->
+    <div class="kanban-column done" data-status="Concluído">
+        <div class="kanban-header">
+            <h6><i class="bi bi-check-circle text-success"></i> Concluído</h6>
+            <span class="kanban-count">{{ completed|length }}</span>
+        </div>
+        <div class="kanban-cards" id="completed">
+            {% for m in completed %}
+            <div class="kanban-card priority-{{ m.priority|lower|replace('í','i')|replace('é','e') }}" 
+                 data-id="{{ m.id }}" draggable="true" style="opacity: 0.7;">
+                <div class="kanban-card-title"><s>{{ m.title }}</s></div>
+                <div class="kanban-card-meta">
+                    {% if m.end_date %}
+                    <span><i class="bi bi-calendar-check"></i> {{ m.end_date.strftime('%d/%m') }}</span>
+                    {% endif %}
+                </div>
+                <div class="kanban-card-footer">
+                    <div>
+                        {% if m.responsible %}
+                        <span class="kanban-avatar bg-success" title="{{ m.responsible.full_name }}">
+                            {{ m.responsible.full_name[:2]|upper }}
+                        </span>
+                        {% endif %}
+                    </div>
+                    {% if m.story_points %}
+                    <span class="story-points">{{ m.story_points }} pts</span>
+                    {% endif %}
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        <div class="drop-zone">Solte aqui</div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Sprint filter
+    document.getElementById('sprintFilter').addEventListener('change', function() {
+        const sprintId = this.value;
+        const url = new URL(window.location.href);
+        if (sprintId) {
+            url.searchParams.set('sprint_id', sprintId);
+        } else {
+            url.searchParams.delete('sprint_id');
+        }
+        window.location.href = url.toString();
+    });
+
+    // Drag and drop
+    const cards = document.querySelectorAll('.kanban-card');
+    const columns = document.querySelectorAll('.kanban-column');
+
+    cards.forEach(card => {
+        card.addEventListener('dragstart', () => {
+            card.classList.add('dragging');
+        });
+
+        card.addEventListener('dragend', () => {
+            card.classList.remove('dragging');
+            columns.forEach(col => col.classList.remove('drag-over'));
+        });
+    });
+
+    columns.forEach(column => {
+        column.addEventListener('dragover', e => {
+            e.preventDefault();
+            column.classList.add('drag-over');
+        });
+
+        column.addEventListener('dragleave', () => {
+            column.classList.remove('drag-over');
+        });
+
+        column.addEventListener('drop', e => {
+            e.preventDefault();
+            column.classList.remove('drag-over');
+
+            const card = document.querySelector('.dragging');
+            const cardsContainer = column.querySelector('.kanban-cards');
+            cardsContainer.appendChild(card);
+
+            const milestoneId = card.dataset.id;
+            const newStatus = column.dataset.status;
+
+            fetch('{{ url_for("agile.move_card", project_id=project.id) }}', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    milestone_id: milestoneId,
+                    status: newStatus,
+                    order: Array.from(cardsContainer.children).indexOf(card)
+                })
+            }).then(r => r.json()).then(data => {
+                if (data.success) {
+                    // Update counts
+                    columns.forEach(col => {
+                        const count = col.querySelector('.kanban-cards').children.length;
+                        col.querySelector('.kanban-count').textContent = count;
+                    });
+                }
+            });
+        });
+    });
+});
+</script>
+{% endblock %}

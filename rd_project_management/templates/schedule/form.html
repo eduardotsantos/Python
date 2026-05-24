@@ -54,6 +54,15 @@
                                 {% endfor %}
                             </select>
                         </div>
+                        <div class="col-md-6">
+                            <label for="responsible_id" class="form-label">Responsável</label>
+                            <select class="form-select" id="responsible_id" name="responsible_id">
+                                <option value="">-- Selecione --</option>
+                                {% for user in users %}
+                                <option value="{{ user.id }}" {{ 'selected' if milestone and milestone.responsible_id == user.id }}>{{ user.full_name }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
                     </div>
                     <hr class="my-4">
                     <div class="d-flex justify-content-end gap-2">

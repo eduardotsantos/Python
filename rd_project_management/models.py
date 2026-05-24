@@ -196,19 +196,43 @@ class Resource(db.Model):
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
 
 
+class Sprint(db.Model):
+    """Sprint for agile project management."""
+    __tablename__ = 'sprints'
+    id = db.Column(db.Integer, primary_key=True)
+    tenant_id = db.Column(db.Integer, db.ForeignKey('tenants.id'), nullable=False)
+    project_id = db.Column(db.Integer, db.ForeignKey('projects.id'), nullable=False)
+    name = db.Column(db.String(100), nullable=False)
+    number = db.Column(db.Integer, default=1)
+    goal = db.Column(db.Text)
+    start_date = db.Column(db.Date, nullable=False)
+    end_date = db.Column(db.Date, nullable=False)
+    status = db.Column(db.String(50), default='Planejado')  # Planejado, Ativo, Concluído
+    velocity = db.Column(db.Integer, default=0)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+
+    milestones = db.relationship('Milestone', backref='sprint', lazy='dynamic')
+
+
 class Milestone(db.Model):
     __tablename__ = 'milestones'
     id = db.Column(db.Integer, primary_key=True)
     tenant_id = db.Column(db.Integer, db.ForeignKey('tenants.id'), nullable=False)
     project_id = db.Column(db.Integer, db.ForeignKey('projects.id'), nullable=False)
+    sprint_id = db.Column(db.Integer, db.ForeignKey('sprints.id'), nullable=True)
+    responsible_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=True)
     title = db.Column(db.String(300), nullable=False)
     description = db.Column(db.Text)
     start_date = db.Column(db.Date, nullable=False)
     end_date = db.Column(db.Date, nullable=False)
     progress = db.Column(db.Integer, default=0)
     status = db.Column(db.String(50), default='Pendente')
+    priority = db.Column(db.String(20), default='Média')  # Baixa, Média, Alta, Crítica
+    story_points = db.Column(db.Integer, default=0)
     order = db.Column(db.Integer, default=0)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
+
+    responsible = db.relationship('User', backref='assigned_milestones')
 
 
 class Timesheet(db.Model):
