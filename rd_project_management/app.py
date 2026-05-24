@@ -54,7 +54,6 @@ def create_app():
     from routes.tenants import tenants_bp
     from routes.ai import ai_bp
     from routes.home import home_bp
-    from routes.audit import audit_bp
     from routes.status_report import status_report_bp
     from routes.meeting_minutes import meeting_minutes_bp
 
@@ -69,9 +68,17 @@ def create_app():
     app.register_blueprint(tenants_bp)
     app.register_blueprint(ai_bp)
     app.register_blueprint(home_bp)
-    app.register_blueprint(audit_bp)
     app.register_blueprint(status_report_bp)
     app.register_blueprint(meeting_minutes_bp)
+
+    # Optional audit blueprint
+    has_audit = False
+    try:
+        from routes.audit import audit_bp
+        app.register_blueprint(audit_bp)
+        has_audit = True
+    except ImportError as e:
+        logging.warning(f"Audit module not loaded: {e}")
 
     # Optional blueprints (Programs and Portfolio modules)
     has_programs = False
@@ -105,7 +112,8 @@ def create_app():
             'current_tenant': getattr(g, 'current_tenant', None),
             'is_superadmin': current_user.is_superadmin() if current_user.is_authenticated else False,
             'has_programs_module': has_programs,
-            'has_portfolio_module': has_portfolio
+            'has_portfolio_module': has_portfolio,
+            'has_audit_module': has_audit
         }
 
     # Root redirect

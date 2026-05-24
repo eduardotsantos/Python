@@ -57,7 +57,7 @@
                         </a>
                     </li>
                     {% endif %}
-                    {% if current_user.role == 'admin' or is_superadmin %}
+                    {% if (current_user.role == 'admin' or is_superadmin) and has_audit_module %}
                     <li class="nav-item">
                         <a class="nav-link" href="{{ url_for('audit.audit_logs') }}">
                             <i class="bi bi-shield-check"></i> Auditoria
