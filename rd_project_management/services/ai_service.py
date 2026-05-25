@@ -415,6 +415,9 @@ CONTEXTO DO USUÁRIO:
 RESUMO DOS PROJETOS:
 {context.get('projects_summary', 'Nenhum projeto cadastrado')}
 
+DETALHES DOS PROJETOS (marcos, recursos, horas, custos):
+{context.get('projects_detail', 'Sem detalhes disponíveis')}
+
 RESUMO DAS CHAMADAS PÚBLICAS:
 {context.get('calls_summary', 'Nenhuma chamada cadastrada')}
 
@@ -452,28 +455,34 @@ Você pode fazer cálculos, análises e dar recomendações baseadas nos dados d
 
 def get_system_context(tenant_id: Optional[int] = None) -> Dict[str, Any]:
     """
-    Get system context for the AI assistant.
+    Get detailed system context for the AI assistant.
+    Includes all projects with their resources, costs, progress, and timesheet data.
     """
-    from models import Project, PublicCall, Expense
+    from models import db, Project, PublicCall, Expense, Resource, Milestone, Timesheet, MilestoneResource
     from sqlalchemy import func
 
     context = {
         'projects_summary': '',
+        'projects_detail': '',
         'calls_summary': '',
         'financial_summary': ''
     }
 
     try:
-        # Projects summary
+        # Get all projects for tenant
         projects_query = Project.query
         if tenant_id:
             projects_query = projects_query.filter_by(tenant_id=tenant_id)
 
         projects = projects_query.all()
+
         if projects:
+            # Summary
             summary_lines = [f"Total de projetos: {len(projects)}"]
             status_counts = {}
             total_budget = 0
+            total_spent = 0
+
             for p in projects:
                 status_counts[p.status] = status_counts.get(p.status, 0) + 1
                 total_budget += p.budget or 0
@@ -481,23 +490,93 @@ def get_system_context(tenant_id: Optional[int] = None) -> Dict[str, Any]:
             for status, count in status_counts.items():
                 summary_lines.append(f"- {status}: {count} projetos")
             summary_lines.append(f"Orçamento total: R$ {total_budget:,.2f}")
-
             context['projects_summary'] = '\n'.join(summary_lines)
 
+            # Detailed project information
+            detail_lines = []
+            for p in projects:
+                # Get expenses
+                expenses = Expense.query.filter_by(project_id=p.id).all()
+                project_spent = sum(e.amount or 0 for e in expenses)
+                total_spent += project_spent
+
+                # Get milestones
+                milestones = Milestone.query.filter_by(project_id=p.id).all()
+                milestone_progress = 0
+                completed_milestones = 0
+                if milestones:
+                    milestone_progress = sum(m.progress or 0 for m in milestones) / len(milestones)
+                    completed_milestones = len([m for m in milestones if m.status in ['Concluído', 'Concluido']])
+
+                # Get resources
+                resources = Resource.query.filter_by(project_id=p.id, type='Pessoa').all()
+                planned_hours = sum(r.hours_allocated or 0 for r in resources)
+                planned_cost = sum((r.hours_allocated or 0) * (r.hourly_cost or 0) for r in resources)
+
+                # Get timesheet hours
+                timesheet_hours = db.session.query(func.sum(Timesheet.hours))\
+                    .filter_by(project_id=p.id).scalar() or 0
+
+                # Calculate realized cost from timesheet
+                realized_cost = 0
+                timesheets = Timesheet.query.filter_by(project_id=p.id).all()
+                resource_costs = {r.id: r.hourly_cost or 0 for r in resources}
+                for ts in timesheets:
+                    if ts.resource_id and ts.resource_id in resource_costs:
+                        realized_cost += (ts.hours or 0) * resource_costs[ts.resource_id]
+
+                detail_lines.append(f"""
+PROJETO: {p.code} - {p.title}
+  Status: {p.status}
+  Categoria: {p.category or 'N/A'}
+  Período: {p.start_date.strftime('%d/%m/%Y') if p.start_date else 'N/A'} a {p.end_date.strftime('%d/%m/%Y') if p.end_date else 'N/A'}
+  Orçamento: R$ {(p.budget or 0):,.2f}
+  Despesas: R$ {project_spent:,.2f} ({(project_spent/(p.budget or 1)*100):.1f}% do orçamento)
+  Marcos: {len(milestones)} total, {completed_milestones} concluídos, progresso médio {milestone_progress:.0f}%
+  Equipe: {len(resources)} pessoas
+  Horas planejadas: {planned_hours:.0f}h (custo planejado: R$ {planned_cost:,.2f})
+  Horas realizadas: {timesheet_hours:.1f}h (custo realizado: R$ {realized_cost:,.2f})
+  Responsável: {p.responsible.full_name if p.responsible else 'N/A'}""")
+
+                # Add milestone details
+                if milestones:
+                    detail_lines.append("  Marcos:")
+                    for m in milestones[:5]:  # Limit to first 5
+                        responsibles = ', '.join([ra.resource.name for ra in m.resource_assignments]) or 'Não atribuído'
+                        detail_lines.append(f"    - {m.title}: {m.progress}% ({m.status}) - Resp: {responsibles}")
+                    if len(milestones) > 5:
+                        detail_lines.append(f"    ... e mais {len(milestones)-5} marcos")
+
+                # Add resource details
+                if resources:
+                    detail_lines.append("  Recursos:")
+                    for r in resources[:5]:  # Limit to first 5
+                        # Get realized hours for this resource
+                        res_hours = db.session.query(func.sum(Timesheet.hours))\
+                            .filter_by(project_id=p.id, resource_id=r.id).scalar() or 0
+                        detail_lines.append(f"    - {r.name} ({r.role or 'Equipe'}): {r.hours_allocated or 0}h alocadas, {res_hours:.1f}h realizadas, R$ {r.hourly_cost or 0}/h")
+                    if len(resources) > 5:
+                        detail_lines.append(f"    ... e mais {len(resources)-5} recursos")
+
+            context['projects_detail'] = '\n'.join(detail_lines)
+            context['financial_summary'] = f"Total despesas todos projetos: R$ {total_spent:,.2f}"
+
         # Calls summary
-        calls_query = PublicCall.query.filter(
-            (PublicCall.tenant_id == tenant_id) | (PublicCall.tenant_id.is_(None))
-        )
+        if tenant_id:
+            calls_query = PublicCall.query.filter(
+                (PublicCall.tenant_id == tenant_id) | (PublicCall.tenant_id.is_(None))
+            )
+        else:
+            calls_query = PublicCall.query
+
         calls = calls_query.filter_by(status='Aberta').all()
         if calls:
-            context['calls_summary'] = f"Chamadas abertas: {len(calls)}"
-
-        # Financial summary
-        if tenant_id:
-            expenses = Expense.query.filter_by(tenant_id=tenant_id).all()
-            if expenses:
-                total_expenses = sum(e.amount for e in expenses)
-                context['financial_summary'] = f"Total de despesas: R$ {total_expenses:,.2f}"
+            calls_info = [f"Chamadas públicas abertas: {len(calls)}"]
+            for c in calls[:5]:
+                calls_info.append(f"- {c.title} ({c.source}) - Prazo: {c.deadline or 'N/A'}")
+            if len(calls) > 5:
+                calls_info.append(f"... e mais {len(calls)-5} chamadas")
+            context['calls_summary'] = '\n'.join(calls_info)
 
     except Exception as e:
         logger.error(f"Error getting system context: {e}")
