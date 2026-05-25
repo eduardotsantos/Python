@@ -55,12 +55,26 @@ O Orion P&D é uma solução completa para gerenciamento de projetos de pesquisa
 ### Cronograma
 - Marcos/milestones do projeto
 - Acompanhamento de progresso (%)
-- Visualização de cronograma
+- Visualização de cronograma com Gráfico de Gantt
+- **Predecessores (Finish-to-Start):** encadeamento de atividades
+- **Múltiplos responsáveis:** alocação de equipe com % por pessoa
+- Validação de alocação (soma não pode ultrapassar 100%)
+- Importação/Exportação MS Project XML (com recursos e predecessores)
 
 ### Timesheet
 - Registro de horas trabalhadas
 - Vinculação com atividades e marcos
 - Relatório de horas por projeto/usuário
+- **Cálculo de custos realizados:** horas × custo/hora do recurso
+- Comparativo planejado vs realizado nos status reports
+
+### Módulo Ágil
+- **Kanban Board:** visualização de atividades por status (Não Iniciado, Em Andamento, Concluído)
+- **Sprints:** gestão de sprints com datas, metas e velocidade
+- **Gráficos Ágeis:** burndown, velocity, distribuição por status/prioridade
+- **Story Points:** pontuação de complexidade das atividades
+- Drag & drop para mover cards entre colunas
+- Filtro por sprint no Kanban
 
 ### Chamadas Públicas
 - Integração automática com FINEP, BNDES e FAPESC
@@ -80,7 +94,7 @@ O sistema integra a API do Claude (Anthropic) para:
 | **Geração de Propostas** | Cria propostas completas para submissão em chamadas públicas |
 | **Geração de Relatórios** | Cria relatórios técnicos parciais ou finais automaticamente |
 | **Análise de Riscos** | Identifica riscos de orçamento, cronograma e recursos |
-| **Assistente de Chat** | Responde perguntas sobre projetos em linguagem natural |
+| **Assistente de Chat** | Responde perguntas sobre projetos, custos, recursos e dependências |
 | **Insights do Setor** | Gera insights de P&D personalizados para cada empresa |
 
 ## Requisitos
@@ -167,9 +181,65 @@ cd rd_project_management
 python add_expense_attachments_table.py
 ```
 
-**Saída esperada:**
-```
-Table 'expense_attachments' created successfully!
+### Atualização para versão com módulo ágil e predecessores
+
+Execute o seguinte script Python:
+
+```python
+from app import create_app
+from models import db
+
+app = create_app()
+with app.app_context():
+    db.session.execute(db.text('''
+        CREATE TABLE IF NOT EXISTS sprints (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            tenant_id INTEGER NOT NULL,
+            project_id INTEGER NOT NULL,
+            name VARCHAR(200) NOT NULL,
+            number INTEGER DEFAULT 1,
+            goal TEXT,
+            start_date DATE NOT NULL,
+            end_date DATE NOT NULL,
+            status VARCHAR(50) DEFAULT 'Planejado',
+            velocity INTEGER DEFAULT 0,
+            created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+            FOREIGN KEY (tenant_id) REFERENCES tenants(id),
+            FOREIGN KEY (project_id) REFERENCES projects(id)
+        )
+    '''))
+    
+    db.session.execute(db.text('''
+        CREATE TABLE IF NOT EXISTS milestone_resources (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            milestone_id INTEGER NOT NULL,
+            resource_id INTEGER NOT NULL,
+            allocation INTEGER DEFAULT 100,
+            FOREIGN KEY (milestone_id) REFERENCES milestones(id),
+            FOREIGN KEY (resource_id) REFERENCES resources(id)
+        )
+    '''))
+    
+    # Adicionar colunas ao milestones (ignorar erro se já existirem)
+    try:
+        db.session.execute(db.text('ALTER TABLE milestones ADD COLUMN sprint_id INTEGER REFERENCES sprints(id)'))
+    except:
+        pass
+    try:
+        db.session.execute(db.text('ALTER TABLE milestones ADD COLUMN story_points INTEGER DEFAULT 0'))
+    except:
+        pass
+    try:
+        db.session.execute(db.text('ALTER TABLE milestones ADD COLUMN priority VARCHAR(20) DEFAULT "Média"'))
+    except:
+        pass
+    try:
+        db.session.execute(db.text('ALTER TABLE milestones ADD COLUMN predecessor_id INTEGER REFERENCES milestones(id)'))
+    except:
+        pass
+    
+    db.session.commit()
+    print("Migração concluída!")
 ```
 
 ## Estrutura do Projeto
@@ -187,14 +257,16 @@ rd_project_management/
 │
 ├── routes/
 │   ├── ai.py                       # Rotas de IA e geração de propostas
+│   ├── agile.py                    # Kanban, Sprints e gráficos ágeis
 │   ├── auth.py                     # Autenticação
 │   ├── home.py                     # Home page com insights
 │   ├── projects.py                 # Projetos
 │   ├── expenses.py                 # Despesas e anexos
 │   ├── resources.py                # Recursos
-│   ├── schedule.py                 # Cronograma
+│   ├── schedule.py                 # Cronograma com predecessores
 │   ├── timesheet.py                # Timesheet
 │   ├── public_calls.py             # Chamadas públicas
+│   ├── status_report.py            # Relatórios de status com custos
 │   ├── users.py                    # Usuários
 │   └── tenants.py                  # Empresas (tenants)
 │
@@ -208,14 +280,21 @@ rd_project_management/
 ├── templates/
 │   ├── base.html                   # Template base
 │   ├── home/
-│   │   └── dashboard.html          # Home page
+│   │   └── dashboard.html          # Home page com botão Chat IA
 │   ├── ai/
 │   │   ├── dashboard.html          # Dashboard IA
+│   │   ├── chat.html               # Assistente de Chat
 │   │   └── proposal.html           # Geração de propostas
+│   ├── agile/
+│   │   ├── kanban.html             # Quadro Kanban
+│   │   ├── sprints.html            # Lista de Sprints
+│   │   ├── sprint_form.html        # Formulário de Sprint
+│   │   └── charts.html             # Gráficos ágeis
 │   ├── auth/
 │   │   └── login.html              # Login com notícias P&D
 │   ├── projects/                   # Projetos
 │   ├── expenses/                   # Despesas com anexos
+│   ├── schedule/                   # Cronograma com Gantt e predecessores
 │   ├── public_calls/               # Chamadas públicas
 │   └── ...
 │
@@ -328,5 +407,13 @@ Para reportar problemas ou sugerir melhorias:
 
 ---
 
-**Versão:** 1.1  
+**Versão:** 1.2  
 **Última atualização:** Maio 2026
+
+### Histórico de Versões
+
+| Versão | Data | Principais mudanças |
+|--------|------|---------------------|
+| 1.2 | Mai/2026 | Módulo Ágil (Kanban, Sprints), Predecessores, Múltiplos responsáveis com %, Custos planejados vs realizados |
+| 1.1 | Mai/2026 | Anexos de despesas, Geração de propostas com IA |
+| 1.0 | Abr/2026 | Versão inicial
