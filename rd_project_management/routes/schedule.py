@@ -41,12 +41,24 @@ def create_milestone(project_id):
             status=request.form.get('status', 'Pendente'),
             order=int(request.form.get('order', 0) or 0)
         )
+        # Validate allocation total
+        resource_ids = request.form.getlist('resource_ids')
+        allocations = request.form.getlist('allocations')
+        total_allocation = 0
+        for i, res_id in enumerate(resource_ids):
+            if res_id:
+                alloc = int(allocations[i]) if i < len(allocations) and allocations[i] else 100
+                total_allocation += alloc
+
+        if total_allocation > 100:
+            flash('A soma das alocações não pode ultrapassar 100%!', 'danger')
+            resources = Resource.query.filter_by(project_id=project_id, type='Pessoa', status='Ativo').order_by(Resource.name).all()
+            return render_template('schedule/form.html', project=project, milestone=None, resources=resources)
+
         db.session.add(milestone)
         db.session.flush()  # Get milestone.id
 
         # Add responsible resources with allocation
-        resource_ids = request.form.getlist('resource_ids')
-        allocations = request.form.getlist('allocations')
         for i, res_id in enumerate(resource_ids):
             if res_id:
                 alloc = int(allocations[i]) if i < len(allocations) and allocations[i] else 100
@@ -84,10 +96,22 @@ def edit_milestone(project_id, milestone_id):
         milestone.status = request.form.get('status', 'Pendente')
         milestone.order = int(request.form.get('order', 0) or 0)
 
-        # Update responsible resources
-        MilestoneResource.query.filter_by(milestone_id=milestone.id).delete()
+        # Validate allocation total
         resource_ids = request.form.getlist('resource_ids')
         allocations = request.form.getlist('allocations')
+        total_allocation = 0
+        for i, res_id in enumerate(resource_ids):
+            if res_id:
+                alloc = int(allocations[i]) if i < len(allocations) and allocations[i] else 100
+                total_allocation += alloc
+
+        if total_allocation > 100:
+            flash('A soma das alocações não pode ultrapassar 100%!', 'danger')
+            resources = Resource.query.filter_by(project_id=project_id, type='Pessoa', status='Ativo').order_by(Resource.name).all()
+            return render_template('schedule/form.html', project=project, milestone=milestone, resources=resources)
+
+        # Update responsible resources
+        MilestoneResource.query.filter_by(milestone_id=milestone.id).delete()
         for i, res_id in enumerate(resource_ids):
             if res_id:
                 alloc = int(allocations[i]) if i < len(allocations) and allocations[i] else 100

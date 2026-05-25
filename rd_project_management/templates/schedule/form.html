@@ -72,12 +72,12 @@
                                         </div>
                                         <div class="col-md-3">
                                             <div class="input-group">
-                                                <input type="number" class="form-control" name="allocations" min="0" max="100" value="{{ ra.allocation }}">
+                                                <input type="number" class="form-control" name="allocations" min="0" max="100" value="{{ ra.allocation }}" onchange="updateAllocationTotal()" oninput="updateAllocationTotal()">
                                                 <span class="input-group-text">%</span>
                                             </div>
                                         </div>
                                         <div class="col-md-2">
-                                            <button type="button" class="btn btn-outline-danger w-100" onclick="this.closest('.responsible-row').remove()">
+                                            <button type="button" class="btn btn-outline-danger w-100" onclick="this.closest('.responsible-row').remove(); updateAllocationTotal();">
                                                 <i class="bi bi-trash"></i>
                                             </button>
                                         </div>
@@ -95,12 +95,12 @@
                                         </div>
                                         <div class="col-md-3">
                                             <div class="input-group">
-                                                <input type="number" class="form-control" name="allocations" min="0" max="100" value="100">
+                                                <input type="number" class="form-control" name="allocations" min="0" max="100" value="100" onchange="updateAllocationTotal()" oninput="updateAllocationTotal()">
                                                 <span class="input-group-text">%</span>
                                             </div>
                                         </div>
                                         <div class="col-md-2">
-                                            <button type="button" class="btn btn-outline-danger w-100" onclick="this.closest('.responsible-row').remove()">
+                                            <button type="button" class="btn btn-outline-danger w-100" onclick="this.closest('.responsible-row').remove(); updateAllocationTotal();">
                                                 <i class="bi bi-trash"></i>
                                             </button>
                                         </div>
@@ -110,6 +110,12 @@
                             <button type="button" class="btn btn-outline-secondary btn-sm mt-2" onclick="addResponsible()">
                                 <i class="bi bi-plus-lg"></i> Adicionar Responsável
                             </button>
+                            <div id="allocation-warning" class="text-danger small mt-2 d-none">
+                                <i class="bi bi-exclamation-triangle"></i> A soma das alocações não pode ultrapassar 100%
+                            </div>
+                            <div id="allocation-total" class="text-muted small mt-1">
+                                Total alocado: <strong id="allocation-sum">0</strong>%
+                            </div>
                         </div>
                     </div>
                     <hr class="my-4">
@@ -143,17 +149,53 @@ function addResponsible() {
         </div>
         <div class="col-md-3">
             <div class="input-group">
-                <input type="number" class="form-control" name="allocations" min="0" max="100" value="100">
+                <input type="number" class="form-control" name="allocations" min="0" max="100" value="100" onchange="updateAllocationTotal()" oninput="updateAllocationTotal()">
                 <span class="input-group-text">%</span>
             </div>
         </div>
         <div class="col-md-2">
-            <button type="button" class="btn btn-outline-danger w-100" onclick="this.closest('.responsible-row').remove()">
+            <button type="button" class="btn btn-outline-danger w-100" onclick="this.closest('.responsible-row').remove(); updateAllocationTotal();">
                 <i class="bi bi-trash"></i>
             </button>
         </div>
     `;
     container.appendChild(row);
+    updateAllocationTotal();
 }
+
+function updateAllocationTotal() {
+    const allocations = document.querySelectorAll('input[name="allocations"]');
+    const selects = document.querySelectorAll('select[name="resource_ids"]');
+    let total = 0;
+
+    allocations.forEach((input, index) => {
+        if (selects[index] && selects[index].value) {
+            total += parseInt(input.value) || 0;
+        }
+    });
+
+    document.getElementById('allocation-sum').textContent = total;
+    const warning = document.getElementById('allocation-warning');
+    const submitBtn = document.querySelector('button[type="submit"]');
+
+    if (total > 100) {
+        warning.classList.remove('d-none');
+        submitBtn.disabled = true;
+    } else {
+        warning.classList.add('d-none');
+        submitBtn.disabled = false;
+    }
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+    document.querySelectorAll('input[name="allocations"]').forEach(input => {
+        input.addEventListener('change', updateAllocationTotal);
+        input.addEventListener('input', updateAllocationTotal);
+    });
+    document.querySelectorAll('select[name="resource_ids"]').forEach(select => {
+        select.addEventListener('change', updateAllocationTotal);
+    });
+    updateAllocationTotal();
+});
 </script>
 {% endblock %}
