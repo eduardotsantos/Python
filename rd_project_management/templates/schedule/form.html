@@ -55,6 +55,22 @@
                             </select>
                         </div>
 
+                        <!-- Predecessor -->
+                        <div class="col-md-12">
+                            <label for="predecessor_id" class="form-label">Predecessora <small class="text-muted">(Finish-to-Start)</small></label>
+                            <select class="form-select" id="predecessor_id" name="predecessor_id">
+                                <option value="">-- Nenhuma --</option>
+                                {% for m in all_milestones %}
+                                    {% if not milestone or m.id != milestone.id %}
+                                    <option value="{{ m.id }}" {{ 'selected' if milestone and milestone.predecessor_id == m.id }}>
+                                        {{ m.order }}. {{ m.title }} ({{ m.end_date.strftime('%d/%m/%Y') }})
+                                    </option>
+                                    {% endif %}
+                                {% endfor %}
+                            </select>
+                            <small class="text-muted">A atividade selecionada deve terminar antes desta iniciar</small>
+                        </div>
+
                         <!-- Responsáveis (múltiplos com % alocação) -->
                         <div class="col-12">
                             <label class="form-label">Responsáveis <small class="text-muted">(opcional)</small></label>

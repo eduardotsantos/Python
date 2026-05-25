@@ -44,24 +44,31 @@
         <h6 class="mb-0 fw-bold">Gráfico de Gantt</h6>
     </div>
     <div class="card-body">
-        <div class="gantt-container">
+        <div class="gantt-container position-relative" id="ganttContainer">
+            <svg class="gantt-connections" id="ganttConnections" style="position:absolute; top:0; left:250px; width:calc(100% - 250px); height:100%; pointer-events:none; z-index:10;"></svg>
             {% set min_date = milestones | map(attribute='start_date') | min %}
             {% set max_date = milestones | map(attribute='end_date') | max %}
             {% set total_days = (max_date - min_date).days if max_date and min_date and (max_date - min_date).days > 0 else 1 %}
 
             {% for milestone in milestones %}
-            <div class="d-flex align-items-center mb-2">
+            <div class="d-flex align-items-center mb-2 gantt-row" data-milestone-id="{{ milestone.id }}" data-predecessor-id="{{ milestone.predecessor_id or '' }}">
                 <div style="width: 250px; min-width: 250px;" class="pe-3">
-                    <div class="fw-bold small">{{ milestone.title }}</div>
+                    <div class="fw-bold small">
+                        {% if milestone.predecessor %}
+                        <i class="bi bi-link-45deg text-secondary" title="Depende de: {{ milestone.predecessor.title }}"></i>
+                        {% endif %}
+                        {{ milestone.title }}
+                    </div>
                     <div class="text-muted" style="font-size: 0.75rem;">
                         {{ milestone.start_date.strftime('%d/%m') }} - {{ milestone.end_date.strftime('%d/%m/%Y') }}
                     </div>
                 </div>
-                <div class="flex-grow-1 position-relative" style="height: 36px; background: #f0f0f0; border-radius: 6px;">
+                <div class="flex-grow-1 position-relative gantt-track" style="height: 36px; background: #f0f0f0; border-radius: 6px;">
                     {% set offset = ((milestone.start_date - min_date).days / total_days * 100) %}
                     {% set width = (((milestone.end_date - milestone.start_date).days + 1) / total_days * 100) %}
                     <div class="gantt-bar
                         {{ 'bg-success' if milestone.status == 'Concluído' else 'bg-warning' if milestone.status == 'Em Andamento' else 'bg-info' if milestone.status == 'Pendente' else 'bg-danger' }}"
+                        data-offset="{{ offset }}" data-width="{{ width }}"
                         style="position:absolute; left:{{ offset }}%; width:{{ width }}%; top:3px; height:30px;"
                         title="{{ milestone.title }} ({{ milestone.progress }}%)">
                         <div class="gantt-progress" style="width: {{ milestone.progress }}%;"></div>
@@ -85,6 +92,7 @@
                 <tr>
                     <th>#</th>
                     <th>Marco</th>
+                    <th>Predecessora</th>
                     <th>Responsável</th>
                     <th>Início</th>
                     <th>Término</th>
@@ -101,6 +109,15 @@
                         <strong>{{ milestone.title }}</strong>
                         {% if milestone.description %}
                         <br><small class="text-muted">{{ milestone.description[:80] }}{{ '...' if milestone.description|length > 80 }}</small>
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if milestone.predecessor %}
+                        <span class="badge bg-secondary" title="Finish-to-Start">
+                            <i class="bi bi-arrow-right-short"></i> {{ milestone.predecessor.order }}. {{ milestone.predecessor.title[:20] }}{{ '...' if milestone.predecessor.title|length > 20 }}
+                        </span>
+                        {% else %}
+                        <span class="text-muted">-</span>
                         {% endif %}
                     </td>
                     <td>
@@ -160,4 +177,123 @@
     </div>
 </div>
 {% endif %}
+{% endblock %}
+
+{% block extra_css %}
+<style>
+.gantt-bar {
+    border-radius: 4px;
+    overflow: hidden;
+}
+.gantt-progress {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    background: rgba(0,0,0,0.2);
+}
+</style>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Draw dependency lines
+    function drawConnections() {
+        const svg = document.getElementById('ganttConnections');
+        if (!svg) return;
+
+        const container = document.getElementById('ganttContainer');
+        svg.innerHTML = '';
+        svg.style.height = container.offsetHeight + 'px';
+
+        const rows = document.querySelectorAll('.gantt-row');
+        const rowMap = {};
+
+        rows.forEach((row, index) => {
+            const id = row.dataset.milestoneId;
+            const bar = row.querySelector('.gantt-bar');
+            const track = row.querySelector('.gantt-track');
+            rowMap[id] = {
+                index: index,
+                row: row,
+                bar: bar,
+                track: track,
+                offset: parseFloat(bar.dataset.offset),
+                width: parseFloat(bar.dataset.width)
+            };
+        });
+
+        rows.forEach((row) => {
+            const predecessorId = row.dataset.predecessorId;
+            if (!predecessorId || !rowMap[predecessorId]) return;
+
+            const pred = rowMap[predecessorId];
+            const curr = rowMap[row.dataset.milestoneId];
+
+            const trackWidth = pred.track.offsetWidth;
+            const predEndX = (pred.offset + pred.width) / 100 * trackWidth;
+            const currStartX = curr.offset / 100 * trackWidth;
+
+            const predY = pred.index * 44 + 18;
+            const currY = curr.index * 44 + 18;
+
+            const midX = Math.max(predEndX + 10, currStartX - 10);
+
+            const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+            const d = `M ${predEndX} ${predY} L ${midX} ${predY} L ${midX} ${currY} L ${currStartX} ${currY}`;
+            path.setAttribute('d', d);
+            path.setAttribute('fill', 'none');
+            path.setAttribute('stroke', '#6c757d');
+            path.setAttribute('stroke-width', '2');
+            path.setAttribute('marker-end', 'url(#arrowhead)');
+
+            svg.appendChild(path);
+        });
+
+        // Add arrowhead marker
+        if (!document.getElementById('arrowhead')) {
+            const defs = document.createElementNS('http://www.w3.org/2000/svg', 'defs');
+            defs.innerHTML = `
+                <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+                    <polygon points="0 0, 10 3.5, 0 7" fill="#6c757d" />
+                </marker>
+            `;
+            svg.appendChild(defs);
+        }
+    }
+
+    drawConnections();
+    window.addEventListener('resize', drawConnections);
+
+    // Progress slider functionality
+    document.querySelectorAll('.progress-slider').forEach(slider => {
+        slider.addEventListener('change', function() {
+            const milestoneId = this.dataset.milestoneId;
+            const projectId = this.dataset.projectId;
+            const progress = this.value;
+
+            document.getElementById('progress-label-' + milestoneId).textContent = progress + '%';
+
+            fetch(`/projects/${projectId}/schedule/${milestoneId}/progress`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ progress: progress })
+            })
+            .then(r => r.json())
+            .then(data => {
+                if (data.success) {
+                    const statusBadge = document.getElementById('status-' + milestoneId);
+                    statusBadge.textContent = data.status;
+                    statusBadge.className = 'badge ' + (
+                        data.status === 'Concluído' ? 'bg-success' :
+                        data.status === 'Em Andamento' ? 'bg-warning text-dark' :
+                        data.status === 'Atrasado' ? 'bg-danger' : 'bg-info'
+                    );
+                }
+            });
+        });
+    });
+});
+</script>
 {% endblock %}

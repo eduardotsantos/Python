@@ -30,6 +30,7 @@ def create_milestone(project_id):
     tenant_id = get_current_tenant_id()
 
     if request.method == 'POST':
+        predecessor_id = request.form.get('predecessor_id')
         milestone = Milestone(
             tenant_id=tenant_id,
             project_id=project_id,
@@ -39,7 +40,8 @@ def create_milestone(project_id):
             end_date=datetime.strptime(request.form.get('end_date', ''), '%Y-%m-%d').date(),
             progress=int(request.form.get('progress', 0)),
             status=request.form.get('status', 'Pendente'),
-            order=int(request.form.get('order', 0) or 0)
+            order=int(request.form.get('order', 0) or 0),
+            predecessor_id=int(predecessor_id) if predecessor_id else None
         )
         # Validate allocation total
         resource_ids = request.form.getlist('resource_ids')
@@ -53,7 +55,8 @@ def create_milestone(project_id):
         if total_allocation > 100:
             flash('A soma das alocações não pode ultrapassar 100%!', 'danger')
             resources = Resource.query.filter_by(project_id=project_id, type='Pessoa', status='Ativo').order_by(Resource.name).all()
-            return render_template('schedule/form.html', project=project, milestone=None, resources=resources)
+            all_milestones = Milestone.query.filter_by(project_id=project_id).order_by(Milestone.order, Milestone.start_date).all()
+            return render_template('schedule/form.html', project=project, milestone=None, resources=resources, all_milestones=all_milestones)
 
         db.session.add(milestone)
         db.session.flush()  # Get milestone.id
@@ -74,7 +77,8 @@ def create_milestone(project_id):
         return redirect(url_for('schedule.view_schedule', project_id=project_id))
 
     resources = Resource.query.filter_by(project_id=project_id, type='Pessoa', status='Ativo').order_by(Resource.name).all()
-    return render_template('schedule/form.html', project=project, milestone=None, resources=resources)
+    all_milestones = Milestone.query.filter_by(project_id=project_id).order_by(Milestone.order, Milestone.start_date).all()
+    return render_template('schedule/form.html', project=project, milestone=None, resources=resources, all_milestones=all_milestones)
 
 
 @schedule_bp.route('/projects/<int:project_id>/schedule/<int:milestone_id>/edit', methods=['GET', 'POST'])
@@ -88,6 +92,7 @@ def edit_milestone(project_id, milestone_id):
     ensure_tenant_access(milestone)
 
     if request.method == 'POST':
+        predecessor_id = request.form.get('predecessor_id')
         milestone.title = request.form.get('title', '').strip()
         milestone.description = request.form.get('description', '').strip()
         milestone.start_date = datetime.strptime(request.form.get('start_date', ''), '%Y-%m-%d').date()
@@ -95,6 +100,7 @@ def edit_milestone(project_id, milestone_id):
         milestone.progress = int(request.form.get('progress', 0))
         milestone.status = request.form.get('status', 'Pendente')
         milestone.order = int(request.form.get('order', 0) or 0)
+        milestone.predecessor_id = int(predecessor_id) if predecessor_id else None
 
         # Validate allocation total
         resource_ids = request.form.getlist('resource_ids')
@@ -108,7 +114,8 @@ def edit_milestone(project_id, milestone_id):
         if total_allocation > 100:
             flash('A soma das alocações não pode ultrapassar 100%!', 'danger')
             resources = Resource.query.filter_by(project_id=project_id, type='Pessoa', status='Ativo').order_by(Resource.name).all()
-            return render_template('schedule/form.html', project=project, milestone=milestone, resources=resources)
+            all_milestones = Milestone.query.filter_by(project_id=project_id).order_by(Milestone.order, Milestone.start_date).all()
+            return render_template('schedule/form.html', project=project, milestone=milestone, resources=resources, all_milestones=all_milestones)
 
         # Update responsible resources
         MilestoneResource.query.filter_by(milestone_id=milestone.id).delete()
@@ -127,7 +134,8 @@ def edit_milestone(project_id, milestone_id):
         return redirect(url_for('schedule.view_schedule', project_id=project_id))
 
     resources = Resource.query.filter_by(project_id=project_id, type='Pessoa', status='Ativo').order_by(Resource.name).all()
-    return render_template('schedule/form.html', project=project, milestone=milestone, resources=resources)
+    all_milestones = Milestone.query.filter_by(project_id=project_id).order_by(Milestone.order, Milestone.start_date).all()
+    return render_template('schedule/form.html', project=project, milestone=milestone, resources=resources, all_milestones=all_milestones)
 
 
 @schedule_bp.route('/projects/<int:project_id>/schedule/<int:milestone_id>/delete', methods=['POST'])
@@ -205,7 +213,9 @@ def export_schedule(project_id):
 
     # Tasks section
     tasks = ET.SubElement(root, 'Tasks')
+    milestone_uid_map = {}
     for i, milestone in enumerate(milestones, 1):
+        milestone_uid_map[milestone.id] = i
         task = ET.SubElement(tasks, 'Task')
         ET.SubElement(task, 'UID').text = str(i)
         ET.SubElement(task, 'ID').text = str(i)
@@ -218,6 +228,13 @@ def export_schedule(project_id):
             ET.SubElement(task, 'Finish').text = milestone.end_date.isoformat() + 'T17:00:00'
         ET.SubElement(task, 'PercentComplete').text = str(milestone.progress or 0)
         ET.SubElement(task, 'Priority').text = '500'
+
+        # Add predecessor link (Finish-to-Start)
+        if milestone.predecessor_id and milestone.predecessor_id in milestone_uid_map:
+            pred_link = ET.SubElement(task, 'PredecessorLink')
+            ET.SubElement(pred_link, 'PredecessorUID').text = str(milestone_uid_map[milestone.predecessor_id])
+            ET.SubElement(pred_link, 'Type').text = '1'  # 1 = Finish-to-Start (FS)
+            ET.SubElement(pred_link, 'LinkLag').text = '0'
 
     # Assignments section (links tasks to resources - supports multiple per task)
     assignments = ET.SubElement(root, 'Assignments')
@@ -299,6 +316,17 @@ def import_schedule(project_id):
                         task_to_resources[task_uid] = []
                     task_to_resources[task_uid].append((res_uid, allocation))
 
+            # Build predecessor map (TaskUID -> PredecessorUID)
+            task_to_predecessor = {}
+            tasks_temp = find_all(root, 'Task')
+            for task in tasks_temp:
+                task_uid = get_text(task, 'UID')
+                pred_link = task.find('ms:PredecessorLink', ns) or task.find('PredecessorLink')
+                if pred_link is not None:
+                    pred_uid = get_text(pred_link, 'PredecessorUID')
+                    if pred_uid:
+                        task_to_predecessor[task_uid] = pred_uid
+
             # Map resource names to project resource IDs
             project_resources = Resource.query.filter_by(project_id=project_id, type='Pessoa').all()
             resource_name_to_id = {r.name.lower(): r.id for r in project_resources}
@@ -306,6 +334,7 @@ def import_schedule(project_id):
             tasks = find_all(root, 'Task')
             imported = 0
             existing_count = Milestone.query.filter_by(project_id=project_id).count()
+            task_uid_to_milestone_id = {}  # Map TaskUID to new milestone ID
 
             for task in tasks:
                 task_uid = get_text(task, 'UID')
@@ -356,6 +385,10 @@ def import_schedule(project_id):
                 db.session.add(milestone)
                 db.session.flush()  # Get milestone.id
 
+                # Track TaskUID to milestone ID mapping
+                if task_uid:
+                    task_uid_to_milestone_id[task_uid] = milestone.id
+
                 # Add responsible resources from assignments
                 if task_uid and task_uid in task_to_resources:
                     for res_uid, allocation in task_to_resources[task_uid]:
@@ -369,6 +402,13 @@ def import_schedule(project_id):
                             db.session.add(mr)
 
                 imported += 1
+
+            # Update predecessor relationships
+            for task_uid, pred_uid in task_to_predecessor.items():
+                if task_uid in task_uid_to_milestone_id and pred_uid in task_uid_to_milestone_id:
+                    milestone = Milestone.query.get(task_uid_to_milestone_id[task_uid])
+                    if milestone:
+                        milestone.predecessor_id = task_uid_to_milestone_id[pred_uid]
 
             db.session.commit()
             flash(f'{imported} marcos importados com sucesso!', 'success')

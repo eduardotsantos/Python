@@ -237,6 +237,7 @@ class Milestone(db.Model):
     tenant_id = db.Column(db.Integer, db.ForeignKey('tenants.id'), nullable=False)
     project_id = db.Column(db.Integer, db.ForeignKey('projects.id'), nullable=False)
     sprint_id = db.Column(db.Integer, db.ForeignKey('sprints.id'), nullable=True)
+    predecessor_id = db.Column(db.Integer, db.ForeignKey('milestones.id'), nullable=True)
     title = db.Column(db.String(300), nullable=False)
     description = db.Column(db.Text)
     start_date = db.Column(db.Date, nullable=False)
@@ -247,6 +248,8 @@ class Milestone(db.Model):
     story_points = db.Column(db.Integer, default=0)
     order = db.Column(db.Integer, default=0)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
+
+    predecessor = db.relationship('Milestone', remote_side=[id], backref='successors', foreign_keys=[predecessor_id])
 
     @property
     def responsibles(self):
