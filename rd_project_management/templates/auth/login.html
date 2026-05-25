@@ -420,10 +420,16 @@
                         <div class="logo-subtitle">Portal de Inovação Aberta</div>
                     </div>
                 </div>
-                <div class="header-links d-none d-md-block">
-                    <a href="https://www.finep.gov.br" target="_blank"><i class="bi bi-box-arrow-up-right me-1"></i>FINEP</a>
-                    <a href="https://fapesc.sc.gov.br" target="_blank"><i class="bi bi-box-arrow-up-right me-1"></i>FAPESC</a>
-                    <a href="https://www.bndes.gov.br" target="_blank"><i class="bi bi-box-arrow-up-right me-1"></i>BNDES</a>
+                <div class="d-flex align-items-center">
+                    <div class="header-links d-none d-md-block me-4">
+                        <a href="https://www.finep.gov.br" target="_blank"><i class="bi bi-box-arrow-up-right me-1"></i>FINEP</a>
+                        <a href="https://fapesc.sc.gov.br" target="_blank"><i class="bi bi-box-arrow-up-right me-1"></i>FAPESC</a>
+                        <a href="https://www.bndes.gov.br" target="_blank"><i class="bi bi-box-arrow-up-right me-1"></i>BNDES</a>
+                    </div>
+                    <div class="language-selector">
+                        <span class="lang-flag" data-lang="pt-BR" title="Português" style="font-size:1.5rem;cursor:pointer;opacity:0.6;transition:all 0.2s;">🇧🇷</span>
+                        <span class="lang-flag" data-lang="en" title="English" style="font-size:1.5rem;cursor:pointer;opacity:0.6;transition:all 0.2s;margin-left:8px;">🇬🇧</span>
+                    </div>
                 </div>
             </div>
         </div>
@@ -714,5 +720,47 @@
     </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+    // Simple i18n for login page
+    const loginTranslations = {
+        'pt-BR': {
+            'Access your account': 'Acesse sua conta',
+            'Email': 'E-mail',
+            'Password': 'Senha',
+            'Login': 'Entrar',
+            'Manage your R&D projects': 'Gerencie seus projetos de P&D',
+            'Open Innovation Portal': 'Portal de Inovação Aberta',
+            'Public Calls': 'Chamadas Públicas',
+            'Recent public calls': 'Chamadas públicas recentes',
+            'Funding Agencies': 'Agências de Fomento',
+            'R&D News': 'Notícias de P&D',
+            'See all': 'Ver todas'
+        }
+    };
+
+    document.addEventListener('DOMContentLoaded', function() {
+        const currentLang = localStorage.getItem('orion_lang') || 'pt-BR';
+
+        // Update active flag
+        document.querySelectorAll('.lang-flag').forEach(el => {
+            el.style.opacity = el.dataset.lang === currentLang ? '1' : '0.5';
+
+            el.addEventListener('click', function() {
+                localStorage.setItem('orion_lang', this.dataset.lang);
+                location.reload();
+            });
+
+            el.addEventListener('mouseenter', function() {
+                this.style.opacity = '0.9';
+                this.style.transform = 'scale(1.1)';
+            });
+
+            el.addEventListener('mouseleave', function() {
+                this.style.opacity = this.dataset.lang === localStorage.getItem('orion_lang') ? '1' : '0.5';
+                this.style.transform = 'scale(1)';
+            });
+        });
+    });
+    </script>
 </body>
 </html>
