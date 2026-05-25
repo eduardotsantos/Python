@@ -543,7 +543,8 @@ PROJETO: {p.code} - {p.title}
                     detail_lines.append("  Marcos:")
                     for m in milestones[:5]:  # Limit to first 5
                         responsibles = ', '.join([ra.resource.name for ra in m.resource_assignments]) or 'Não atribuído'
-                        detail_lines.append(f"    - {m.title}: {m.progress}% ({m.status}) - Resp: {responsibles}")
+                        predecessor_info = f" (após: {m.predecessor.title})" if m.predecessor else ""
+                        detail_lines.append(f"    - {m.title}: {m.progress}% ({m.status}) - Resp: {responsibles}{predecessor_info}")
                     if len(milestones) > 5:
                         detail_lines.append(f"    ... e mais {len(milestones)-5} marcos")
 
