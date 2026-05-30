@@ -1,0 +1,135 @@
+{% extends "base.html" %}
+{% block title %}Ações Corretivas - Gestão P&D{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h4 class="fw-bold mb-0"><i class="bi bi-check2-square text-success"></i> Ações Corretivas</h4>
+    <div>
+        <a href="{{ url_for('compliance.dashboard') }}" class="btn btn-outline-secondary me-2">
+            <i class="bi bi-arrow-left"></i> Voltar
+        </a>
+        <a href="{{ url_for('compliance.action_create') }}" class="btn btn-success">
+            <i class="bi bi-plus-lg"></i> Nova Ação
+        </a>
+    </div>
+</div>
+
+<!-- Filters -->
+<div class="card shadow-sm mb-4">
+    <div class="card-body py-2">
+        <form method="GET" class="row g-2 align-items-center">
+            <div class="col-md-4">
+                <select name="status" class="form-select form-select-sm">
+                    <option value="">Todos os Status</option>
+                    <option value="Planejada" {{ 'selected' if status_filter == 'Planejada' }}>Planejada</option>
+                    <option value="Em Andamento" {{ 'selected' if status_filter == 'Em Andamento' }}>Em Andamento</option>
+                    <option value="Concluída" {{ 'selected' if status_filter == 'Concluída' }}>Concluída</option>
+                    <option value="Verificada" {{ 'selected' if status_filter == 'Verificada' }}>Verificada</option>
+                    <option value="Cancelada" {{ 'selected' if status_filter == 'Cancelada' }}>Cancelada</option>
+                </select>
+            </div>
+            <div class="col-md-4">
+                <select name="project_id" class="form-select form-select-sm">
+                    <option value="">Todos os Projetos</option>
+                    {% for project in projects %}
+                    <option value="{{ project.id }}" {{ 'selected' if project_filter == project.id|string }}>{{ project.title }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col-md-4 text-end">
+                <button type="submit" class="btn btn-outline-primary btn-sm"><i class="bi bi-filter"></i> Filtrar</button>
+                <a href="{{ url_for('compliance.actions_list') }}" class="btn btn-outline-secondary btn-sm"><i class="bi bi-x"></i> Limpar</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+{% if actions %}
+<div class="card shadow-sm">
+    <div class="table-responsive">
+        <table class="table table-hover mb-0">
+            <thead>
+                <tr>
+                    <th>Código</th>
+                    <th>Descrição</th>
+                    <th>Projeto</th>
+                    <th>Origem</th>
+                    <th>Data Limite</th>
+                    <th>Status</th>
+                    <th>Responsável</th>
+                    <th class="text-end">Ações</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for action in actions %}
+                <tr>
+                    <td><strong>{{ action.code }}</strong></td>
+                    <td>{{ action.description[:50] }}{{ '...' if action.description|length > 50 else '' }}</td>
+                    <td>{{ action.project.title if action.project else '-' }}</td>
+                    <td>
+                        {% if action.pending_item_id %}
+                            <span class="badge bg-warning text-dark">Pendência</span>
+                        {% elif action.non_conformity_id %}
+                            <span class="badge bg-info">NC</span>
+                        {% elif action.bug_id %}
+                            <span class="badge bg-dark">Bug</span>
+                        {% elif action.risk_id %}
+                            <span class="badge bg-danger">Risco</span>
+                        {% else %}
+                            <span class="badge bg-secondary">-</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if action.due_date %}
+                            {% if action.due_date < now and action.status not in ['Concluída', 'Verificada', 'Cancelada'] %}
+                                <span class="text-danger fw-bold">{{ action.due_date.strftime('%d/%m/%Y') }}</span>
+                            {% else %}
+                                {{ action.due_date.strftime('%d/%m/%Y') }}
+                            {% endif %}
+                        {% else %}
+                            -
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if action.status == 'Planejada' %}
+                            <span class="badge bg-info">{{ action.status }}</span>
+                        {% elif action.status == 'Em Andamento' %}
+                            <span class="badge bg-warning text-dark">{{ action.status }}</span>
+                        {% elif action.status == 'Concluída' or action.status == 'Verificada' %}
+                            <span class="badge bg-success">{{ action.status }}</span>
+                        {% elif action.status == 'Cancelada' %}
+                            <span class="badge bg-secondary">{{ action.status }}</span>
+                        {% else %}
+                            <span class="badge bg-secondary">{{ action.status }}</span>
+                        {% endif %}
+                    </td>
+                    <td>{{ action.responsible.full_name if action.responsible else '-' }}</td>
+                    <td class="text-end">
+                        <a href="{{ url_for('compliance.action_edit', action_id=action.id) }}" class="btn btn-sm btn-outline-primary" title="Editar">
+                            <i class="bi bi-pencil"></i>
+                        </a>
+                        <form action="{{ url_for('compliance.action_delete', action_id=action.id) }}" method="POST" class="d-inline" onsubmit="return confirm('Confirma exclusão?')">
+                            <button type="submit" class="btn btn-sm btn-outline-danger" title="Excluir">
+                                <i class="bi bi-trash"></i>
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% else %}
+<div class="card shadow-sm">
+    <div class="empty-state">
+        <i class="bi bi-check2-square"></i>
+        <h5>Nenhuma ação corretiva encontrada</h5>
+        <p>Registre ações corretivas vinculadas a pendências, NC, bugs ou riscos</p>
+        <a href="{{ url_for('compliance.action_create') }}" class="btn btn-success">
+            <i class="bi bi-plus-lg"></i> Registrar Ação
+        </a>
+    </div>
+</div>
+{% endif %}
+{% endblock %}

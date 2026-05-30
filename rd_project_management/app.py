@@ -107,6 +107,15 @@ def create_app():
     except ImportError:
         pass
 
+    # Optional Compliance blueprint
+    has_compliance = False
+    try:
+        from routes.compliance import compliance_bp
+        app.register_blueprint(compliance_bp)
+        has_compliance = True
+    except ImportError:
+        pass
+
     # Before request - set current tenant
     @app.before_request
     def set_tenant_context():
@@ -123,7 +132,8 @@ def create_app():
             'has_programs_module': has_programs,
             'has_portfolio_module': has_portfolio,
             'has_audit_module': has_audit,
-            'has_agile_module': has_agile
+            'has_agile_module': has_agile,
+            'has_compliance_module': has_compliance
         }
 
     # Root redirect

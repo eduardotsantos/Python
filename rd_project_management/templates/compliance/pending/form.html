@@ -1,0 +1,85 @@
+{% extends "base.html" %}
+{% block title %}{{ 'Editar' if item else 'Nova' }} Pendência - Gestão P&D{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h4 class="fw-bold mb-0">
+        <i class="bi bi-clock-history text-warning"></i>
+        {{ 'Editar Pendência' if item else 'Nova Pendência' }}
+    </h4>
+    <a href="{{ url_for('compliance.pending_list') }}" class="btn btn-outline-secondary">
+        <i class="bi bi-arrow-left"></i> Voltar
+    </a>
+</div>
+
+<div class="card shadow-sm">
+    <div class="card-body">
+        <form method="POST">
+            <div class="row g-3">
+                <div class="col-md-8">
+                    <label class="form-label">Título *</label>
+                    <input type="text" name="title" class="form-control" required value="{{ item.title if item else '' }}">
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label">Projeto</label>
+                    <select name="project_id" class="form-select">
+                        <option value="">-- Selecione --</option>
+                        {% for project in projects %}
+                        <option value="{{ project.id }}" {{ 'selected' if item and item.project_id == project.id }}>{{ project.title }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-12">
+                    <label class="form-label">Descrição</label>
+                    <textarea name="description" class="form-control" rows="3">{{ item.description if item else '' }}</textarea>
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label">Prioridade *</label>
+                    <select name="priority" class="form-select" required>
+                        {% set priorities = ['Baixa', 'Média', 'Alta', 'Crítica'] %}
+                        {% for p in priorities %}
+                        <option value="{{ p }}" {{ 'selected' if item and item.priority == p }}>{{ p }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label">Status</label>
+                    <select name="status" class="form-select">
+                        {% set statuses = ['Aberta', 'Em Andamento', 'Resolvida', 'Cancelada'] %}
+                        {% for status in statuses %}
+                        <option value="{{ status }}" {{ 'selected' if item and item.status == status }}>{{ status }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label">Data Limite</label>
+                    <input type="date" name="due_date" class="form-control" value="{{ item.due_date.strftime('%Y-%m-%d') if item and item.due_date else '' }}">
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label">Responsável</label>
+                    <select name="responsible_id" class="form-select">
+                        <option value="">-- Selecione --</option>
+                        {% for user in users %}
+                        <option value="{{ user.id }}" {{ 'selected' if item and item.responsible_id == user.id }}>{{ user.full_name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label">Data Resolução</label>
+                    <input type="date" name="resolution_date" class="form-control" value="{{ item.resolution_date.strftime('%Y-%m-%d') if item and item.resolution_date else '' }}">
+                </div>
+                <div class="col-12">
+                    <label class="form-label">Observações de Resolução</label>
+                    <textarea name="resolution_notes" class="form-control" rows="2">{{ item.resolution_notes if item else '' }}</textarea>
+                </div>
+            </div>
+            <div class="mt-4">
+                <button type="submit" class="btn btn-warning">
+                    <i class="bi bi-check-lg"></i> {{ 'Atualizar' if item else 'Salvar' }}
+                </button>
+                <a href="{{ url_for('compliance.pending_list') }}" class="btn btn-outline-secondary">Cancelar</a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

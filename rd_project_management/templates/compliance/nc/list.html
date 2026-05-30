@@ -1,0 +1,121 @@
+{% extends "base.html" %}
+{% block title %}Não Conformidades - Gestão P&D{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h4 class="fw-bold mb-0"><i class="bi bi-x-octagon text-info"></i> Não Conformidades</h4>
+    <div>
+        <a href="{{ url_for('compliance.dashboard') }}" class="btn btn-outline-secondary me-2">
+            <i class="bi bi-arrow-left"></i> Voltar
+        </a>
+        <a href="{{ url_for('compliance.nc_create') }}" class="btn btn-info">
+            <i class="bi bi-plus-lg"></i> Nova NC
+        </a>
+    </div>
+</div>
+
+<!-- Filters -->
+<div class="card shadow-sm mb-4">
+    <div class="card-body py-2">
+        <form method="GET" class="row g-2 align-items-center">
+            <div class="col-md-4">
+                <select name="status" class="form-select form-select-sm">
+                    <option value="">Todos os Status</option>
+                    <option value="Aberta" {{ 'selected' if status_filter == 'Aberta' }}>Aberta</option>
+                    <option value="Em Análise" {{ 'selected' if status_filter == 'Em Análise' }}>Em Análise</option>
+                    <option value="Em Tratamento" {{ 'selected' if status_filter == 'Em Tratamento' }}>Em Tratamento</option>
+                    <option value="Verificação" {{ 'selected' if status_filter == 'Verificação' }}>Verificação</option>
+                    <option value="Fechada" {{ 'selected' if status_filter == 'Fechada' }}>Fechada</option>
+                </select>
+            </div>
+            <div class="col-md-4">
+                <select name="project_id" class="form-select form-select-sm">
+                    <option value="">Todos os Projetos</option>
+                    {% for project in projects %}
+                    <option value="{{ project.id }}" {{ 'selected' if project_filter == project.id|string }}>{{ project.title }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col-md-4 text-end">
+                <button type="submit" class="btn btn-outline-primary btn-sm"><i class="bi bi-filter"></i> Filtrar</button>
+                <a href="{{ url_for('compliance.nc_list') }}" class="btn btn-outline-secondary btn-sm"><i class="bi bi-x"></i> Limpar</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+{% if items %}
+<div class="card shadow-sm">
+    <div class="table-responsive">
+        <table class="table table-hover mb-0">
+            <thead>
+                <tr>
+                    <th>Código</th>
+                    <th>Título</th>
+                    <th>Projeto</th>
+                    <th>Tipo</th>
+                    <th>Impacto</th>
+                    <th>Status</th>
+                    <th>Responsável</th>
+                    <th class="text-end">Ações</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in items %}
+                <tr>
+                    <td><strong>{{ item.code }}</strong></td>
+                    <td>{{ item.title }}</td>
+                    <td>{{ item.project.title if item.project else '-' }}</td>
+                    <td><span class="badge bg-secondary">{{ item.nc_type }}</span></td>
+                    <td>
+                        {% if item.impact == 'Alto' %}
+                            <span class="badge bg-danger">{{ item.impact }}</span>
+                        {% elif item.impact == 'Médio' %}
+                            <span class="badge bg-warning text-dark">{{ item.impact }}</span>
+                        {% else %}
+                            <span class="badge bg-success">{{ item.impact }}</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if item.status == 'Aberta' %}
+                            <span class="badge bg-danger">{{ item.status }}</span>
+                        {% elif item.status == 'Em Análise' or item.status == 'Em Tratamento' %}
+                            <span class="badge bg-warning text-dark">{{ item.status }}</span>
+                        {% elif item.status == 'Verificação' %}
+                            <span class="badge bg-info">{{ item.status }}</span>
+                        {% elif item.status == 'Fechada' %}
+                            <span class="badge bg-success">{{ item.status }}</span>
+                        {% else %}
+                            <span class="badge bg-secondary">{{ item.status }}</span>
+                        {% endif %}
+                    </td>
+                    <td>{{ item.responsible.full_name if item.responsible else '-' }}</td>
+                    <td class="text-end">
+                        <a href="{{ url_for('compliance.nc_edit', nc_id=item.id) }}" class="btn btn-sm btn-outline-primary" title="Editar">
+                            <i class="bi bi-pencil"></i>
+                        </a>
+                        <form action="{{ url_for('compliance.nc_delete', nc_id=item.id) }}" method="POST" class="d-inline" onsubmit="return confirm('Confirma exclusão?')">
+                            <button type="submit" class="btn btn-sm btn-outline-danger" title="Excluir">
+                                <i class="bi bi-trash"></i>
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% else %}
+<div class="card shadow-sm">
+    <div class="empty-state">
+        <i class="bi bi-x-octagon"></i>
+        <h5>Nenhuma não conformidade encontrada</h5>
+        <p>Registre não conformidades para tratamento</p>
+        <a href="{{ url_for('compliance.nc_create') }}" class="btn btn-info">
+            <i class="bi bi-plus-lg"></i> Registrar NC
+        </a>
+    </div>
+</div>
+{% endif %}
+{% endblock %}

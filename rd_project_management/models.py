@@ -493,6 +493,207 @@ class MeetingMinutes(db.Model):
     project = db.relationship('Project', backref='meeting_minutes')
 
 
+# ============================================================================
+# CENTRAL DE PENDÊNCIAS E CONFORMIDADE
+# ============================================================================
+
+class Risk(db.Model):
+    """Project risks registry."""
+    __tablename__ = 'risks'
+    id = db.Column(db.Integer, primary_key=True)
+    tenant_id = db.Column(db.Integer, db.ForeignKey('tenants.id'), nullable=False)
+    project_id = db.Column(db.Integer, db.ForeignKey('projects.id'), nullable=True)
+    code = db.Column(db.String(50))  # RSK-2024-001
+    title = db.Column(db.String(300), nullable=False)
+    description = db.Column(db.Text)
+    category = db.Column(db.String(100))  # Técnico, Financeiro, Cronograma, Recursos, Externo
+    probability = db.Column(db.Integer, default=3)  # 1-5 scale
+    impact = db.Column(db.Integer, default=3)  # 1-5 scale
+    response_strategy = db.Column(db.String(50))  # Evitar, Mitigar, Transferir, Aceitar
+    status = db.Column(db.String(50), default='Identificado')  # Identificado, Analisado, Em Tratamento, Mitigado, Fechado
+    mitigation_plan = db.Column(db.Text)
+    contingency_plan = db.Column(db.Text)
+    owner_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=True)
+    identified_date = db.Column(db.Date, default=date.today)
+    review_date = db.Column(db.Date)
+    created_by_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+
+    project = db.relationship('Project', backref='risks')
+    owner = db.relationship('User', foreign_keys=[owner_id], backref='owned_risks')
+    created_by = db.relationship('User', foreign_keys=[created_by_id], backref='created_risks')
+
+    @property
+    def risk_score(self):
+        """Calculate risk score based on probability and impact."""
+        return (self.probability or 1) * (self.impact or 1)
+
+    @property
+    def risk_level(self):
+        """Get risk level based on score."""
+        score = self.risk_score
+        if score >= 16:
+            return 'Crítico'
+        elif score >= 9:
+            return 'Alto'
+        elif score >= 4:
+            return 'Médio'
+        return 'Baixo'
+
+
+class PendingItem(db.Model):
+    """Pending items for projects."""
+    __tablename__ = 'pending_items'
+    id = db.Column(db.Integer, primary_key=True)
+    tenant_id = db.Column(db.Integer, db.ForeignKey('tenants.id'), nullable=False)
+    project_id = db.Column(db.Integer, db.ForeignKey('projects.id'), nullable=True)
+    code = db.Column(db.String(50))  # PND-2024-001
+    title = db.Column(db.String(300), nullable=False)
+    description = db.Column(db.Text)
+    category = db.Column(db.String(100))  # Documento, Reunião, Aprovação, Contratação, Outro
+    priority = db.Column(db.String(20), default='Média')  # Baixa, Média, Alta, Crítica
+    status = db.Column(db.String(50), default='Aberta')  # Aberta, Em Andamento, Resolvida, Cancelada
+    due_date = db.Column(db.Date)
+    resolution_date = db.Column(db.Date)
+    responsible_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=True)
+    created_by_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+    resolved_by_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+    resolution_notes = db.Column(db.Text)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+
+    project = db.relationship('Project', backref='pending_items')
+    responsible = db.relationship('User', foreign_keys=[responsible_id], backref='pending_items_responsible')
+    created_by = db.relationship('User', foreign_keys=[created_by_id], backref='created_pending_items')
+    resolved_by = db.relationship('User', foreign_keys=[resolved_by_id], backref='resolved_pending_items')
+
+    @property
+    def is_overdue(self):
+        """Check if item is overdue."""
+        if self.due_date and self.status in ['Aberta', 'Em Andamento']:
+            return self.due_date < date.today()
+        return False
+
+
+class NonConformity(db.Model):
+    """Non-conformity records for projects."""
+    __tablename__ = 'non_conformities'
+    id = db.Column(db.Integer, primary_key=True)
+    tenant_id = db.Column(db.Integer, db.ForeignKey('tenants.id'), nullable=False)
+    project_id = db.Column(db.Integer, db.ForeignKey('projects.id'), nullable=True)
+    code = db.Column(db.String(50))  # NC-2024-001
+    title = db.Column(db.String(300), nullable=False)
+    description = db.Column(db.Text)
+    nc_type = db.Column(db.String(100))  # Processo, Produto, Documentação, Auditoria, Cliente, Regulatório
+    impact = db.Column(db.String(20))  # Baixo, Médio, Alto
+    root_cause = db.Column(db.Text)
+    corrective_plan = db.Column(db.Text)
+    evidence = db.Column(db.Text)
+    status = db.Column(db.String(50), default='Aberta')  # Aberta, Em Análise, Em Tratamento, Verificação, Fechada
+    responsible_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=True)
+    identified_date = db.Column(db.Date, default=date.today)
+    due_date = db.Column(db.Date)
+    closure_date = db.Column(db.Date)
+    created_by_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+
+    project = db.relationship('Project', backref='non_conformities')
+    responsible = db.relationship('User', foreign_keys=[responsible_id], backref='nc_responsible')
+    created_by = db.relationship('User', foreign_keys=[created_by_id], backref='created_non_conformities')
+
+
+class Bug(db.Model):
+    """Bug tracking for software projects."""
+    __tablename__ = 'bugs'
+    id = db.Column(db.Integer, primary_key=True)
+    tenant_id = db.Column(db.Integer, db.ForeignKey('tenants.id'), nullable=False)
+    project_id = db.Column(db.Integer, db.ForeignKey('projects.id'), nullable=True)
+    code = db.Column(db.String(50))  # BUG-2024-001
+    title = db.Column(db.String(300), nullable=False)
+    description = db.Column(db.Text)
+    severity = db.Column(db.String(20))  # Baixa, Média, Alta, Crítica
+    environment = db.Column(db.String(100))  # Desenvolvimento, Homologação, Produção
+    steps_to_reproduce = db.Column(db.Text)
+    expected_behavior = db.Column(db.Text)
+    actual_behavior = db.Column(db.Text)
+    evidence = db.Column(db.Text)  # Screenshots, logs, etc.
+    status = db.Column(db.String(50), default='Aberto')  # Aberto, Em Análise, Em Correção, Teste, Resolvido, Fechado
+    assigned_to_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=True)
+    reported_by_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+    reported_date = db.Column(db.Date, default=date.today)
+    resolved_date = db.Column(db.Date)
+    resolution_notes = db.Column(db.Text)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+
+    project = db.relationship('Project', backref='bugs')
+    assigned_to = db.relationship('User', foreign_keys=[assigned_to_id], backref='assigned_bugs')
+    reported_by = db.relationship('User', foreign_keys=[reported_by_id], backref='reported_bugs')
+
+
+class CorrectiveAction(db.Model):
+    """Corrective actions linked to pending items, bugs, non-conformities, or risks."""
+    __tablename__ = 'corrective_actions'
+    id = db.Column(db.Integer, primary_key=True)
+    tenant_id = db.Column(db.Integer, db.ForeignKey('tenants.id'), nullable=False)
+    project_id = db.Column(db.Integer, db.ForeignKey('projects.id'), nullable=True)
+    code = db.Column(db.String(50))  # AC-2024-001
+    description = db.Column(db.Text, nullable=False)
+    action_type = db.Column(db.String(50), default='Corretiva')  # Corretiva, Preventiva, Melhoria
+
+    # Links to related items (only one should be filled)
+    pending_item_id = db.Column(db.Integer, db.ForeignKey('pending_items.id'), nullable=True)
+    non_conformity_id = db.Column(db.Integer, db.ForeignKey('non_conformities.id'), nullable=True)
+    bug_id = db.Column(db.Integer, db.ForeignKey('bugs.id'), nullable=True)
+    risk_id = db.Column(db.Integer, db.ForeignKey('risks.id'), nullable=True)
+
+    status = db.Column(db.String(50), default='Planejada')  # Planejada, Em Andamento, Concluída, Verificada, Cancelada
+    effectiveness = db.Column(db.String(50))  # Eficaz, Parcialmente Eficaz, Não Eficaz
+    responsible_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=True)
+    due_date = db.Column(db.Date)
+    completion_date = db.Column(db.Date)
+    verification_notes = db.Column(db.Text)
+    created_by_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+
+    project = db.relationship('Project', backref='corrective_actions')
+    responsible = db.relationship('User', foreign_keys=[responsible_id], backref='action_responsible')
+    pending_item = db.relationship('PendingItem', backref='corrective_actions')
+    non_conformity = db.relationship('NonConformity', backref='corrective_actions')
+    bug = db.relationship('Bug', backref='corrective_actions')
+    risk = db.relationship('Risk', backref='corrective_actions')
+    created_by = db.relationship('User', foreign_keys=[created_by_id], backref='created_corrective_actions')
+
+    @property
+    def linked_item_type(self):
+        """Return the type of linked item."""
+        if self.pending_item_id:
+            return 'Pendência'
+        elif self.non_conformity_id:
+            return 'Não Conformidade'
+        elif self.bug_id:
+            return 'Bug'
+        elif self.risk_id:
+            return 'Risco'
+        return None
+
+    @property
+    def linked_item(self):
+        """Return the linked item object."""
+        if self.pending_item_id:
+            return self.pending_item
+        elif self.non_conformity_id:
+            return self.non_conformity
+        elif self.bug_id:
+            return self.bug
+        elif self.risk_id:
+            return self.risk
+        return None
+
+
 # Helper function to get current tenant
 def get_current_tenant_id():
     """Get the current tenant ID from the logged-in user."""

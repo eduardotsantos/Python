@@ -1,0 +1,130 @@
+{% extends "base.html" %}
+{% block title %}Pendências - Gestão P&D{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h4 class="fw-bold mb-0"><i class="bi bi-clock-history text-warning"></i> Pendências</h4>
+    <div>
+        <a href="{{ url_for('compliance.dashboard') }}" class="btn btn-outline-secondary me-2">
+            <i class="bi bi-arrow-left"></i> Voltar
+        </a>
+        <a href="{{ url_for('compliance.pending_create') }}" class="btn btn-warning">
+            <i class="bi bi-plus-lg"></i> Nova Pendência
+        </a>
+    </div>
+</div>
+
+<!-- Filters -->
+<div class="card shadow-sm mb-4">
+    <div class="card-body py-2">
+        <form method="GET" class="row g-2 align-items-center">
+            <div class="col-md-4">
+                <select name="status" class="form-select form-select-sm">
+                    <option value="">Todos os Status</option>
+                    <option value="Aberta" {{ 'selected' if status_filter == 'Aberta' }}>Aberta</option>
+                    <option value="Em Andamento" {{ 'selected' if status_filter == 'Em Andamento' }}>Em Andamento</option>
+                    <option value="Resolvida" {{ 'selected' if status_filter == 'Resolvida' }}>Resolvida</option>
+                    <option value="Cancelada" {{ 'selected' if status_filter == 'Cancelada' }}>Cancelada</option>
+                </select>
+            </div>
+            <div class="col-md-4">
+                <select name="project_id" class="form-select form-select-sm">
+                    <option value="">Todos os Projetos</option>
+                    {% for project in projects %}
+                    <option value="{{ project.id }}" {{ 'selected' if project_filter == project.id|string }}>{{ project.title }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col-md-4 text-end">
+                <button type="submit" class="btn btn-outline-primary btn-sm"><i class="bi bi-filter"></i> Filtrar</button>
+                <a href="{{ url_for('compliance.pending_list') }}" class="btn btn-outline-secondary btn-sm"><i class="bi bi-x"></i> Limpar</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+{% if items %}
+<div class="card shadow-sm">
+    <div class="table-responsive">
+        <table class="table table-hover mb-0">
+            <thead>
+                <tr>
+                    <th>Código</th>
+                    <th>Título</th>
+                    <th>Projeto</th>
+                    <th>Prioridade</th>
+                    <th>Data Limite</th>
+                    <th>Status</th>
+                    <th>Responsável</th>
+                    <th class="text-end">Ações</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in items %}
+                <tr>
+                    <td><strong>{{ item.code }}</strong></td>
+                    <td>{{ item.title }}</td>
+                    <td>{{ item.project.title if item.project else '-' }}</td>
+                    <td>
+                        {% if item.priority == 'Crítica' %}
+                            <span class="badge bg-danger">{{ item.priority }}</span>
+                        {% elif item.priority == 'Alta' %}
+                            <span class="badge bg-warning text-dark">{{ item.priority }}</span>
+                        {% elif item.priority == 'Média' %}
+                            <span class="badge bg-info">{{ item.priority }}</span>
+                        {% else %}
+                            <span class="badge bg-secondary">{{ item.priority }}</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if item.due_date %}
+                            {% if item.due_date < now and item.status not in ['Resolvida', 'Cancelada'] %}
+                                <span class="text-danger fw-bold">{{ item.due_date.strftime('%d/%m/%Y') }}</span>
+                            {% else %}
+                                {{ item.due_date.strftime('%d/%m/%Y') }}
+                            {% endif %}
+                        {% else %}
+                            -
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if item.status == 'Aberta' %}
+                            <span class="badge bg-info">{{ item.status }}</span>
+                        {% elif item.status == 'Em Andamento' %}
+                            <span class="badge bg-warning text-dark">{{ item.status }}</span>
+                        {% elif item.status == 'Resolvida' %}
+                            <span class="badge bg-success">{{ item.status }}</span>
+                        {% else %}
+                            <span class="badge bg-secondary">{{ item.status }}</span>
+                        {% endif %}
+                    </td>
+                    <td>{{ item.responsible.full_name if item.responsible else '-' }}</td>
+                    <td class="text-end">
+                        <a href="{{ url_for('compliance.pending_edit', item_id=item.id) }}" class="btn btn-sm btn-outline-primary" title="Editar">
+                            <i class="bi bi-pencil"></i>
+                        </a>
+                        <form action="{{ url_for('compliance.pending_delete', item_id=item.id) }}" method="POST" class="d-inline" onsubmit="return confirm('Confirma exclusão?')">
+                            <button type="submit" class="btn btn-sm btn-outline-danger" title="Excluir">
+                                <i class="bi bi-trash"></i>
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% else %}
+<div class="card shadow-sm">
+    <div class="empty-state">
+        <i class="bi bi-clock-history"></i>
+        <h5>Nenhuma pendência encontrada</h5>
+        <p>Registre pendências para acompanhamento</p>
+        <a href="{{ url_for('compliance.pending_create') }}" class="btn btn-warning">
+            <i class="bi bi-plus-lg"></i> Registrar Pendência
+        </a>
+    </div>
+</div>
+{% endif %}
+{% endblock %}

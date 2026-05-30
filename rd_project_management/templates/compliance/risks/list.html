@@ -1,0 +1,140 @@
+{% extends "base.html" %}
+{% block title %}Riscos - Gestão P&D{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h4 class="fw-bold mb-0"><i class="bi bi-exclamation-triangle text-danger"></i> Registro de Riscos</h4>
+    <div>
+        <a href="{{ url_for('compliance.dashboard') }}" class="btn btn-outline-secondary me-2">
+            <i class="bi bi-arrow-left"></i> Voltar
+        </a>
+        <a href="{{ url_for('compliance.risk_create') }}" class="btn btn-danger">
+            <i class="bi bi-plus-lg"></i> Novo Risco
+        </a>
+    </div>
+</div>
+
+<!-- Filters -->
+<div class="card shadow-sm mb-4">
+    <div class="card-body py-2">
+        <form method="GET" class="row g-2 align-items-center">
+            <div class="col-md-4">
+                <select name="status" class="form-select form-select-sm">
+                    <option value="">Todos os Status</option>
+                    <option value="Identificado" {{ 'selected' if status_filter == 'Identificado' }}>Identificado</option>
+                    <option value="Analisado" {{ 'selected' if status_filter == 'Analisado' }}>Analisado</option>
+                    <option value="Em Tratamento" {{ 'selected' if status_filter == 'Em Tratamento' }}>Em Tratamento</option>
+                    <option value="Mitigado" {{ 'selected' if status_filter == 'Mitigado' }}>Mitigado</option>
+                    <option value="Fechado" {{ 'selected' if status_filter == 'Fechado' }}>Fechado</option>
+                </select>
+            </div>
+            <div class="col-md-4">
+                <select name="project_id" class="form-select form-select-sm">
+                    <option value="">Todos os Projetos</option>
+                    {% for project in projects %}
+                    <option value="{{ project.id }}" {{ 'selected' if project_filter == project.id|string }}>{{ project.title }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col-md-4 text-end">
+                <button type="submit" class="btn btn-outline-primary btn-sm"><i class="bi bi-filter"></i> Filtrar</button>
+                <a href="{{ url_for('compliance.risks_list') }}" class="btn btn-outline-secondary btn-sm"><i class="bi bi-x"></i> Limpar</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+{% if risks %}
+<div class="card shadow-sm">
+    <div class="table-responsive">
+        <table class="table table-hover mb-0">
+            <thead>
+                <tr>
+                    <th>Código</th>
+                    <th>Título</th>
+                    <th>Projeto</th>
+                    <th>Categoria</th>
+                    <th>Probabilidade</th>
+                    <th>Impacto</th>
+                    <th>Score</th>
+                    <th>Status</th>
+                    <th>Responsável</th>
+                    <th class="text-end">Ações</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for risk in risks %}
+                <tr>
+                    <td><strong>{{ risk.code }}</strong></td>
+                    <td>{{ risk.title }}</td>
+                    <td>{{ risk.project.title if risk.project else '-' }}</td>
+                    <td><span class="badge bg-secondary">{{ risk.category }}</span></td>
+                    <td>
+                        {% if risk.probability >= 4 %}
+                            <span class="badge bg-danger">{{ risk.probability }}</span>
+                        {% elif risk.probability >= 3 %}
+                            <span class="badge bg-warning text-dark">{{ risk.probability }}</span>
+                        {% else %}
+                            <span class="badge bg-success">{{ risk.probability }}</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if risk.impact >= 4 %}
+                            <span class="badge bg-danger">{{ risk.impact }}</span>
+                        {% elif risk.impact >= 3 %}
+                            <span class="badge bg-warning text-dark">{{ risk.impact }}</span>
+                        {% else %}
+                            <span class="badge bg-success">{{ risk.impact }}</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% set score = risk.probability * risk.impact %}
+                        {% if score >= 16 %}
+                            <span class="badge bg-danger">{{ score }}</span>
+                        {% elif score >= 9 %}
+                            <span class="badge bg-warning text-dark">{{ score }}</span>
+                        {% else %}
+                            <span class="badge bg-success">{{ score }}</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if risk.status == 'Identificado' %}
+                            <span class="badge bg-info">{{ risk.status }}</span>
+                        {% elif risk.status == 'Em Tratamento' %}
+                            <span class="badge bg-warning text-dark">{{ risk.status }}</span>
+                        {% elif risk.status == 'Mitigado' or risk.status == 'Fechado' %}
+                            <span class="badge bg-success">{{ risk.status }}</span>
+                        {% else %}
+                            <span class="badge bg-secondary">{{ risk.status }}</span>
+                        {% endif %}
+                    </td>
+                    <td>{{ risk.owner.full_name if risk.owner else '-' }}</td>
+                    <td class="text-end">
+                        <a href="{{ url_for('compliance.risk_edit', risk_id=risk.id) }}" class="btn btn-sm btn-outline-primary" title="Editar">
+                            <i class="bi bi-pencil"></i>
+                        </a>
+                        <form action="{{ url_for('compliance.risk_delete', risk_id=risk.id) }}" method="POST" class="d-inline" onsubmit="return confirm('Confirma exclusão?')">
+                            <button type="submit" class="btn btn-sm btn-outline-danger" title="Excluir">
+                                <i class="bi bi-trash"></i>
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% else %}
+<div class="card shadow-sm">
+    <div class="empty-state">
+        <i class="bi bi-exclamation-triangle"></i>
+        <h5>Nenhum risco encontrado</h5>
+        <p>Registre riscos para gerenciá-los proativamente</p>
+        <a href="{{ url_for('compliance.risk_create') }}" class="btn btn-danger">
+            <i class="bi bi-plus-lg"></i> Registrar Risco
+        </a>
+    </div>
+</div>
+{% endif %}
+{% endblock %}
