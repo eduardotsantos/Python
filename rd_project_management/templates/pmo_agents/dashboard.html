@@ -1,0 +1,135 @@
+{% extends "base.html" %}
+{% block title %}{{ page_title }} - Gestão P&D{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h4 class="fw-bold mb-0">
+        <i class="bi bi-robot text-primary"></i> Orion Autônomos PMO
+    </h4>
+    <div>
+        <a href="{{ url_for('pmo_agents.daily_briefing') }}" class="btn btn-primary">
+            <i class="bi bi-sun"></i> Briefing Diário
+        </a>
+        <a href="{{ url_for('pmo_agents.action_center') }}" class="btn btn-success">
+            <i class="bi bi-lightning"></i> Central de Ações
+        </a>
+    </div>
+</div>
+
+<!-- Quick Actions -->
+<div class="row g-3 mb-4">
+    <div class="col-md-4">
+        <div class="card bg-primary text-white shadow">
+            <div class="card-body">
+                <h5><i class="bi bi-sun"></i> Daily Executive AI</h5>
+                <p class="small mb-2">Análise automática todas as manhãs com recomendações priorizadas.</p>
+                <a href="{{ url_for('pmo_agents.daily_briefing') }}" class="btn btn-light btn-sm">
+                    <i class="bi bi-play-fill"></i> Executar Agora
+                </a>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card bg-success text-white shadow">
+            <div class="card-body">
+                <h5><i class="bi bi-file-earmark-text"></i> Leitor de Atas</h5>
+                <p class="small mb-2">Extraia pendências, riscos e ações automaticamente de atas.</p>
+                <a href="{{ url_for('pmo_agents.minutes_parser') }}" class="btn btn-light btn-sm">
+                    <i class="bi bi-upload"></i> Analisar Ata
+                </a>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card bg-info text-white shadow">
+            <div class="card-body">
+                <h5><i class="bi bi-lightning"></i> Execução Autônoma</h5>
+                <p class="small mb-2">O Orion não apenas recomenda - ele executa ações aprovadas.</p>
+                <a href="{{ url_for('pmo_agents.action_center') }}" class="btn btn-light btn-sm">
+                    <i class="bi bi-check2-all"></i> Ver Ações
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Agents Grid -->
+<h5 class="fw-bold mb-3"><i class="bi bi-grid-3x3-gap"></i> Equipe de Agentes IA</h5>
+
+<div class="row g-3">
+    {% for agent in agents %}
+    <div class="col-md-4 col-lg-3">
+        <div class="card h-100 shadow-sm agent-card">
+            <div class="card-body">
+                <div class="d-flex align-items-center mb-2">
+                    <div class="agent-icon bg-{{ agent.color }} text-white rounded-circle p-2 me-2">
+                        <i class="bi {{ agent.icon }}"></i>
+                    </div>
+                    <h6 class="mb-0">{{ agent.display_name }}</h6>
+                </div>
+                <p class="text-muted small mb-3">{{ agent.description }}</p>
+                <a href="{{ url_for('pmo_agents.run_agent', agent_name=agent.name) }}" class="btn btn-outline-{{ agent.color }} btn-sm w-100">
+                    <i class="bi bi-play-fill"></i> Executar
+                </a>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+
+<!-- How it Works -->
+<div class="card mt-4 shadow-sm">
+    <div class="card-header">
+        <h6 class="mb-0"><i class="bi bi-info-circle"></i> Como Funciona o PMO Autônomo</h6>
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-md-3 text-center mb-3">
+                <div class="rounded-circle bg-primary bg-opacity-10 p-3 d-inline-block mb-2">
+                    <i class="bi bi-clock text-primary" style="font-size: 2rem;"></i>
+                </div>
+                <h6>1. Análise Diária</h6>
+                <p class="small text-muted">Todos os dias às 7h, os agentes analisam todo o portfolio automaticamente.</p>
+            </div>
+            <div class="col-md-3 text-center mb-3">
+                <div class="rounded-circle bg-success bg-opacity-10 p-3 d-inline-block mb-2">
+                    <i class="bi bi-search text-success" style="font-size: 2rem;"></i>
+                </div>
+                <h6>2. Identificação</h6>
+                <p class="small text-muted">Identificam problemas, riscos, atrasos e oportunidades de melhoria.</p>
+            </div>
+            <div class="col-md-3 text-center mb-3">
+                <div class="rounded-circle bg-warning bg-opacity-10 p-3 d-inline-block mb-2">
+                    <i class="bi bi-lightbulb text-warning" style="font-size: 2rem;"></i>
+                </div>
+                <h6>3. Recomendação</h6>
+                <p class="small text-muted">Geram recomendações inteligentes baseadas em análise histórica.</p>
+            </div>
+            <div class="col-md-3 text-center mb-3">
+                <div class="rounded-circle bg-info bg-opacity-10 p-3 d-inline-block mb-2">
+                    <i class="bi bi-lightning text-info" style="font-size: 2rem;"></i>
+                </div>
+                <h6>4. Execução</h6>
+                <p class="small text-muted">Com sua aprovação, executam ações automaticamente.</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.agent-card {
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+.agent-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15) !important;
+}
+.agent-icon {
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+</style>
+{% endblock %}

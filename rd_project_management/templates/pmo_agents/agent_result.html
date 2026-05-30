@@ -1,0 +1,193 @@
+{% extends "base.html" %}
+{% block title %}{{ page_title }} - Gestão P&D{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h4 class="fw-bold mb-0">
+        <i class="bi {{ agent.icon }} text-{{ agent.color }}"></i> {{ agent.display_name }}
+    </h4>
+    <a href="{{ url_for('pmo_agents.dashboard') }}" class="btn btn-outline-secondary">
+        <i class="bi bi-arrow-left"></i> Voltar
+    </a>
+</div>
+
+<!-- Status Banner -->
+<div class="alert
+    {% if result.health_status and result.health_status.value == 'critical' %}alert-danger
+    {% elif result.health_status and result.health_status.value == 'attention' %}alert-warning
+    {% else %}alert-success{% endif %} mb-4">
+    <div class="d-flex align-items-center justify-content-between">
+        <div class="d-flex align-items-center">
+            <div class="me-3" style="font-size: 2rem;">
+                {% if result.health_status and result.health_status.value == 'critical' %}🔴
+                {% elif result.health_status and result.health_status.value == 'attention' %}🟡
+                {% else %}🟢{% endif %}
+            </div>
+            <div>
+                <h5 class="mb-1">{{ result.summary }}</h5>
+                <small>Executado em {{ result.execution_time | round(2) }}s</small>
+            </div>
+        </div>
+        <div>
+            <span class="badge bg-info">{{ result.insights | length }} insights</span>
+            <span class="badge bg-primary">{{ result.actions | length }} ações</span>
+        </div>
+    </div>
+</div>
+
+<div class="row g-4">
+    <!-- Insights Column -->
+    <div class="col-lg-7">
+        <div class="card shadow-sm">
+            <div class="card-header">
+                <h5 class="mb-0"><i class="bi bi-lightbulb"></i> Insights ({{ result.insights | length }})</h5>
+            </div>
+            <div class="card-body p-0">
+                {% if result.insights %}
+                <div class="list-group list-group-flush">
+                    {% for insight in result.insights %}
+                    <div class="list-group-item">
+                        <div class="d-flex w-100 justify-content-between">
+                            <h6 class="mb-1">
+                                {% if insight.severity.value == 'critical' %}🔴
+                                {% elif insight.severity.value == 'high' %}🟠
+                                {% elif insight.severity.value == 'medium' %}🟡
+                                {% else %}🔵{% endif %}
+                                {{ insight.title }}
+                            </h6>
+                            <span class="badge bg-{{ 'danger' if insight.severity.value == 'critical' else 'warning' if insight.severity.value == 'high' else 'info' }}">
+                                {{ insight.severity.value }}
+                            </span>
+                        </div>
+                        <p class="mb-1 text-muted">{{ insight.description }}</p>
+                        {% if insight.project_name %}
+                        <small><span class="badge bg-secondary">{{ insight.project_name }}</span></small>
+                        {% endif %}
+                        {% if insight.recommendation %}
+                        <div class="mt-2 p-2 bg-light rounded">
+                            <small><i class="bi bi-lightbulb text-warning"></i> {{ insight.recommendation }}</small>
+                        </div>
+                        {% endif %}
+                        {% if insight.metric_value %}
+                        <div class="mt-1">
+                            <small class="text-muted">
+                                <i class="bi bi-graph-up"></i> {{ insight.metric_name }}: <strong>{{ insight.metric_value }}</strong>
+                                {% if insight.metric_threshold %} (limite: {{ insight.metric_threshold }}){% endif %}
+                            </small>
+                        </div>
+                        {% endif %}
+                    </div>
+                    {% endfor %}
+                </div>
+                {% else %}
+                <div class="text-center py-4 text-muted">
+                    <i class="bi bi-check-circle" style="font-size: 3rem;"></i>
+                    <p class="mt-2">Nenhum insight identificado. Tudo sob controle!</p>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <!-- Actions Column -->
+    <div class="col-lg-5">
+        <div class="card shadow-sm">
+            <div class="card-header bg-success text-white">
+                <h5 class="mb-0"><i class="bi bi-lightning"></i> Ações Sugeridas ({{ result.actions | length }})</h5>
+            </div>
+            <div class="card-body p-0">
+                {% if result.actions %}
+                <div class="list-group list-group-flush">
+                    {% for action in result.actions %}
+                    <div class="list-group-item">
+                        <h6 class="mb-1">{{ action.title }}</h6>
+                        <p class="mb-2 text-muted small">{{ action.description }}</p>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <span class="badge bg-{{ 'danger' if action.priority.value == 'critical' else 'warning' if action.priority.value == 'high' else 'info' }}">
+                                {{ action.priority.value }}
+                            </span>
+                            <div>
+                                <button class="btn btn-success btn-sm execute-action"
+                                        data-action='{{ action.to_dict() | tojson }}'>
+                                    <i class="bi bi-check-lg"></i> Executar
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% else %}
+                <div class="text-center py-4 text-muted">
+                    <i class="bi bi-emoji-smile" style="font-size: 3rem;"></i>
+                    <p class="mt-2">Nenhuma ação necessária no momento.</p>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Metrics Card -->
+        {% if result.metrics %}
+        <div class="card shadow-sm mt-4">
+            <div class="card-header">
+                <h6 class="mb-0"><i class="bi bi-bar-chart"></i> Métricas</h6>
+            </div>
+            <div class="card-body">
+                <dl class="row mb-0">
+                    {% for key, value in result.metrics.items() if value is not mapping %}
+                    <dt class="col-sm-6">{{ key | replace('_', ' ') | title }}</dt>
+                    <dd class="col-sm-6">
+                        {% if value is number %}
+                            {{ "%.2f" | format(value) if value != value | int else value }}
+                        {% else %}
+                            {{ value }}
+                        {% endif %}
+                    </dd>
+                    {% endfor %}
+                </dl>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+{% if result.errors %}
+<div class="alert alert-danger mt-4">
+    <h6><i class="bi bi-exclamation-triangle"></i> Erros durante execução</h6>
+    <ul class="mb-0">
+        {% for error in result.errors %}
+        <li>{{ error }}</li>
+        {% endfor %}
+    </ul>
+</div>
+{% endif %}
+
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.querySelectorAll('.execute-action').forEach(btn => {
+    btn.addEventListener('click', function() {
+        const action = JSON.parse(this.dataset.action);
+
+        if (confirm(`Executar: ${action.title}?`)) {
+            fetch('/pmo/api/execute-action', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify(action)
+            })
+            .then(r => r.json())
+            .then(data => {
+                if (data.success) {
+                    alert('Ação executada com sucesso!');
+                    this.closest('.list-group-item').classList.add('bg-light');
+                    this.disabled = true;
+                    this.innerHTML = '<i class="bi bi-check-all"></i> Executado';
+                } else {
+                    alert('Erro: ' + (data.error || 'Falha'));
+                }
+            });
+        }
+    });
+});
+</script>
+{% endblock %}

@@ -116,6 +116,15 @@ def create_app():
     except ImportError:
         pass
 
+    # Optional PMO Agents blueprint (Orion Autônomos PMO)
+    has_pmo_agents = False
+    try:
+        from routes.pmo_agents import pmo_agents_bp
+        app.register_blueprint(pmo_agents_bp)
+        has_pmo_agents = True
+    except ImportError as e:
+        logging.warning(f"PMO Agents module not loaded: {e}")
+
     # Before request - set current tenant
     @app.before_request
     def set_tenant_context():
@@ -133,7 +142,8 @@ def create_app():
             'has_portfolio_module': has_portfolio,
             'has_audit_module': has_audit,
             'has_agile_module': has_agile,
-            'has_compliance_module': has_compliance
+            'has_compliance_module': has_compliance,
+            'has_pmo_agents_module': has_pmo_agents
         }
 
     # Root redirect

@@ -1,0 +1,260 @@
+{% extends "base.html" %}
+{% block title %}{{ page_title }} - Gestão P&D{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h4 class="fw-bold mb-0">
+        <i class="bi bi-sun text-warning"></i> Briefing Executivo Diário
+    </h4>
+    <div>
+        <a href="{{ url_for('pmo_agents.dashboard') }}" class="btn btn-outline-secondary">
+            <i class="bi bi-arrow-left"></i> Voltar
+        </a>
+        <a href="{{ url_for('pmo_agents.action_center') }}" class="btn btn-success">
+            <i class="bi bi-lightning"></i> Central de Ações
+        </a>
+    </div>
+</div>
+
+<!-- Overall Status Banner -->
+<div class="alert
+    {% if briefing.overall_status.value == 'critical' %}alert-danger
+    {% elif briefing.overall_status.value == 'attention' %}alert-warning
+    {% else %}alert-success{% endif %} mb-4">
+    <div class="d-flex align-items-center">
+        <div class="me-3" style="font-size: 2rem;">
+            {% if briefing.overall_status.value == 'critical' %}🔴
+            {% elif briefing.overall_status.value == 'attention' %}🟡
+            {% else %}🟢{% endif %}
+        </div>
+        <div>
+            <h5 class="mb-1">
+                Status Geral: {{ briefing.overall_status.value | upper }}
+            </h5>
+            <p class="mb-0">
+                Análise realizada em {{ briefing.generated_at.strftime('%d/%m/%Y às %H:%M') }}
+            </p>
+        </div>
+    </div>
+</div>
+
+<div class="row g-4">
+    <!-- Left Column - Summary -->
+    <div class="col-lg-8">
+        <!-- Executive Summary -->
+        <div class="card shadow-sm mb-4">
+            <div class="card-header">
+                <h5 class="mb-0"><i class="bi bi-file-text"></i> Resumo Executivo</h5>
+            </div>
+            <div class="card-body">
+                <pre class="mb-0" style="white-space: pre-wrap; font-family: inherit;">{{ briefing.summary }}</pre>
+            </div>
+        </div>
+
+        <!-- Priority Items -->
+        {% if briefing.priority_items %}
+        <div class="card shadow-sm mb-4">
+            <div class="card-header bg-danger text-white">
+                <h5 class="mb-0"><i class="bi bi-exclamation-triangle"></i> Prioridades do Dia ({{ briefing.priority_items | length }})</h5>
+            </div>
+            <div class="card-body p-0">
+                <div class="list-group list-group-flush">
+                    {% for item in briefing.priority_items %}
+                    <div class="list-group-item">
+                        <div class="d-flex w-100 justify-content-between align-items-start">
+                            <div>
+                                <h6 class="mb-1">
+                                    {% if item.severity == 'critical' %}🔴
+                                    {% elif item.severity == 'high' %}🟠
+                                    {% else %}🟡{% endif %}
+                                    {{ item.title }}
+                                </h6>
+                                <p class="mb-1 text-muted small">{{ item.description }}</p>
+                                {% if item.project_name %}
+                                <span class="badge bg-secondary">{{ item.project_name }}</span>
+                                {% endif %}
+                            </div>
+                            <span class="badge bg-{{ 'danger' if item.severity == 'critical' else 'warning' if item.severity == 'high' else 'info' }}">
+                                {{ item.severity | upper }}
+                            </span>
+                        </div>
+                        {% if item.recommendation %}
+                        <div class="mt-2 p-2 bg-light rounded">
+                            <small><i class="bi bi-lightbulb text-warning"></i> <strong>Recomendação:</strong> {{ item.recommendation }}</small>
+                        </div>
+                        {% endif %}
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+        {% endif %}
+
+        <!-- Agent Results Summary -->
+        <div class="card shadow-sm">
+            <div class="card-header">
+                <h5 class="mb-0"><i class="bi bi-robot"></i> Resumo por Agente</h5>
+            </div>
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table class="table table-hover mb-0">
+                        <thead>
+                            <tr>
+                                <th>Agente</th>
+                                <th>Status</th>
+                                <th>Insights</th>
+                                <th>Ações</th>
+                                <th>Resumo</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for result in briefing.agent_results %}
+                            <tr>
+                                <td>
+                                    <strong>{{ result.agent_name | replace('_', ' ') | title }}</strong>
+                                </td>
+                                <td>
+                                    {% if result.health_status %}
+                                        {% if result.health_status.value == 'critical' %}
+                                            <span class="badge bg-danger">🔴 Crítico</span>
+                                        {% elif result.health_status.value == 'attention' %}
+                                            <span class="badge bg-warning text-dark">🟡 Atenção</span>
+                                        {% else %}
+                                            <span class="badge bg-success">🟢 Saudável</span>
+                                        {% endif %}
+                                    {% else %}
+                                        <span class="badge bg-secondary">-</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    <span class="badge bg-info">{{ result.insights | length }}</span>
+                                    {% if result.critical_count > 0 %}
+                                    <span class="badge bg-danger">{{ result.critical_count }} críticos</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    <span class="badge bg-primary">{{ result.actions | length }}</span>
+                                </td>
+                                <td class="small">{{ result.summary[:100] }}{% if result.summary | length > 100 %}...{% endif %}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Right Column - Metrics & Actions -->
+    <div class="col-lg-4">
+        <!-- Metrics -->
+        <div class="card shadow-sm mb-4">
+            <div class="card-header">
+                <h6 class="mb-0"><i class="bi bi-bar-chart"></i> Métricas</h6>
+            </div>
+            <div class="card-body">
+                <div class="row g-2">
+                    <div class="col-6">
+                        <div class="text-center p-2 bg-light rounded">
+                            <h4 class="mb-0 text-success">{{ briefing.metrics.agents_healthy }}</h4>
+                            <small class="text-muted">Saudáveis</small>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="text-center p-2 bg-light rounded">
+                            <h4 class="mb-0 text-warning">{{ briefing.metrics.agents_attention }}</h4>
+                            <small class="text-muted">Atenção</small>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="text-center p-2 bg-light rounded">
+                            <h4 class="mb-0 text-danger">{{ briefing.metrics.agents_critical }}</h4>
+                            <small class="text-muted">Críticos</small>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="text-center p-2 bg-light rounded">
+                            <h4 class="mb-0 text-info">{{ briefing.metrics.total_insights }}</h4>
+                            <small class="text-muted">Insights</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Recommended Actions -->
+        {% if briefing.recommended_actions %}
+        <div class="card shadow-sm">
+            <div class="card-header bg-success text-white">
+                <h6 class="mb-0"><i class="bi bi-lightning"></i> Ações Recomendadas</h6>
+            </div>
+            <div class="card-body p-0">
+                <div class="list-group list-group-flush">
+                    {% for action in briefing.recommended_actions[:5] %}
+                    <div class="list-group-item">
+                        <div class="d-flex justify-content-between align-items-start">
+                            <div>
+                                <h6 class="mb-1 small">{{ action.title }}</h6>
+                                <p class="mb-1 text-muted small">{{ action.description[:80] }}...</p>
+                            </div>
+                        </div>
+                        <div class="mt-2">
+                            <button class="btn btn-success btn-sm execute-action"
+                                    data-action-type="{{ action.action_type.value }}"
+                                    data-title="{{ action.title }}"
+                                    data-description="{{ action.description }}">
+                                <i class="bi bi-check-lg"></i> Executar
+                            </button>
+                            <button class="btn btn-outline-secondary btn-sm">
+                                <i class="bi bi-x"></i> Ignorar
+                            </button>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% if briefing.recommended_actions | length > 5 %}
+                <div class="card-footer text-center">
+                    <a href="{{ url_for('pmo_agents.action_center') }}" class="btn btn-link">
+                        Ver todas as {{ briefing.recommended_actions | length }} ações
+                    </a>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.querySelectorAll('.execute-action').forEach(btn => {
+    btn.addEventListener('click', function() {
+        const actionType = this.dataset.actionType;
+        const title = this.dataset.title;
+
+        if (confirm(`Executar ação: ${title}?`)) {
+            fetch('/pmo/api/execute-action', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({
+                    action_type: actionType,
+                    title: title,
+                    description: this.dataset.description
+                })
+            })
+            .then(r => r.json())
+            .then(data => {
+                if (data.success) {
+                    alert('Ação executada com sucesso!');
+                    this.closest('.list-group-item').remove();
+                } else {
+                    alert('Erro: ' + (data.error || 'Falha na execução'));
+                }
+            });
+        }
+    });
+});
+</script>
+{% endblock %}

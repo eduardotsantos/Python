@@ -53,6 +53,13 @@
                         </a>
                     </li>
                     {% endif %}
+                    {% if has_pmo_agents_module %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('pmo_agents.dashboard') }}">
+                            <i class="bi bi-robot"></i> PMO IA
+                        </a>
+                    </li>
+                    {% endif %}
                     {% if current_user.role in ['admin', 'manager'] or is_superadmin %}
                     <li class="nav-item">
                         <a class="nav-link" href="{{ url_for('users.list_users') }}">
