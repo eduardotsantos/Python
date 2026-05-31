@@ -1,0 +1,240 @@
+================================================================================
+                    PACOTE DE DEPLOY - ORION P&D v2.0
+                    Central de Conformidade + PMO IA
+                    WINDOWS SERVER
+================================================================================
+
+NOVOS MODULOS
+-------------
+1. Central de Pendencias e Conformidade (/compliance)
+   - Riscos, Pendencias, Nao Conformidades, Bugs, Acoes Corretivas
+
+2. Orion Autonomos PMO (/pmo)
+   - 11 Agentes IA para gestao autonoma de projetos
+   - Daily Executive AI (briefing diario)
+   - Leitor de Atas com extracao automatica
+
+
+PASSO A PASSO PARA DEPLOY (WINDOWS)
+====================================
+
+1. BACKUP (IMPORTANTE!)
+------------------------
+Abra o Prompt de Comando como Administrador:
+
+    xcopy C:\inetpub\wwwroot\rd_project_management C:\backups\orion_backup_%date:~-4,4%%date:~-7,2%%date:~-10,2% /E /I
+
+
+2. EXTRAIR O PACOTE
+--------------------
+Copie o arquivo orion_pd_v2_deploy.tar.gz para o servidor.
+
+Opcao A - Usando 7-Zip (recomendado):
+    - Clique direito no arquivo > 7-Zip > Extrair aqui
+
+Opcao B - Usando PowerShell:
+    tar -xzvf orion_pd_v2_deploy.tar.gz
+
+Opcao C - Usando Git Bash:
+    tar -xzvf orion_pd_v2_deploy.tar.gz
+
+
+3. CRIAR DIRETORIOS
+--------------------
+No Prompt de Comando (como Admin):
+
+    cd C:\inetpub\wwwroot\rd_project_management
+
+    mkdir agents
+    mkdir templates\compliance\risks
+    mkdir templates\compliance\pending
+    mkdir templates\compliance\nc
+    mkdir templates\compliance\bugs
+    mkdir templates\compliance\actions
+    mkdir templates\pmo_agents
+
+
+4. COPIAR ARQUIVOS
+-------------------
+Copie os arquivos extraidos para o diretorio da aplicacao:
+
+    xcopy app.py C:\inetpub\wwwroot\rd_project_management\ /Y
+    xcopy models.py C:\inetpub\wwwroot\rd_project_management\ /Y
+    xcopy static\js\i18n.js C:\inetpub\wwwroot\rd_project_management\static\js\ /Y
+    xcopy templates\base.html C:\inetpub\wwwroot\rd_project_management\templates\ /Y
+
+    xcopy agents\* C:\inetpub\wwwroot\rd_project_management\agents\ /E /Y
+    xcopy routes\compliance.py C:\inetpub\wwwroot\rd_project_management\routes\ /Y
+    xcopy routes\pmo_agents.py C:\inetpub\wwwroot\rd_project_management\routes\ /Y
+    xcopy templates\compliance\* C:\inetpub\wwwroot\rd_project_management\templates\compliance\ /E /Y
+    xcopy templates\pmo_agents\* C:\inetpub\wwwroot\rd_project_management\templates\pmo_agents\ /E /Y
+
+
+5. PARAR A APLICACAO
+---------------------
+
+Se estiver usando IIS:
+    - Abra o IIS Manager
+    - Pare o Application Pool do Orion P&D
+
+    OU via comando:
+    %windir%\system32\inetsrv\appcmd stop apppool /apppool.name:"OrionPD"
+
+Se estiver usando servico Windows:
+    net stop OrionPD
+
+Se estiver usando processo Python direto:
+    taskkill /F /IM python.exe
+    (CUIDADO: isso mata TODOS os processos Python)
+
+
+6. EXECUTAR MIGRATION
+----------------------
+    cd C:\inetpub\wwwroot\rd_project_management
+    python deploy\migrate_compliance_pmo.py
+
+Saida esperada:
+    ==================================================
+      MIGRATION - Central de Conformidade + PMO IA
+    ==================================================
+    [OK] Modulos importados com sucesso
+    [1/3] Verificando conexao com banco de dados...
+          Conexao OK
+    [2/3] Criando tabelas (se nao existirem)...
+          ✓ Tabela 'risks' criada
+          ✓ Tabela 'pending_items' criada
+          ✓ Tabela 'non_conformities' criada
+          ✓ Tabela 'bugs' criada
+          ✓ Tabela 'corrective_actions' criada
+    [3/3] Verificando estrutura das tabelas...
+    ==================================================
+      MIGRATION CONCLUIDA COM SUCESSO!
+    ==================================================
+
+
+7. REINICIAR A APLICACAO
+-------------------------
+
+Se estiver usando IIS:
+    %windir%\system32\inetsrv\appcmd start apppool /apppool.name:"OrionPD"
+
+    OU abra o IIS Manager e inicie o Application Pool
+
+Se estiver usando servico Windows:
+    net start OrionPD
+
+Se estiver usando Flask direto:
+    cd C:\inetpub\wwwroot\rd_project_management
+    python app.py
+
+Se estiver usando Waitress (producao):
+    waitress-serve --port=5000 app:create_app
+
+
+8. VERIFICAR
+-------------
+Abra no navegador:
+    http://localhost:5000/compliance  -> Dashboard de Conformidade
+    http://localhost:5000/pmo         -> Dashboard PMO IA
+
+
+SCRIPT AUTOMATIZADO
+====================
+Use o arquivo deploy_windows.bat para automatizar os passos 1-7:
+
+    cd C:\caminho\para\pacote
+    deploy_windows.bat
+
+Ajuste os caminhos no inicio do arquivo .bat conforme necessario.
+
+
+ROLLBACK (EM CASO DE PROBLEMAS)
+================================
+    xcopy C:\backups\orion_backup_YYYYMMDD\* C:\inetpub\wwwroot\rd_project_management\ /E /Y
+
+    Reinicie a aplicacao apos restaurar.
+
+
+CONFIGURACAO DO IIS (SE APLICAVEL)
+===================================
+
+Se estiver configurando pela primeira vez no IIS:
+
+1. Instale o modulo wfastcgi:
+   pip install wfastcgi
+   wfastcgi-enable
+
+2. No IIS Manager:
+   - Adicione um novo Site ou Application
+   - Aponte para C:\inetpub\wwwroot\rd_project_management
+   - Configure o Handler Mapping para FastCGI
+
+3. web.config exemplo:
+   Ja deve existir no projeto, ajuste os caminhos do Python se necessario.
+
+
+LISTA COMPLETA DE ARQUIVOS
+===========================
+
+ARQUIVOS MODIFICADOS:
+    app.py
+    models.py
+    static\js\i18n.js
+    templates\base.html
+
+NOVOS ARQUIVOS - AGENTS:
+    agents\__init__.py
+    agents\base.py
+    agents\orchestrator.py
+    agents\health_agent.py
+    agents\risk_agent.py
+    agents\financial_agent.py
+    agents\schedule_agent.py
+    agents\resource_agent.py
+    agents\quality_agent.py
+    agents\compliance_agent.py
+    agents\communication_agent.py
+    agents\lessons_agent.py
+    agents\advisor_agent.py
+    agents\minutes_reader.py
+
+NOVOS ARQUIVOS - ROUTES:
+    routes\compliance.py
+    routes\pmo_agents.py
+
+NOVOS ARQUIVOS - TEMPLATES:
+    templates\compliance\dashboard.html
+    templates\compliance\risks\list.html
+    templates\compliance\risks\form.html
+    templates\compliance\pending\list.html
+    templates\compliance\pending\form.html
+    templates\compliance\nc\list.html
+    templates\compliance\nc\form.html
+    templates\compliance\bugs\list.html
+    templates\compliance\bugs\form.html
+    templates\compliance\actions\list.html
+    templates\compliance\actions\form.html
+    templates\pmo_agents\dashboard.html
+    templates\pmo_agents\briefing.html
+    templates\pmo_agents\agent_result.html
+    templates\pmo_agents\action_center.html
+    templates\pmo_agents\minutes_parser.html
+
+
+NOVAS TABELAS NO BANCO
+=======================
+    - risks
+    - pending_items
+    - non_conformities
+    - bugs
+    - corrective_actions
+
+
+SUPORTE
+========
+Em caso de problemas, verifique:
+    - Event Viewer do Windows (logs de aplicacao)
+    - Logs do IIS em C:\inetpub\logs\LogFiles
+    - Console do Python se executando diretamente
+
+================================================================================
