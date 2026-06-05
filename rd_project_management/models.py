@@ -27,6 +27,16 @@ class Tenant(db.Model):
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
 
+    # Email configuration per tenant
+    email_enabled = db.Column(db.Boolean, default=False)  # Enable/disable email sending
+    mail_server = db.Column(db.String(200))  # SMTP server (e.g., smtp.gmail.com)
+    mail_port = db.Column(db.Integer, default=587)
+    mail_use_tls = db.Column(db.Boolean, default=True)
+    mail_use_ssl = db.Column(db.Boolean, default=False)
+    mail_username = db.Column(db.String(200))  # SMTP username/email
+    mail_password = db.Column(db.String(200))  # SMTP password (encrypted in production)
+    mail_default_sender = db.Column(db.String(200))  # Default sender name and email
+
     # Relationships
     users = db.relationship('User', backref='tenant', lazy='dynamic')
     projects = db.relationship('Project', backref='tenant', lazy='dynamic')
@@ -64,6 +74,11 @@ class User(UserMixin, db.Model):
     role = db.Column(db.String(50), default='user')  # superadmin, admin, manager, user, viewer
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     active = db.Column(db.Boolean, default=True)
+
+    # Email notification preferences
+    email_notifications = db.Column(db.Boolean, default=True)  # Receive email notifications
+    email_briefing_daily = db.Column(db.Boolean, default=True)  # Receive daily briefing
+    email_alerts = db.Column(db.Boolean, default=True)  # Receive critical alerts
 
     __table_args__ = (
         db.UniqueConstraint('tenant_id', 'username', name='uq_tenant_username'),

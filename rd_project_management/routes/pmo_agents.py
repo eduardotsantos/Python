@@ -308,20 +308,37 @@ def briefing_pdf():
 @tenant_required
 def briefing_email():
     """Send briefing via email to project resources."""
-    from models import Resource, User, Project
+    from models import Resource, User, Project, Tenant
 
     tenant_id = get_current_tenant_id()
+    tenant = Tenant.query.get(tenant_id)
+
+    # Check if email is enabled for this tenant
+    if not tenant or not tenant.email_enabled:
+        flash('Envio de email não está habilitado para este tenant. Configure em Configurações.', 'warning')
+        return redirect(url_for('pmo_agents.daily_briefing'))
+
     project_ids = request.form.getlist('project_ids', type=int)
     additional_emails = request.form.get('additional_emails', '')
 
     orchestrator = get_orchestrator()
     briefing = orchestrator.generate_daily_briefing(current_user.full_name)
 
-    # Collect recipient emails
+    # Collect recipient emails (respecting user preferences)
     recipients = set()
+    skipped_users = []
 
-    # Always add current user
-    if current_user.email:
+    def can_receive_briefing(user):
+        """Check if user can receive briefing emails."""
+        if not user or not user.email:
+            return False
+        # Check user preferences (default to True if field doesn't exist yet)
+        email_notifications = getattr(user, 'email_notifications', True)
+        email_briefing = getattr(user, 'email_briefing_daily', True)
+        return email_notifications and email_briefing
+
+    # Always add current user (if they have notifications enabled)
+    if current_user.email and can_receive_briefing(current_user):
         recipients.add(current_user.email)
 
     if project_ids:
@@ -334,26 +351,29 @@ def briefing_email():
 
             if project:
                 # Add project responsible
-                if project.responsible and project.responsible.email:
+                if project.responsible and can_receive_briefing(project.responsible):
                     recipients.add(project.responsible.email)
+                elif project.responsible and project.responsible.email:
+                    skipped_users.append(project.responsible.full_name)
 
                 # Add all resources - try to match with users
                 for resource in project.resources:
                     if resource.type in ['Humano', 'Pessoa', 'Human']:
-                        # Try to find user with matching name
                         user = User.query.filter(
                             User.tenant_id == tenant_id,
                             User.full_name.ilike(f'%{resource.name}%')
                         ).first()
-                        if user and user.email:
+                        if user and can_receive_briefing(user):
                             recipients.add(user.email)
+                        elif user and user.email:
+                            skipped_users.append(user.full_name)
     else:
         # Send to all active project responsibles
         projects = Project.query.filter_by(tenant_id=tenant_id).filter(
             Project.status.in_(['Em Execução', 'Em Andamento', 'Em execução', 'Planejamento', 'Ativo'])
         ).all()
         for project in projects:
-            if project.responsible and project.responsible.email:
+            if project.responsible and can_receive_briefing(project.responsible):
                 recipients.add(project.responsible.email)
 
         # Also add all active users with manager/admin role
@@ -363,15 +383,21 @@ def briefing_email():
             User.active == True
         ).all()
         for manager in managers:
-            if manager.email:
+            if can_receive_briefing(manager):
                 recipients.add(manager.email)
+            elif manager.email:
+                skipped_users.append(manager.full_name)
 
-    # Add additional emails
+    # Add additional emails (always sent - manual override)
     if additional_emails:
         for email in additional_emails.split(','):
             email = email.strip()
             if '@' in email:
                 recipients.add(email)
+
+    # Log skipped users
+    if skipped_users:
+        logger.info(f"Users with notifications disabled: {skipped_users}")
 
     if not recipients:
         flash('Nenhum destinatário encontrado. Adicione emails manualmente.', 'warning')
@@ -382,7 +408,7 @@ def briefing_email():
 
     # Try to send email
     try:
-        sent_count = send_briefing_email(briefing, list(recipients))
+        sent_count = send_briefing_email(briefing, list(recipients), tenant)
         flash(f'Briefing enviado para {sent_count} destinatário(s).', 'success')
     except Exception as e:
         logger.error(f"Error sending email: {e}")
@@ -658,10 +684,28 @@ def generate_briefing_pdf(briefing):
     return buffer.getvalue()
 
 
-def send_briefing_email(briefing, recipients):
-    """Send briefing email to recipients."""
-    from flask_mail import Message
-    from app import mail
+def send_briefing_email(briefing, recipients, tenant=None):
+    """Send briefing email to recipients using tenant-specific or global config."""
+    from flask_mail import Mail, Message
+    from flask import current_app
+    from app import mail as global_mail
+
+    # Use tenant-specific mail config if available
+    if tenant and tenant.mail_server and tenant.mail_username:
+        # Create a new Mail instance with tenant config
+        current_app.config['MAIL_SERVER'] = tenant.mail_server
+        current_app.config['MAIL_PORT'] = tenant.mail_port or 587
+        current_app.config['MAIL_USE_TLS'] = tenant.mail_use_tls
+        current_app.config['MAIL_USE_SSL'] = tenant.mail_use_ssl
+        current_app.config['MAIL_USERNAME'] = tenant.mail_username
+        current_app.config['MAIL_PASSWORD'] = tenant.mail_password
+        current_app.config['MAIL_DEFAULT_SENDER'] = tenant.mail_default_sender or tenant.mail_username
+
+        mail = Mail(current_app)
+        logger.info(f"Using tenant-specific email config: {tenant.mail_server}")
+    else:
+        mail = global_mail
+        logger.info("Using global email config")
 
     # Generate HTML content
     html_content = generate_briefing_html(briefing)
