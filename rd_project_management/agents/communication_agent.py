@@ -101,11 +101,12 @@ class CommunicationAgent(BaseAgent):
                     project_name=project.title
                 ))
 
+            # Get milestones completed recently (based on end_date within last 7 days)
             recent_milestones = Milestone.query.filter_by(
                 project_id=project.id,
                 status='Concluído'
             ).filter(
-                Milestone.updated_at >= datetime.utcnow() - timedelta(days=7)
+                Milestone.end_date >= today - timedelta(days=7)
             ).all()
 
             if recent_milestones:
@@ -202,7 +203,7 @@ DETALHAMENTO POR PROJETO
    Orçamento: R$ {spent:,.2f} / R$ {budget:,.2f} ({budget_pct:.0f}%)
    Status: {project.status}
 """
-            overdue = [m for m in milestones if m.status != 'Concluído' and m.due_date and m.due_date < today]
+            overdue = [m for m in milestones if m.status != 'Concluído' and m.end_date and m.end_date < today]
             if overdue:
                 report += f"   ⚠️ Atrasos: {len(overdue)} marco(s)\n"
 
@@ -287,7 +288,7 @@ DETALHAMENTO POR PROJETO
         today = date.today()
 
         milestones = Milestone.query.filter_by(project_id=project.id).all()
-        overdue = [m for m in milestones if m.status != 'Concluído' and m.due_date and m.due_date < today]
+        overdue = [m for m in milestones if m.status != 'Concluído' and m.end_date and m.end_date < today]
 
         expenses = Expense.query.filter_by(project_id=project.id).all()
         spent = sum(e.amount for e in expenses)

@@ -6,12 +6,18 @@
     <h4 class="fw-bold mb-0">
         <i class="bi bi-sun text-warning"></i> Briefing Executivo Diário
     </h4>
-    <div>
+    <div class="btn-group">
+        <a href="{{ url_for('pmo_agents.briefing_pdf') }}" class="btn btn-danger" title="Exportar PDF">
+            <i class="bi bi-file-pdf"></i> PDF
+        </a>
+        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#emailModal" title="Enviar por Email">
+            <i class="bi bi-envelope"></i> Email
+        </button>
+        <a href="{{ url_for('pmo_agents.action_center') }}" class="btn btn-success">
+            <i class="bi bi-lightning"></i> Ações
+        </a>
         <a href="{{ url_for('pmo_agents.dashboard') }}" class="btn btn-outline-secondary">
             <i class="bi bi-arrow-left"></i> Voltar
-        </a>
-        <a href="{{ url_for('pmo_agents.action_center') }}" class="btn btn-success">
-            <i class="bi bi-lightning"></i> Central de Ações
         </a>
     </div>
 </div>
@@ -20,40 +26,338 @@
 <div class="alert
     {% if briefing.overall_status.value == 'critical' %}alert-danger
     {% elif briefing.overall_status.value == 'attention' %}alert-warning
-    {% else %}alert-success{% endif %} mb-4">
-    <div class="d-flex align-items-center">
-        <div class="me-3" style="font-size: 2rem;">
-            {% if briefing.overall_status.value == 'critical' %}🔴
-            {% elif briefing.overall_status.value == 'attention' %}🟡
-            {% else %}🟢{% endif %}
+    {% else %}alert-success{% endif %} mb-4 shadow">
+    <div class="d-flex align-items-center justify-content-between">
+        <div class="d-flex align-items-center">
+            <div class="me-3" style="font-size: 3rem;">
+                {% if briefing.overall_status.value == 'critical' %}🔴
+                {% elif briefing.overall_status.value == 'attention' %}🟡
+                {% else %}🟢{% endif %}
+            </div>
+            <div>
+                <h4 class="mb-1 fw-bold">
+                    Status Geral: {{ briefing.overall_status.value | upper }}
+                </h4>
+                <p class="mb-0">
+                    <i class="bi bi-clock"></i> Análise realizada em {{ briefing.generated_at.strftime('%d/%m/%Y às %H:%M') }}
+                </p>
+            </div>
         </div>
-        <div>
-            <h5 class="mb-1">
-                Status Geral: {{ briefing.overall_status.value | upper }}
-            </h5>
-            <p class="mb-0">
-                Análise realizada em {{ briefing.generated_at.strftime('%d/%m/%Y às %H:%M') }}
-            </p>
+        <div class="text-end">
+            <small class="text-muted">{{ briefing.user_name }}</small>
         </div>
     </div>
 </div>
 
-<div class="row g-4">
-    <!-- Left Column - Summary -->
-    <div class="col-lg-8">
-        <!-- Executive Summary -->
-        <div class="card shadow-sm mb-4">
-            <div class="card-header">
-                <h5 class="mb-0"><i class="bi bi-file-text"></i> Resumo Executivo</h5>
+<!-- Metrics Cards Row -->
+<div class="row g-3 mb-4">
+    <div class="col-md-3 col-6">
+        <div class="card border-0 shadow-sm h-100" style="background: linear-gradient(135deg, #27ae60, #2ecc71);">
+            <div class="card-body text-white text-center">
+                <h2 class="mb-0 fw-bold">{{ briefing.metrics.agents_healthy }}</h2>
+                <small>Agentes Saudáveis</small>
             </div>
-            <div class="card-body">
-                <pre class="mb-0" style="white-space: pre-wrap; font-family: inherit;">{{ briefing.summary }}</pre>
+        </div>
+    </div>
+    <div class="col-md-3 col-6">
+        <div class="card border-0 shadow-sm h-100" style="background: linear-gradient(135deg, #f39c12, #f1c40f);">
+            <div class="card-body text-white text-center">
+                <h2 class="mb-0 fw-bold">{{ briefing.metrics.agents_attention }}</h2>
+                <small>Requerem Atenção</small>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3 col-6">
+        <div class="card border-0 shadow-sm h-100" style="background: linear-gradient(135deg, #e74c3c, #c0392b);">
+            <div class="card-body text-white text-center">
+                <h2 class="mb-0 fw-bold">{{ briefing.metrics.agents_critical }}</h2>
+                <small>Críticos</small>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3 col-6">
+        <div class="card border-0 shadow-sm h-100" style="background: linear-gradient(135deg, #3498db, #2980b9);">
+            <div class="card-body text-white text-center">
+                <h2 class="mb-0 fw-bold">{{ briefing.metrics.total_insights }}</h2>
+                <small>Total Insights</small>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Cost Analysis -->
+{% if briefing.cost_analysis %}
+<div class="card shadow-sm mb-4 border-0">
+    <div class="card-header bg-success text-white">
+        <h5 class="mb-0"><i class="bi bi-currency-dollar"></i> Análise Financeira Consolidada</h5>
+    </div>
+    <div class="card-body">
+        <div class="row g-3">
+            <div class="col-md-3 col-6">
+                <div class="border rounded p-3 text-center">
+                    <small class="text-muted d-block">Orçamento Total</small>
+                    <h4 class="mb-0 text-primary">R$ {{ "{:,.2f}".format(briefing.cost_analysis.total_budget) }}</h4>
+                </div>
+            </div>
+            <div class="col-md-3 col-6">
+                <div class="border rounded p-3 text-center">
+                    <small class="text-muted d-block">Realizado</small>
+                    <h4 class="mb-0 text-dark">R$ {{ "{:,.2f}".format(briefing.cost_analysis.total_spent) }}</h4>
+                </div>
+            </div>
+            <div class="col-md-3 col-6">
+                <div class="border rounded p-3 text-center">
+                    <small class="text-muted d-block">Variação</small>
+                    <h4 class="mb-0 {% if briefing.cost_analysis.budget_variance > 10 %}text-danger{% elif briefing.cost_analysis.budget_variance < -10 %}text-success{% else %}text-secondary{% endif %}">
+                        {{ "{:+.1f}".format(briefing.cost_analysis.budget_variance) }}%
+                    </h4>
+                </div>
+            </div>
+            <div class="col-md-3 col-6">
+                <div class="border rounded p-3 text-center">
+                    <small class="text-muted d-block">Gasto do Mês</small>
+                    <h4 class="mb-0 text-info">R$ {{ "{:,.2f}".format(briefing.cost_analysis.month_spent) }}</h4>
+                </div>
             </div>
         </div>
 
+        <div class="row mt-3">
+            <div class="col-md-6">
+                <div class="d-flex justify-content-between small text-muted mb-1">
+                    <span>Mão de Obra</span>
+                    <span>{{ "{:.1f}".format(briefing.cost_analysis.labor_percentage) }}%</span>
+                </div>
+                <div class="progress" style="height: 8px;">
+                    <div class="progress-bar bg-info" style="width: {{ briefing.cost_analysis.labor_percentage }}%"></div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="d-flex justify-content-between small text-muted mb-1">
+                    <span>Despesas</span>
+                    <span>{{ "{:.1f}".format(100 - briefing.cost_analysis.labor_percentage) }}%</span>
+                </div>
+                <div class="progress" style="height: 8px;">
+                    <div class="progress-bar bg-warning" style="width: {{ 100 - briefing.cost_analysis.labor_percentage }}%"></div>
+                </div>
+            </div>
+        </div>
+
+        {% if briefing.cost_analysis.projects_over_budget %}
+        <div class="mt-3">
+            <h6 class="text-danger"><i class="bi bi-exclamation-triangle"></i> Projetos Acima do Orçamento</h6>
+            <div class="table-responsive">
+                <table class="table table-sm table-hover mb-0">
+                    <thead class="table-danger">
+                        <tr>
+                            <th>Projeto</th>
+                            <th class="text-end">Orçamento</th>
+                            <th class="text-end">Realizado</th>
+                            <th class="text-end">Variação</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for proj in briefing.cost_analysis.projects_over_budget %}
+                        <tr>
+                            <td><a href="{{ url_for('projects.detail', id=proj.project_id) }}">{{ proj.code }} - {{ proj.title[:30] }}</a></td>
+                            <td class="text-end">R$ {{ "{:,.0f}".format(proj.budget) }}</td>
+                            <td class="text-end">R$ {{ "{:,.0f}".format(proj.spent) }}</td>
+                            <td class="text-end text-danger fw-bold">{{ "{:+.1f}".format(proj.variance) }}%</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endif %}
+
+<div class="row g-4">
+    <!-- Left Column - Activities -->
+    <div class="col-lg-8">
+        <!-- Upcoming Activities -->
+        {% if briefing.upcoming_activities %}
+        <div class="card shadow-sm mb-4 border-0">
+            <div class="card-header bg-primary text-white">
+                <h5 class="mb-0"><i class="bi bi-calendar-event"></i> Próximas Atividades (14 dias)</h5>
+            </div>
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table class="table table-hover mb-0">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Atividade</th>
+                                <th>Projeto</th>
+                                <th class="text-center">Prazo</th>
+                                <th class="text-center">Progresso</th>
+                                <th class="text-end">Custo Plan.</th>
+                                <th class="text-end">Custo Real.</th>
+                                <th>Responsáveis</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for act in briefing.upcoming_activities %}
+                            <tr>
+                                <td>
+                                    <strong>{{ act.title[:35] }}{% if act.title|length > 35 %}...{% endif %}</strong>
+                                </td>
+                                <td>
+                                    <a href="{{ url_for('projects.detail', id=act.project_id) }}" class="text-decoration-none">
+                                        {{ act.project_name[:20] }}
+                                    </a>
+                                </td>
+                                <td class="text-center">
+                                    <span class="badge {% if -act.days_variance <= 3 %}bg-danger{% elif -act.days_variance <= 7 %}bg-warning text-dark{% else %}bg-info{% endif %}">
+                                        {{ act.end_date.strftime('%d/%m') }}
+                                        <small>({{ -act.days_variance }}d)</small>
+                                    </span>
+                                </td>
+                                <td class="text-center">
+                                    <div class="progress" style="height: 20px; min-width: 60px;">
+                                        <div class="progress-bar {% if act.progress >= 80 %}bg-success{% elif act.progress >= 50 %}bg-info{% else %}bg-warning{% endif %}"
+                                             style="width: {{ act.progress }}%">
+                                            {{ act.progress }}%
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="text-end">R$ {{ "{:,.0f}".format(act.planned_cost) }}</td>
+                                <td class="text-end {% if act.cost_variance > 20 %}text-danger{% endif %}">
+                                    R$ {{ "{:,.0f}".format(act.actual_cost) }}
+                                </td>
+                                <td>
+                                    <small>{{ act.responsibles | join(', ') | truncate(25) }}</small>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+
+        <!-- Past Activities -->
+        {% if briefing.past_activities %}
+        <div class="card shadow-sm mb-4 border-0">
+            <div class="card-header bg-secondary text-white">
+                <h5 class="mb-0"><i class="bi bi-clock-history"></i> Atividades Recentes (7 dias)</h5>
+            </div>
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table class="table table-hover mb-0">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Atividade</th>
+                                <th>Projeto</th>
+                                <th class="text-center">Status</th>
+                                <th class="text-center">Hrs Plan.</th>
+                                <th class="text-center">Hrs Real.</th>
+                                <th class="text-end">Custo Plan.</th>
+                                <th class="text-end">Custo Real.</th>
+                                <th class="text-center">Var.</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for act in briefing.past_activities %}
+                            <tr class="{% if act.is_late %}table-warning{% endif %}">
+                                <td>
+                                    {% if act.is_late %}<i class="bi bi-exclamation-triangle text-warning"></i>{% endif %}
+                                    {{ act.title[:30] }}{% if act.title|length > 30 %}...{% endif %}
+                                </td>
+                                <td>
+                                    <a href="{{ url_for('projects.detail', id=act.project_id) }}" class="text-decoration-none">
+                                        {{ act.project_name[:18] }}
+                                    </a>
+                                </td>
+                                <td class="text-center">
+                                    <span class="badge {% if act.status in ['Concluído', 'Concluída', 'Finalizado'] %}bg-success{% elif act.is_late %}bg-danger{% else %}bg-primary{% endif %}">
+                                        {{ act.status[:12] }}
+                                    </span>
+                                </td>
+                                <td class="text-center">{{ "{:.0f}".format(act.planned_hours) }}h</td>
+                                <td class="text-center {% if act.actual_hours > act.planned_hours * 1.2 %}text-danger{% endif %}">
+                                    {{ "{:.0f}".format(act.actual_hours) }}h
+                                </td>
+                                <td class="text-end">R$ {{ "{:,.0f}".format(act.planned_cost) }}</td>
+                                <td class="text-end">R$ {{ "{:,.0f}".format(act.actual_cost) }}</td>
+                                <td class="text-center">
+                                    <span class="badge {% if act.cost_variance > 10 %}bg-danger{% elif act.cost_variance < -10 %}bg-success{% else %}bg-secondary{% endif %}">
+                                        {{ "{:+.0f}".format(act.cost_variance) }}%
+                                    </span>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+
+        <!-- Project Summaries -->
+        {% if briefing.project_summaries %}
+        <div class="card shadow-sm mb-4 border-0">
+            <div class="card-header bg-purple text-white" style="background: linear-gradient(135deg, #8e44ad, #9b59b6);">
+                <h5 class="mb-0"><i class="bi bi-folder"></i> Resumo por Projeto</h5>
+            </div>
+            <div class="card-body p-0">
+                <div class="accordion accordion-flush" id="projectsAccordion">
+                    {% for proj in briefing.project_summaries %}
+                    <div class="accordion-item">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#proj{{ proj.project_id }}">
+                                <span class="me-2">
+                                    {% if proj.schedule_status == 'on_track' %}🟢
+                                    {% elif proj.schedule_status == 'at_risk' %}🟡
+                                    {% else %}🔴{% endif %}
+                                </span>
+                                <strong>{{ proj.code }}</strong>
+                                <span class="ms-2 text-muted">{{ proj.title[:40] }}</span>
+                                <span class="ms-auto me-3">
+                                    <span class="badge bg-primary">{{ "{:.0f}".format(proj.progress) }}%</span>
+                                    <span class="badge {% if proj.budget_variance > 10 %}bg-danger{% elif proj.budget_variance < -10 %}bg-success{% else %}bg-secondary{% endif %}">
+                                        {{ "{:+.1f}".format(proj.budget_variance) }}%
+                                    </span>
+                                </span>
+                            </button>
+                        </h2>
+                        <div id="proj{{ proj.project_id }}" class="accordion-collapse collapse" data-bs-parent="#projectsAccordion">
+                            <div class="accordion-body">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <p><strong>Status:</strong> {{ proj.status }}</p>
+                                        <p><strong>Orçamento:</strong> R$ {{ "{:,.2f}".format(proj.budget) }}</p>
+                                        <p><strong>Realizado:</strong> R$ {{ "{:,.2f}".format(proj.spent) }}</p>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <p><strong>Marcos:</strong> {{ proj.completed_milestones }}/{{ proj.total_milestones }} concluídos</p>
+                                        <p><strong>Atrasados:</strong> <span class="{% if proj.late_milestones > 0 %}text-danger{% endif %}">{{ proj.late_milestones }}</span></p>
+                                    </div>
+                                </div>
+                                {% if proj.upcoming_milestones %}
+                                <h6 class="mt-2"><i class="bi bi-arrow-right"></i> Próximos Marcos:</h6>
+                                <ul class="list-unstyled small">
+                                    {% for ms in proj.upcoming_milestones %}
+                                    <li>• {{ ms.title }} <span class="text-muted">({{ ms.end_date[:10] }})</span></li>
+                                    {% endfor %}
+                                </ul>
+                                {% endif %}
+                                <a href="{{ url_for('projects.detail', id=proj.project_id) }}" class="btn btn-sm btn-outline-primary">
+                                    Ver Projeto <i class="bi bi-arrow-right"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+        {% endif %}
+
         <!-- Priority Items -->
         {% if briefing.priority_items %}
-        <div class="card shadow-sm mb-4">
+        <div class="card shadow-sm mb-4 border-0">
             <div class="card-header bg-danger text-white">
                 <h5 class="mb-0"><i class="bi bi-exclamation-triangle"></i> Prioridades do Dia ({{ briefing.priority_items | length }})</h5>
             </div>
@@ -89,102 +393,46 @@
             </div>
         </div>
         {% endif %}
-
-        <!-- Agent Results Summary -->
-        <div class="card shadow-sm">
-            <div class="card-header">
-                <h5 class="mb-0"><i class="bi bi-robot"></i> Resumo por Agente</h5>
-            </div>
-            <div class="card-body p-0">
-                <div class="table-responsive">
-                    <table class="table table-hover mb-0">
-                        <thead>
-                            <tr>
-                                <th>Agente</th>
-                                <th>Status</th>
-                                <th>Insights</th>
-                                <th>Ações</th>
-                                <th>Resumo</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% for result in briefing.agent_results %}
-                            <tr>
-                                <td>
-                                    <strong>{{ result.agent_name | replace('_', ' ') | title }}</strong>
-                                </td>
-                                <td>
-                                    {% if result.health_status %}
-                                        {% if result.health_status.value == 'critical' %}
-                                            <span class="badge bg-danger">🔴 Crítico</span>
-                                        {% elif result.health_status.value == 'attention' %}
-                                            <span class="badge bg-warning text-dark">🟡 Atenção</span>
-                                        {% else %}
-                                            <span class="badge bg-success">🟢 Saudável</span>
-                                        {% endif %}
-                                    {% else %}
-                                        <span class="badge bg-secondary">-</span>
-                                    {% endif %}
-                                </td>
-                                <td>
-                                    <span class="badge bg-info">{{ result.insights | length }}</span>
-                                    {% if result.critical_count > 0 %}
-                                    <span class="badge bg-danger">{{ result.critical_count }} críticos</span>
-                                    {% endif %}
-                                </td>
-                                <td>
-                                    <span class="badge bg-primary">{{ result.actions | length }}</span>
-                                </td>
-                                <td class="small">{{ result.summary[:100] }}{% if result.summary | length > 100 %}...{% endif %}</td>
-                            </tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
     </div>
 
-    <!-- Right Column - Metrics & Actions -->
+    <!-- Right Column - Agents & Actions -->
     <div class="col-lg-4">
-        <!-- Metrics -->
-        <div class="card shadow-sm mb-4">
+        <!-- Agent Results Summary -->
+        <div class="card shadow-sm mb-4 border-0">
             <div class="card-header">
-                <h6 class="mb-0"><i class="bi bi-bar-chart"></i> Métricas</h6>
+                <h6 class="mb-0"><i class="bi bi-robot"></i> Status dos Agentes</h6>
             </div>
-            <div class="card-body">
-                <div class="row g-2">
-                    <div class="col-6">
-                        <div class="text-center p-2 bg-light rounded">
-                            <h4 class="mb-0 text-success">{{ briefing.metrics.agents_healthy }}</h4>
-                            <small class="text-muted">Saudáveis</small>
+            <div class="card-body p-0">
+                <div class="list-group list-group-flush">
+                    {% for result in briefing.agent_results %}
+                    <div class="list-group-item d-flex justify-content-between align-items-center">
+                        <div>
+                            <strong class="small">{{ result.agent_name | replace('_', ' ') | title }}</strong>
+                            <br/>
+                            <small class="text-muted">{{ result.summary[:50] }}...</small>
+                        </div>
+                        <div class="text-end">
+                            {% if result.health_status %}
+                                {% if result.health_status.value == 'critical' %}
+                                    <span class="badge bg-danger">🔴</span>
+                                {% elif result.health_status.value == 'attention' %}
+                                    <span class="badge bg-warning text-dark">🟡</span>
+                                {% else %}
+                                    <span class="badge bg-success">🟢</span>
+                                {% endif %}
+                            {% endif %}
+                            <br/>
+                            <small class="text-muted">{{ result.insights | length }} insights</small>
                         </div>
                     </div>
-                    <div class="col-6">
-                        <div class="text-center p-2 bg-light rounded">
-                            <h4 class="mb-0 text-warning">{{ briefing.metrics.agents_attention }}</h4>
-                            <small class="text-muted">Atenção</small>
-                        </div>
-                    </div>
-                    <div class="col-6">
-                        <div class="text-center p-2 bg-light rounded">
-                            <h4 class="mb-0 text-danger">{{ briefing.metrics.agents_critical }}</h4>
-                            <small class="text-muted">Críticos</small>
-                        </div>
-                    </div>
-                    <div class="col-6">
-                        <div class="text-center p-2 bg-light rounded">
-                            <h4 class="mb-0 text-info">{{ briefing.metrics.total_insights }}</h4>
-                            <small class="text-muted">Insights</small>
-                        </div>
-                    </div>
+                    {% endfor %}
                 </div>
             </div>
         </div>
 
         <!-- Recommended Actions -->
         {% if briefing.recommended_actions %}
-        <div class="card shadow-sm">
+        <div class="card shadow-sm border-0">
             <div class="card-header bg-success text-white">
                 <h6 class="mb-0"><i class="bi bi-lightning"></i> Ações Recomendadas</h6>
             </div>
@@ -222,6 +470,52 @@
             </div>
         </div>
         {% endif %}
+    </div>
+</div>
+
+<!-- Email Modal -->
+<div class="modal fade" id="emailModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <form action="{{ url_for('pmo_agents.briefing_email') }}" method="POST">
+                <div class="modal-header bg-primary text-white">
+                    <h5 class="modal-title"><i class="bi bi-envelope"></i> Enviar Briefing por Email</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Selecione os Projetos (destinatários serão os responsáveis)</label>
+                        <div class="row">
+                            {% for proj in briefing.project_summaries %}
+                            <div class="col-md-6">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" name="project_ids" value="{{ proj.project_id }}" id="proj_email_{{ proj.project_id }}">
+                                    <label class="form-check-label" for="proj_email_{{ proj.project_id }}">
+                                        {{ proj.code }} - {{ proj.title[:30] }}
+                                    </label>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                        <small class="text-muted">Deixe em branco para enviar a todos os responsáveis de projetos ativos.</small>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Emails Adicionais</label>
+                        <input type="text" class="form-control" name="additional_emails" placeholder="email1@empresa.com, email2@empresa.com">
+                        <small class="text-muted">Separe múltiplos emails por vírgula.</small>
+                    </div>
+                    <div class="alert alert-info">
+                        <i class="bi bi-info-circle"></i> O email incluirá o briefing em formato HTML e um anexo PDF.
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="bi bi-send"></i> Enviar Briefing
+                    </button>
+                </div>
+            </form>
+        </div>
     </div>
 </div>
 

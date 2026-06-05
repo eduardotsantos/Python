@@ -215,7 +215,7 @@ class ComplianceAgent(BaseAgent):
             for keyword in funding_keywords:
                 if keyword.lower() in project.description.lower():
                     return True
-        if project.funding_agency:
+        if project.funding_source:
             return True
         return False
 

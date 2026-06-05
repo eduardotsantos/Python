@@ -7,7 +7,7 @@ from flask_login import login_required, current_user
 from datetime import datetime, date, timedelta
 from sqlalchemy import func
 
-from models import db, Project, Expense, Milestone, Resource, Timesheet
+from models import db, Project, Expense, Milestone, Resource, Timesheet, Risk, PendingItem, NonConformity, Bug, CorrectiveAction
 from services.tenant_utils import tenant_required, ensure_tenant_access, get_current_tenant_id
 
 status_report_bp = Blueprint('status_report', __name__)
@@ -390,6 +390,75 @@ def get_upcoming_milestones(project, limit=5):
     return milestones
 
 
+def get_compliance_status(project):
+    """Get compliance items status (risks, pending, bugs, NCs, corrective actions)."""
+    today = date.today()
+
+    # Risks
+    risks = Risk.query.filter_by(project_id=project.id).all()
+    open_risks = [r for r in risks if r.status not in ['Fechado', 'Mitigado', 'Encerrado']]
+    critical_risks = [r for r in open_risks if r.probability >= 4 and r.impact >= 4]
+
+    # Pending Items
+    pending = PendingItem.query.filter_by(project_id=project.id).all()
+    open_pending = [p for p in pending if p.status not in ['Concluída', 'Fechada', 'Resolvida']]
+    overdue_pending = [p for p in open_pending if p.due_date and p.due_date < today]
+
+    # Bugs
+    bugs = Bug.query.filter_by(project_id=project.id).all()
+    open_bugs = [b for b in bugs if b.status not in ['Fechado', 'Resolvido', 'Encerrado']]
+    critical_bugs = [b for b in open_bugs if b.severity in ['Crítico', 'Crítica', 'Critical']]
+
+    # Non-Conformities
+    ncs = NonConformity.query.filter_by(project_id=project.id).all()
+    open_ncs = [nc for nc in ncs if nc.status not in ['Fechada', 'Encerrada', 'Resolvida']]
+
+    # Corrective Actions
+    actions = CorrectiveAction.query.filter_by(project_id=project.id).all()
+    pending_actions = [a for a in actions if a.status not in ['Concluída', 'Implementada', 'Fechada']]
+
+    # Determine overall compliance status
+    if critical_risks or critical_bugs or len(overdue_pending) > 3:
+        status = 'red'
+        label = 'Crítico'
+    elif open_risks or overdue_pending or open_ncs:
+        status = 'yellow'
+        label = 'Atenção'
+    else:
+        status = 'green'
+        label = 'Conforme'
+
+    return {
+        'status': status,
+        'label': label,
+        # Risks
+        'total_risks': len(risks),
+        'open_risks': len(open_risks),
+        'critical_risks': len(critical_risks),
+        'risks': open_risks[:5],
+        # Pending
+        'total_pending': len(pending),
+        'open_pending': len(open_pending),
+        'overdue_pending': len(overdue_pending),
+        'pending_items': open_pending[:5],
+        # Bugs
+        'total_bugs': len(bugs),
+        'open_bugs': len(open_bugs),
+        'critical_bugs': len(critical_bugs),
+        'bugs': open_bugs[:5],
+        # NCs
+        'total_ncs': len(ncs),
+        'open_ncs': len(open_ncs),
+        'ncs': open_ncs[:5],
+        # Actions
+        'total_actions': len(actions),
+        'pending_actions': len(pending_actions),
+        'actions': pending_actions[:5],
+        # Summary
+        'has_issues': len(open_risks) + len(overdue_pending) + len(open_bugs) + len(open_ncs) > 0
+    }
+
+
 @status_report_bp.route('/projects/<int:project_id>/status-report')
 @login_required
 @tenant_required
@@ -406,16 +475,17 @@ def view_report(project_id):
     resource_cost_status = calculate_resource_cost_status(project)
     evm_metrics = calculate_evm_metrics(project, schedule_status, cost_status)
     risks = identify_risks(project, schedule_status, cost_status)
+    compliance_status = get_compliance_status(project)
 
     # Get additional data
     recent_activities = get_recent_activities(project)
     upcoming_milestones = get_upcoming_milestones(project)
 
-    # Calculate overall health
-    if any(r['severity'] == 'high' for r in risks):
+    # Calculate overall health (include compliance status)
+    if any(r['severity'] == 'high' for r in risks) or compliance_status['status'] == 'red':
         overall_health = 'red'
         overall_label = 'Crítico'
-    elif any(r['severity'] == 'medium' for r in risks):
+    elif any(r['severity'] == 'medium' for r in risks) or compliance_status['status'] == 'yellow':
         overall_health = 'yellow'
         overall_label = 'Atenção'
     elif schedule_status['status'] == 'gray' and cost_status['status'] == 'gray':
@@ -441,6 +511,7 @@ def view_report(project_id):
         resource_cost_status=resource_cost_status,
         evm_metrics=evm_metrics,
         risks=risks,
+        compliance_status=compliance_status,
         overall_health=overall_health,
         overall_label=overall_label,
         recent_activities=recent_activities,
@@ -466,16 +537,17 @@ def print_report(project_id):
     resource_cost_status = calculate_resource_cost_status(project)
     evm_metrics = calculate_evm_metrics(project, schedule_status, cost_status)
     risks = identify_risks(project, schedule_status, cost_status)
+    compliance_status = get_compliance_status(project)
 
     # Get additional data
     recent_activities = get_recent_activities(project)
     upcoming_milestones = get_upcoming_milestones(project)
 
     # Calculate overall health
-    if any(r['severity'] == 'high' for r in risks):
+    if any(r['severity'] == 'high' for r in risks) or compliance_status['status'] == 'red':
         overall_health = 'red'
         overall_label = 'Crítico'
-    elif any(r['severity'] == 'medium' for r in risks):
+    elif any(r['severity'] == 'medium' for r in risks) or compliance_status['status'] == 'yellow':
         overall_health = 'yellow'
         overall_label = 'Atenção'
     else:
@@ -495,6 +567,7 @@ def print_report(project_id):
         resource_cost_status=resource_cost_status,
         evm_metrics=evm_metrics,
         risks=risks,
+        compliance_status=compliance_status,
         overall_health=overall_health,
         overall_label=overall_label,
         recent_activities=recent_activities,

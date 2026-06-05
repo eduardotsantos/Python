@@ -151,11 +151,11 @@ class ProjectHealthAgent(BaseAgent):
         upcoming_critical = []
 
         for m in milestones:
-            if m.status != 'Concluído' and m.due_date:
-                if m.due_date < today:
-                    days_late = (today - m.due_date).days
+            if m.status != 'Concluído' and m.end_date:
+                if m.end_date < today:
+                    days_late = (today - m.end_date).days
                     overdue_milestones.append((m, days_late))
-                elif m.due_date <= today + timedelta(days=7):
+                elif m.end_date <= today + timedelta(days=7):
                     upcoming_critical.append(m)
 
         if overdue_milestones:
@@ -167,7 +167,7 @@ class ProjectHealthAgent(BaseAgent):
 
             insights.append(self.create_insight(
                 title=f'Atraso no cronograma: {worst[1]} dias',
-                description=f'Marco "{worst[0].name}" está atrasado {worst[1]} dias. Total de {len(overdue_milestones)} marcos atrasados.',
+                description=f'Marco "{worst[0].title}" está atrasado {worst[1]} dias. Total de {len(overdue_milestones)} marcos atrasados.',
                 severity=severity,
                 category='schedule',
                 project_id=project.id,
@@ -294,7 +294,7 @@ class ProjectHealthAgent(BaseAgent):
             project_id=project.id
         ).filter(
             PendingItem.status.notin_(['Resolvida', 'Cancelada']),
-            PendingItem.due_date < date.today()
+            PendingItem.end_date < date.today()
         ).count()
 
         if critical_bugs > 0:

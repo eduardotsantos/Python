@@ -153,10 +153,10 @@ class ProjectAdvisorAgent(BaseAgent):
                 data={'variance': variance, 'consumption': consumption, 'progress': progress}
             ))
 
-        overdue = [m for m in milestones if m.status != 'Concluído' and m.due_date and m.due_date < date.today()]
+        overdue = [m for m in milestones if m.status != 'Concluído' and m.end_date and m.end_date < date.today()]
         if len(overdue) > 0:
             recommendation_count += 1
-            days_late = max((date.today() - m.due_date).days for m in overdue)
+            days_late = max((date.today() - m.end_date).days for m in overdue)
 
             advice = self._generate_schedule_advice(project, overdue, days_late, progress)
             insights.append(self.create_insight(
@@ -216,7 +216,7 @@ class ProjectAdvisorAgent(BaseAgent):
             completed = sum(1 for m in milestones if m.status == 'Concluído')
             progress = completed / len(milestones)
 
-            overdue = [m for m in milestones if m.status != 'Concluído' and m.due_date and m.due_date < date.today()]
+            overdue = [m for m in milestones if m.status != 'Concluído' and m.end_date and m.end_date < date.today()]
             overdue_ratio = len(overdue) / len(milestones) if milestones else 0
             probability -= overdue_ratio * 30
 

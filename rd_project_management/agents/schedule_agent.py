@@ -117,7 +117,7 @@ class ScheduleAgent(BaseAgent):
         actions = []
         today = date.today()
 
-        milestones = Milestone.query.filter_by(project_id=project.id).order_by(Milestone.due_date).all()
+        milestones = Milestone.query.filter_by(project_id=project.id).order_by(Milestone.end_date).all()
 
         total = len(milestones)
         completed = sum(1 for m in milestones if m.status == 'Concluído')
@@ -129,19 +129,19 @@ class ScheduleAgent(BaseAgent):
 
         overdue_milestones = []
         for m in milestones:
-            if not m.due_date:
+            if not m.end_date:
                 no_date += 1
                 continue
 
             if m.status != 'Concluído':
-                if m.due_date < today:
+                if m.end_date < today:
                     overdue += 1
-                    days_late = (today - m.due_date).days
+                    days_late = (today - m.end_date).days
                     delays.append(days_late)
                     overdue_milestones.append((m, days_late))
-                elif m.due_date <= today + timedelta(days=7):
+                elif m.end_date <= today + timedelta(days=7):
                     upcoming_7 += 1
-                elif m.due_date <= today + timedelta(days=30):
+                elif m.end_date <= today + timedelta(days=30):
                     upcoming_30 += 1
 
         if overdue_milestones:
@@ -150,7 +150,7 @@ class ScheduleAgent(BaseAgent):
 
             insights.append(self.create_insight(
                 title=f'{overdue} marco(s) atrasado(s)',
-                description=f'Maior atraso: "{worst[0].name}" ({worst[1]} dias). Projeto: {project.title}',
+                description=f'Maior atraso: "{worst[0].title}" ({worst[1]} dias). Projeto: {project.title}',
                 severity=severity,
                 category='overdue',
                 project_id=project.id,
@@ -224,7 +224,7 @@ class ScheduleAgent(BaseAgent):
             if m.predecessor_id and m.status != 'Concluído':
                 predecessor = milestone_dict.get(m.predecessor_id)
                 if predecessor and predecessor.status != 'Concluído':
-                    if predecessor.due_date and predecessor.due_date < date.today():
+                    if predecessor.end_date and predecessor.end_date < date.today():
                         blocked.append({
                             'milestone': m,
                             'blocked_by': predecessor
@@ -286,7 +286,7 @@ class ScheduleAgent(BaseAgent):
 
         milestones = Milestone.query.filter_by(project_id=project_id).filter(
             Milestone.status != 'Concluído'
-        ).order_by(Milestone.due_date).all()
+        ).order_by(Milestone.end_date).all()
 
         suggestions = {
             'compression': {
