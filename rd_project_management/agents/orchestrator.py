@@ -1081,15 +1081,129 @@ class PMOOrchestrator:
             return {'success': False, 'error': str(e)}
 
     def _execute_schedule_meeting(self, action: ActionSuggestion) -> Dict:
-        """Schedule a meeting (generates invite content)."""
-        meeting_content = {
-            'subject': action.title,
-            'body': action.description,
-            'project_id': action.project_id,
-            'suggested_date': (date.today() + timedelta(days=2)).isoformat(),
-            'duration': '1 hour'
-        }
-        return {'success': True, 'meeting': meeting_content, 'action': 'manual_scheduling_required'}
+        """Schedule a meeting - sends calendar invite via email."""
+        from models import Project, User
+        from flask import current_app
+        from flask_login import current_user
+        from flask_mail import Mail, Message
+        from datetime import datetime, timedelta
+        import uuid
+
+        try:
+            project = Project.query.get(action.project_id) if action.project_id else None
+            tenant = project.tenant if project else None
+
+            if tenant and not tenant.email_enabled:
+                return {'success': False, 'error': 'Email desabilitado para este tenant'}
+
+            # Get recipients
+            recipients = []
+            if current_user and current_user.is_authenticated and current_user.email:
+                recipients.append(current_user.email)
+
+            if project and project.responsible and project.responsible.email:
+                if project.responsible.email not in recipients:
+                    recipients.append(project.responsible.email)
+
+            if not recipients:
+                return {'success': False, 'error': 'Nenhum destinatário encontrado'}
+
+            # Configure mail
+            if tenant and tenant.mail_server and tenant.mail_username:
+                port = tenant.mail_port or 587
+                if port == 465:
+                    use_ssl, use_tls = True, False
+                else:
+                    use_ssl, use_tls = False, True
+
+                current_app.config['MAIL_SERVER'] = tenant.mail_server
+                current_app.config['MAIL_PORT'] = port
+                current_app.config['MAIL_USE_TLS'] = use_tls
+                current_app.config['MAIL_USE_SSL'] = use_ssl
+                current_app.config['MAIL_USERNAME'] = tenant.mail_username
+                current_app.config['MAIL_PASSWORD'] = tenant.mail_password
+                current_app.config['MAIL_DEFAULT_SENDER'] = tenant.mail_default_sender or tenant.mail_username
+
+            mail = Mail(current_app)
+
+            # Meeting details
+            meeting_date = datetime.now() + timedelta(days=2)
+            meeting_date = meeting_date.replace(hour=10, minute=0, second=0, microsecond=0)
+            meeting_end = meeting_date + timedelta(hours=1)
+            meeting_uid = str(uuid.uuid4())
+
+            # Create ICS content
+            ics_content = f"""BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//Orion PMO//Meeting Scheduler//PT
+METHOD:REQUEST
+BEGIN:VEVENT
+UID:{meeting_uid}
+DTSTAMP:{datetime.utcnow().strftime('%Y%m%dT%H%M%SZ')}
+DTSTART:{meeting_date.strftime('%Y%m%dT%H%M%S')}
+DTEND:{meeting_end.strftime('%Y%m%dT%H%M%S')}
+SUMMARY:{action.title}
+DESCRIPTION:{action.description}
+LOCATION:Online / Teams / Meet
+ORGANIZER:mailto:{current_user.email if current_user else 'noreply@orionpmo.com'}
+STATUS:CONFIRMED
+SEQUENCE:0
+END:VEVENT
+END:VCALENDAR"""
+
+            # HTML content
+            html_content = f"""
+            <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+                <div style="background: #1a237e; color: white; padding: 20px; text-align: center;">
+                    <h2>📅 Convite de Reunião</h2>
+                </div>
+                <div style="padding: 20px; background: #f5f5f5;">
+                    <h3>{action.title}</h3>
+                    <p><strong>Projeto:</strong> {project.title if project else 'N/A'}</p>
+                    <p><strong>Data:</strong> {meeting_date.strftime('%d/%m/%Y às %H:%M')}</p>
+                    <p><strong>Duração:</strong> 1 hora</p>
+                    <hr style="border: 1px solid #ddd;">
+                    <p>{action.description}</p>
+                    <p style="color: #666; font-size: 12px;">
+                        <em>Adicione o arquivo .ics anexo ao seu calendário.</em>
+                    </p>
+                </div>
+                <div style="padding: 10px; text-align: center; color: #666; font-size: 12px;">
+                    Orion PMO - Sistema de Gestão de Projetos P&D
+                </div>
+            </div>
+            """
+
+            sent_count = 0
+            for recipient in recipients:
+                try:
+                    msg = Message(
+                        subject=f"📅 Convite: {action.title}",
+                        recipients=[recipient],
+                        html=html_content
+                    )
+                    msg.attach(
+                        'reuniao.ics',
+                        'text/calendar',
+                        ics_content.encode('utf-8')
+                    )
+                    mail.send(msg)
+                    sent_count += 1
+                    logger.info(f"Meeting invite sent to {recipient}")
+                except Exception as e:
+                    logger.error(f"Failed to send meeting invite to {recipient}: {e}")
+
+            return {
+                'success': True,
+                'sent_count': sent_count,
+                'recipients': recipients,
+                'meeting_date': meeting_date.isoformat(),
+                'action': 'meeting_invite_sent'
+            }
+
+        except Exception as e:
+            logger.error(f"Error scheduling meeting: {e}")
+            return {'success': False, 'error': str(e)}
 
     def _execute_send_notification(self, action: ActionSuggestion) -> Dict:
         """Send notification via email to project team."""
