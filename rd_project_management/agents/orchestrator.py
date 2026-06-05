@@ -1108,13 +1108,15 @@ class PMOOrchestrator:
             # Get recipients (project team with email_alerts enabled)
             recipients = []
             if project:
-                # Project manager
-                if project.manager and project.manager.email_alerts and project.manager.email:
-                    recipients.append(project.manager.email)
-                # Project members
-                for member in project.members:
-                    if member.email_alerts and member.email and member.email not in recipients:
-                        recipients.append(member.email)
+                # Project responsible (manager)
+                if project.responsible and project.responsible.email_alerts and project.responsible.email:
+                    recipients.append(project.responsible.email)
+                # Project resources (team members)
+                for resource in project.resources:
+                    if resource.user_id:
+                        user = User.query.get(resource.user_id)
+                        if user and user.email_alerts and user.email and user.email not in recipients:
+                            recipients.append(user.email)
 
             if not recipients:
                 return {'success': False, 'error': 'Nenhum destinatário com alertas habilitados'}

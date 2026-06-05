@@ -192,6 +192,14 @@ def create_app():
             db.session.commit()
             logging.info("Default super admin user created: superadmin / super123")
 
+    # Initialize scheduler for automated tasks (daily briefing at 7 AM)
+    try:
+        from services.scheduler_service import init_scheduler
+        init_scheduler(app)
+        logging.info("Scheduler initialized for daily briefing")
+    except Exception as e:
+        logging.warning(f"Scheduler not initialized: {e}")
+
     return app
 
 
