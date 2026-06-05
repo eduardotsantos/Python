@@ -86,7 +86,7 @@ class MinutesReaderAgent(BaseAgent):
             query = query.join(Project).filter(Project.tenant_id == self.tenant_id)
 
         recent_minutes = query.filter(
-            MeetingMinutes.date >= date.today() - timedelta(days=30)
+            MeetingMinutes.meeting_date >= date.today() - timedelta(days=30)
         ).all()
 
         metrics['minutes_analyzed'] = len(recent_minutes)
