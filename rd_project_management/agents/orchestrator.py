@@ -1109,10 +1109,10 @@ class PMOOrchestrator:
             # Get recipients (project team with email_alerts enabled)
             recipients = []
 
-            # Always include current user if they have alerts enabled
-            if current_user and current_user.is_authenticated:
-                if getattr(current_user, 'email_alerts', True) and current_user.email:
-                    recipients.append(current_user.email)
+            # Always include current user
+            if current_user and current_user.is_authenticated and current_user.email:
+                recipients.append(current_user.email)
+                logger.info(f"Added current user to recipients: {current_user.email}")
 
             if project:
                 # Project responsible (manager)
