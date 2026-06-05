@@ -692,17 +692,27 @@ def send_briefing_email(briefing, recipients, tenant=None):
 
     # Use tenant-specific mail config if available
     if tenant and tenant.mail_server and tenant.mail_username:
-        # Create a new Mail instance with tenant config
+        port = tenant.mail_port or 587
+
+        # Auto-detect TLS/SSL based on port to avoid WRONG_VERSION_NUMBER errors
+        # Port 465 = implicit SSL, Port 587/25 = STARTTLS (TLS)
+        if port == 465:
+            use_ssl = True
+            use_tls = False
+        else:
+            use_ssl = False
+            use_tls = True
+
         current_app.config['MAIL_SERVER'] = tenant.mail_server
-        current_app.config['MAIL_PORT'] = tenant.mail_port or 587
-        current_app.config['MAIL_USE_TLS'] = tenant.mail_use_tls
-        current_app.config['MAIL_USE_SSL'] = tenant.mail_use_ssl
+        current_app.config['MAIL_PORT'] = port
+        current_app.config['MAIL_USE_TLS'] = use_tls
+        current_app.config['MAIL_USE_SSL'] = use_ssl
         current_app.config['MAIL_USERNAME'] = tenant.mail_username
         current_app.config['MAIL_PASSWORD'] = tenant.mail_password
         current_app.config['MAIL_DEFAULT_SENDER'] = tenant.mail_default_sender or tenant.mail_username
 
         mail = Mail(current_app)
-        logger.info(f"Using tenant-specific email config: {tenant.mail_server}")
+        logger.info(f"Using tenant-specific email config: {tenant.mail_server}:{port} (TLS={use_tls}, SSL={use_ssl})")
     else:
         mail = global_mail
         logger.info("Using global email config")
