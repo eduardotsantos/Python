@@ -10,8 +10,8 @@ echo   DEPLOY - Orion P&D v2.0
 echo   Novos Modulos: Conformidade + PMO IA
 echo ==================================================
 
-REM Ajuste estes caminhos conforme seu servidor
-set BASE_DIR=C:\inetpub\wwwroot\rd_project_management
+REM Caminho do servidor de producao
+set BASE_DIR=C:\apps\rd_project_managementv45
 set BACKUP_DIR=C:\backups\orion_pd_%date:~-4,4%%date:~-7,2%%date:~-10,2%_%time:~0,2%%time:~3,2%
 
 echo.

@@ -22,7 +22,7 @@ PASSO A PASSO PARA DEPLOY (WINDOWS)
 ------------------------
 Abra o Prompt de Comando como Administrador:
 
-    xcopy C:\inetpub\wwwroot\rd_project_management C:\backups\orion_backup_%date:~-4,4%%date:~-7,2%%date:~-10,2% /E /I
+    xcopy C:\apps\rd_project_managementv45 C:\backups\orion_backup_%date:~-4,4%%date:~-7,2%%date:~-10,2% /E /I
 
 
 2. EXTRAIR O PACOTE
@@ -43,7 +43,7 @@ Opcao C - Usando Git Bash:
 --------------------
 No Prompt de Comando (como Admin):
 
-    cd C:\inetpub\wwwroot\rd_project_management
+    cd C:\apps\rd_project_managementv45
 
     mkdir agents
     mkdir templates\compliance\risks
@@ -58,16 +58,16 @@ No Prompt de Comando (como Admin):
 -------------------
 Copie os arquivos extraidos para o diretorio da aplicacao:
 
-    xcopy app.py C:\inetpub\wwwroot\rd_project_management\ /Y
-    xcopy models.py C:\inetpub\wwwroot\rd_project_management\ /Y
-    xcopy static\js\i18n.js C:\inetpub\wwwroot\rd_project_management\static\js\ /Y
-    xcopy templates\base.html C:\inetpub\wwwroot\rd_project_management\templates\ /Y
+    xcopy app.py C:\apps\rd_project_managementv45\ /Y
+    xcopy models.py C:\apps\rd_project_managementv45\ /Y
+    xcopy static\js\i18n.js C:\apps\rd_project_managementv45\static\js\ /Y
+    xcopy templates\base.html C:\apps\rd_project_managementv45\templates\ /Y
 
-    xcopy agents\* C:\inetpub\wwwroot\rd_project_management\agents\ /E /Y
-    xcopy routes\compliance.py C:\inetpub\wwwroot\rd_project_management\routes\ /Y
-    xcopy routes\pmo_agents.py C:\inetpub\wwwroot\rd_project_management\routes\ /Y
-    xcopy templates\compliance\* C:\inetpub\wwwroot\rd_project_management\templates\compliance\ /E /Y
-    xcopy templates\pmo_agents\* C:\inetpub\wwwroot\rd_project_management\templates\pmo_agents\ /E /Y
+    xcopy agents\* C:\apps\rd_project_managementv45\agents\ /E /Y
+    xcopy routes\compliance.py C:\apps\rd_project_managementv45\routes\ /Y
+    xcopy routes\pmo_agents.py C:\apps\rd_project_managementv45\routes\ /Y
+    xcopy templates\compliance\* C:\apps\rd_project_managementv45\templates\compliance\ /E /Y
+    xcopy templates\pmo_agents\* C:\apps\rd_project_managementv45\templates\pmo_agents\ /E /Y
 
 
 5. PARAR A APLICACAO
@@ -90,7 +90,7 @@ Se estiver usando processo Python direto:
 
 6. EXECUTAR MIGRATION
 ----------------------
-    cd C:\inetpub\wwwroot\rd_project_management
+    cd C:\apps\rd_project_managementv45
     python deploy\migrate_compliance_pmo.py
 
 Saida esperada:
@@ -124,7 +124,7 @@ Se estiver usando servico Windows:
     net start OrionPD
 
 Se estiver usando Flask direto:
-    cd C:\inetpub\wwwroot\rd_project_management
+    cd C:\apps\rd_project_managementv45
     python app.py
 
 Se estiver usando Waitress (producao):
@@ -150,7 +150,7 @@ Ajuste os caminhos no inicio do arquivo .bat conforme necessario.
 
 ROLLBACK (EM CASO DE PROBLEMAS)
 ================================
-    xcopy C:\backups\orion_backup_YYYYMMDD\* C:\inetpub\wwwroot\rd_project_management\ /E /Y
+    xcopy C:\backups\orion_backup_YYYYMMDD\* C:\apps\rd_project_managementv45\ /E /Y
 
     Reinicie a aplicacao apos restaurar.
 
@@ -166,7 +166,7 @@ Se estiver configurando pela primeira vez no IIS:
 
 2. No IIS Manager:
    - Adicione um novo Site ou Application
-   - Aponte para C:\inetpub\wwwroot\rd_project_management
+   - Aponte para C:\apps\rd_project_managementv45
    - Configure o Handler Mapping para FastCGI
 
 3. web.config exemplo:
