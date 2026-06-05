@@ -357,6 +357,11 @@ def profile():
         current_user.full_name = full_name
         current_user.email = email
 
+        # Email notification preferences
+        current_user.email_notifications = request.form.get('email_notifications') == 'on'
+        current_user.email_briefing_daily = request.form.get('email_briefing_daily') == 'on'
+        current_user.email_alerts = request.form.get('email_alerts') == 'on'
+
         # Change password if provided
         if new_password:
             if not current_user.check_password(current_password):
