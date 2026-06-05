@@ -294,7 +294,7 @@ class ProjectHealthAgent(BaseAgent):
             project_id=project.id
         ).filter(
             PendingItem.status.notin_(['Resolvida', 'Cancelada']),
-            PendingItem.end_date < date.today()
+            PendingItem.due_date < date.today()
         ).count()
 
         if critical_bugs > 0:
