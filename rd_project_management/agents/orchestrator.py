@@ -1095,6 +1095,7 @@ class PMOOrchestrator:
         """Send notification via email to project team."""
         from models import Project, User, db
         from flask import current_app
+        from flask_login import current_user
         from flask_mail import Mail, Message
 
         try:
@@ -1107,10 +1108,17 @@ class PMOOrchestrator:
 
             # Get recipients (project team with email_alerts enabled)
             recipients = []
+
+            # Always include current user if they have alerts enabled
+            if current_user and current_user.is_authenticated:
+                if getattr(current_user, 'email_alerts', True) and current_user.email:
+                    recipients.append(current_user.email)
+
             if project:
                 # Project responsible (manager)
                 if project.responsible and project.responsible.email_alerts and project.responsible.email:
-                    recipients.append(project.responsible.email)
+                    if project.responsible.email not in recipients:
+                        recipients.append(project.responsible.email)
                 # Project resources (team members) - match by name to users
                 for resource in project.resources:
                     if resource.name:
