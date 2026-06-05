@@ -72,6 +72,43 @@
                             </div>
                         </div>
                     </div>
+
+                    <!-- Email Notification Preferences -->
+                    <hr class="my-4">
+                    <h6 class="fw-bold mb-3"><i class="bi bi-envelope"></i> Preferências de Email</h6>
+                    <div class="row g-3">
+                        <div class="col-12">
+                            <div class="form-check form-switch">
+                                <input class="form-check-input" type="checkbox" id="email_notifications" name="email_notifications"
+                                       {{ 'checked' if not user or (user.email_notifications is not defined) or user.email_notifications }}>
+                                <label class="form-check-label" for="email_notifications">
+                                    <strong>Receber notificações por email</strong>
+                                    <small class="text-muted d-block">Desative para não receber nenhum email do sistema</small>
+                                </label>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-check form-switch">
+                                <input class="form-check-input" type="checkbox" id="email_briefing_daily" name="email_briefing_daily"
+                                       {{ 'checked' if not user or (user.email_briefing_daily is not defined) or user.email_briefing_daily }}>
+                                <label class="form-check-label" for="email_briefing_daily">
+                                    Briefing diário
+                                    <small class="text-muted d-block">Resumo executivo diário</small>
+                                </label>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-check form-switch">
+                                <input class="form-check-input" type="checkbox" id="email_alerts" name="email_alerts"
+                                       {{ 'checked' if not user or (user.email_alerts is not defined) or user.email_alerts }}>
+                                <label class="form-check-label" for="email_alerts">
+                                    Alertas críticos
+                                    <small class="text-muted d-block">Notificações de riscos e problemas</small>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
                     <hr class="my-4">
                     <div class="d-flex justify-content-end gap-2">
                         <a href="{{ url_for('users.list_users') }}" class="btn btn-outline-secondary">Cancelar</a>

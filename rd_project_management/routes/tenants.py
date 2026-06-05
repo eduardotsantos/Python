@@ -85,6 +85,20 @@ def create_tenant():
             except ValueError:
                 pass
 
+        # Email configuration
+        email_enabled = request.form.get('email_enabled') == 'on'
+        mail_server = request.form.get('mail_server', '').strip()
+        mail_port_str = request.form.get('mail_port', '587').strip()
+        mail_port = int(mail_port_str) if mail_port_str else 587
+
+        mail_security = request.form.get('mail_security', 'tls')
+        mail_use_tls = (mail_security == 'tls')
+        mail_use_ssl = (mail_security == 'ssl')
+
+        mail_username = request.form.get('mail_username', '').strip()
+        mail_password = request.form.get('mail_password', '').strip()
+        mail_default_sender = request.form.get('mail_default_sender', '').strip()
+
         # Create tenant
         tenant = Tenant(
             name=name,
@@ -99,7 +113,15 @@ def create_tenant():
             max_users=max_users,
             max_projects=max_projects,
             expires_at=expires_at,
-            active=True
+            active=True,
+            email_enabled=email_enabled,
+            mail_server=mail_server,
+            mail_port=mail_port,
+            mail_use_tls=mail_use_tls,
+            mail_use_ssl=mail_use_ssl,
+            mail_username=mail_username,
+            mail_password=mail_password,
+            mail_default_sender=mail_default_sender
         )
         db.session.add(tenant)
         db.session.commit()
@@ -183,6 +205,22 @@ def edit_tenant(tenant_id):
                 pass
         else:
             tenant.expires_at = None
+
+        # Email configuration
+        tenant.email_enabled = request.form.get('email_enabled') == 'on'
+        tenant.mail_server = request.form.get('mail_server', '').strip()
+        mail_port = request.form.get('mail_port', '587').strip()
+        tenant.mail_port = int(mail_port) if mail_port else 587
+
+        mail_security = request.form.get('mail_security', 'tls')
+        tenant.mail_use_tls = (mail_security == 'tls')
+        tenant.mail_use_ssl = (mail_security == 'ssl')
+
+        tenant.mail_username = request.form.get('mail_username', '').strip()
+        mail_password = request.form.get('mail_password', '').strip()
+        if mail_password:
+            tenant.mail_password = mail_password
+        tenant.mail_default_sender = request.form.get('mail_default_sender', '').strip()
 
         db.session.commit()
         flash('Empresa atualizada com sucesso!', 'success')

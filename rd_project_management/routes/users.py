@@ -131,7 +131,10 @@ def create_user():
             email=email,
             full_name=full_name,
             role=role,
-            active=active
+            active=active,
+            email_notifications=request.form.get('email_notifications') == 'on',
+            email_briefing_daily=request.form.get('email_briefing_daily') == 'on',
+            email_alerts=request.form.get('email_alerts') == 'on'
         )
         user.set_password(password)
 
@@ -235,6 +238,11 @@ def edit_user(user_id):
         user.full_name = full_name
         user.role = role
         user.active = active
+
+        # Email notification preferences
+        user.email_notifications = request.form.get('email_notifications') == 'on'
+        user.email_briefing_daily = request.form.get('email_briefing_daily') == 'on'
+        user.email_alerts = request.form.get('email_alerts') == 'on'
 
         # Update password only if provided
         if password:

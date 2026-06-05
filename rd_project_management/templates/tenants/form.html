@@ -111,6 +111,67 @@
                 </div>
             </div>
 
+            <!-- Email Configuration -->
+            <div class="card shadow-sm mb-4">
+                <div class="card-header bg-white">
+                    <h6 class="mb-0 fw-bold"><i class="bi bi-envelope"></i> Configuração de Email</h6>
+                </div>
+                <div class="card-body">
+                    <div class="row g-3">
+                        <div class="col-12">
+                            <div class="form-check form-switch">
+                                <input class="form-check-input" type="checkbox" name="email_enabled" id="email_enabled"
+                                       {{ 'checked' if tenant and tenant.email_enabled }}>
+                                <label class="form-check-label" for="email_enabled">
+                                    <strong>Habilitar envio de emails</strong>
+                                    <small class="text-muted d-block">Ativa o envio de briefings e notificações por email</small>
+                                </label>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Servidor SMTP</label>
+                            <input type="text" class="form-control" name="mail_server"
+                                   value="{{ tenant.mail_server if tenant and tenant.mail_server else '' }}"
+                                   placeholder="smtp.gmail.com">
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label">Porta</label>
+                            <input type="number" class="form-control" name="mail_port"
+                                   value="{{ tenant.mail_port if tenant and tenant.mail_port else 587 }}"
+                                   placeholder="587">
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label">Segurança</label>
+                            <select class="form-select" name="mail_security">
+                                <option value="tls" {{ 'selected' if not tenant or (tenant.mail_use_tls) }}>TLS (porta 587)</option>
+                                <option value="ssl" {{ 'selected' if tenant and tenant.mail_use_ssl }}>SSL (porta 465)</option>
+                                <option value="none" {{ 'selected' if tenant and not tenant.mail_use_tls and not tenant.mail_use_ssl }}>Nenhum</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Usuário SMTP (Email)</label>
+                            <input type="email" class="form-control" name="mail_username"
+                                   value="{{ tenant.mail_username if tenant and tenant.mail_username else '' }}"
+                                   placeholder="noreply@empresa.com">
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Senha SMTP</label>
+                            <input type="password" class="form-control" name="mail_password"
+                                   value="{{ tenant.mail_password if tenant and tenant.mail_password else '' }}"
+                                   placeholder="{% if tenant and tenant.mail_password %}••••••••{% else %}Senha ou App Password{% endif %}">
+                            <small class="text-muted">Para Gmail, use uma <a href="https://myaccount.google.com/apppasswords" target="_blank">Senha de App</a></small>
+                        </div>
+                        <div class="col-12">
+                            <label class="form-label">Remetente Padrão</label>
+                            <input type="text" class="form-control" name="mail_default_sender"
+                                   value="{{ tenant.mail_default_sender if tenant and tenant.mail_default_sender else '' }}"
+                                   placeholder="Orion PMO <noreply@empresa.com>">
+                            <small class="text-muted">Formato: Nome &lt;email@empresa.com&gt;</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             {% if not tenant %}
             <div class="card shadow-sm mb-4">
                 <div class="card-header bg-white">
