@@ -155,7 +155,7 @@ class ResourceAgent(BaseAgent):
                 if project_id and project.id != project_id:
                     continue
 
-                allocation_pct = mr.allocation_percentage or 0
+                allocation_pct = mr.allocation or 0
                 allocations[resource.id]['total_allocation'] += allocation_pct
 
                 if project.id not in allocations[resource.id]['projects']:
