@@ -320,6 +320,10 @@ def briefing_email():
     # Collect recipient emails
     recipients = set()
 
+    # Always add current user
+    if current_user.email:
+        recipients.add(current_user.email)
+
     if project_ids:
         # Get resources from selected projects
         for project_id in project_ids:
@@ -333,9 +337,9 @@ def briefing_email():
                 if project.responsible and project.responsible.email:
                     recipients.add(project.responsible.email)
 
-                # Add all resources with email (linked users)
+                # Add all resources - try to match with users
                 for resource in project.resources:
-                    if resource.type == 'Humano':
+                    if resource.type in ['Humano', 'Pessoa', 'Human']:
                         # Try to find user with matching name
                         user = User.query.filter(
                             User.tenant_id == tenant_id,
@@ -346,11 +350,21 @@ def briefing_email():
     else:
         # Send to all active project responsibles
         projects = Project.query.filter_by(tenant_id=tenant_id).filter(
-            Project.status.in_(['Em Execução', 'Em Andamento', 'Em execução'])
+            Project.status.in_(['Em Execução', 'Em Andamento', 'Em execução', 'Planejamento', 'Ativo'])
         ).all()
         for project in projects:
             if project.responsible and project.responsible.email:
                 recipients.add(project.responsible.email)
+
+        # Also add all active users with manager/admin role
+        managers = User.query.filter(
+            User.tenant_id == tenant_id,
+            User.role.in_(['admin', 'manager']),
+            User.active == True
+        ).all()
+        for manager in managers:
+            if manager.email:
+                recipients.add(manager.email)
 
     # Add additional emails
     if additional_emails:
@@ -360,8 +374,11 @@ def briefing_email():
                 recipients.add(email)
 
     if not recipients:
-        flash('Nenhum destinatário encontrado.', 'warning')
+        flash('Nenhum destinatário encontrado. Adicione emails manualmente.', 'warning')
         return redirect(url_for('pmo_agents.daily_briefing'))
+
+    # Log recipients for debugging
+    logger.info(f"Sending briefing to {len(recipients)} recipients: {recipients}")
 
     # Try to send email
     try:
