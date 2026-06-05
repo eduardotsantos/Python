@@ -1092,15 +1092,96 @@ class PMOOrchestrator:
         return {'success': True, 'meeting': meeting_content, 'action': 'manual_scheduling_required'}
 
     def _execute_send_notification(self, action: ActionSuggestion) -> Dict:
-        """Send notification (generates content for various channels)."""
-        notification = {
-            'title': action.title,
-            'message': action.description,
-            'project_id': action.project_id,
-            'channels': ['email', 'in_app'],
-            'priority': action.priority.value
-        }
-        return {'success': True, 'notification': notification, 'action': 'notification_queued'}
+        """Send notification via email to project team."""
+        from models import Project, User, db
+        from flask import current_app
+        from flask_mail import Mail, Message
+
+        try:
+            project = Project.query.get(action.project_id) if action.project_id else None
+            tenant = project.tenant if project else None
+
+            # Check if tenant has email enabled
+            if tenant and not tenant.email_enabled:
+                return {'success': False, 'error': 'Email desabilitado para este tenant'}
+
+            # Get recipients (project team with email_alerts enabled)
+            recipients = []
+            if project:
+                # Project manager
+                if project.manager and project.manager.email_alerts and project.manager.email:
+                    recipients.append(project.manager.email)
+                # Project members
+                for member in project.members:
+                    if member.email_alerts and member.email and member.email not in recipients:
+                        recipients.append(member.email)
+
+            if not recipients:
+                return {'success': False, 'error': 'Nenhum destinatário com alertas habilitados'}
+
+            # Configure mail with tenant settings
+            if tenant and tenant.mail_server and tenant.mail_username:
+                port = tenant.mail_port or 587
+                if port == 465:
+                    use_ssl, use_tls = True, False
+                else:
+                    use_ssl, use_tls = False, True
+
+                current_app.config['MAIL_SERVER'] = tenant.mail_server
+                current_app.config['MAIL_PORT'] = port
+                current_app.config['MAIL_USE_TLS'] = use_tls
+                current_app.config['MAIL_USE_SSL'] = use_ssl
+                current_app.config['MAIL_USERNAME'] = tenant.mail_username
+                current_app.config['MAIL_PASSWORD'] = tenant.mail_password
+                current_app.config['MAIL_DEFAULT_SENDER'] = tenant.mail_default_sender or tenant.mail_username
+
+            mail = Mail(current_app)
+
+            # Build email content
+            priority_icons = {'critical': '🔴', 'high': '🟠', 'medium': '🟡', 'low': '🟢'}
+            icon = priority_icons.get(action.priority.value, '📢')
+
+            html_content = f"""
+            <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+                <div style="background: #1a237e; color: white; padding: 20px; text-align: center;">
+                    <h2>{icon} {action.title}</h2>
+                </div>
+                <div style="padding: 20px; background: #f5f5f5;">
+                    <p><strong>Projeto:</strong> {project.title if project else 'N/A'}</p>
+                    <p><strong>Prioridade:</strong> {action.priority.value.upper()}</p>
+                    <hr style="border: 1px solid #ddd;">
+                    <p>{action.description}</p>
+                </div>
+                <div style="padding: 10px; text-align: center; color: #666; font-size: 12px;">
+                    Orion PMO - Sistema de Gestão de Projetos P&D
+                </div>
+            </div>
+            """
+
+            sent_count = 0
+            for recipient in recipients:
+                try:
+                    msg = Message(
+                        subject=f"{icon} {action.title}",
+                        recipients=[recipient],
+                        html=html_content
+                    )
+                    mail.send(msg)
+                    sent_count += 1
+                    logger.info(f"Notification sent to {recipient}")
+                except Exception as e:
+                    logger.error(f"Failed to send notification to {recipient}: {e}")
+
+            return {
+                'success': True,
+                'sent_count': sent_count,
+                'recipients': recipients,
+                'action': 'notification_sent'
+            }
+
+        except Exception as e:
+            logger.error(f"Error sending notification: {e}")
+            return {'success': False, 'error': str(e)}
 
     def _execute_generate_report(self, action: ActionSuggestion) -> Dict:
         """Generate a report."""
