@@ -158,7 +158,7 @@
                     <tbody>
                         {% for proj in briefing.cost_analysis.projects_over_budget %}
                         <tr>
-                            <td><a href="{{ url_for('projects.detail', id=proj.project_id) }}">{{ proj.code }} - {{ proj.title[:30] }}</a></td>
+                            <td><a href="{{ url_for('projects.view_project', project_id=proj.project_id) }}">{{ proj.code }} - {{ proj.title[:30] }}</a></td>
                             <td class="text-end">R$ {{ "{:,.0f}".format(proj.budget) }}</td>
                             <td class="text-end">R$ {{ "{:,.0f}".format(proj.spent) }}</td>
                             <td class="text-end text-danger fw-bold">{{ "{:+.1f}".format(proj.variance) }}%</td>
@@ -203,7 +203,7 @@
                                     <strong>{{ act.title[:35] }}{% if act.title|length > 35 %}...{% endif %}</strong>
                                 </td>
                                 <td>
-                                    <a href="{{ url_for('projects.detail', id=act.project_id) }}" class="text-decoration-none">
+                                    <a href="{{ url_for('projects.view_project', project_id=act.project_id) }}" class="text-decoration-none">
                                         {{ act.project_name[:20] }}
                                     </a>
                                 </td>
@@ -266,7 +266,7 @@
                                     {{ act.title[:30] }}{% if act.title|length > 30 %}...{% endif %}
                                 </td>
                                 <td>
-                                    <a href="{{ url_for('projects.detail', id=act.project_id) }}" class="text-decoration-none">
+                                    <a href="{{ url_for('projects.view_project', project_id=act.project_id) }}" class="text-decoration-none">
                                         {{ act.project_name[:18] }}
                                     </a>
                                 </td>
@@ -343,7 +343,7 @@
                                     {% endfor %}
                                 </ul>
                                 {% endif %}
-                                <a href="{{ url_for('projects.detail', id=proj.project_id) }}" class="btn btn-sm btn-outline-primary">
+                                <a href="{{ url_for('projects.view_project', project_id=proj.project_id) }}" class="btn btn-sm btn-outline-primary">
                                     Ver Projeto <i class="bi bi-arrow-right"></i>
                                 </a>
                             </div>
