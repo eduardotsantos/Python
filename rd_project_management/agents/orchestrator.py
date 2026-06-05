@@ -1111,10 +1111,14 @@ class PMOOrchestrator:
                 # Project responsible (manager)
                 if project.responsible and project.responsible.email_alerts and project.responsible.email:
                     recipients.append(project.responsible.email)
-                # Project resources (team members)
+                # Project resources (team members) - match by name to users
                 for resource in project.resources:
-                    if resource.user_id:
-                        user = User.query.get(resource.user_id)
+                    if resource.name:
+                        user = User.query.filter_by(
+                            tenant_id=project.tenant_id,
+                            full_name=resource.name,
+                            active=True
+                        ).first()
                         if user and user.email_alerts and user.email and user.email not in recipients:
                             recipients.append(user.email)
 
