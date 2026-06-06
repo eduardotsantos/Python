@@ -21,13 +21,14 @@
                     <textarea name="description" class="form-control" rows="3" required>{{ action.description if action else '' }}</textarea>
                 </div>
                 <div class="col-md-4">
-                    <label class="form-label">Projeto</label>
-                    <select name="project_id" class="form-select">
+                    <label class="form-label">Projeto *</label>
+                    <select name="project_id" class="form-select" required>
                         <option value="">-- Selecione --</option>
                         {% for project in projects %}
                         <option value="{{ project.id }}" {{ 'selected' if action and action.project_id == project.id }}>{{ project.title }}</option>
                         {% endfor %}
                     </select>
+                    <small class="text-muted">Obrigatório para aparecer no Status Report</small>
                 </div>
 
                 <div class="col-12">

@@ -21,13 +21,14 @@
                     <input type="text" name="title" class="form-control" required value="{{ bug.title if bug else '' }}">
                 </div>
                 <div class="col-md-4">
-                    <label class="form-label">Projeto</label>
-                    <select name="project_id" class="form-select">
+                    <label class="form-label">Projeto *</label>
+                    <select name="project_id" class="form-select" required>
                         <option value="">-- Selecione --</option>
                         {% for project in projects %}
                         <option value="{{ project.id }}" {{ 'selected' if bug and bug.project_id == project.id }}>{{ project.title }}</option>
                         {% endfor %}
                     </select>
+                    <small class="text-muted">Obrigatório para aparecer no Status Report</small>
                 </div>
                 <div class="col-12">
                     <label class="form-label">Descrição</label>
