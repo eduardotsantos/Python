@@ -159,8 +159,15 @@ def risk_create():
         probability = request.form.get('probability', 3)
         impact = request.form.get('impact', 3)
 
+        # For superadmins, get tenant_id from the project
+        effective_tenant_id = tenant_id
+        if not effective_tenant_id and project_id:
+            project = Project.query.get(int(project_id))
+            if project:
+                effective_tenant_id = project.tenant_id
+
         risk = Risk(
-            tenant_id=tenant_id,
+            tenant_id=effective_tenant_id,
             code=generate_code('RSK', Risk),
             project_id=int(project_id) if project_id else None,
             title=request.form.get('title', '').strip(),
@@ -285,8 +292,15 @@ def pending_create():
         due_date = request.form.get('due_date')
         resolution_date = request.form.get('resolution_date')
 
+        # For superadmins, get tenant_id from the project
+        effective_tenant_id = tenant_id
+        if not effective_tenant_id and project_id:
+            project = Project.query.get(int(project_id))
+            if project:
+                effective_tenant_id = project.tenant_id
+
         item = PendingItem(
-            tenant_id=tenant_id,
+            tenant_id=effective_tenant_id,
             code=generate_code('PND', PendingItem),
             project_id=int(project_id) if project_id else None,
             title=request.form.get('title', '').strip(),
@@ -403,8 +417,15 @@ def nc_create():
         identified_date = request.form.get('identified_date')
         closure_date = request.form.get('closure_date')
 
+        # For superadmins, get tenant_id from the project
+        effective_tenant_id = tenant_id
+        if not effective_tenant_id and project_id:
+            project = Project.query.get(int(project_id))
+            if project:
+                effective_tenant_id = project.tenant_id
+
         nc = NonConformity(
-            tenant_id=tenant_id,
+            tenant_id=effective_tenant_id,
             code=generate_code('NC', NonConformity),
             project_id=int(project_id) if project_id else None,
             title=request.form.get('title', '').strip(),
@@ -527,8 +548,15 @@ def bug_create():
         reported_date = request.form.get('reported_date')
         resolved_date = request.form.get('resolved_date')
 
+        # For superadmins, get tenant_id from the project
+        effective_tenant_id = tenant_id
+        if not effective_tenant_id and project_id:
+            project = Project.query.get(int(project_id))
+            if project:
+                effective_tenant_id = project.tenant_id
+
         bug = Bug(
-            tenant_id=tenant_id,
+            tenant_id=effective_tenant_id,
             code=generate_code('BUG', Bug),
             project_id=int(project_id) if project_id else None,
             title=request.form.get('title', '').strip(),
@@ -660,8 +688,15 @@ def action_create():
         bug_id = request.form.get('bug_id')
         risk_id = request.form.get('risk_id')
 
+        # For superadmins, get tenant_id from the project
+        effective_tenant_id = tenant_id
+        if not effective_tenant_id and project_id:
+            project = Project.query.get(int(project_id))
+            if project:
+                effective_tenant_id = project.tenant_id
+
         action = CorrectiveAction(
-            tenant_id=tenant_id,
+            tenant_id=effective_tenant_id,
             code=generate_code('AC', CorrectiveAction),
             project_id=int(project_id) if project_id else None,
             description=request.form.get('description', '').strip(),
