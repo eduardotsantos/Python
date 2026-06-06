@@ -785,7 +785,93 @@
                 this.style.transform = 'scale(1)';
             });
         });
+
+        // Translate page if English is selected
+        if (currentLang === 'en') {
+            setTimeout(translateLoginPage, 100);
+        }
     });
+
+    // Translation dictionary for login page
+    const loginTranslations = {
+        'Acesso ao Sistema': 'System Access',
+        'Email ou Usuário': 'Email or Username',
+        'Senha': 'Password',
+        'Entrar na Plataforma': 'Enter Platform',
+        'Conexão segura e criptografada': 'Secure encrypted connection',
+        'Idioma / Language': 'Language',
+        'Recursos da Plataforma': 'Platform Features',
+        'Inteligência Artificial': 'Artificial Intelligence',
+        'Análise automática de editais e geração de propostas com IA avançada': 'Automatic call analysis and proposal generation with advanced AI',
+        'Monitoramento': 'Monitoring',
+        'Acompanhamento automático de chamadas FINEP, BNDES e FAPESC': 'Automatic tracking of FINEP, BNDES and FAPESC calls',
+        'Gestão Financeira': 'Financial Management',
+        'Controle de despesas com anexos de boletos, NFs e comprovantes': 'Expense control with payment slips, invoices and receipts',
+        'Propostas': 'Proposals',
+        'Geração automática de propostas alinhadas com requisitos do edital': 'Automatic generation of proposals aligned with call requirements',
+        'Últimas Notícias': 'Latest News',
+        'Chamadas Abertas': 'Open Calls',
+        'Projetos Ativos': 'Active Projects',
+        'Usuários': 'Users',
+        'Gestão Inteligente de Projetos P&D': 'Intelligent R&D Project Management',
+        'Plataforma completa para gestão de projetos de Pesquisa e Desenvolvimento com inteligência artificial integrada': 'Complete platform for Research and Development project management with integrated artificial intelligence',
+        'Solicitar Demonstração': 'Request Demo',
+        'Saiba Mais': 'Learn More',
+        'Todos os direitos reservados': 'All rights reserved',
+        'Termos de Uso': 'Terms of Use',
+        'Privacidade': 'Privacy',
+        'Contato': 'Contact'
+    };
+
+    function translateLoginPage() {
+        // Translate text nodes
+        const walker = document.createTreeWalker(
+            document.body,
+            NodeFilter.SHOW_TEXT,
+            {
+                acceptNode: function(node) {
+                    const parent = node.parentNode;
+                    if (parent.tagName === 'SCRIPT' || parent.tagName === 'STYLE') {
+                        return NodeFilter.FILTER_REJECT;
+                    }
+                    if (!node.textContent.trim()) {
+                        return NodeFilter.FILTER_REJECT;
+                    }
+                    return NodeFilter.FILTER_ACCEPT;
+                }
+            }
+        );
+
+        const textNodes = [];
+        while (walker.nextNode()) {
+            textNodes.push(walker.currentNode);
+        }
+
+        textNodes.forEach(node => {
+            const text = node.textContent.trim();
+            if (loginTranslations[text]) {
+                node.textContent = node.textContent.replace(text, loginTranslations[text]);
+            }
+        });
+
+        // Translate placeholders
+        document.querySelectorAll('[placeholder]').forEach(el => {
+            const text = el.placeholder;
+            if (loginTranslations[text]) {
+                el.placeholder = loginTranslations[text];
+            }
+        });
+
+        // Translate buttons
+        document.querySelectorAll('button').forEach(el => {
+            const text = el.textContent.trim();
+            Object.keys(loginTranslations).forEach(key => {
+                if (text.includes(key)) {
+                    el.innerHTML = el.innerHTML.replace(key, loginTranslations[key]);
+                }
+            });
+        });
+    }
     </script>
 </body>
 </html>
