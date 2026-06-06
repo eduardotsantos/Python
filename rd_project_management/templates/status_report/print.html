@@ -661,7 +661,7 @@
                             <div style="font-size: 8pt; color: #888;">Riscos</div>
                         </td>
                         <td style="text-align: center; padding: 5px;">
-                            <div style="font-size: 14pt; font-weight: bold; color: {{ '#ffc107' if compliance_status.overdue_pending > 0 else '#333' }};">{{ compliance_status.overdue_pending }}</div>
+                            <div style="font-size: 14pt; font-weight: bold; color: {{ '#ffc107' if compliance_status.open_pending > 0 else '#333' }};">{{ compliance_status.open_pending }}</div>
                             <div style="font-size: 8pt; color: #888;">Pendencias</div>
                         </td>
                         <td style="text-align: center; padding: 5px;">
@@ -678,6 +678,9 @@
                 <div style="font-size: 8pt; border-top: 1px solid #ddd; padding-top: 5px;">
                     {% if compliance_status.critical_risks > 0 %}
                     <div style="color: #dc3545;">* {{ compliance_status.critical_risks }} risco(s) critico(s)</div>
+                    {% endif %}
+                    {% if compliance_status.overdue_pending > 0 %}
+                    <div style="color: #dc3545;">* {{ compliance_status.overdue_pending }} pendencia(s) atrasada(s)</div>
                     {% endif %}
                     {% if compliance_status.critical_bugs > 0 %}
                     <div style="color: #dc3545;">* {{ compliance_status.critical_bugs }} bug(s) critico(s)</div>

@@ -474,8 +474,8 @@
                         <small class="text-muted">Riscos Abertos</small>
                     </div>
                     <div class="col">
-                        <div class="fw-bold fs-5 {% if compliance_status.overdue_pending > 0 %}text-warning{% endif %}">{{ compliance_status.overdue_pending }}</div>
-                        <small class="text-muted">Pendencias Atrasadas</small>
+                        <div class="fw-bold fs-5 {% if compliance_status.open_pending > 0 %}text-warning{% endif %}">{{ compliance_status.open_pending }}</div>
+                        <small class="text-muted">Pendencias Abertas</small>
                     </div>
                     <div class="col">
                         <div class="fw-bold fs-5 {% if compliance_status.open_bugs > 0 %}text-danger{% endif %}">{{ compliance_status.open_bugs }}</div>
@@ -492,6 +492,9 @@
                 <div class="small">
                     {% if compliance_status.critical_risks > 0 %}
                     <div class="text-danger mb-1"><i class="bi bi-exclamation-circle"></i> {{ compliance_status.critical_risks }} risco(s) critico(s)</div>
+                    {% endif %}
+                    {% if compliance_status.overdue_pending > 0 %}
+                    <div class="text-danger mb-1"><i class="bi bi-clock-history"></i> {{ compliance_status.overdue_pending }} pendencia(s) atrasada(s)</div>
                     {% endif %}
                     {% if compliance_status.critical_bugs > 0 %}
                     <div class="text-danger mb-1"><i class="bi bi-bug"></i> {{ compliance_status.critical_bugs }} bug(s) critico(s)</div>
