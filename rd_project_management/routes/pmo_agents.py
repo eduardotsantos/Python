@@ -1,5 +1,5 @@
 """
-Routes for Orion Autônomos PMO - AI Agent Dashboard and API.
+Routes for Orion Autonomous PMO - AI Agent Dashboard and API.
 """
 from flask import Blueprint, render_template, request, redirect, url_for, flash, jsonify, make_response
 from flask_login import login_required, current_user
@@ -30,7 +30,7 @@ def dashboard():
 
     return render_template('pmo_agents/dashboard.html',
         agents=agents_info,
-        page_title='Orion Autônomos PMO'
+        page_title='Orion Autonomous PMO'
     )
 
 

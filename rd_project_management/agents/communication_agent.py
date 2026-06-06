@@ -276,7 +276,7 @@ DETALHAMENTO POR PROJETO
 
         summary += """
 --------------------------------------------------------------------------------
-                    Orion Autônomos PMO - Daily Executive AI
+                    Orion Autonomous PMO - Daily Executive AI
 ================================================================================
 """
         return summary

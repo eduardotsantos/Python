@@ -8,7 +8,7 @@ NOVOS MÓDULOS
 1. Central de Pendências e Conformidade (/compliance)
    - Riscos, Pendências, Não Conformidades, Bugs, Ações Corretivas
 
-2. Orion Autônomos PMO (/pmo)
+2. Orion Autonomous PMO (/pmo)
    - 11 Agentes IA para gestão autônoma de projetos
    - Daily Executive AI (briefing diário)
    - Leitor de Atas com extração automática

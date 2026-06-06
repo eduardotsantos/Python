@@ -130,7 +130,7 @@ def create_app():
     except ImportError:
         pass
 
-    # Optional PMO Agents blueprint (Orion Autônomos PMO)
+    # Optional PMO Agents blueprint (Orion Autonomous PMO)
     has_pmo_agents = False
     try:
         from routes.pmo_agents import pmo_agents_bp

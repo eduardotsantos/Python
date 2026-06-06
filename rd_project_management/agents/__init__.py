@@ -1,5 +1,5 @@
 """
-Orion Autônomos PMO - AI Agent Framework
+Orion Autonomous PMO - AI Agent Framework
 Autonomous Project Management Office with 10 specialized AI agents.
 """
 

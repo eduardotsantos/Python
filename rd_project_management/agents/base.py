@@ -1,5 +1,5 @@
 """
-Base Agent Framework for Orion Autônomos PMO.
+Base Agent Framework for Orion Autonomous PMO.
 All specialized agents inherit from BaseAgent.
 """
 from abc import ABC, abstractmethod

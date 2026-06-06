@@ -1,7 +1,7 @@
 #!/bin/bash
 # =============================================================================
 # DEPLOY PACKAGE - Orion P&D v2.0
-# Central de Conformidade + Orion Autônomos PMO
+# Central de Conformidade + Orion Autonomous PMO
 # =============================================================================
 # Gerado em: $(date)
 # =============================================================================
@@ -73,7 +73,7 @@ echo "=================================================="
 echo ""
 echo "Novos recursos disponíveis:"
 echo "  - /compliance - Central de Pendências e Conformidade"
-echo "  - /pmo - Orion Autônomos PMO (11 Agentes IA)"
+echo "  - /pmo - Orion Autonomous PMO (11 AI Agents)"
 echo ""
 echo "Em caso de problemas, restaure o backup:"
 echo "  cp -r $BACKUP_DIR/* $BASE_DIR/"
