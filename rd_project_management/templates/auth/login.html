@@ -738,64 +738,11 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-    // Simple i18n for login page
-    const loginTranslations = {
-        'pt-BR': {
-            'Access your account': 'Acesse sua conta',
-            'Email': 'E-mail',
-            'Password': 'Senha',
-            'Login': 'Entrar',
-            'Manage your R&D projects': 'Gerencie seus projetos de P&D',
-            'Open Innovation Portal': 'Portal de Inovação Aberta',
-            'Public Calls': 'Chamadas Públicas',
-            'Recent public calls': 'Chamadas públicas recentes',
-            'Funding Agencies': 'Agências de Fomento',
-            'R&D News': 'Notícias de P&D',
-            'See all': 'Ver todas'
-        }
-    };
-
-    document.addEventListener('DOMContentLoaded', function() {
-        const currentLang = localStorage.getItem('orion_lang') || 'pt-BR';
-
-        // Update active flag
-        document.querySelectorAll('.lang-flag').forEach(el => {
-            const isActive = el.dataset.lang === currentLang;
-            el.style.opacity = isActive ? '1' : '0.6';
-
-            // Add border to active flag image
-            const img = el.querySelector('img');
-            if (img) {
-                img.style.borderColor = isActive ? 'rgba(255,255,255,0.8)' : 'transparent';
-            }
-
-            el.addEventListener('click', function() {
-                localStorage.setItem('orion_lang', this.dataset.lang);
-                location.reload();
-            });
-
-            el.addEventListener('mouseenter', function() {
-                this.style.opacity = '1';
-                this.style.transform = 'scale(1.1)';
-            });
-
-            el.addEventListener('mouseleave', function() {
-                const isActiveNow = this.dataset.lang === localStorage.getItem('orion_lang');
-                this.style.opacity = isActiveNow ? '1' : '0.6';
-                this.style.transform = 'scale(1)';
-            });
-        });
-
-        // Translate page if English is selected
-        if (currentLang === 'en') {
-            setTimeout(translateLoginPage, 100);
-        }
-    });
-
-    // Translation dictionary for login page
-    const loginTranslations = {
+    // Translation dictionary for login page (PT -> EN)
+    const ptToEn = {
         // Header
         'Portal de Inovação Aberta': 'Open Innovation Portal',
+        'Orion P&D': 'Orion R&D',
 
         // Hero Section
         'Transforme suas idéias em projetos de inovação': 'Transform your ideas into innovation projects',
@@ -830,11 +777,7 @@
         'Projetos Ativos': 'Active Projects',
         'Usuários': 'Users',
 
-        // Other
-        'Gestão Inteligente de Projetos P&D': 'Intelligent R&D Project Management',
-        'Plataforma completa para gestão de projetos de Pesquisa e Desenvolvimento com inteligência artificial integrada': 'Complete platform for R&D project management with integrated artificial intelligence',
-        'Solicitar Demonstração': 'Request Demo',
-        'Saiba Mais': 'Learn More',
+        // Footer
         'Todos os direitos reservados': 'All rights reserved',
         'Termos de Uso': 'Terms of Use',
         'Privacidade': 'Privacy',
@@ -873,29 +816,73 @@
 
         textNodes.forEach(node => {
             const text = node.textContent.trim();
-            if (loginTranslations[text]) {
-                node.textContent = node.textContent.replace(text, loginTranslations[text]);
+            if (ptToEn[text]) {
+                node.textContent = node.textContent.replace(text, ptToEn[text]);
             }
         });
 
         // Translate placeholders
         document.querySelectorAll('[placeholder]').forEach(el => {
-            const text = el.placeholder;
-            if (loginTranslations[text]) {
-                el.placeholder = loginTranslations[text];
+            if (ptToEn[el.placeholder]) {
+                el.placeholder = ptToEn[el.placeholder];
             }
         });
 
         // Translate buttons
         document.querySelectorAll('button').forEach(el => {
-            const text = el.textContent.trim();
-            Object.keys(loginTranslations).forEach(key => {
-                if (text.includes(key)) {
-                    el.innerHTML = el.innerHTML.replace(key, loginTranslations[key]);
+            Object.keys(ptToEn).forEach(key => {
+                if (el.innerHTML.includes(key)) {
+                    el.innerHTML = el.innerHTML.replace(key, ptToEn[key]);
+                }
+            });
+        });
+
+        // Translate labels
+        document.querySelectorAll('label').forEach(el => {
+            Object.keys(ptToEn).forEach(key => {
+                if (el.innerHTML.includes(key)) {
+                    el.innerHTML = el.innerHTML.replace(key, ptToEn[key]);
                 }
             });
         });
     }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        const currentLang = localStorage.getItem('orion_lang') || 'pt-BR';
+
+        // Update active flag
+        document.querySelectorAll('.lang-flag').forEach(el => {
+            const isActive = el.dataset.lang === currentLang;
+            el.style.opacity = isActive ? '1' : '0.6';
+
+            // Add border to active flag image
+            const img = el.querySelector('img');
+            if (img) {
+                img.style.borderColor = isActive ? 'rgba(255,255,255,0.8)' : 'transparent';
+            }
+
+            el.addEventListener('click', function() {
+                localStorage.setItem('orion_lang', this.dataset.lang);
+                location.reload();
+            });
+
+            el.addEventListener('mouseenter', function() {
+                this.style.opacity = '1';
+                this.style.transform = 'scale(1.1)';
+            });
+
+            el.addEventListener('mouseleave', function() {
+                const isActiveNow = this.dataset.lang === localStorage.getItem('orion_lang');
+                this.style.opacity = isActiveNow ? '1' : '0.6';
+                this.style.transform = 'scale(1)';
+            });
+        });
+
+        // Translate page if English is selected
+        if (currentLang === 'en') {
+            setTimeout(translateLoginPage, 100);
+        }
+    });
     </script>
 </body>
 </html>
