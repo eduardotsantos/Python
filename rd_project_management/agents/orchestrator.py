@@ -115,6 +115,13 @@ class ProjectSummary:
     late_milestones: int
     upcoming_milestones: List[Dict] = field(default_factory=list)
     recent_milestones: List[Dict] = field(default_factory=list)
+    health_status: HealthStatus = HealthStatus.HEALTHY
+    next_milestone: str = ''
+    # PMBOK 8 - Value Delivery fields
+    expected_value: float = 0.0
+    realized_value: float = 0.0
+    value_type: str = ''
+    value_status: str = 'Não iniciado'
 
     def to_dict(self) -> Dict:
         return {
@@ -131,7 +138,13 @@ class ProjectSummary:
             'completed_milestones': self.completed_milestones,
             'late_milestones': self.late_milestones,
             'upcoming_milestones': self.upcoming_milestones,
-            'recent_milestones': self.recent_milestones
+            'recent_milestones': self.recent_milestones,
+            'health_status': self.health_status.value,
+            'next_milestone': self.next_milestone,
+            'expected_value': self.expected_value,
+            'realized_value': self.realized_value,
+            'value_type': self.value_type,
+            'value_status': self.value_status
         }
 
 
@@ -403,6 +416,19 @@ class PMOOrchestrator:
                 and m.end_date >= today - timedelta(days=7)
             ]
 
+            # Determine health status
+            if late_ms > 2 or budget_variance > 20:
+                health_status = HealthStatus.CRITICAL
+            elif late_ms > 0 or budget_variance > 10 or schedule_status == 'at_risk':
+                health_status = HealthStatus.ATTENTION
+            else:
+                health_status = HealthStatus.HEALTHY
+
+            # Get next milestone
+            next_ms = next((m for m in sorted(milestones, key=lambda x: x.end_date)
+                           if m.end_date >= today and m.status not in ['Concluído', 'Concluída', 'Finalizado']), None)
+            next_milestone_str = f"{next_ms.title} ({next_ms.end_date.strftime('%d/%m')})" if next_ms else ''
+
             summaries.append(ProjectSummary(
                 project_id=project.id,
                 code=project.code,
@@ -417,7 +443,14 @@ class PMOOrchestrator:
                 completed_milestones=completed_ms,
                 late_milestones=late_ms,
                 upcoming_milestones=upcoming[:5],
-                recent_milestones=recent[:5]
+                recent_milestones=recent[:5],
+                health_status=health_status,
+                next_milestone=next_milestone_str,
+                # PMBOK 8 - Value Delivery
+                expected_value=getattr(project, 'expected_value', 0) or 0,
+                realized_value=getattr(project, 'realized_value', 0) or 0,
+                value_type=getattr(project, 'value_type', '') or '',
+                value_status=getattr(project, 'value_status', 'Não iniciado') or 'Não iniciado'
             ))
 
         return summaries

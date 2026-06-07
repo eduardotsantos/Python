@@ -123,6 +123,12 @@ class Project(db.Model):
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
 
+    # PMBOK 8 - Value Delivery fields
+    expected_value = db.Column(db.Float, default=0.0)
+    value_type = db.Column(db.String(50))  # ROI, Economia, Receita, Estratégico
+    value_status = db.Column(db.String(50), default='Não iniciado')  # Não iniciado, Em captura, Parcial, Realizado
+    realized_value = db.Column(db.Float, default=0.0)
+
     __table_args__ = (
         db.UniqueConstraint('tenant_id', 'code', name='uq_tenant_project_code'),
     )

@@ -231,6 +231,39 @@ def generate_briefing_html(briefing, tenant):
             </div>
         """
 
+    # PMBOK 8 - Value Delivery Summary
+    if briefing.project_summaries:
+        total_expected = sum(p.expected_value for p in briefing.project_summaries if hasattr(p, 'expected_value') and p.expected_value)
+        total_realized = sum(p.realized_value for p in briefing.project_summaries if hasattr(p, 'realized_value') and p.realized_value)
+        value_capture_pct = (total_realized / total_expected * 100) if total_expected > 0 else 0
+        projects_with_value = [p for p in briefing.project_summaries if hasattr(p, 'expected_value') and p.expected_value and p.expected_value > 0]
+
+        if total_expected > 0:
+            html += f"""
+            <div class="section">
+                <h2>🏆 Entrega de Valor (PMBOK 8)</h2>
+                <table>
+                    <tr>
+                        <th>Valor Esperado</th>
+                        <th>Valor Realizado</th>
+                        <th>Captura</th>
+                    </tr>
+                    <tr>
+                        <td>R$ {total_expected:,.2f}</td>
+                        <td style="color: #27ae60; font-weight: bold;">R$ {total_realized:,.2f}</td>
+                        <td style="color: {'#27ae60' if value_capture_pct >= 80 else '#f39c12' if value_capture_pct >= 50 else '#e74c3c'}; font-weight: bold;">{value_capture_pct:.0f}%</td>
+                    </tr>
+                </table>
+            """
+            # Projects needing value capture attention
+            pending_value_projects = [p for p in projects_with_value if hasattr(p, 'value_status') and p.value_status in ['Não iniciado', 'Em captura']]
+            if pending_value_projects:
+                html += "<h4 style='color: #f39c12; margin-top: 15px;'>💡 Projetos pendentes de captura de valor:</h4><ul>"
+                for proj in pending_value_projects[:5]:
+                    html += f"<li><strong>{proj.code}</strong>: {proj.title[:40]} (R$ {proj.expected_value:,.2f})</li>"
+                html += "</ul>"
+            html += "</div>"
+
     # Compliance Summary
     if briefing.compliance_summary:
         comp = briefing.compliance_summary
@@ -411,6 +444,39 @@ def generate_briefing_pdf(briefing):
         ]))
         story.append(table)
         story.append(Spacer(1, 20))
+
+        # PMBOK 8 - Value Delivery Section
+        if briefing.project_summaries:
+            total_expected = sum(p.expected_value for p in briefing.project_summaries if hasattr(p, 'expected_value') and p.expected_value)
+            total_realized = sum(p.realized_value for p in briefing.project_summaries if hasattr(p, 'realized_value') and p.realized_value)
+
+            if total_expected > 0:
+                value_capture_pct = (total_realized / total_expected * 100) if total_expected > 0 else 0
+                story.append(Paragraph("Entrega de Valor (PMBOK 8)", section_style))
+
+                value_data = [
+                    ['Métrica', 'Valor'],
+                    ['Valor Esperado (Total)', f'R$ {total_expected:,.2f}'],
+                    ['Valor Realizado', f'R$ {total_realized:,.2f}'],
+                    ['Captura de Valor', f'{value_capture_pct:.0f}%'],
+                ]
+
+                value_table = Table(value_data, colWidths=[10*cm, 5*cm])
+                value_table.setStyle(TableStyle([
+                    ('BACKGROUND', (0, 0), (-1, 0), colors.HexColor('#17a2b8')),
+                    ('TEXTCOLOR', (0, 0), (-1, 0), colors.white),
+                    ('ALIGN', (0, 0), (-1, -1), 'LEFT'),
+                    ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
+                    ('FONTSIZE', (0, 0), (-1, 0), 12),
+                    ('BOTTOMPADDING', (0, 0), (-1, 0), 12),
+                    ('BACKGROUND', (0, 1), (-1, -1), colors.HexColor('#e3f2fd')),
+                    ('GRID', (0, 0), (-1, -1), 1, colors.white),
+                    ('FONTSIZE', (0, 1), (-1, -1), 10),
+                    ('TOPPADDING', (0, 1), (-1, -1), 8),
+                    ('BOTTOMPADDING', (0, 1), (-1, -1), 8),
+                ]))
+                story.append(value_table)
+                story.append(Spacer(1, 20))
 
         # Compliance Summary Section
         compliance = briefing.compliance_summary

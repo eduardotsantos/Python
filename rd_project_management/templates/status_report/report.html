@@ -135,6 +135,56 @@
     </div>
 </div>
 
+<!-- PMBOK 8 - Value Delivery -->
+{% if project.expected_value and project.expected_value > 0 %}
+<div class="card shadow-sm mb-4 border-start border-4 border-info">
+    <div class="card-header bg-white d-flex justify-content-between align-items-center">
+        <h6 class="mb-0 fw-bold"><i class="bi bi-award text-info"></i> Entrega de Valor (PMBOK 8)</h6>
+        {% if project.value_status == 'Realizado' %}
+        <span class="status-badge green">{{ project.value_status }}</span>
+        {% elif project.value_status == 'Parcial' %}
+        <span class="status-badge yellow">{{ project.value_status }}</span>
+        {% elif project.value_status == 'Em captura' %}
+        <span class="badge bg-info">{{ project.value_status }}</span>
+        {% else %}
+        <span class="status-badge gray">{{ project.value_status }}</span>
+        {% endif %}
+    </div>
+    <div class="card-body">
+        <div class="row g-3">
+            <div class="col-md-3">
+                <div class="border rounded p-3 text-center h-100">
+                    <div class="fw-bold text-muted" style="font-size: 1.2rem;">{{ project.value_type or '-' }}</div>
+                    <div class="small text-muted">Tipo de Valor</div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="border rounded p-3 text-center h-100">
+                    <div class="fw-bold text-primary" style="font-size: 1.2rem;">R$ {{ "{:,.2f}".format(project.expected_value).replace(",", "X").replace(".", ",").replace("X", ".") }}</div>
+                    <div class="small text-muted">Valor Esperado</div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="border rounded p-3 text-center h-100">
+                    <div class="fw-bold text-success" style="font-size: 1.2rem;">R$ {{ "{:,.2f}".format(project.realized_value or 0).replace(",", "X").replace(".", ",").replace("X", ".") }}</div>
+                    <div class="small text-muted">Valor Realizado</div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="border rounded p-3 text-center h-100">
+                    {% set value_percent = ((project.realized_value or 0) / project.expected_value * 100) if project.expected_value > 0 else 0 %}
+                    <div class="fw-bold {{ 'text-success' if value_percent >= 80 else 'text-warning' if value_percent >= 50 else 'text-danger' }}" style="font-size: 1.5rem;">{{ "%.0f"|format(value_percent) }}%</div>
+                    <div class="small text-muted">Captura de Valor</div>
+                    <div class="progress progress-thin mt-2">
+                        <div class="progress-bar {{ 'bg-success' if value_percent >= 80 else 'bg-warning' if value_percent >= 50 else 'bg-danger' }}" style="width: {{ value_percent }}%"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
+
 <!-- EVM Metrics -->
 {% if evm_metrics and evm_metrics.has_data %}
 <div class="card shadow-sm mb-4">

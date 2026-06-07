@@ -75,6 +75,50 @@
     </div>
 </div>
 
+<!-- PMBOK 8 - Value Delivery Card -->
+{% if project.expected_value and project.expected_value > 0 %}
+<div class="card shadow-sm mb-4 border-start border-4 border-info">
+    <div class="card-body">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h6 class="mb-0 fw-bold"><i class="bi bi-award text-info"></i> Entrega de Valor (PMBOK 8)</h6>
+            {% if project.value_status == 'Realizado' %}
+            <span class="badge bg-success">{{ project.value_status }}</span>
+            {% elif project.value_status == 'Parcial' %}
+            <span class="badge bg-warning text-dark">{{ project.value_status }}</span>
+            {% elif project.value_status == 'Em captura' %}
+            <span class="badge bg-info">{{ project.value_status }}</span>
+            {% else %}
+            <span class="badge bg-secondary">{{ project.value_status }}</span>
+            {% endif %}
+        </div>
+        <div class="row g-3">
+            <div class="col-md-3">
+                <small class="text-muted d-block">Tipo de Valor</small>
+                <strong>{{ project.value_type or '-' }}</strong>
+            </div>
+            <div class="col-md-3">
+                <small class="text-muted d-block">Valor Esperado</small>
+                <strong class="text-primary">R$ {{ "{:,.2f}".format(project.expected_value).replace(",", "X").replace(".", ",").replace("X", ".") }}</strong>
+            </div>
+            <div class="col-md-3">
+                <small class="text-muted d-block">Valor Realizado</small>
+                <strong class="text-success">R$ {{ "{:,.2f}".format(project.realized_value or 0).replace(",", "X").replace(".", ",").replace("X", ".") }}</strong>
+            </div>
+            <div class="col-md-3">
+                <small class="text-muted d-block">Captura de Valor</small>
+                {% set value_percent = ((project.realized_value or 0) / project.expected_value * 100) if project.expected_value > 0 else 0 %}
+                <div class="d-flex align-items-center">
+                    <strong class="{{ 'text-success' if value_percent >= 80 else 'text-warning' if value_percent >= 50 else 'text-danger' }}">{{ "%.0f"|format(value_percent) }}%</strong>
+                    <div class="progress flex-grow-1 ms-2" style="height: 8px;">
+                        <div class="progress-bar {{ 'bg-success' if value_percent >= 80 else 'bg-warning' if value_percent >= 50 else 'bg-danger' }}" style="width: {{ value_percent }}%"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
+
 <!-- Project Details -->
 <div class="row g-4">
     <div class="col-lg-8">

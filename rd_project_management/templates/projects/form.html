@@ -94,6 +94,42 @@
                                 {% endfor %}
                             </select>
                         </div>
+
+                        <!-- PMBOK 8 - Value Delivery Section -->
+                        <div class="col-12 mt-4">
+                            <div class="alert alert-info py-2 mb-3">
+                                <i class="bi bi-award me-1"></i> <strong>Entrega de Valor (PMBOK 8)</strong> - Defina o valor esperado do projeto
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <label for="value_type" class="form-label">Tipo de Valor</label>
+                            <select class="form-select" id="value_type" name="value_type">
+                                <option value="">Selecione...</option>
+                                {% set value_types = ['ROI', 'Economia', 'Receita', 'Estratégico'] %}
+                                {% for vt in value_types %}
+                                <option value="{{ vt }}" {{ 'selected' if project and project.value_type == vt }}>{{ vt }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="col-md-3">
+                            <label for="expected_value" class="form-label">Valor Esperado (R$)</label>
+                            <input type="number" step="0.01" class="form-control" id="expected_value" name="expected_value"
+                                   value="{{ project.expected_value if project and project.expected_value else '0.00' }}" data-currency>
+                        </div>
+                        <div class="col-md-3">
+                            <label for="realized_value" class="form-label">Valor Realizado (R$)</label>
+                            <input type="number" step="0.01" class="form-control" id="realized_value" name="realized_value"
+                                   value="{{ project.realized_value if project and project.realized_value else '0.00' }}" data-currency>
+                        </div>
+                        <div class="col-md-3">
+                            <label for="value_status" class="form-label">Status do Valor</label>
+                            <select class="form-select" id="value_status" name="value_status">
+                                {% set value_statuses = ['Não iniciado', 'Em captura', 'Parcial', 'Realizado'] %}
+                                {% for vs in value_statuses %}
+                                <option value="{{ vs }}" {{ 'selected' if project and project.value_status == vs }}>{{ vs }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
                     </div>
 
                     <hr class="my-4">

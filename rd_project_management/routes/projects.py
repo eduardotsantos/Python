@@ -155,6 +155,12 @@ def create_project():
             flash('Código do projeto já existe nesta empresa.', 'danger')
             return render_template('projects/form.html', project=None, users=users, tenants=tenants, is_superadmin=is_superadmin)
 
+        # PMBOK 8 - Value fields
+        value_type = request.form.get('value_type', '')
+        expected_value = request.form.get('expected_value', 0)
+        realized_value = request.form.get('realized_value', 0)
+        value_status = request.form.get('value_status', 'Não iniciado')
+
         project = Project(
             tenant_id=tenant_id,
             code=code,
@@ -164,7 +170,11 @@ def create_project():
             category=category,
             budget=float(budget) if budget else 0,
             funding_source=funding_source,
-            responsible_id=current_user.id
+            responsible_id=current_user.id,
+            value_type=value_type,
+            expected_value=float(expected_value) if expected_value else 0,
+            realized_value=float(realized_value) if realized_value else 0,
+            value_status=value_status
         )
 
         if start_date_str:
@@ -232,6 +242,12 @@ def edit_project(project_id):
         project.budget = float(request.form.get('budget', 0) or 0)
         project.funding_source = request.form.get('funding_source', '')
         project.responsible_id = request.form.get('responsible_id') or current_user.id
+
+        # PMBOK 8 - Value fields
+        project.value_type = request.form.get('value_type', '')
+        project.expected_value = float(request.form.get('expected_value', 0) or 0)
+        project.realized_value = float(request.form.get('realized_value', 0) or 0)
+        project.value_status = request.form.get('value_status', 'Não iniciado')
 
         start_date_str = request.form.get('start_date', '')
         end_date_str = request.form.get('end_date', '')
