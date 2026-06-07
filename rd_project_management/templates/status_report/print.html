@@ -689,6 +689,15 @@
                     <div style="color: #856404;">* {{ compliance_status.pending_actions }} acao(oes) pendente(s)</div>
                     {% endif %}
                 </div>
+
+                {% if compliance_status.overdue_items %}
+                <div style="font-size: 8pt; margin-top: 5px;">
+                    <strong style="color: #dc3545;">Itens Atrasados:</strong>
+                    {% for item in compliance_status.overdue_items[:5] %}
+                    <div style="margin-left: 10px;">- {{ item.title|truncate(40) }} ({{ item.due_date.strftime('%d/%m') if item.due_date else '' }})</div>
+                    {% endfor %}
+                </div>
+                {% endif %}
                 {% endif %}
             </div>
             {% endif %}

@@ -440,6 +440,7 @@ def get_compliance_status(project):
         'total_pending': len(pending),
         'open_pending': len(open_pending),
         'overdue_pending': len(overdue_pending),
+        'overdue_items': overdue_pending[:10],
         'pending_items': open_pending[:5],
         # Bugs
         'total_bugs': len(bugs),

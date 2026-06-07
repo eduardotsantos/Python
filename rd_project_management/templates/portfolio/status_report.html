@@ -188,6 +188,51 @@
             </div>
         </div>
 
+        <!-- Compliance Status -->
+        {% if compliance_status %}
+        <div class="card shadow-sm mb-4">
+            <div class="card-header bg-white d-flex justify-content-between align-items-center">
+                <h6 class="mb-0 fw-bold"><i class="bi bi-shield-check text-primary"></i> Conformidade</h6>
+                <span class="badge bg-{{ 'danger' if compliance_status.status == 'red' else 'warning' if compliance_status.status == 'yellow' else 'success' }}">
+                    {{ compliance_status.label }}
+                </span>
+            </div>
+            <div class="card-body">
+                <div class="row text-center mb-3">
+                    <div class="col-3">
+                        <div class="fw-bold fs-5 {% if compliance_status.open_risks > 0 %}text-danger{% endif %}">{{ compliance_status.open_risks }}</div>
+                        <small class="text-muted">Riscos</small>
+                    </div>
+                    <div class="col-3">
+                        <div class="fw-bold fs-5 {% if compliance_status.open_pending > 0 %}text-warning{% endif %}">{{ compliance_status.open_pending }}</div>
+                        <small class="text-muted">Pendencias</small>
+                    </div>
+                    <div class="col-3">
+                        <div class="fw-bold fs-5 {% if compliance_status.open_bugs > 0 %}text-danger{% endif %}">{{ compliance_status.open_bugs }}</div>
+                        <small class="text-muted">Bugs</small>
+                    </div>
+                    <div class="col-3">
+                        <div class="fw-bold fs-5 {% if compliance_status.open_ncs > 0 %}text-warning{% endif %}">{{ compliance_status.open_ncs }}</div>
+                        <small class="text-muted">NCs</small>
+                    </div>
+                </div>
+
+                {% if compliance_status.overdue_items %}
+                <hr>
+                <h6 class="small fw-bold text-danger"><i class="bi bi-clock-history"></i> Pendencias Atrasadas</h6>
+                <div class="list-group list-group-flush small">
+                    {% for item in compliance_status.overdue_items[:5] %}
+                    <div class="list-group-item px-0 py-1 d-flex justify-content-between">
+                        <span>{{ item.title|truncate(40) }}</span>
+                        <span class="text-danger">{{ item.due_date.strftime('%d/%m') if item.due_date else '' }}</span>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% endif %}
+            </div>
+        </div>
+        {% endif %}
+
         <!-- Milestones -->
         <div class="card shadow-sm">
             <div class="card-header bg-white">

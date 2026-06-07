@@ -1,0 +1,188 @@
+{% extends "base.html" %}
+{% block title %}{{ page_title }} - Gestao P&D{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h4 class="fw-bold mb-0">
+        <i class="bi bi-shield-check text-primary"></i> Analise de Conformidade
+    </h4>
+    <div>
+        <a href="{{ url_for('pmo_agents.dashboard') }}" class="btn btn-outline-secondary">
+            <i class="bi bi-arrow-left"></i> Voltar
+        </a>
+    </div>
+</div>
+
+<!-- Filter -->
+<div class="card shadow-sm mb-4">
+    <div class="card-body">
+        <form method="GET" class="row g-3 align-items-end">
+            <div class="col-md-6">
+                <label class="form-label">Filtrar por Projeto</label>
+                <select name="project_id" class="form-select" onchange="this.form.submit()">
+                    <option value="">Todos os Projetos</option>
+                    {% for project in projects %}
+                    <option value="{{ project.id }}" {{ 'selected' if selected_project and selected_project.id == project.id }}>
+                        {{ project.code }} - {{ project.title }}
+                    </option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col-md-6">
+                <a href="{{ url_for('pmo_agents.compliance_analysis') }}" class="btn btn-outline-secondary">
+                    <i class="bi bi-arrow-counterclockwise"></i> Limpar Filtro
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Summary -->
+<div class="row g-3 mb-4">
+    <div class="col-md-3">
+        <div class="card border-0 shadow-sm h-100">
+            <div class="card-body text-center">
+                <div class="fs-1 fw-bold text-primary">{{ result.metrics.total_items_analyzed }}</div>
+                <div class="text-muted">Itens Analisados</div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card border-0 shadow-sm h-100">
+            <div class="card-body text-center">
+                <div class="fs-1 fw-bold text-{{ 'danger' if result.metrics.items_needing_action > 0 else 'success' }}">
+                    {{ result.metrics.items_needing_action }}
+                </div>
+                <div class="text-muted">Requerem Acao</div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card border-0 shadow-sm h-100">
+            <div class="card-body text-center">
+                <div class="fs-1 fw-bold text-info">{{ result.metrics.correlations_found }}</div>
+                <div class="text-muted">Correlacoes Encontradas</div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card border-0 shadow-sm h-100">
+            <div class="card-body text-center">
+                <div class="fs-1 fw-bold text-{{ 'danger' if result.metrics.items_by_age.critical > 0 else 'warning' if result.metrics.items_by_age.old > 0 else 'success' }}">
+                    {{ result.metrics.items_by_age.critical + result.metrics.items_by_age.old }}
+                </div>
+                <div class="text-muted">Itens Criticos/Antigos</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Status -->
+<div class="alert alert-{{ 'danger' if result.health_status.value == 'critical' else 'warning' if result.health_status.value == 'attention' else 'success' }} mb-4">
+    <i class="bi bi-{% if result.health_status.value == 'critical' %}exclamation-triangle{% elif result.health_status.value == 'attention' %}exclamation-circle{% else %}check-circle{% endif %}"></i>
+    {{ result.summary }}
+</div>
+
+<div class="row">
+    <!-- Insights -->
+    <div class="col-lg-6">
+        <div class="card shadow-sm mb-4">
+            <div class="card-header bg-white">
+                <h6 class="mb-0 fw-bold"><i class="bi bi-lightbulb text-warning"></i> Analises ({{ result.insights|length }})</h6>
+            </div>
+            <div class="card-body p-0">
+                {% if result.insights %}
+                <div class="list-group list-group-flush">
+                    {% for insight in result.insights[:15] %}
+                    <div class="list-group-item">
+                        <div class="d-flex justify-content-between align-items-start">
+                            <div class="flex-grow-1">
+                                <span class="badge bg-{{ 'danger' if insight.severity.value == 'critical' else 'warning' if insight.severity.value == 'high' else 'info' if insight.severity.value == 'medium' else 'secondary' }} me-2">
+                                    {{ insight.severity.value|upper }}
+                                </span>
+                                <strong>{{ insight.title }}</strong>
+                                <p class="mb-1 small text-muted">{{ insight.description }}</p>
+                                {% if insight.project_name %}
+                                <small class="text-primary"><i class="bi bi-folder"></i> {{ insight.project_name }}</small>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% else %}
+                <div class="text-center py-4 text-muted">
+                    <i class="bi bi-check-circle fs-1 text-success"></i>
+                    <p class="mb-0 mt-2">Nenhum item requer atencao</p>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <!-- Suggested Actions -->
+    <div class="col-lg-6">
+        <div class="card shadow-sm mb-4">
+            <div class="card-header bg-white">
+                <h6 class="mb-0 fw-bold"><i class="bi bi-lightning text-success"></i> Acoes Sugeridas ({{ result.actions|length }})</h6>
+            </div>
+            <div class="card-body p-0">
+                {% if result.actions %}
+                <div class="list-group list-group-flush">
+                    {% for action in result.actions[:15] %}
+                    <div class="list-group-item">
+                        <div class="d-flex justify-content-between align-items-start">
+                            <div class="flex-grow-1">
+                                <span class="badge bg-{{ 'danger' if action.priority.value == 'critical' else 'warning' if action.priority.value == 'high' else 'info' }} me-2">
+                                    {{ action.priority.value|upper }}
+                                </span>
+                                <strong>{{ action.title }}</strong>
+                                <p class="mb-1 small text-muted" style="white-space: pre-line;">{{ action.description }}</p>
+                                {% if action.data and action.data.correlation %}
+                                <div class="alert alert-info py-1 px-2 mb-0 mt-2 small">
+                                    <i class="bi bi-link-45deg"></i> <strong>Correlacao:</strong> Item similar encontrado
+                                </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% else %}
+                <div class="text-center py-4 text-muted">
+                    <i class="bi bi-hand-thumbs-up fs-1 text-success"></i>
+                    <p class="mb-0 mt-2">Nenhuma acao necessaria no momento</p>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Age Distribution -->
+<div class="card shadow-sm">
+    <div class="card-header bg-white">
+        <h6 class="mb-0 fw-bold"><i class="bi bi-clock-history"></i> Distribuicao por Idade</h6>
+    </div>
+    <div class="card-body">
+        <div class="row text-center">
+            <div class="col">
+                <div class="fs-3 fw-bold text-success">{{ result.metrics.items_by_age.new }}</div>
+                <div class="text-muted small">Novos<br>(até 7 dias)</div>
+            </div>
+            <div class="col">
+                <div class="fs-3 fw-bold text-info">{{ result.metrics.items_by_age.medium }}</div>
+                <div class="text-muted small">Medio<br>(8-30 dias)</div>
+            </div>
+            <div class="col">
+                <div class="fs-3 fw-bold text-warning">{{ result.metrics.items_by_age.old }}</div>
+                <div class="text-muted small">Antigos<br>(31-60 dias)</div>
+            </div>
+            <div class="col">
+                <div class="fs-3 fw-bold text-danger">{{ result.metrics.items_by_age.critical }}</div>
+                <div class="text-muted small">Criticos<br>(+60 dias)</div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

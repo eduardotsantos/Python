@@ -503,6 +503,19 @@
                     <div class="text-warning mb-1"><i class="bi bi-lightning"></i> {{ compliance_status.pending_actions }} acao(oes) corretiva(s) pendente(s)</div>
                     {% endif %}
                 </div>
+
+                {% if compliance_status.overdue_items %}
+                <hr>
+                <h6 class="small fw-bold text-danger"><i class="bi bi-clock-history"></i> Itens Atrasados</h6>
+                <div class="list-group list-group-flush small">
+                    {% for item in compliance_status.overdue_items[:5] %}
+                    <div class="list-group-item px-0 py-1 d-flex justify-content-between">
+                        <span>{{ item.title|truncate(35) }}</span>
+                        <span class="text-danger">{{ item.due_date.strftime('%d/%m') if item.due_date else '' }}</span>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% endif %}
                 {% else %}
                 <div class="text-center text-success">
                     <i class="bi bi-check-circle"></i> Projeto em conformidade

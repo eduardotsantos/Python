@@ -6,7 +6,7 @@ from flask_login import login_required, current_user
 from datetime import datetime, date, timedelta
 from sqlalchemy import func
 
-from models import db, Project, Program, Expense, Milestone, Resource, Timesheet, PublicCall
+from models import db, Project, Program, Expense, Milestone, Resource, Timesheet, PublicCall, Risk, PendingItem, NonConformity, Bug, CorrectiveAction
 from services.tenant_utils import tenant_required, get_current_tenant_id
 
 portfolio_bp = Blueprint('portfolio', __name__)
@@ -274,6 +274,58 @@ def status_report():
             'spent': spent
         })
 
+    # Compliance status for entire portfolio
+    project_ids = [p.id for p in projects]
+
+    all_risks_compliance = Risk.query.filter(Risk.project_id.in_(project_ids)).all() if project_ids else []
+    open_risks = [r for r in all_risks_compliance if r.status not in ['Fechado', 'Mitigado', 'Encerrado']]
+    critical_risks = [r for r in open_risks if r.probability >= 4 and r.impact >= 4]
+
+    all_pending = PendingItem.query.filter(PendingItem.project_id.in_(project_ids)).all() if project_ids else []
+    open_pending = [p for p in all_pending if p.status not in ['Concluída', 'Fechada', 'Resolvida']]
+    overdue_pending = [p for p in open_pending if p.due_date and p.due_date < today]
+
+    all_bugs = Bug.query.filter(Bug.project_id.in_(project_ids)).all() if project_ids else []
+    open_bugs = [b for b in all_bugs if b.status not in ['Fechado', 'Resolvido', 'Encerrado']]
+    critical_bugs = [b for b in open_bugs if b.severity in ['Crítico', 'Crítica', 'Critical']]
+
+    all_ncs = NonConformity.query.filter(NonConformity.project_id.in_(project_ids)).all() if project_ids else []
+    open_ncs = [nc for nc in all_ncs if nc.status not in ['Fechada', 'Encerrada', 'Resolvida']]
+
+    all_actions = CorrectiveAction.query.filter(CorrectiveAction.project_id.in_(project_ids)).all() if project_ids else []
+    pending_actions = [a for a in all_actions if a.status not in ['Concluída', 'Implementada', 'Fechada']]
+
+    # Determine compliance status
+    if critical_risks or critical_bugs or len(overdue_pending) > 3:
+        compliance_color = 'red'
+        compliance_label = 'Crítico'
+    elif open_risks or overdue_pending or open_ncs:
+        compliance_color = 'yellow'
+        compliance_label = 'Atenção'
+    else:
+        compliance_color = 'green'
+        compliance_label = 'Conforme'
+
+    compliance_status = {
+        'status': compliance_color,
+        'label': compliance_label,
+        'open_risks': len(open_risks),
+        'critical_risks': len(critical_risks),
+        'open_pending': len(open_pending),
+        'overdue_pending': len(overdue_pending),
+        'overdue_items': overdue_pending[:10],
+        'open_bugs': len(open_bugs),
+        'critical_bugs': len(critical_bugs),
+        'open_ncs': len(open_ncs),
+        'pending_actions': len(pending_actions),
+        'has_issues': len(open_risks) + len(overdue_pending) + len(open_bugs) + len(open_ncs) > 0
+    }
+
+    # Update overall health to include compliance
+    if compliance_status['status'] == 'red':
+        overall_health = 'red'
+        overall_label = 'Critico'
+
     return render_template('portfolio/status_report.html',
         tenant=tenant,
         report_date=datetime.now(),
@@ -287,7 +339,8 @@ def status_report():
         total_hours=total_hours,
         team=list(unique_team),
         upcoming_milestones=upcoming_milestones,
-        projects_summary=projects_summary
+        projects_summary=projects_summary,
+        compliance_status=compliance_status
     )
 
 

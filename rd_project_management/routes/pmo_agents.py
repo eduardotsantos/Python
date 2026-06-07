@@ -101,6 +101,38 @@ def action_center():
     )
 
 
+@pmo_agents_bp.route('/compliance-analysis')
+@pmo_agents_bp.route('/compliance-analysis/<int:project_id>')
+@login_required
+@tenant_required
+def compliance_analysis(project_id=None):
+    """Run compliance agent analysis on open items."""
+    from agents import ComplianceAgent
+    from models import Project
+
+    tenant_id = get_current_tenant_id()
+
+    # Get projects for filter
+    projects = Project.query.filter_by(tenant_id=tenant_id).filter(
+        Project.status.in_(['Em Andamento', 'Planejamento'])
+    ).order_by(Project.title).all()
+
+    # Run compliance agent
+    agent = ComplianceAgent(tenant_id)
+    result = agent.analyze_open_items(project_id)
+
+    selected_project = None
+    if project_id:
+        selected_project = Project.query.get(project_id)
+
+    return render_template('pmo_agents/compliance_analysis.html',
+        result=result,
+        projects=projects,
+        selected_project=selected_project,
+        page_title='Análise de Conformidade'
+    )
+
+
 @pmo_agents_bp.route('/minutes-parser', methods=['GET', 'POST'])
 @login_required
 @tenant_required
