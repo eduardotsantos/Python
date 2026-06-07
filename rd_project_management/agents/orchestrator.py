@@ -196,6 +196,7 @@ class PMOOrchestrator:
         from .resource_agent import ResourceAgent
         from .quality_agent import QualityAgent
         from .compliance_agent import ComplianceAgent
+        from .compliance_analysis_agent import ComplianceAnalysisAgent
         from .communication_agent import CommunicationAgent
         from .lessons_agent import LessonsLearnedAgent
         from .advisor_agent import ProjectAdvisorAgent
@@ -209,6 +210,7 @@ class PMOOrchestrator:
             ResourceAgent,
             QualityAgent,
             ComplianceAgent,
+            ComplianceAnalysisAgent,
             CommunicationAgent,
             LessonsLearnedAgent,
             ProjectAdvisorAgent,

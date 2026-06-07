@@ -106,8 +106,8 @@ def action_center():
 @login_required
 @tenant_required
 def compliance_analysis(project_id=None):
-    """Run compliance agent analysis on open items."""
-    from agents import ComplianceAgent
+    """Run compliance analysis agent on open items."""
+    from agents import ComplianceAnalysisAgent
     from models import Project
 
     tenant_id = get_current_tenant_id()
@@ -117,9 +117,9 @@ def compliance_analysis(project_id=None):
         Project.status.in_(['Em Andamento', 'Planejamento'])
     ).order_by(Project.title).all()
 
-    # Run compliance agent
-    agent = ComplianceAgent(tenant_id)
-    result = agent.analyze_open_items(project_id)
+    # Run compliance analysis agent
+    agent = ComplianceAnalysisAgent(tenant_id)
+    result = agent.analyze(project_id)
 
     selected_project = None
     if project_id:

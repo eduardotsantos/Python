@@ -1,6 +1,6 @@
 """
 Orion Autonomous PMO - AI Agent Framework
-Autonomous Project Management Office with 10 specialized AI agents.
+Autonomous Project Management Office with 12 specialized AI agents.
 """
 
 from .base import BaseAgent, AgentResult, ActionSuggestion
@@ -12,6 +12,7 @@ from .schedule_agent import ScheduleAgent
 from .resource_agent import ResourceAgent
 from .quality_agent import QualityAgent
 from .compliance_agent import ComplianceAgent
+from .compliance_analysis_agent import ComplianceAnalysisAgent
 from .communication_agent import CommunicationAgent
 from .lessons_agent import LessonsLearnedAgent
 from .advisor_agent import ProjectAdvisorAgent
@@ -29,6 +30,7 @@ __all__ = [
     'ResourceAgent',
     'QualityAgent',
     'ComplianceAgent',
+    'ComplianceAnalysisAgent',
     'CommunicationAgent',
     'LessonsLearnedAgent',
     'ProjectAdvisorAgent',
