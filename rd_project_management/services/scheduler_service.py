@@ -577,6 +577,147 @@ def generate_briefing_pdf(briefing):
         return None
 
 
+def send_action_suggestion_email(tenant_id, action, executed_by=None):
+    """
+    Send an email to the team suggesting an action that couldn't be auto-executed.
+    Used when there's no handler for an action type.
+    """
+    from flask import current_app
+    from flask_mail import Mail, Message
+    from models import Tenant, User, Project
+
+    try:
+        tenant = Tenant.query.get(tenant_id)
+        if not tenant or not tenant.mail_server or not tenant.mail_username:
+            logger.warning(f"Cannot send action email: tenant {tenant_id} has no SMTP config")
+            return False
+
+        # Get managers and admins to notify
+        recipients = User.query.filter_by(
+            tenant_id=tenant_id,
+            active=True,
+            email_notifications=True
+        ).filter(User.role.in_(['admin', 'manager'])).all()
+
+        if not recipients:
+            logger.warning(f"No recipients found for action suggestion email")
+            return False
+
+        # Get project info if available
+        project = None
+        if action.project_id:
+            project = Project.query.get(action.project_id)
+
+        # Configure mail
+        port = tenant.mail_port or 587
+        if port == 465:
+            use_ssl, use_tls = True, False
+        else:
+            use_ssl, use_tls = False, True
+
+        current_app.config['MAIL_SERVER'] = tenant.mail_server
+        current_app.config['MAIL_PORT'] = port
+        current_app.config['MAIL_USE_TLS'] = use_tls
+        current_app.config['MAIL_USE_SSL'] = use_ssl
+        current_app.config['MAIL_USERNAME'] = tenant.mail_username
+        current_app.config['MAIL_PASSWORD'] = tenant.mail_password
+        current_app.config['MAIL_DEFAULT_SENDER'] = tenant.mail_default_sender or tenant.mail_username
+
+        mail = Mail(current_app)
+
+        # Build email content
+        priority_emoji = '🔴' if action.priority.value == 'critical' else '🟠' if action.priority.value == 'high' else '🔵'
+        action_type_display = action.action_type.value.replace('_', ' ').title()
+
+        html_content = f"""
+        <!DOCTYPE html>
+        <html>
+        <head>
+            <meta charset="utf-8">
+            <style>
+                body {{ font-family: Arial, sans-serif; line-height: 1.6; color: #333; }}
+                .header {{ background: linear-gradient(135deg, #1a237e 0%, #3949ab 100%); color: white; padding: 20px; text-align: center; }}
+                .content {{ padding: 20px; max-width: 600px; margin: 0 auto; }}
+                .action-card {{ background: #f5f5f5; border-radius: 8px; padding: 20px; margin: 20px 0; border-left: 4px solid #1a237e; }}
+                .priority {{ font-weight: bold; font-size: 14px; margin-bottom: 10px; }}
+                .priority.critical {{ color: #dc3545; }}
+                .priority.high {{ color: #f39c12; }}
+                .priority.medium {{ color: #3498db; }}
+                .details {{ margin-top: 15px; }}
+                .details p {{ margin: 5px 0; }}
+                .footer {{ text-align: center; padding: 20px; color: #666; font-size: 12px; }}
+                .btn {{ display: inline-block; padding: 10px 20px; background: #1a237e; color: white; text-decoration: none; border-radius: 5px; margin-top: 15px; }}
+            </style>
+        </head>
+        <body>
+            <div class="header">
+                <h2>{priority_emoji} Sugestão de Ação do PMO IA</h2>
+            </div>
+            <div class="content">
+                <p>O sistema Orion PMO identificou uma ação que requer intervenção manual da equipe:</p>
+
+                <div class="action-card">
+                    <div class="priority {action.priority.value}">{action.priority.value.upper()}</div>
+                    <h3>{action.title}</h3>
+                    <p>{action.description}</p>
+
+                    <div class="details">
+                        <p><strong>Tipo de Ação:</strong> {action_type_display}</p>
+                        <p><strong>Agente:</strong> {action.agent_name or 'PMO Orchestrator'}</p>
+                        {f'<p><strong>Projeto:</strong> {project.code} - {project.title}</p>' if project else ''}
+                        <p><strong>Data:</strong> {datetime.now().strftime('%d/%m/%Y %H:%M')}</p>
+                        {f'<p><strong>Solicitado por:</strong> {executed_by}</p>' if executed_by else ''}
+                    </div>
+                </div>
+
+                <p><strong>Dados adicionais:</strong></p>
+                <ul>
+        """
+
+        # Add action data
+        if action.data:
+            for key, value in action.data.items():
+                if value and key not in ['type', 'item_id']:
+                    html_content += f"<li><strong>{key}:</strong> {value}</li>"
+
+        html_content += f"""
+                </ul>
+
+                <p>Por favor, avalie esta sugestão e tome as medidas apropriadas.</p>
+
+                <div class="footer">
+                    <p>Orion Autonomous PMO - Sistema de Gestão de Projetos P&D</p>
+                    <p><small>Este email foi enviado automaticamente pelo sistema de IA.</small></p>
+                </div>
+            </div>
+        </body>
+        </html>
+        """
+
+        subject = f"{priority_emoji} [Ação Sugerida] {action.title}"
+
+        # Send to all managers
+        for user in recipients:
+            try:
+                msg = Message(
+                    subject=subject,
+                    recipients=[user.email],
+                    html=html_content
+                )
+                mail.send(msg)
+                logger.info(f"Action suggestion email sent to {user.email}")
+            except Exception as e:
+                logger.error(f"Failed to send action email to {user.email}: {e}")
+
+        return True
+
+    except Exception as e:
+        logger.error(f"Error sending action suggestion email: {e}")
+        import traceback
+        logger.error(traceback.format_exc())
+        return False
+
+
 def init_scheduler(app):
     """Initialize the scheduler with the Flask app context."""
 

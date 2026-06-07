@@ -1012,10 +1012,11 @@ class PMOOrchestrator:
             f"time={result.execution_time:.2f}s"
         )
 
-    def execute_action(self, action: ActionSuggestion) -> Dict:
+    def execute_action(self, action: ActionSuggestion, executed_by: str = None) -> Dict:
         """
         Execute a suggested action.
         This is where the orchestrator doesn't just recommend - it EXECUTES.
+        If no handler exists, sends an email to the team with the action suggestion.
         """
         logger.info(f"Executing action: {action.action_type.value} - {action.title}")
 
@@ -1034,7 +1035,31 @@ class PMOOrchestrator:
         if handler:
             return handler(action)
         else:
-            return {'success': False, 'error': f'No handler for {action.action_type.value}'}
+            # No handler - send email to team with action suggestion
+            logger.info(f"No handler for {action.action_type.value}, sending email to team")
+            try:
+                from services.scheduler_service import send_action_suggestion_email
+                email_sent = send_action_suggestion_email(self.tenant_id, action, executed_by)
+                if email_sent:
+                    return {
+                        'success': True,
+                        'message': f'Ação enviada por email para a equipe: {action.title}',
+                        'action_type': action.action_type.value,
+                        'email_sent': True
+                    }
+                else:
+                    return {
+                        'success': False,
+                        'error': f'Não foi possível enviar email para a equipe. Ação: {action.title}',
+                        'action_type': action.action_type.value
+                    }
+            except Exception as e:
+                logger.error(f"Error sending action email: {e}")
+                return {
+                    'success': False,
+                    'error': f'Erro ao enviar email: {str(e)}',
+                    'action_type': action.action_type.value
+                }
 
     def _execute_create_pending(self, action: ActionSuggestion) -> Dict:
         """Create a pending item."""

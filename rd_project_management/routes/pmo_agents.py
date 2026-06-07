@@ -215,11 +215,13 @@ def api_execute_action():
         description=data.get('description', ''),
         priority=Severity(data.get('priority', 'medium')),
         project_id=data.get('project_id'),
-        data=data.get('data', {})
+        data=data.get('data', {}),
+        agent_name=data.get('agent_name', '')
     )
 
     orchestrator = get_orchestrator()
-    result = orchestrator.execute_action(action)
+    executed_by = current_user.full_name if current_user else None
+    result = orchestrator.execute_action(action, executed_by=executed_by)
 
     return jsonify(result)
 
