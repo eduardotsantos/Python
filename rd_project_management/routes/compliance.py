@@ -740,7 +740,12 @@ def action_create():
         pending_items=pending_items.all(),
         non_conformities=non_conformities.all(),
         bugs=bugs.all(),
-        risks=risks.all()
+        risks=risks.all(),
+        prefill_project_id=request.args.get('project_id', type=int),
+        prefill_pending_id=request.args.get('pending_item_id', type=int),
+        prefill_nc_id=request.args.get('non_conformity_id', type=int),
+        prefill_bug_id=request.args.get('bug_id', type=int),
+        prefill_risk_id=request.args.get('risk_id', type=int)
     )
 
 

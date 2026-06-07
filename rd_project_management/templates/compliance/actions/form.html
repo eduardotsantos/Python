@@ -25,7 +25,7 @@
                     <select name="project_id" class="form-select" required>
                         <option value="">-- Selecione --</option>
                         {% for project in projects %}
-                        <option value="{{ project.id }}" {{ 'selected' if action and action.project_id == project.id }}>{{ project.title }}</option>
+                        <option value="{{ project.id }}" {{ 'selected' if (action and action.project_id == project.id) or (prefill_project_id and prefill_project_id == project.id) }}>{{ project.title }}</option>
                         {% endfor %}
                     </select>
                     <small class="text-muted">Obrigatório para aparecer no Status Report</small>
@@ -42,7 +42,7 @@
                     <select name="pending_item_id" class="form-select">
                         <option value="">-- Nenhuma --</option>
                         {% for item in pending_items %}
-                        <option value="{{ item.id }}" {{ 'selected' if action and action.pending_item_id == item.id }}>{{ item.code }} - {{ item.title[:30] }}</option>
+                        <option value="{{ item.id }}" {{ 'selected' if (action and action.pending_item_id == item.id) or (prefill_pending_id and prefill_pending_id == item.id) }}>{{ item.code }} - {{ item.title[:30] }}</option>
                         {% endfor %}
                     </select>
                 </div>
@@ -51,7 +51,7 @@
                     <select name="non_conformity_id" class="form-select">
                         <option value="">-- Nenhuma --</option>
                         {% for nc in non_conformities %}
-                        <option value="{{ nc.id }}" {{ 'selected' if action and action.non_conformity_id == nc.id }}>{{ nc.code }} - {{ nc.title[:30] }}</option>
+                        <option value="{{ nc.id }}" {{ 'selected' if (action and action.non_conformity_id == nc.id) or (prefill_nc_id and prefill_nc_id == nc.id) }}>{{ nc.code }} - {{ nc.title[:30] }}</option>
                         {% endfor %}
                     </select>
                 </div>
@@ -60,7 +60,7 @@
                     <select name="bug_id" class="form-select">
                         <option value="">-- Nenhum --</option>
                         {% for bug in bugs %}
-                        <option value="{{ bug.id }}" {{ 'selected' if action and action.bug_id == bug.id }}>{{ bug.code }} - {{ bug.title[:30] }}</option>
+                        <option value="{{ bug.id }}" {{ 'selected' if (action and action.bug_id == bug.id) or (prefill_bug_id and prefill_bug_id == bug.id) }}>{{ bug.code }} - {{ bug.title[:30] }}</option>
                         {% endfor %}
                     </select>
                 </div>
@@ -69,7 +69,7 @@
                     <select name="risk_id" class="form-select">
                         <option value="">-- Nenhum --</option>
                         {% for risk in risks %}
-                        <option value="{{ risk.id }}" {{ 'selected' if action and action.risk_id == risk.id }}>{{ risk.code }} - {{ risk.title[:30] }}</option>
+                        <option value="{{ risk.id }}" {{ 'selected' if (action and action.risk_id == risk.id) or (prefill_risk_id and prefill_risk_id == risk.id) }}>{{ risk.code }} - {{ risk.title[:30] }}</option>
                         {% endfor %}
                     </select>
                 </div>
