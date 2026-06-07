@@ -139,6 +139,13 @@ def send_tenant_briefing(tenant):
 
 def generate_briefing_html(briefing, tenant):
     """Generate HTML content for briefing email."""
+    status_colors = {
+        'healthy': '#27ae60',
+        'attention': '#f39c12',
+        'critical': '#e74c3c'
+    }
+    status_color = status_colors.get(briefing.overall_status.value, '#95a5a6')
+
     html = f"""
     <!DOCTYPE html>
     <html>
@@ -149,10 +156,11 @@ def generate_briefing_html(briefing, tenant):
             .header {{ background: linear-gradient(135deg, #1a237e 0%, #3949ab 100%); color: white; padding: 30px; text-align: center; }}
             .header h1 {{ margin: 0; font-size: 24px; }}
             .header p {{ margin: 10px 0 0; opacity: 0.9; }}
+            .status-banner {{ background: {status_color}; color: white; padding: 15px; text-align: center; font-size: 18px; font-weight: bold; }}
             .content {{ padding: 20px; max-width: 800px; margin: 0 auto; }}
             .section {{ background: #f5f5f5; border-radius: 8px; padding: 20px; margin-bottom: 20px; }}
             .section h2 {{ color: #1a237e; margin-top: 0; font-size: 18px; border-bottom: 2px solid #1a237e; padding-bottom: 10px; }}
-            .metric {{ display: inline-block; text-align: center; padding: 15px; margin: 5px; background: white; border-radius: 8px; min-width: 120px; }}
+            .metric {{ display: inline-block; text-align: center; padding: 15px; margin: 5px; background: white; border-radius: 8px; min-width: 100px; }}
             .metric-value {{ font-size: 28px; font-weight: bold; color: #1a237e; }}
             .metric-label {{ font-size: 12px; color: #666; }}
             .alert {{ padding: 15px; border-radius: 8px; margin: 10px 0; }}
@@ -162,6 +170,9 @@ def generate_briefing_html(briefing, tenant):
             .footer {{ text-align: center; padding: 20px; color: #666; font-size: 12px; }}
             ul {{ padding-left: 20px; }}
             li {{ margin-bottom: 8px; }}
+            table {{ width: 100%; border-collapse: collapse; }}
+            th {{ background: #1a237e; color: white; padding: 10px; text-align: left; }}
+            td {{ padding: 8px; border-bottom: 1px solid #ddd; }}
         </style>
     </head>
     <body>
@@ -169,70 +180,154 @@ def generate_briefing_html(briefing, tenant):
             <h1>📊 Briefing Executivo Diário</h1>
             <p>{tenant.name} - {briefing.date.strftime('%d/%m/%Y')}</p>
         </div>
+
+        <div class="status-banner">
+            STATUS GERAL: {briefing.overall_status.value.upper()}
+        </div>
+
         <div class="content">
             <div class="section">
-                <h2>📈 Visão Geral do Portfólio</h2>
+                <h2>📈 Métricas do Dia</h2>
                 <div style="text-align: center;">
                     <div class="metric">
-                        <div class="metric-value">{briefing.total_projects}</div>
-                        <div class="metric-label">Projetos Ativos</div>
-                    </div>
-                    <div class="metric">
-                        <div class="metric-value">{briefing.health_summary.get('healthy', 0)}</div>
+                        <div class="metric-value" style="color: #27ae60;">{briefing.metrics.get('agents_healthy', 0)}</div>
                         <div class="metric-label">Saudáveis</div>
                     </div>
                     <div class="metric">
-                        <div class="metric-value">{briefing.health_summary.get('at_risk', 0)}</div>
-                        <div class="metric-label">Em Risco</div>
+                        <div class="metric-value" style="color: #f39c12;">{briefing.metrics.get('agents_attention', 0)}</div>
+                        <div class="metric-label">Atenção</div>
                     </div>
                     <div class="metric">
-                        <div class="metric-value">{briefing.health_summary.get('critical', 0)}</div>
+                        <div class="metric-value" style="color: #e74c3c;">{briefing.metrics.get('agents_critical', 0)}</div>
                         <div class="metric-label">Críticos</div>
+                    </div>
+                    <div class="metric">
+                        <div class="metric-value" style="color: #3498db;">{briefing.metrics.get('total_insights', 0)}</div>
+                        <div class="metric-label">Insights</div>
                     </div>
                 </div>
             </div>
     """
 
-    # Critical alerts
-    if briefing.critical_alerts:
+    # Cost Analysis
+    if briefing.cost_analysis:
+        cost = briefing.cost_analysis
+        variance_color = '#e74c3c' if cost.get('budget_variance', 0) > 10 else '#27ae60'
+        html += f"""
+            <div class="section">
+                <h2>💰 Análise Financeira</h2>
+                <table>
+                    <tr>
+                        <th>Orçamento Total</th>
+                        <th>Realizado</th>
+                        <th>Variação</th>
+                    </tr>
+                    <tr>
+                        <td>R$ {cost.get('total_budget', 0):,.2f}</td>
+                        <td>R$ {cost.get('total_spent', 0):,.2f}</td>
+                        <td style="color: {variance_color}; font-weight: bold;">{cost.get('budget_variance', 0):+.1f}%</td>
+                    </tr>
+                </table>
+            </div>
+        """
+
+    # Compliance Summary
+    if briefing.compliance_summary:
+        comp = briefing.compliance_summary
+        comp_dict = comp.to_dict() if hasattr(comp, 'to_dict') else comp
+        html += f"""
+            <div class="section">
+                <h2>🛡️ Conformidade</h2>
+                <div style="text-align: center;">
+                    <div class="metric">
+                        <div class="metric-value" style="color: {'#e74c3c' if comp_dict.get('open_risks', 0) > 0 else '#27ae60'};">{comp_dict.get('open_risks', 0)}</div>
+                        <div class="metric-label">Riscos Abertos</div>
+                    </div>
+                    <div class="metric">
+                        <div class="metric-value" style="color: {'#e74c3c' if comp_dict.get('overdue_pending', 0) > 0 else '#27ae60'};">{comp_dict.get('overdue_pending', 0)}</div>
+                        <div class="metric-label">Pendências Atrasadas</div>
+                    </div>
+                    <div class="metric">
+                        <div class="metric-value" style="color: {'#e74c3c' if comp_dict.get('open_bugs', 0) > 0 else '#27ae60'};">{comp_dict.get('open_bugs', 0)}</div>
+                        <div class="metric-label">Bugs Abertos</div>
+                    </div>
+                    <div class="metric">
+                        <div class="metric-value" style="color: {'#f39c12' if comp_dict.get('open_ncs', 0) > 0 else '#27ae60'};">{comp_dict.get('open_ncs', 0)}</div>
+                        <div class="metric-label">NCs Abertas</div>
+                    </div>
+                </div>
+        """
+        # Critical items list
+        critical_items = comp_dict.get('critical_items', [])
+        if critical_items:
+            html += "<h4 style='color: #e74c3c; margin-top: 15px;'>⚠️ Itens Críticos:</h4><ul>"
+            for item in critical_items[:5]:
+                html += f"<li><strong>{item.get('type', '')}</strong>: {item.get('title', '')} - {item.get('project', '')}</li>"
+            html += "</ul>"
+        html += "</div>"
+
+    # Upcoming Activities
+    if briefing.upcoming_activities:
         html += """
             <div class="section">
-                <h2>🔴 Alertas Críticos</h2>
+                <h2>📅 Próximas Atividades (14 dias)</h2>
+                <table>
+                    <tr>
+                        <th>Atividade</th>
+                        <th>Projeto</th>
+                        <th>Prazo</th>
+                        <th>Progresso</th>
+                    </tr>
         """
-        for alert in briefing.critical_alerts[:5]:
+        for act in briefing.upcoming_activities[:8]:
+            days_left = -act.days_variance if hasattr(act, 'days_variance') else 0
             html += f"""
-                <div class="alert alert-critical">
-                    <strong>{alert.get('title', 'Alerta')}</strong><br>
-                    {alert.get('description', '')}
+                <tr>
+                    <td>{act.title[:40]}</td>
+                    <td>{act.project_name[:20]}</td>
+                    <td>{act.end_date.strftime('%d/%m')} ({days_left}d)</td>
+                    <td>{act.progress}%</td>
+                </tr>
+            """
+        html += "</table></div>"
+
+    # Priority Items
+    if briefing.priority_items:
+        html += """
+            <div class="section">
+                <h2>🎯 Prioridades do Dia</h2>
+        """
+        for item in briefing.priority_items[:5]:
+            severity_class = 'alert-critical' if item.get('severity') == 'critical' else 'alert-warning'
+            icon = '🔴' if item.get('severity') == 'critical' else '🟠'
+            html += f"""
+                <div class="alert {severity_class}">
+                    <strong>{icon} {item.get('title', '')}</strong><br/>
+                    <small>{item.get('description', '')[:150]}</small>
+                    {f"<br/><em style='color: #1a237e;'>💡 {item.get('recommendation', '')}</em>" if item.get('recommendation') else ""}
                 </div>
             """
         html += "</div>"
 
-    # Key insights
-    if briefing.key_insights:
+    # Recommended Actions
+    if briefing.recommended_actions:
         html += """
             <div class="section">
-                <h2>💡 Principais Insights</h2>
-                <ul>
+                <h2>⚡ Ações Recomendadas</h2>
         """
-        for insight in briefing.key_insights[:5]:
-            html += f"<li>{insight}</li>"
-        html += "</ul></div>"
-
-    # Today's priorities
-    if briefing.todays_priorities:
-        html += """
-            <div class="section">
-                <h2>🎯 Prioridades de Hoje</h2>
-                <ul>
-        """
-        for priority in briefing.todays_priorities[:5]:
-            html += f"<li>{priority}</li>"
-        html += "</ul></div>"
+        for action in briefing.recommended_actions[:8]:
+            priority_color = '#e74c3c' if action.priority.value == 'critical' else '#f39c12' if action.priority.value == 'high' else '#2196f3'
+            html += f"""
+                <div class="alert" style="border-left: 4px solid {priority_color}; background: white;">
+                    <strong>{action.title}</strong><br/>
+                    <small>{action.description[:200]}</small>
+                </div>
+            """
+        html += "</div>"
 
     html += f"""
             <div class="footer">
-                <p>Orion PMO - Sistema de Gestão de Projetos P&D</p>
+                <p>Orion Autonomous PMO - Sistema de Gestão de Projetos P&D</p>
                 <p>Este email foi enviado automaticamente às 7:00.</p>
                 <p><small>Para desativar, acesse seu perfil e desmarque "Briefing diário".</small></p>
             </div>

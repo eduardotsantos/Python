@@ -921,9 +921,60 @@ def generate_briefing_html(briefing):
             """
         html += "</div>"
 
+    # Compliance Summary
+    if briefing.compliance_summary:
+        comp = briefing.compliance_summary
+        comp_dict = comp.to_dict() if hasattr(comp, 'to_dict') else comp
+        html += f"""
+        <div class="section">
+            <div class="section-title">🛡️ Conformidade</div>
+            <div style="text-align: center;">
+                <div class="metric-box">
+                    <div class="metric-value" style="color: {'#e74c3c' if comp_dict.get('open_risks', 0) > 0 else '#27ae60'};">{comp_dict.get('open_risks', 0)}</div>
+                    <div class="metric-label">Riscos Abertos</div>
+                </div>
+                <div class="metric-box">
+                    <div class="metric-value" style="color: {'#e74c3c' if comp_dict.get('overdue_pending', 0) > 0 else '#27ae60'};">{comp_dict.get('overdue_pending', 0)}</div>
+                    <div class="metric-label">Pendências Atrasadas</div>
+                </div>
+                <div class="metric-box">
+                    <div class="metric-value" style="color: {'#e74c3c' if comp_dict.get('open_bugs', 0) > 0 else '#27ae60'};">{comp_dict.get('open_bugs', 0)}</div>
+                    <div class="metric-label">Bugs Abertos</div>
+                </div>
+                <div class="metric-box">
+                    <div class="metric-value" style="color: {'#f39c12' if comp_dict.get('open_ncs', 0) > 0 else '#27ae60'};">{comp_dict.get('open_ncs', 0)}</div>
+                    <div class="metric-label">NCs Abertas</div>
+                </div>
+            </div>
+        """
+        # Critical items list
+        critical_items = comp_dict.get('critical_items', [])
+        if critical_items:
+            html += "<h4 style='color: #e74c3c; margin-top: 15px;'>⚠️ Itens Críticos:</h4><ul>"
+            for item in critical_items[:5]:
+                html += f"<li><strong>{item.get('type', '')}</strong>: {item.get('title', '')} - {item.get('project', '')}</li>"
+            html += "</ul>"
+        html += "</div>"
+
+    # Recommended Actions
+    if briefing.recommended_actions:
+        html += """
+        <div class="section">
+            <div class="section-title">⚡ Ações Recomendadas</div>
+        """
+        for action in briefing.recommended_actions[:8]:
+            priority_color = '#e74c3c' if action.priority.value == 'critical' else '#f39c12' if action.priority.value == 'high' else '#3498db'
+            html += f"""
+            <div class="priority-item" style="border-color: {priority_color};">
+                <strong>{action.title}</strong><br/>
+                <small>{action.description[:200]}</small>
+            </div>
+            """
+        html += "</div>"
+
     html += f"""
         <div class="footer">
-            <p>Gerado automaticamente pelo Orion PMO IA em {briefing.generated_at.strftime('%d/%m/%Y %H:%M')}</p>
+            <p>Gerado automaticamente pelo Orion Autonomous PMO em {briefing.generated_at.strftime('%d/%m/%Y %H:%M')}</p>
             <p>Este é um email automático. Acesse o sistema para mais detalhes.</p>
         </div>
     </body>
