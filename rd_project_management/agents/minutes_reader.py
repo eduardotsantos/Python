@@ -106,7 +106,7 @@ class MinutesReaderAgent(BaseAgent):
                         'title': pending['title'],
                         'responsible': pending.get('responsible'),
                         'due_date': pending.get('due_date'),
-                        'source': f'Ata de {minutes.date}'
+                        'source': f'Ata de {minutes.meeting_date}'
                     },
                     auto_executable=True
                 ))
@@ -121,7 +121,7 @@ class MinutesReaderAgent(BaseAgent):
                     project_id=minutes.project_id,
                     data={
                         'title': risk['title'],
-                        'source': f'Ata de {minutes.date}'
+                        'source': f'Ata de {minutes.meeting_date}'
                     },
                     auto_executable=True
                 ))
@@ -136,7 +136,7 @@ class MinutesReaderAgent(BaseAgent):
                     project_id=minutes.project_id,
                     data={
                         'title': nc['title'],
-                        'source': f'Ata de {minutes.date}'
+                        'source': f'Ata de {minutes.meeting_date}'
                     },
                     auto_executable=True
                 ))
@@ -151,7 +151,7 @@ class MinutesReaderAgent(BaseAgent):
                     project_id=minutes.project_id,
                     data={
                         'description': action_item['title'],
-                        'source': f'Ata de {minutes.date}'
+                        'source': f'Ata de {minutes.meeting_date}'
                     },
                     auto_executable=True
                 ))
