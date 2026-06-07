@@ -3,8 +3,11 @@ AI Routes for R&D Project Management System.
 Provides AI-powered features: document analysis, matching, reports, risks, chat.
 """
 import os
+import logging
 from flask import Blueprint, render_template, request, jsonify, flash, redirect, url_for, current_app, session
 from flask_login import login_required, current_user
+
+logger = logging.getLogger(__name__)
 
 from models import db, Project, PublicCall, ProjectDocument, Expense, Milestone, Resource, Timesheet
 from services.tenant_utils import tenant_required, get_current_tenant_id, ensure_tenant_access
@@ -101,6 +104,19 @@ def run_document_analysis(doc_id):
     if 'error' in result:
         return jsonify({'error': result['error']}), 500
 
+    # Save analysis as PDF in project documents
+    try:
+        project = Project.query.get(doc.project_id)
+        if project:
+            from services.ai_document_service import save_ai_analysis_pdf
+            saved_doc = save_ai_analysis_pdf(project, 'document_analysis', result, current_user.id)
+            if saved_doc:
+                result['document_saved'] = True
+                result['document_id'] = saved_doc.id
+                result['document_name'] = saved_doc.filename
+    except Exception as e:
+        logger.warning(f"Could not save document analysis PDF: {e}")
+
     return jsonify(result)
 
 
@@ -172,9 +188,21 @@ def run_matching(project_id):
             match['call_title'] = call.title
             match['call_source'] = call.source
             match['call_url'] = call.url
-            match['call_deadline'] = call.deadline
+            match['call_deadline'] = str(call.deadline) if call.deadline else None
 
-    return jsonify({'matches': matches})
+    # Save matching results as PDF in project documents
+    result = {'matches': matches}
+    try:
+        from services.ai_document_service import save_ai_analysis_pdf
+        doc = save_ai_analysis_pdf(project, 'matching', {'matches': matches}, current_user.id)
+        if doc:
+            result['document_saved'] = True
+            result['document_id'] = doc.id
+            result['document_name'] = doc.filename
+    except Exception as e:
+        logger.warning(f"Could not save matching PDF: {e}")
+
+    return jsonify(result)
 
 
 # --- Report Generation ---
@@ -246,7 +274,19 @@ def generate_report(project_id):
     if report is None:
         return jsonify({'error': 'Erro ao gerar relatório.'}), 500
 
-    return jsonify({'report': report})
+    # Save report as PDF in project documents
+    result = {'report': report}
+    try:
+        from services.ai_document_service import save_ai_analysis_pdf
+        doc = save_ai_analysis_pdf(project, 'report', {'report': report}, current_user.id)
+        if doc:
+            result['document_saved'] = True
+            result['document_id'] = doc.id
+            result['document_name'] = doc.filename
+    except Exception as e:
+        logger.warning(f"Could not save report PDF: {e}")
+
+    return jsonify(result)
 
 
 # --- Risk Analysis ---
@@ -304,6 +344,17 @@ def analyze_risks(project_id):
 
     if 'error' in analysis:
         return jsonify({'error': analysis['error']}), 500
+
+    # Save analysis as PDF in project documents
+    try:
+        from services.ai_document_service import save_ai_analysis_pdf
+        doc = save_ai_analysis_pdf(project, 'risks', analysis, current_user.id)
+        if doc:
+            analysis['document_saved'] = True
+            analysis['document_id'] = doc.id
+            analysis['document_name'] = doc.filename
+    except Exception as e:
+        logger.warning(f"Could not save risk analysis PDF: {e}")
 
     return jsonify(analysis)
 
@@ -528,7 +579,20 @@ Use linguagem técnica apropriada para editais de P&D.
         )
 
         proposal = response.content[0].text
-        return jsonify({'proposal': proposal})
+
+        # Save proposal as Word document in project documents
+        result = {'proposal': proposal}
+        try:
+            from services.ai_document_service import save_proposal_word
+            doc = save_proposal_word(project, call, proposal, current_user.id)
+            if doc:
+                result['document_saved'] = True
+                result['document_id'] = doc.id
+                result['document_name'] = doc.filename
+        except Exception as e:
+            logger.warning(f"Could not save proposal Word document: {e}")
+
+        return jsonify(result)
 
     except Exception as e:
         return jsonify({'error': str(e)}), 500
