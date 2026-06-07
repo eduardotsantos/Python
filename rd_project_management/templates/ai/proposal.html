@@ -108,6 +108,15 @@
 
     <!-- Proposal Result -->
     <div class="d-none" id="proposalSection">
+        <!-- Document Saved Notification -->
+        <div id="documentSavedSection" class="d-none mb-3 no-print">
+            <div class="alert alert-success">
+                <i class="bi bi-file-earmark-check"></i>
+                <strong>Documento salvo!</strong> A proposta foi salva em <a href="{{ url_for('projects.view_project', project_id=project.id) }}#documents" class="alert-link">Documentos do Projeto</a>.
+                <span id="documentName"></span>
+            </div>
+        </div>
+
         <div class="mb-3 no-print">
             <button class="btn btn-outline-primary" onclick="window.print()">
                 <i class="bi bi-printer"></i> Imprimir
@@ -209,6 +218,12 @@ document.getElementById('proposalForm').addEventListener('submit', async functio
         document.getElementById('proposalContent').innerHTML = marked.parse(data.proposal);
         document.getElementById('proposalSection').classList.remove('d-none');
 
+        // Document saved notification
+        if (data.document_saved) {
+            document.getElementById('documentSavedSection').classList.remove('d-none');
+            document.getElementById('documentName').textContent = ' (' + data.document_name + ')';
+        }
+
     } catch (error) {
         alert('Erro: ' + error.message);
         document.getElementById('questionsCard').classList.remove('d-none');
@@ -220,6 +235,7 @@ document.getElementById('proposalForm').addEventListener('submit', async functio
 function resetProposal() {
     document.getElementById('proposalSection').classList.add('d-none');
     document.getElementById('questionsCard').classList.remove('d-none');
+    document.getElementById('documentSavedSection').classList.add('d-none');
 }
 
 function copyProposal() {

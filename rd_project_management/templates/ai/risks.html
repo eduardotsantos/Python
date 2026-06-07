@@ -76,6 +76,15 @@
         <!-- Alerts -->
         <div id="alertsSection" class="mb-4"></div>
 
+        <!-- Document Saved Notification -->
+        <div id="documentSavedSection" class="d-none mb-4">
+            <div class="alert alert-success">
+                <i class="bi bi-file-earmark-check"></i>
+                <strong>Documento salvo!</strong> A análise foi salva em <a href="{{ url_for('projects.view_project', project_id=project.id) }}#documents" class="alert-link">Documentos do Projeto</a>.
+                <span id="documentName"></span>
+            </div>
+        </div>
+
         <!-- Identified Risks -->
         <div class="card mb-4">
             <div class="card-header bg-danger text-white">
@@ -133,6 +142,12 @@ async function analyzeRisks() {
 
 function displayResults(data) {
     document.getElementById('resultsSection').classList.remove('d-none');
+
+    // Document saved notification
+    if (data.document_saved) {
+        document.getElementById('documentSavedSection').classList.remove('d-none');
+        document.getElementById('documentName').textContent = ' (' + data.document_name + ')';
+    }
 
     // Risk level
     const riskLevel = data.nivel_risco_geral || 'N/A';

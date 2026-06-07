@@ -239,60 +239,116 @@ def _add_risks_content(story, content, styles, section_style):
     """Add risk analysis content to PDF."""
     from reportlab.platypus import Paragraph, Spacer, Table, TableStyle
     from reportlab.lib import colors
+    from reportlab.lib.units import cm
 
-    if isinstance(content, dict):
-        # Summary
-        if content.get('summary'):
-            story.append(Paragraph("Resumo", section_style))
-            story.append(Paragraph(content['summary'], styles['Normal']))
-            story.append(Spacer(1, 15))
-
-        # Risks
-        risks = content.get('risks', [])
-        if risks:
-            story.append(Paragraph(f"Riscos Identificados ({len(risks)})", section_style))
-            for i, risk in enumerate(risks, 1):
-                severity_color = '#dc3545' if risk.get('severity') == 'high' else '#ffc107' if risk.get('severity') == 'medium' else '#17a2b8'
-                story.append(Paragraph(f"<b>{i}. {risk.get('title', 'Risco')}</b>", styles['Normal']))
-                story.append(Paragraph(f"Descrição: {risk.get('description', '')}", styles['Normal']))
-                story.append(Paragraph(f"Severidade: <font color='{severity_color}'>{risk.get('severity', 'N/A').upper()}</font>", styles['Normal']))
-                if risk.get('mitigation'):
-                    story.append(Paragraph(f"Mitigação: {risk.get('mitigation')}", styles['Normal']))
-                story.append(Spacer(1, 10))
-
-        # Recommendations
-        recommendations = content.get('recommendations', [])
-        if recommendations:
-            story.append(Paragraph("Recomendações", section_style))
-            for rec in recommendations:
-                story.append(Paragraph(f"• {rec}", styles['Normal']))
-    else:
+    if not isinstance(content, dict):
         story.append(Paragraph(str(content), styles['Normal']))
+        return
+
+    # Overall risk level and score
+    nivel_risco = content.get('nivel_risco_geral', 'N/A')
+    score_risco = content.get('score_risco', 'N/A')
+
+    risk_color = '#dc3545' if nivel_risco in ['alto', 'crítico'] else '#ffc107' if nivel_risco == 'médio' else '#28a745'
+
+    story.append(Paragraph("Resumo de Risco", section_style))
+    story.append(Paragraph(f"<b>Nível de Risco Geral:</b> <font color='{risk_color}'>{nivel_risco.upper()}</font>", styles['Normal']))
+    story.append(Paragraph(f"<b>Score de Risco:</b> {score_risco}/100", styles['Normal']))
+    story.append(Spacer(1, 15))
+
+    # Burn rate analysis
+    burn_rate = content.get('burn_rate', {})
+    if burn_rate:
+        story.append(Paragraph("Análise de Burn Rate", section_style))
+        story.append(Paragraph(f"<b>Gasto Mensal Estimado:</b> R$ {burn_rate.get('mensal', 0):,.2f}", styles['Normal']))
+        story.append(Paragraph(f"<b>Projeção de Gasto Final:</b> R$ {burn_rate.get('projecao_final', 0):,.2f}", styles['Normal']))
+        status_burn = burn_rate.get('status', 'N/A')
+        burn_color = '#dc3545' if 'acima' in status_burn else '#ffc107' if 'risco' in status_burn else '#28a745'
+        story.append(Paragraph(f"<b>Status:</b> <font color='{burn_color}'>{status_burn}</font>", styles['Normal']))
+        story.append(Spacer(1, 15))
+
+    # Completion forecast
+    previsao = content.get('previsao_conclusao', {})
+    if previsao:
+        story.append(Paragraph("Previsão de Conclusão", section_style))
+        status_prev = previsao.get('status', 'N/A')
+        prev_color = '#dc3545' if 'atrasado' in status_prev else '#ffc107' if 'risco' in status_prev else '#28a745'
+        story.append(Paragraph(f"<b>Status:</b> <font color='{prev_color}'>{status_prev}</font>", styles['Normal']))
+        story.append(Paragraph(f"<b>Estimativa:</b> {previsao.get('estimativa', 'N/A')}", styles['Normal']))
+        story.append(Paragraph(f"<b>Confiança:</b> {previsao.get('confianca', 'N/A')}", styles['Normal']))
+        story.append(Spacer(1, 15))
+
+    # Alerts
+    alertas = content.get('alertas', [])
+    if alertas:
+        story.append(Paragraph("⚠️ Alertas Imediatos", section_style))
+        for alerta in alertas:
+            story.append(Paragraph(f"• <font color='#dc3545'>{alerta}</font>", styles['Normal']))
+        story.append(Spacer(1, 15))
+
+    # Identified risks
+    riscos = content.get('riscos_identificados', [])
+    if riscos:
+        story.append(Paragraph(f"Riscos Identificados ({len(riscos)})", section_style))
+
+        for i, risk in enumerate(riscos, 1):
+            categoria = risk.get('categoria', 'N/A')
+            severidade = risk.get('severidade', 'N/A')
+            sev_color = '#dc3545' if severidade in ['alta', 'crítica'] else '#ffc107' if severidade == 'média' else '#17a2b8'
+
+            story.append(Paragraph(f"<b>{i}. [{categoria.upper()}] - Severidade: <font color='{sev_color}'>{severidade.upper()}</font></b>", styles['Normal']))
+            story.append(Paragraph(f"<b>Descrição:</b> {risk.get('descricao', 'N/A')}", styles['Normal']))
+            story.append(Paragraph(f"<b>Probabilidade:</b> {risk.get('probabilidade', 'N/A')}", styles['Normal']))
+            story.append(Paragraph(f"<b>Impacto:</b> {risk.get('impacto', 'N/A')}", styles['Normal']))
+            story.append(Paragraph(f"<b>Mitigação:</b> {risk.get('mitigacao', 'N/A')}", styles['Normal']))
+            story.append(Spacer(1, 10))
+
+    # Recommendations
+    recomendacoes = content.get('recomendacoes', [])
+    if recomendacoes:
+        story.append(Paragraph("💡 Recomendações", section_style))
+        for rec in recomendacoes:
+            story.append(Paragraph(f"• {rec}", styles['Normal']))
+        story.append(Spacer(1, 10))
 
 
 def _add_report_content(story, content, styles, section_style):
     """Add report content to PDF."""
     from reportlab.platypus import Paragraph, Spacer
+    from reportlab.lib.styles import ParagraphStyle
 
-    if isinstance(content, str):
+    # Get the actual report text
+    report_text = content
+    if isinstance(content, dict):
+        report_text = content.get('report', str(content))
+
+    if isinstance(report_text, str):
         # Parse markdown-like content
-        lines = content.split('\n')
+        lines = report_text.split('\n')
         for line in lines:
             line = line.strip()
             if not line:
+                story.append(Spacer(1, 8))
+            elif line.startswith('### '):
                 story.append(Spacer(1, 10))
-            elif line.startswith('# '):
-                story.append(Paragraph(line[2:], section_style))
+                story.append(Paragraph(f"<b>{line[4:]}</b>", styles['Normal']))
             elif line.startswith('## '):
-                story.append(Paragraph(f"<b>{line[3:]}</b>", styles['Normal']))
+                story.append(Spacer(1, 12))
+                story.append(Paragraph(line[3:], section_style))
+            elif line.startswith('# '):
+                story.append(Spacer(1, 15))
+                story.append(Paragraph(line[2:], section_style))
             elif line.startswith('- ') or line.startswith('* '):
                 story.append(Paragraph(f"• {line[2:]}", styles['Normal']))
+            elif line.startswith('1. ') or line.startswith('2. ') or line.startswith('3. '):
+                story.append(Paragraph(line, styles['Normal']))
             else:
-                clean_line = line.replace('**', '').replace('*', '')
-                story.append(Paragraph(clean_line, styles['Normal']))
-    elif isinstance(content, dict):
-        if content.get('report'):
-            _add_report_content(story, content['report'], styles, section_style)
+                # Clean markdown formatting
+                clean_line = line.replace('**', '').replace('__', '').replace('*', '').replace('_', '')
+                if clean_line:
+                    story.append(Paragraph(clean_line, styles['Normal']))
+    else:
+        story.append(Paragraph(str(report_text), styles['Normal']))
 
 
 def _add_matching_content(story, content, styles, section_style):
@@ -305,22 +361,50 @@ def _add_matching_content(story, content, styles, section_style):
 
     if matches:
         story.append(Paragraph(f"Editais Compatíveis ({len(matches)})", section_style))
+        story.append(Spacer(1, 10))
 
         for i, match in enumerate(matches, 1):
-            score = match.get('score', 0)
+            score = match.get('score', match.get('compatibility_score', 0))
             score_color = '#28a745' if score >= 80 else '#ffc107' if score >= 60 else '#dc3545'
 
-            story.append(Paragraph(f"<b>{i}. {match.get('call_title', 'Edital')}</b>", styles['Normal']))
-            story.append(Paragraph(f"Fonte: {match.get('call_source', 'N/A')}", styles['Normal']))
-            story.append(Paragraph(f"Compatibilidade: <font color='{score_color}'><b>{score}%</b></font>", styles['Normal']))
+            story.append(Paragraph(f"<b>{i}. {match.get('call_title', match.get('title', 'Edital'))}</b>", styles['Normal']))
+            story.append(Paragraph(f"<b>Fonte:</b> {match.get('call_source', match.get('source', 'N/A'))}", styles['Normal']))
+            story.append(Paragraph(f"<b>Compatibilidade:</b> <font color='{score_color}'><b>{score}%</b></font>", styles['Normal']))
 
-            if match.get('reasons'):
-                story.append(Paragraph("Motivos:", styles['Normal']))
-                for reason in match['reasons']:
-                    story.append(Paragraph(f"  • {reason}", styles['Normal']))
+            # Reasons/justification
+            reasons = match.get('reasons', match.get('justificativa', match.get('pontos_fortes', [])))
+            if reasons:
+                if isinstance(reasons, str):
+                    reasons = [reasons]
+                story.append(Paragraph("<b>Pontos de Compatibilidade:</b>", styles['Normal']))
+                for reason in reasons:
+                    story.append(Paragraph(f"  ✓ {reason}", styles['Normal']))
 
-            if match.get('call_deadline'):
-                story.append(Paragraph(f"Prazo: {match['call_deadline']}", styles['Normal']))
+            # Gaps/weaknesses
+            gaps = match.get('gaps', match.get('pontos_fracos', []))
+            if gaps:
+                if isinstance(gaps, str):
+                    gaps = [gaps]
+                story.append(Paragraph("<b>Pontos de Atenção:</b>", styles['Normal']))
+                for gap in gaps:
+                    story.append(Paragraph(f"  ⚠ {gap}", styles['Normal']))
+
+            # Recommendations
+            recomendacoes = match.get('recomendacoes', match.get('recommendations', []))
+            if recomendacoes:
+                if isinstance(recomendacoes, str):
+                    recomendacoes = [recomendacoes]
+                story.append(Paragraph("<b>Recomendações:</b>", styles['Normal']))
+                for rec in recomendacoes:
+                    story.append(Paragraph(f"  → {rec}", styles['Normal']))
+
+            deadline = match.get('call_deadline', match.get('deadline', ''))
+            if deadline:
+                story.append(Paragraph(f"<b>Prazo:</b> {deadline}", styles['Normal']))
+
+            url = match.get('call_url', match.get('url', ''))
+            if url:
+                story.append(Paragraph(f"<b>Link:</b> {url}", styles['Normal']))
 
             story.append(Spacer(1, 15))
     else:
@@ -331,30 +415,104 @@ def _add_document_analysis_content(story, content, styles, section_style):
     """Add document analysis content to PDF."""
     from reportlab.platypus import Paragraph, Spacer
 
-    if isinstance(content, dict):
-        # Summary
-        if content.get('summary'):
-            story.append(Paragraph("Resumo", section_style))
-            story.append(Paragraph(content['summary'], styles['Normal']))
-            story.append(Spacer(1, 15))
-
-        # Key points
-        if content.get('key_points'):
-            story.append(Paragraph("Pontos Principais", section_style))
-            for point in content['key_points']:
-                story.append(Paragraph(f"• {point}", styles['Normal']))
-            story.append(Spacer(1, 15))
-
-        # Requirements
-        if content.get('requirements'):
-            story.append(Paragraph("Requisitos Identificados", section_style))
-            for req in content['requirements']:
-                story.append(Paragraph(f"• {req}", styles['Normal']))
-            story.append(Spacer(1, 15))
-
-        # Analysis
-        if content.get('analysis'):
-            story.append(Paragraph("Análise Detalhada", section_style))
-            story.append(Paragraph(content['analysis'], styles['Normal']))
-    else:
+    if not isinstance(content, dict):
         story.append(Paragraph(str(content), styles['Normal']))
+        return
+
+    # Summary / resumo
+    resumo = content.get('summary', content.get('resumo', content.get('resumo_executivo', '')))
+    if resumo:
+        story.append(Paragraph("Resumo", section_style))
+        story.append(Paragraph(resumo, styles['Normal']))
+        story.append(Spacer(1, 15))
+
+    # Objective / objetivo
+    objetivo = content.get('objetivo', content.get('objective', ''))
+    if objetivo:
+        story.append(Paragraph("Objetivo", section_style))
+        story.append(Paragraph(objetivo, styles['Normal']))
+        story.append(Spacer(1, 15))
+
+    # Key points / pontos principais
+    pontos = content.get('key_points', content.get('pontos_principais', content.get('pontos_chave', [])))
+    if pontos:
+        story.append(Paragraph("Pontos Principais", section_style))
+        if isinstance(pontos, str):
+            pontos = [pontos]
+        for point in pontos:
+            story.append(Paragraph(f"• {point}", styles['Normal']))
+        story.append(Spacer(1, 15))
+
+    # Requirements / requisitos
+    requisitos = content.get('requirements', content.get('requisitos', content.get('requisitos_tecnicos', [])))
+    if requisitos:
+        story.append(Paragraph("Requisitos Identificados", section_style))
+        if isinstance(requisitos, str):
+            requisitos = [requisitos]
+        for req in requisitos:
+            story.append(Paragraph(f"• {req}", styles['Normal']))
+        story.append(Spacer(1, 15))
+
+    # Elegibility / elegibilidade
+    elegibilidade = content.get('elegibilidade', content.get('eligibility', content.get('publico_alvo', '')))
+    if elegibilidade:
+        story.append(Paragraph("Elegibilidade / Público-Alvo", section_style))
+        if isinstance(elegibilidade, list):
+            for item in elegibilidade:
+                story.append(Paragraph(f"• {item}", styles['Normal']))
+        else:
+            story.append(Paragraph(elegibilidade, styles['Normal']))
+        story.append(Spacer(1, 15))
+
+    # Funding / recursos
+    recursos = content.get('recursos', content.get('funding', content.get('valor_maximo', '')))
+    if recursos:
+        story.append(Paragraph("Recursos / Financiamento", section_style))
+        story.append(Paragraph(str(recursos), styles['Normal']))
+        story.append(Spacer(1, 15))
+
+    # Deadlines / prazos
+    prazos = content.get('prazos', content.get('deadlines', content.get('cronograma', [])))
+    if prazos:
+        story.append(Paragraph("Prazos", section_style))
+        if isinstance(prazos, list):
+            for prazo in prazos:
+                story.append(Paragraph(f"• {prazo}", styles['Normal']))
+        else:
+            story.append(Paragraph(str(prazos), styles['Normal']))
+        story.append(Spacer(1, 15))
+
+    # Analysis / análise detalhada
+    analise = content.get('analysis', content.get('analise', content.get('analise_detalhada', '')))
+    if analise:
+        story.append(Paragraph("Análise Detalhada", section_style))
+        story.append(Paragraph(analise, styles['Normal']))
+        story.append(Spacer(1, 15))
+
+    # Recommendations
+    recomendacoes = content.get('recomendacoes', content.get('recommendations', []))
+    if recomendacoes:
+        story.append(Paragraph("Recomendações", section_style))
+        if isinstance(recomendacoes, str):
+            recomendacoes = [recomendacoes]
+        for rec in recomendacoes:
+            story.append(Paragraph(f"• {rec}", styles['Normal']))
+        story.append(Spacer(1, 15))
+
+    # If content has other keys not handled, add them
+    handled_keys = {'summary', 'resumo', 'resumo_executivo', 'objetivo', 'objective',
+                    'key_points', 'pontos_principais', 'pontos_chave', 'requirements',
+                    'requisitos', 'requisitos_tecnicos', 'elegibilidade', 'eligibility',
+                    'publico_alvo', 'recursos', 'funding', 'valor_maximo', 'prazos',
+                    'deadlines', 'cronograma', 'analysis', 'analise', 'analise_detalhada',
+                    'recomendacoes', 'recommendations', 'document_saved', 'document_id', 'document_name'}
+
+    for key, value in content.items():
+        if key not in handled_keys and value:
+            story.append(Paragraph(f"<b>{key.replace('_', ' ').title()}</b>", styles['Normal']))
+            if isinstance(value, list):
+                for item in value:
+                    story.append(Paragraph(f"• {item}", styles['Normal']))
+            else:
+                story.append(Paragraph(str(value), styles['Normal']))
+            story.append(Spacer(1, 10))

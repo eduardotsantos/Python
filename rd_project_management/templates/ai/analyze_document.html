@@ -58,6 +58,15 @@
         </div>
 
         <div class="col-md-8">
+            <!-- Document Saved Notification -->
+            <div id="documentSavedSection" class="d-none mb-3">
+                <div class="alert alert-success">
+                    <i class="bi bi-file-earmark-check"></i>
+                    <strong>Documento salvo!</strong> A análise foi salva em <a href="{{ url_for('projects.view_project', project_id=document.project_id) }}#documents" class="alert-link">Documentos do Projeto</a>.
+                    <span id="documentName"></span>
+                </div>
+            </div>
+
             <div class="card d-none" id="resultsCard">
                 <div class="card-header bg-info text-white">
                     <i class="bi bi-lightbulb"></i> Análise do Documento
@@ -111,6 +120,12 @@ async function analyzeDocument() {
 function displayAnalysis(data) {
     document.getElementById('placeholderCard').classList.add('d-none');
     document.getElementById('resultsCard').classList.remove('d-none');
+
+    // Document saved notification
+    if (data.document_saved) {
+        document.getElementById('documentSavedSection').classList.remove('d-none');
+        document.getElementById('documentName').textContent = ' (' + data.document_name + ')';
+    }
 
     let html = '';
 

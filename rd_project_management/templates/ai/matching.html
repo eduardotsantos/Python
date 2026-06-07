@@ -54,6 +54,15 @@
     </div>
 
     <div class="d-none" id="resultsSection">
+        <!-- Document Saved Notification -->
+        <div id="documentSavedSection" class="d-none mb-3">
+            <div class="alert alert-success">
+                <i class="bi bi-file-earmark-check"></i>
+                <strong>Documento salvo!</strong> O matching foi salvo em <a href="{{ url_for('projects.view_project', project_id=project.id) }}#documents" class="alert-link">Documentos do Projeto</a>.
+                <span id="documentName"></span>
+            </div>
+        </div>
+
         <h5><i class="bi bi-trophy"></i> Editais Compativeis Encontrados</h5>
         <div id="matchesList"></div>
         <div id="noMatches" class="alert alert-info d-none">
@@ -87,6 +96,12 @@ async function runMatching() {
         }
 
         displayMatches(data.matches || []);
+
+        // Document saved notification
+        if (data.document_saved) {
+            document.getElementById('documentSavedSection').classList.remove('d-none');
+            document.getElementById('documentName').textContent = ' (' + data.document_name + ')';
+        }
 
     } catch (error) {
         alert('Erro de conexao: ' + error.message);
