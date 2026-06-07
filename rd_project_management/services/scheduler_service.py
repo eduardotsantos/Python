@@ -354,7 +354,7 @@ def generate_briefing_pdf(briefing):
         styles = getSampleStyleSheet()
         story = []
 
-        # Title
+        # Custom styles
         title_style = ParagraphStyle(
             'CustomTitle',
             parent=styles['Heading1'],
@@ -362,16 +362,37 @@ def generate_briefing_pdf(briefing):
             textColor=colors.HexColor('#1a237e'),
             spaceAfter=20
         )
-        story.append(Paragraph(f"Briefing Executivo - {briefing.date.strftime('%d/%m/%Y')}", title_style))
-        story.append(Spacer(1, 20))
+        section_style = ParagraphStyle(
+            'SectionTitle',
+            parent=styles['Heading2'],
+            fontSize=14,
+            textColor=colors.HexColor('#1a237e'),
+            spaceBefore=15,
+            spaceAfter=10
+        )
 
-        # Summary table
+        # Title
+        story.append(Paragraph(f"Briefing Executivo - {briefing.date.strftime('%d/%m/%Y')}", title_style))
+        story.append(Spacer(1, 10))
+
+        # Executive Summary
+        status_color = '#28a745' if briefing.overall_status.value == 'healthy' else '#ffc107' if briefing.overall_status.value == 'attention' else '#dc3545'
+        story.append(Paragraph(f"<b>Status Geral:</b> <font color='{status_color}'>{briefing.overall_status.value.upper()}</font>", styles['Normal']))
+        story.append(Spacer(1, 10))
+
+        # Metrics summary table
+        metrics = briefing.metrics if briefing.metrics else {}
+        total_projects = metrics.get('total_projects', len(briefing.project_summaries))
+        healthy = metrics.get('healthy_projects', 0)
+        at_risk = metrics.get('at_risk_projects', 0)
+        critical = metrics.get('critical_projects', 0)
+
         summary_data = [
             ['Métrica', 'Valor'],
-            ['Total de Projetos', str(briefing.total_projects)],
-            ['Projetos Saudáveis', str(briefing.health_summary.get('healthy', 0))],
-            ['Projetos em Risco', str(briefing.health_summary.get('at_risk', 0))],
-            ['Projetos Críticos', str(briefing.health_summary.get('critical', 0))],
+            ['Total de Projetos', str(total_projects)],
+            ['Projetos Saudáveis', str(healthy)],
+            ['Projetos em Risco', str(at_risk)],
+            ['Projetos Críticos', str(critical)],
         ]
 
         table = Table(summary_data, colWidths=[10*cm, 5*cm])
@@ -391,24 +412,102 @@ def generate_briefing_pdf(briefing):
         story.append(table)
         story.append(Spacer(1, 20))
 
-        # Insights
-        if briefing.key_insights:
-            story.append(Paragraph("Principais Insights", styles['Heading2']))
-            for insight in briefing.key_insights[:5]:
-                story.append(Paragraph(f"• {insight}", styles['Normal']))
+        # Compliance Summary Section
+        compliance = briefing.compliance_summary
+        if compliance and (compliance.open_risks > 0 or compliance.overdue_pending > 0 or
+                          compliance.open_bugs > 0 or compliance.open_ncs > 0):
+            story.append(Paragraph("Resumo de Conformidade", section_style))
+
+            compliance_data = [
+                ['Item', 'Total', 'Abertos/Atrasados', 'Críticos'],
+                ['Riscos', str(compliance.total_risks), str(compliance.open_risks), str(compliance.critical_risks)],
+                ['Pendências', str(compliance.total_pending), str(compliance.overdue_pending), '-'],
+                ['Bugs', str(compliance.total_bugs), str(compliance.open_bugs), str(compliance.critical_bugs)],
+                ['Não Conformidades', str(compliance.total_ncs), str(compliance.open_ncs), '-'],
+                ['Ações Corretivas', str(compliance.total_actions), str(compliance.pending_actions), '-'],
+            ]
+
+            compliance_table = Table(compliance_data, colWidths=[6*cm, 3*cm, 4*cm, 3*cm])
+            compliance_table.setStyle(TableStyle([
+                ('BACKGROUND', (0, 0), (-1, 0), colors.HexColor('#dc3545')),
+                ('TEXTCOLOR', (0, 0), (-1, 0), colors.white),
+                ('ALIGN', (0, 0), (-1, -1), 'LEFT'),
+                ('ALIGN', (1, 1), (-1, -1), 'CENTER'),
+                ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
+                ('FONTSIZE', (0, 0), (-1, 0), 11),
+                ('BOTTOMPADDING', (0, 0), (-1, 0), 10),
+                ('BACKGROUND', (0, 1), (-1, -1), colors.HexColor('#fff5f5')),
+                ('GRID', (0, 0), (-1, -1), 1, colors.HexColor('#ffcccc')),
+                ('FONTSIZE', (0, 1), (-1, -1), 10),
+                ('TOPPADDING', (0, 1), (-1, -1), 6),
+                ('BOTTOMPADDING', (0, 1), (-1, -1), 6),
+            ]))
+            story.append(compliance_table)
             story.append(Spacer(1, 15))
 
-        # Priorities
-        if briefing.todays_priorities:
-            story.append(Paragraph("Prioridades de Hoje", styles['Heading2']))
-            for priority in briefing.todays_priorities[:5]:
-                story.append(Paragraph(f"• {priority}", styles['Normal']))
+            # Critical Items List
+            if compliance.critical_items:
+                story.append(Paragraph("<b>Itens Críticos:</b>", styles['Normal']))
+                for item in compliance.critical_items[:10]:
+                    item_text = f"• [{item.get('type', 'Item')}] {item.get('title', 'Sem título')} - {item.get('project', 'Sem projeto')}"
+                    story.append(Paragraph(item_text, styles['Normal']))
+                story.append(Spacer(1, 10))
+
+        # Recommended Actions Section
+        if briefing.recommended_actions:
+            story.append(Paragraph("Ações Recomendadas", section_style))
+
+            for i, action in enumerate(briefing.recommended_actions[:10], 1):
+                priority = action.priority.value if hasattr(action.priority, 'value') else str(action.priority)
+                priority_color = '#dc3545' if priority == 'critical' else '#ffc107' if priority == 'high' else '#17a2b8'
+
+                action_text = f"<b>{i}. [{priority.upper()}]</b> {action.title}"
+                story.append(Paragraph(action_text, styles['Normal']))
+                if action.description:
+                    desc_style = ParagraphStyle('Desc', parent=styles['Normal'], leftIndent=20, fontSize=9, textColor=colors.gray)
+                    story.append(Paragraph(action.description[:200], desc_style))
+                story.append(Spacer(1, 5))
+            story.append(Spacer(1, 10))
+
+        # Priority Items
+        if briefing.priority_items:
+            story.append(Paragraph("Itens Prioritários", section_style))
+            for item in briefing.priority_items[:8]:
+                if isinstance(item, dict):
+                    item_text = f"• {item.get('title', item.get('description', str(item)))}"
+                else:
+                    item_text = f"• {str(item)}"
+                story.append(Paragraph(item_text, styles['Normal']))
+            story.append(Spacer(1, 10))
+
+        # Project Summaries
+        if briefing.project_summaries:
+            story.append(Paragraph("Resumo dos Projetos", section_style))
+            for proj in briefing.project_summaries[:10]:
+                status_indicator = "●" if proj.health_status.value == 'healthy' else "◐" if proj.health_status.value == 'attention' else "○"
+                proj_text = f"{status_indicator} <b>{proj.code}</b> - {proj.title}"
+                story.append(Paragraph(proj_text, styles['Normal']))
+                if proj.next_milestone:
+                    detail_style = ParagraphStyle('Detail', parent=styles['Normal'], leftIndent=20, fontSize=9, textColor=colors.gray)
+                    story.append(Paragraph(f"Próximo marco: {proj.next_milestone}", detail_style))
+            story.append(Spacer(1, 10))
+
+        # Cost Analysis
+        if briefing.cost_analysis:
+            story.append(Paragraph("Análise de Custos", section_style))
+            cost = briefing.cost_analysis
+            cost_text = f"Orçamento Total: R$ {cost.get('total_budget', 0):,.2f} | Executado: R$ {cost.get('total_spent', 0):,.2f}"
+            story.append(Paragraph(cost_text, styles['Normal']))
+            if cost.get('over_budget_projects'):
+                story.append(Paragraph(f"<font color='red'>Projetos acima do orçamento: {len(cost.get('over_budget_projects', []))}</font>", styles['Normal']))
 
         doc.build(story)
         return buffer.getvalue()
 
     except Exception as e:
         logger.error(f"Error generating PDF: {e}")
+        import traceback
+        logger.error(traceback.format_exc())
         return None
 
 
