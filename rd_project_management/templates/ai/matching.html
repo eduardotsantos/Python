@@ -99,8 +99,10 @@ async function runMatching() {
 
         // Document saved notification
         if (data.document_saved) {
-            document.getElementById('documentSavedSection').classList.remove('d-none');
-            document.getElementById('documentName').textContent = ' (' + data.document_name + ')';
+            const savedSection = document.getElementById('documentSavedSection');
+            const docName = document.getElementById('documentName');
+            if (savedSection) savedSection.classList.remove('d-none');
+            if (docName) docName.textContent = ' (' + data.document_name + ')';
         }
 
     } catch (error) {
