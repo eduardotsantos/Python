@@ -357,6 +357,19 @@ def program_status_report(program_id):
         overall_health = 'red'
         overall_label = 'Critico'
 
+    # PMBOK 8 - Value Delivery calculation
+    total_expected_value = sum(getattr(p, 'expected_value', 0) or 0 for p in projects)
+    total_realized_value = sum(getattr(p, 'realized_value', 0) or 0 for p in projects)
+    projects_with_value = len([p for p in projects if getattr(p, 'expected_value', 0) and p.expected_value > 0])
+    value_capture_percent = (total_realized_value / total_expected_value * 100) if total_expected_value > 0 else 0
+
+    value_status = {
+        'total_expected': total_expected_value,
+        'total_realized': total_realized_value,
+        'capture_percent': round(value_capture_percent, 1),
+        'projects_with_value': projects_with_value
+    }
+
     return render_template('programs/status_report.html',
         program=program,
         tenant=tenant,
@@ -370,7 +383,8 @@ def program_status_report(program_id):
         total_hours=total_hours,
         team=list(unique_team),
         upcoming_milestones=upcoming_milestones,
-        compliance_status=compliance_status
+        compliance_status=compliance_status,
+        value_status=value_status
     )
 
 

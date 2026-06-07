@@ -133,7 +133,7 @@
         </div>
 
         <!-- Budget -->
-        <div class="card shadow-sm">
+        <div class="card shadow-sm mb-4">
             <div class="card-header bg-white">
                 <h6 class="mb-0 fw-bold"><i class="bi bi-cash-stack text-success"></i> Orçamento</h6>
             </div>
@@ -160,6 +160,38 @@
                 </div>
             </div>
         </div>
+
+        <!-- PMBOK 8 - Value Delivery -->
+        {% if value_status and value_status.total_expected > 0 %}
+        <div class="card shadow-sm border-start border-4 border-info">
+            <div class="card-header bg-white d-flex justify-content-between align-items-center">
+                <h6 class="mb-0 fw-bold"><i class="bi bi-award text-info"></i> Entrega de Valor (PMBOK 8)</h6>
+                <span class="badge bg-{{ 'success' if value_status.capture_percent >= 80 else 'warning' if value_status.capture_percent >= 50 else 'secondary' }}">
+                    {{ value_status.capture_percent|round(0)|int }}% capturado
+                </span>
+            </div>
+            <div class="card-body">
+                <div class="progress mb-3" style="height: 12px;">
+                    <div class="progress-bar bg-{{ 'success' if value_status.capture_percent >= 80 else 'warning' if value_status.capture_percent >= 50 else 'info' }}"
+                         style="width: {{ value_status.capture_percent }}%"></div>
+                </div>
+                <div class="row text-center">
+                    <div class="col-4">
+                        <div class="fw-bold text-primary">R$ {{ "{:,.0f}".format(value_status.total_expected) }}</div>
+                        <small class="text-muted">Valor Esperado</small>
+                    </div>
+                    <div class="col-4">
+                        <div class="fw-bold text-success">R$ {{ "{:,.0f}".format(value_status.total_realized) }}</div>
+                        <small class="text-muted">Valor Realizado</small>
+                    </div>
+                    <div class="col-4">
+                        <div class="fw-bold">{{ value_status.projects_with_value }}</div>
+                        <small class="text-muted">Projetos c/ Valor</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endif %}
     </div>
 
     <div class="col-lg-6">
