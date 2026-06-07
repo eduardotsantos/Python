@@ -21,7 +21,7 @@
 
 <!-- Quick Actions -->
 <div class="row g-3 mb-4">
-    <div class="col-md-4">
+    <div class="col-md-3">
         <div class="card bg-primary text-white shadow">
             <div class="card-body">
                 <h5><i class="bi bi-sun"></i> Daily Executive AI</h5>
@@ -32,7 +32,18 @@
             </div>
         </div>
     </div>
-    <div class="col-md-4">
+    <div class="col-md-3">
+        <div class="card bg-info text-white shadow">
+            <div class="card-body">
+                <h5><i class="bi bi-shield-check"></i> Análise Conformidade</h5>
+                <p class="small mb-2">Analisa pendências, bugs e NCs com correlação e sugestões.</p>
+                <a href="{{ url_for('pmo_agents.compliance_analysis') }}" class="btn btn-light btn-sm">
+                    <i class="bi bi-play-fill"></i> Analisar
+                </a>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
         <div class="card bg-success text-white shadow">
             <div class="card-body">
                 <h5><i class="bi bi-file-earmark-text"></i> Leitor de Atas</h5>
@@ -43,12 +54,12 @@
             </div>
         </div>
     </div>
-    <div class="col-md-4">
-        <div class="card bg-info text-white shadow">
+    <div class="col-md-3">
+        <div class="card bg-warning text-dark shadow">
             <div class="card-body">
                 <h5><i class="bi bi-lightning"></i> Execução Autônoma</h5>
                 <p class="small mb-2">O Orion não apenas recomenda - ele executa ações aprovadas.</p>
-                <a href="{{ url_for('pmo_agents.action_center') }}" class="btn btn-light btn-sm">
+                <a href="{{ url_for('pmo_agents.action_center') }}" class="btn btn-dark btn-sm">
                     <i class="bi bi-check2-all"></i> Ver Ações
                 </a>
             </div>
