@@ -1,6 +1,6 @@
 from flask import Blueprint, render_template, redirect, url_for, flash, request, send_file, current_app
 from flask_login import login_required, current_user
-from models import db, Project, User, Expense, Resource, Milestone, Timesheet, ProjectCall, ProjectDocument, Tenant
+from models import db, Project, User, Expense, Resource, Milestone, Timesheet, ProjectCall, ProjectDocument, Tenant, ProjectStakeholder, ProjectTRLHistory
 from services.tenant_utils import tenant_required, ensure_tenant_access, get_current_tenant_id
 from datetime import datetime
 from io import BytesIO
@@ -248,6 +248,31 @@ def edit_project(project_id):
         project.expected_value = float(request.form.get('expected_value', 0) or 0)
         project.realized_value = float(request.form.get('realized_value', 0) or 0)
         project.value_status = request.form.get('value_status', 'Não iniciado')
+
+        # TRL - Track history if changed
+        new_trl = int(request.form.get('trl', 1) or 1)
+        if new_trl != project.trl:
+            trl_history = ProjectTRLHistory(
+                tenant_id=project.tenant_id,
+                project_id=project.id,
+                trl_from=project.trl,
+                trl_to=new_trl,
+                change_date=datetime.now().date(),
+                justification=request.form.get('trl_justification', ''),
+                changed_by_id=current_user.id
+            )
+            db.session.add(trl_history)
+            project.trl = new_trl
+
+        # Innovation KPIs
+        project.innovation_type = request.form.get('innovation_type', '')
+        project.innovation_scope = request.form.get('innovation_scope', '')
+        project.target_market = request.form.get('target_market', '')
+        project.competitive_advantage = request.form.get('competitive_advantage', '')
+        project.ip_strategy = request.form.get('ip_strategy', '')
+        project.time_to_market = int(request.form.get('time_to_market', 0) or 0) or None
+        project.expected_roi_percent = float(request.form.get('expected_roi_percent', 0) or 0) or None
+        project.innovation_risk_level = request.form.get('innovation_risk_level', '')
 
         start_date_str = request.form.get('start_date', '')
         end_date_str = request.form.get('end_date', '')
@@ -679,3 +704,268 @@ def delete_document(project_id, doc_id):
 
     flash(f'Documento "{filename}" excluído com sucesso!', 'success')
     return redirect(url_for('projects.view_project', project_id=project_id))
+
+
+# ============================================
+# STAKEHOLDER MANAGEMENT
+# ============================================
+
+@projects_bp.route('/projects/<int:project_id>/stakeholders')
+@login_required
+@tenant_required
+def list_stakeholders(project_id):
+    """List all stakeholders for a project."""
+    project = Project.query.get_or_404(project_id)
+    ensure_tenant_access(project)
+
+    stakeholders = ProjectStakeholder.query.filter_by(project_id=project_id).order_by(
+        ProjectStakeholder.influence_level.desc(),
+        ProjectStakeholder.name
+    ).all()
+
+    return render_template('projects/stakeholders/list.html',
+                           project=project,
+                           stakeholders=stakeholders)
+
+
+@projects_bp.route('/projects/<int:project_id>/stakeholders/add', methods=['GET', 'POST'])
+@login_required
+@tenant_required
+def add_stakeholder(project_id):
+    """Add a new stakeholder to a project."""
+    project = Project.query.get_or_404(project_id)
+    ensure_tenant_access(project)
+
+    if request.method == 'POST':
+        stakeholder = ProjectStakeholder(
+            tenant_id=project.tenant_id,
+            project_id=project_id,
+            name=request.form.get('name', '').strip(),
+            email=request.form.get('email', '').strip() or None,
+            phone=request.form.get('phone', '').strip() or None,
+            organization=request.form.get('organization', '').strip() or None,
+            role=request.form.get('role', '').strip(),
+            influence_level=request.form.get('influence_level', 'Médio'),
+            interest_level=request.form.get('interest_level', 'Médio'),
+            engagement_strategy=request.form.get('engagement_strategy', ''),
+            receive_briefing=request.form.get('receive_briefing') == 'on',
+            receive_risk_alerts=request.form.get('receive_risk_alerts') == 'on',
+            receive_financial_alerts=request.form.get('receive_financial_alerts') == 'on',
+            receive_schedule_alerts=request.form.get('receive_schedule_alerts') == 'on',
+            receive_quality_alerts=request.form.get('receive_quality_alerts') == 'on',
+            receive_compliance_alerts=request.form.get('receive_compliance_alerts') == 'on',
+            receive_status_reports=request.form.get('receive_status_reports') == 'on',
+            notes=request.form.get('notes', '').strip() or None,
+            created_by_id=current_user.id
+        )
+        db.session.add(stakeholder)
+        db.session.commit()
+
+        flash(f'Stakeholder "{stakeholder.name}" adicionado com sucesso!', 'success')
+        return redirect(url_for('projects.list_stakeholders', project_id=project_id))
+
+    return render_template('projects/stakeholders/form.html',
+                           project=project,
+                           stakeholder=None)
+
+
+@projects_bp.route('/projects/<int:project_id>/stakeholders/<int:stakeholder_id>/edit', methods=['GET', 'POST'])
+@login_required
+@tenant_required
+def edit_stakeholder(project_id, stakeholder_id):
+    """Edit an existing stakeholder."""
+    project = Project.query.get_or_404(project_id)
+    ensure_tenant_access(project)
+
+    stakeholder = ProjectStakeholder.query.get_or_404(stakeholder_id)
+    if stakeholder.project_id != project_id:
+        flash('Stakeholder não encontrado.', 'danger')
+        return redirect(url_for('projects.list_stakeholders', project_id=project_id))
+
+    if request.method == 'POST':
+        stakeholder.name = request.form.get('name', '').strip()
+        stakeholder.email = request.form.get('email', '').strip() or None
+        stakeholder.phone = request.form.get('phone', '').strip() or None
+        stakeholder.organization = request.form.get('organization', '').strip() or None
+        stakeholder.role = request.form.get('role', '').strip()
+        stakeholder.influence_level = request.form.get('influence_level', 'Médio')
+        stakeholder.interest_level = request.form.get('interest_level', 'Médio')
+        stakeholder.engagement_strategy = request.form.get('engagement_strategy', '')
+        stakeholder.receive_briefing = request.form.get('receive_briefing') == 'on'
+        stakeholder.receive_risk_alerts = request.form.get('receive_risk_alerts') == 'on'
+        stakeholder.receive_financial_alerts = request.form.get('receive_financial_alerts') == 'on'
+        stakeholder.receive_schedule_alerts = request.form.get('receive_schedule_alerts') == 'on'
+        stakeholder.receive_quality_alerts = request.form.get('receive_quality_alerts') == 'on'
+        stakeholder.receive_compliance_alerts = request.form.get('receive_compliance_alerts') == 'on'
+        stakeholder.receive_status_reports = request.form.get('receive_status_reports') == 'on'
+        stakeholder.active = request.form.get('active') == 'on'
+        stakeholder.notes = request.form.get('notes', '').strip() or None
+
+        db.session.commit()
+        flash(f'Stakeholder "{stakeholder.name}" atualizado com sucesso!', 'success')
+        return redirect(url_for('projects.list_stakeholders', project_id=project_id))
+
+    return render_template('projects/stakeholders/form.html',
+                           project=project,
+                           stakeholder=stakeholder)
+
+
+@projects_bp.route('/projects/<int:project_id>/stakeholders/<int:stakeholder_id>/delete', methods=['POST'])
+@login_required
+@tenant_required
+def delete_stakeholder(project_id, stakeholder_id):
+    """Delete a stakeholder."""
+    project = Project.query.get_or_404(project_id)
+    ensure_tenant_access(project)
+
+    stakeholder = ProjectStakeholder.query.get_or_404(stakeholder_id)
+    if stakeholder.project_id != project_id:
+        flash('Stakeholder não encontrado.', 'danger')
+        return redirect(url_for('projects.list_stakeholders', project_id=project_id))
+
+    name = stakeholder.name
+    db.session.delete(stakeholder)
+    db.session.commit()
+
+    flash(f'Stakeholder "{name}" excluído com sucesso!', 'success')
+    return redirect(url_for('projects.list_stakeholders', project_id=project_id))
+
+
+# ============================================
+# TRL HISTORY
+# ============================================
+
+@projects_bp.route('/projects/<int:project_id>/trl-history')
+@login_required
+@tenant_required
+def trl_history(project_id):
+    """View TRL history for a project."""
+    project = Project.query.get_or_404(project_id)
+    ensure_tenant_access(project)
+
+    history = ProjectTRLHistory.query.filter_by(project_id=project_id).order_by(
+        ProjectTRLHistory.change_date.desc()
+    ).all()
+
+    return render_template('projects/trl_history.html',
+                           project=project,
+                           history=history)
+
+
+@projects_bp.route('/projects/<int:project_id>/update-trl', methods=['POST'])
+@login_required
+@tenant_required
+def update_trl(project_id):
+    """Update TRL with history tracking."""
+    project = Project.query.get_or_404(project_id)
+    ensure_tenant_access(project)
+
+    new_trl = int(request.form.get('trl', project.trl))
+
+    if new_trl != project.trl:
+        trl_history = ProjectTRLHistory(
+            tenant_id=project.tenant_id,
+            project_id=project.id,
+            trl_from=project.trl,
+            trl_to=new_trl,
+            change_date=datetime.strptime(request.form.get('change_date', ''), '%Y-%m-%d').date() if request.form.get('change_date') else datetime.now().date(),
+            justification=request.form.get('justification', ''),
+            evidence=request.form.get('evidence', ''),
+            verified_by=request.form.get('verified_by', ''),
+            changed_by_id=current_user.id
+        )
+        db.session.add(trl_history)
+        project.trl = new_trl
+        db.session.commit()
+
+        flash(f'TRL atualizado de {trl_history.trl_from} para {new_trl}!', 'success')
+    else:
+        flash('TRL não foi alterado.', 'info')
+
+    return redirect(url_for('projects.view_project', project_id=project_id))
+
+
+# ============================================
+# AI SUGGESTIONS FOR TRL AND KPIs
+# ============================================
+
+@projects_bp.route('/projects/<int:project_id>/suggest-trl-kpi', methods=['POST'])
+@login_required
+@tenant_required
+def suggest_trl_kpi(project_id):
+    """Get AI suggestions for TRL and innovation KPIs."""
+    import os
+    if not os.environ.get('ANTHROPIC_API_KEY'):
+        return {'error': 'API de IA não configurada.'}, 400
+
+    project = Project.query.get_or_404(project_id)
+    ensure_tenant_access(project)
+
+    from services.ai_service import get_anthropic_client
+    client = get_anthropic_client()
+
+    # Gather project info
+    milestones_info = "\n".join([f"- {m.title}: {m.progress}% ({m.status})" for m in project.milestones[:10]])
+    expenses_total = sum(e.amount for e in project.expenses if e.status != 'Rejeitada')
+
+    prompt = f"""Analise este projeto de P&D e sugira o TRL (Technology Readiness Level) atual e KPIs de inovação apropriados.
+
+PROJETO:
+- Título: {project.title}
+- Descrição: {project.description or 'Não informada'}
+- Categoria: {project.category or 'Não informada'}
+- Status: {project.status}
+- Orçamento: R$ {project.budget:,.2f}
+- Gastos: R$ {expenses_total:,.2f}
+- Data Início: {project.start_date}
+- Data Fim: {project.end_date}
+
+MARCOS/ATIVIDADES:
+{milestones_info or 'Nenhum marco cadastrado'}
+
+Responda APENAS em JSON válido com esta estrutura:
+{{
+    "trl_sugerido": <número 1-9>,
+    "trl_justificativa": "<explicação breve>",
+    "innovation_type": "<Radical|Incremental|Disruptiva|Arquitetural>",
+    "innovation_scope": "<Produto|Processo|Modelo de Negócio|Organizacional>",
+    "ip_strategy": "<Patente|Segredo Industrial|Open Source|Nenhuma>",
+    "innovation_risk_level": "<Baixo|Médio|Alto|Muito Alto>",
+    "time_to_market_meses": <número>,
+    "expected_roi_percent": <número>,
+    "target_market": "<descrição do mercado-alvo>",
+    "competitive_advantage": "<vantagem competitiva esperada>"
+}}
+
+Baseie-se nos níveis TRL:
+1: Princípios básicos observados
+2: Conceito de tecnologia formulado
+3: Prova de conceito experimental
+4: Validação em laboratório
+5: Validação em ambiente relevante
+6: Demonstração em ambiente relevante
+7: Demonstração em ambiente operacional
+8: Sistema completo e qualificado
+9: Sistema comprovado em operação
+"""
+
+    try:
+        response = client.messages.create(
+            model="claude-sonnet-4-20250514",
+            max_tokens=1000,
+            messages=[{"role": "user", "content": prompt}]
+        )
+
+        import json
+        response_text = response.content[0].text.strip()
+        # Extract JSON from response
+        if '```json' in response_text:
+            response_text = response_text.split('```json')[1].split('```')[0]
+        elif '```' in response_text:
+            response_text = response_text.split('```')[1].split('```')[0]
+
+        suggestion = json.loads(response_text)
+        return suggestion
+
+    except Exception as e:
+        return {'error': str(e)}, 500

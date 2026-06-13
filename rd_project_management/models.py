@@ -129,6 +129,19 @@ class Project(db.Model):
     value_status = db.Column(db.String(50), default='Não iniciado')  # Não iniciado, Em captura, Parcial, Realizado
     realized_value = db.Column(db.Float, default=0.0)
 
+    # TRL - Technology Readiness Level (1-9)
+    trl = db.Column(db.Integer, default=1)  # Current TRL level
+
+    # Innovation KPIs
+    innovation_type = db.Column(db.String(100))  # Radical, Incremental, Disruptiva, Arquitetural
+    innovation_scope = db.Column(db.String(100))  # Produto, Processo, Modelo de Negócio, Organizacional
+    target_market = db.Column(db.String(200))  # Mercado-alvo
+    competitive_advantage = db.Column(db.Text)  # Vantagem competitiva esperada
+    ip_strategy = db.Column(db.String(100))  # Patente, Segredo Industrial, Open Source, Nenhuma
+    time_to_market = db.Column(db.Integer)  # Meses estimados para mercado
+    expected_roi_percent = db.Column(db.Float)  # ROI esperado em %
+    innovation_risk_level = db.Column(db.String(50))  # Baixo, Médio, Alto, Muito Alto
+
     __table_args__ = (
         db.UniqueConstraint('tenant_id', 'code', name='uq_tenant_project_code'),
     )
@@ -713,6 +726,116 @@ class CorrectiveAction(db.Model):
         elif self.risk_id:
             return self.risk
         return None
+
+
+class ProjectStakeholder(db.Model):
+    """Stakeholders linked to projects with role and communication preferences."""
+    __tablename__ = 'project_stakeholders'
+    id = db.Column(db.Integer, primary_key=True)
+    tenant_id = db.Column(db.Integer, db.ForeignKey('tenants.id'), nullable=False)
+    project_id = db.Column(db.Integer, db.ForeignKey('projects.id'), nullable=False)
+
+    # Stakeholder info
+    name = db.Column(db.String(200), nullable=False)
+    email = db.Column(db.String(120))
+    phone = db.Column(db.String(20))
+    organization = db.Column(db.String(200))  # Organização/empresa do stakeholder
+
+    # Role and influence
+    role = db.Column(db.String(100), nullable=False)  # Patrocinador, Cliente, Fornecedor, Regulador, Equipe, Consultor, etc.
+    influence_level = db.Column(db.String(50), default='Médio')  # Baixo, Médio, Alto, Muito Alto
+    interest_level = db.Column(db.String(50), default='Médio')  # Baixo, Médio, Alto, Muito Alto
+    engagement_strategy = db.Column(db.String(100))  # Monitorar, Manter Informado, Manter Satisfeito, Gerenciar de Perto
+
+    # Communication preferences - which agent communications to receive
+    receive_briefing = db.Column(db.Boolean, default=False)  # Daily executive briefing
+    receive_risk_alerts = db.Column(db.Boolean, default=False)  # Risk agent alerts
+    receive_financial_alerts = db.Column(db.Boolean, default=False)  # Financial agent alerts
+    receive_schedule_alerts = db.Column(db.Boolean, default=False)  # Schedule agent alerts
+    receive_quality_alerts = db.Column(db.Boolean, default=False)  # Quality agent alerts
+    receive_compliance_alerts = db.Column(db.Boolean, default=False)  # Compliance agent alerts
+    receive_status_reports = db.Column(db.Boolean, default=False)  # Status reports
+
+    # Status
+    active = db.Column(db.Boolean, default=True)
+    notes = db.Column(db.Text)
+
+    created_by_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+
+    project = db.relationship('Project', backref='stakeholders')
+    created_by = db.relationship('User', backref='created_stakeholders')
+
+    @property
+    def power_interest_quadrant(self):
+        """Return stakeholder quadrant based on power/interest matrix."""
+        power_map = {'Baixo': 1, 'Médio': 2, 'Alto': 3, 'Muito Alto': 4}
+        interest_map = {'Baixo': 1, 'Médio': 2, 'Alto': 3, 'Muito Alto': 4}
+
+        power = power_map.get(self.influence_level, 2)
+        interest = interest_map.get(self.interest_level, 2)
+
+        if power >= 3 and interest >= 3:
+            return 'Gerenciar de Perto'
+        elif power >= 3 and interest < 3:
+            return 'Manter Satisfeito'
+        elif power < 3 and interest >= 3:
+            return 'Manter Informado'
+        else:
+            return 'Monitorar'
+
+    @property
+    def communication_count(self):
+        """Count how many communication types are enabled."""
+        count = 0
+        if self.receive_briefing: count += 1
+        if self.receive_risk_alerts: count += 1
+        if self.receive_financial_alerts: count += 1
+        if self.receive_schedule_alerts: count += 1
+        if self.receive_quality_alerts: count += 1
+        if self.receive_compliance_alerts: count += 1
+        if self.receive_status_reports: count += 1
+        return count
+
+
+class ProjectTRLHistory(db.Model):
+    """History of TRL changes for a project."""
+    __tablename__ = 'project_trl_history'
+    id = db.Column(db.Integer, primary_key=True)
+    tenant_id = db.Column(db.Integer, db.ForeignKey('tenants.id'), nullable=False)
+    project_id = db.Column(db.Integer, db.ForeignKey('projects.id'), nullable=False)
+
+    trl_from = db.Column(db.Integer)  # Previous TRL level (null if first entry)
+    trl_to = db.Column(db.Integer, nullable=False)  # New TRL level
+    change_date = db.Column(db.Date, nullable=False, default=date.today)
+
+    # Evidence and justification
+    justification = db.Column(db.Text)  # Why the TRL changed
+    evidence = db.Column(db.Text)  # Evidence supporting the change
+    verified_by = db.Column(db.String(200))  # Who verified/approved the change
+
+    changed_by_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+
+    project = db.relationship('Project', backref='trl_history')
+    changed_by = db.relationship('User', backref='trl_changes')
+
+    @property
+    def trl_description(self):
+        """Return description for the TRL level."""
+        descriptions = {
+            1: 'Princípios básicos observados',
+            2: 'Conceito de tecnologia formulado',
+            3: 'Prova de conceito experimental',
+            4: 'Validação em laboratório',
+            5: 'Validação em ambiente relevante',
+            6: 'Demonstração em ambiente relevante',
+            7: 'Demonstração em ambiente operacional',
+            8: 'Sistema completo e qualificado',
+            9: 'Sistema comprovado em operação'
+        }
+        return descriptions.get(self.trl_to, 'Nível não definido')
 
 
 # Helper function to get current tenant

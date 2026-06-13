@@ -1,0 +1,186 @@
+{% extends "base.html" %}
+{% block title %}Historico TRL - {{ project.title }}{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <a href="{{ url_for('projects.view_project', project_id=project.id) }}" class="btn btn-outline-secondary btn-sm">
+                <i class="bi bi-arrow-left"></i> Voltar ao Projeto
+            </a>
+            <h4 class="mt-2"><i class="bi bi-graph-up-arrow text-success"></i> Historico TRL</h4>
+            <p class="text-muted mb-0">{{ project.code }} - {{ project.title }}</p>
+        </div>
+    </div>
+
+    <!-- Current TRL -->
+    <div class="row mb-4">
+        <div class="col-md-6">
+            <div class="card border-primary">
+                <div class="card-body">
+                    <div class="d-flex align-items-center">
+                        <div class="me-4">
+                            <div class="display-1 text-primary fw-bold">{{ project.trl or 1 }}</div>
+                        </div>
+                        <div>
+                            <h5 class="mb-1">TRL Atual</h5>
+                            <p class="text-muted mb-0">
+                                {% set trl_descriptions = {
+                                    1: 'Principios basicos observados',
+                                    2: 'Conceito de tecnologia formulado',
+                                    3: 'Prova de conceito experimental',
+                                    4: 'Validacao em laboratorio',
+                                    5: 'Validacao em ambiente relevante',
+                                    6: 'Demonstracao em ambiente relevante',
+                                    7: 'Demonstracao em ambiente operacional',
+                                    8: 'Sistema completo e qualificado',
+                                    9: 'Sistema comprovado em operacao'
+                                } %}
+                                {{ trl_descriptions.get(project.trl or 1, 'Nivel nao definido') }}
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    <i class="bi bi-arrow-up-circle"></i> Atualizar TRL
+                </div>
+                <div class="card-body">
+                    <form action="{{ url_for('projects.update_trl', project_id=project.id) }}" method="POST">
+                        <div class="row">
+                            <div class="col-md-4 mb-3">
+                                <label class="form-label">Novo TRL</label>
+                                <select name="trl" class="form-select" required>
+                                    {% for i in range(1, 10) %}
+                                    <option value="{{ i }}" {{ 'selected' if project.trl == i else '' }}>
+                                        TRL {{ i }}
+                                    </option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label class="form-label">Data da Mudanca</label>
+                                <input type="date" name="change_date" class="form-control" value="{{ today }}">
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label class="form-label">Verificado por</label>
+                                <input type="text" name="verified_by" class="form-control" placeholder="Nome do verificador">
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Justificativa</label>
+                            <textarea name="justification" class="form-control" rows="2"
+                                      placeholder="Por que o TRL mudou?"></textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Evidencias</label>
+                            <textarea name="evidence" class="form-control" rows="2"
+                                      placeholder="Quais evidencias suportam esta mudanca?"></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="bi bi-check-lg"></i> Atualizar TRL
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- TRL Scale Reference -->
+    <div class="card mb-4">
+        <div class="card-header">
+            <i class="bi bi-info-circle"></i> Escala TRL (Technology Readiness Level)
+        </div>
+        <div class="card-body">
+            <div class="row">
+                {% for i in range(1, 10) %}
+                <div class="col-md-4 mb-2">
+                    <div class="d-flex align-items-center {{ 'bg-primary text-white rounded p-2' if project.trl == i else '' }}">
+                        <span class="badge {{ 'bg-light text-primary' if project.trl == i else 'bg-secondary' }} me-2 fs-6">{{ i }}</span>
+                        <small>{{ trl_descriptions.get(i, '') }}</small>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+    <!-- History Timeline -->
+    <div class="card">
+        <div class="card-header">
+            <i class="bi bi-clock-history"></i> Linha do Tempo
+        </div>
+        <div class="card-body">
+            {% if history %}
+            <div class="timeline">
+                {% for h in history %}
+                <div class="timeline-item mb-4">
+                    <div class="d-flex">
+                        <div class="me-3">
+                            <div class="timeline-badge bg-{{ 'success' if h.trl_to > (h.trl_from or 0) else 'warning' }}">
+                                <i class="bi bi-{{ 'arrow-up' if h.trl_to > (h.trl_from or 0) else 'dash' }}"></i>
+                            </div>
+                        </div>
+                        <div class="flex-grow-1">
+                            <div class="card">
+                                <div class="card-body">
+                                    <div class="d-flex justify-content-between align-items-start">
+                                        <div>
+                                            <h6 class="mb-1">
+                                                {% if h.trl_from %}
+                                                TRL {{ h.trl_from }} <i class="bi bi-arrow-right"></i> TRL {{ h.trl_to }}
+                                                {% else %}
+                                                TRL Inicial: {{ h.trl_to }}
+                                                {% endif %}
+                                            </h6>
+                                            <small class="text-muted">
+                                                {{ h.change_date.strftime('%d/%m/%Y') }}
+                                                {% if h.changed_by %}
+                                                - por {{ h.changed_by.full_name }}
+                                                {% endif %}
+                                            </small>
+                                        </div>
+                                        <span class="badge bg-primary fs-5">{{ h.trl_to }}</span>
+                                    </div>
+                                    {% if h.justification %}
+                                    <p class="mt-2 mb-1"><strong>Justificativa:</strong> {{ h.justification }}</p>
+                                    {% endif %}
+                                    {% if h.evidence %}
+                                    <p class="mb-1"><strong>Evidencias:</strong> {{ h.evidence }}</p>
+                                    {% endif %}
+                                    {% if h.verified_by %}
+                                    <p class="mb-0 small text-muted"><i class="bi bi-patch-check"></i> Verificado por: {{ h.verified_by }}</p>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            {% else %}
+            <div class="text-center py-5 text-muted">
+                <i class="bi bi-clock-history fs-1"></i>
+                <p class="mt-2">Nenhuma mudanca de TRL registrada.</p>
+                <p class="small">O historico sera criado quando o TRL for atualizado.</p>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<style>
+.timeline-badge {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+}
+</style>
+{% endblock %}

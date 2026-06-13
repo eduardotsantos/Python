@@ -130,6 +130,119 @@
                                 {% endfor %}
                             </select>
                         </div>
+
+                        <!-- TRL Section -->
+                        <div class="col-12 mt-4">
+                            <div class="alert alert-success py-2 mb-3 d-flex justify-content-between align-items-center">
+                                <span><i class="bi bi-graph-up-arrow me-1"></i> <strong>TRL - Technology Readiness Level</strong></span>
+                                {% if project %}
+                                <a href="{{ url_for('projects.trl_history', project_id=project.id) }}" class="btn btn-sm btn-outline-success">
+                                    <i class="bi bi-clock-history"></i> Ver Historico
+                                </a>
+                                {% endif %}
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <label for="trl" class="form-label">Nivel TRL Atual</label>
+                            <select class="form-select" id="trl" name="trl">
+                                {% set trl_descriptions = {
+                                    1: 'Principios basicos observados',
+                                    2: 'Conceito de tecnologia formulado',
+                                    3: 'Prova de conceito experimental',
+                                    4: 'Validacao em laboratorio',
+                                    5: 'Validacao em ambiente relevante',
+                                    6: 'Demonstracao em ambiente relevante',
+                                    7: 'Demonstracao em ambiente operacional',
+                                    8: 'Sistema completo e qualificado',
+                                    9: 'Sistema comprovado em operacao'
+                                } %}
+                                {% for i in range(1, 10) %}
+                                <option value="{{ i }}" {{ 'selected' if project and project.trl == i else ('selected' if not project and i == 1 else '') }}>
+                                    TRL {{ i }} - {{ trl_descriptions[i] }}
+                                </option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="col-md-8">
+                            <label for="trl_justification" class="form-label">Justificativa da Mudanca (se alterado)</label>
+                            <input type="text" class="form-control" id="trl_justification" name="trl_justification"
+                                   placeholder="Por que o TRL mudou?">
+                        </div>
+
+                        <!-- Innovation KPIs Section -->
+                        <div class="col-12 mt-4">
+                            <div class="alert alert-warning py-2 mb-3 d-flex justify-content-between align-items-center">
+                                <span><i class="bi bi-lightbulb me-1"></i> <strong>KPIs de Inovacao</strong></span>
+                                {% if project %}
+                                <button type="button" class="btn btn-sm btn-outline-warning" onclick="suggestTrlKpi()">
+                                    <i class="bi bi-magic"></i> Sugerir com IA
+                                </button>
+                                {% endif %}
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <label for="innovation_type" class="form-label">Tipo de Inovacao</label>
+                            <select class="form-select" id="innovation_type" name="innovation_type">
+                                <option value="">Selecione...</option>
+                                {% set innovation_types = ['Radical', 'Incremental', 'Disruptiva', 'Arquitetural'] %}
+                                {% for it in innovation_types %}
+                                <option value="{{ it }}" {{ 'selected' if project and project.innovation_type == it }}>{{ it }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="col-md-3">
+                            <label for="innovation_scope" class="form-label">Escopo</label>
+                            <select class="form-select" id="innovation_scope" name="innovation_scope">
+                                <option value="">Selecione...</option>
+                                {% set scopes = ['Produto', 'Processo', 'Modelo de Negócio', 'Organizacional'] %}
+                                {% for scope in scopes %}
+                                <option value="{{ scope }}" {{ 'selected' if project and project.innovation_scope == scope }}>{{ scope }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="col-md-3">
+                            <label for="ip_strategy" class="form-label">Estrategia de PI</label>
+                            <select class="form-select" id="ip_strategy" name="ip_strategy">
+                                <option value="">Selecione...</option>
+                                {% set ip_strategies = ['Patente', 'Segredo Industrial', 'Open Source', 'Nenhuma'] %}
+                                {% for ip in ip_strategies %}
+                                <option value="{{ ip }}" {{ 'selected' if project and project.ip_strategy == ip }}>{{ ip }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="col-md-3">
+                            <label for="innovation_risk_level" class="form-label">Nivel de Risco</label>
+                            <select class="form-select" id="innovation_risk_level" name="innovation_risk_level">
+                                <option value="">Selecione...</option>
+                                {% set risk_levels = ['Baixo', 'Médio', 'Alto', 'Muito Alto'] %}
+                                {% for rl in risk_levels %}
+                                <option value="{{ rl }}" {{ 'selected' if project and project.innovation_risk_level == rl }}>{{ rl }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="col-md-4">
+                            <label for="target_market" class="form-label">Mercado-Alvo</label>
+                            <input type="text" class="form-control" id="target_market" name="target_market"
+                                   value="{{ project.target_market if project else '' }}"
+                                   placeholder="Ex: Industria automotiva, Saude">
+                        </div>
+                        <div class="col-md-4">
+                            <label for="time_to_market" class="form-label">Time to Market (meses)</label>
+                            <input type="number" class="form-control" id="time_to_market" name="time_to_market"
+                                   value="{{ project.time_to_market if project and project.time_to_market else '' }}"
+                                   placeholder="Meses estimados">
+                        </div>
+                        <div class="col-md-4">
+                            <label for="expected_roi_percent" class="form-label">ROI Esperado (%)</label>
+                            <input type="number" step="0.1" class="form-control" id="expected_roi_percent" name="expected_roi_percent"
+                                   value="{{ project.expected_roi_percent if project and project.expected_roi_percent else '' }}"
+                                   placeholder="Ex: 150">
+                        </div>
+                        <div class="col-12">
+                            <label for="competitive_advantage" class="form-label">Vantagem Competitiva</label>
+                            <textarea class="form-control" id="competitive_advantage" name="competitive_advantage" rows="2"
+                                      placeholder="Qual a vantagem competitiva esperada?">{{ project.competitive_advantage if project else '' }}</textarea>
+                        </div>
                     </div>
 
                     <hr class="my-4">
@@ -223,4 +336,73 @@
         {% endif %}
     </div>
 </div>
+{% endblock %}
+
+{% block extra_js %}
+{% if project %}
+<script>
+async function suggestTrlKpi() {
+    const btn = event.target;
+    const originalText = btn.innerHTML;
+    btn.innerHTML = '<span class="spinner-border spinner-border-sm"></span> Analisando...';
+    btn.disabled = true;
+
+    try {
+        const response = await fetch('{{ url_for("projects.suggest_trl_kpi", project_id=project.id) }}', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' }
+        });
+
+        const data = await response.json();
+
+        if (data.error) {
+            alert('Erro: ' + data.error);
+            return;
+        }
+
+        // Fill TRL
+        if (data.trl_sugerido) {
+            document.getElementById('trl').value = data.trl_sugerido;
+            if (data.trl_justificativa) {
+                document.getElementById('trl_justification').value = data.trl_justificativa;
+            }
+        }
+
+        // Fill Innovation KPIs
+        if (data.innovation_type) {
+            document.getElementById('innovation_type').value = data.innovation_type;
+        }
+        if (data.innovation_scope) {
+            document.getElementById('innovation_scope').value = data.innovation_scope;
+        }
+        if (data.ip_strategy) {
+            document.getElementById('ip_strategy').value = data.ip_strategy;
+        }
+        if (data.innovation_risk_level) {
+            document.getElementById('innovation_risk_level').value = data.innovation_risk_level;
+        }
+        if (data.target_market) {
+            document.getElementById('target_market').value = data.target_market;
+        }
+        if (data.time_to_market_meses) {
+            document.getElementById('time_to_market').value = data.time_to_market_meses;
+        }
+        if (data.expected_roi_percent) {
+            document.getElementById('expected_roi_percent').value = data.expected_roi_percent;
+        }
+        if (data.competitive_advantage) {
+            document.getElementById('competitive_advantage').value = data.competitive_advantage;
+        }
+
+        alert('Sugestoes aplicadas! Revise os valores antes de salvar.');
+
+    } catch (error) {
+        alert('Erro de conexao: ' + error.message);
+    } finally {
+        btn.innerHTML = originalText;
+        btn.disabled = false;
+    }
+}
+</script>
+{% endif %}
 {% endblock %}
