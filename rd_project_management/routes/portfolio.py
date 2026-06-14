@@ -124,6 +124,40 @@ def dashboard():
     today = date.today()
     delayed_milestones = [m for m in all_milestones if m.end_date and m.end_date < today and m.status != 'Concluido']
 
+    # TRL Distribution
+    trl_distribution = {}
+    for p in projects:
+        trl = p.trl or 1
+        trl_distribution[trl] = trl_distribution.get(trl, 0) + 1
+
+    # Innovation Type Distribution
+    innovation_type_distribution = {}
+    for p in projects:
+        itype = p.innovation_type or 'Não definido'
+        innovation_type_distribution[itype] = innovation_type_distribution.get(itype, 0) + 1
+
+    # Innovation Scope Distribution
+    innovation_scope_distribution = {}
+    for p in projects:
+        scope = p.innovation_scope or 'Não definido'
+        innovation_scope_distribution[scope] = innovation_scope_distribution.get(scope, 0) + 1
+
+    # Average TRL
+    trls = [p.trl or 1 for p in projects]
+    avg_trl = sum(trls) / len(trls) if trls else 1
+
+    # Projects by TRL level for detailed view
+    projects_by_trl = {}
+    for p in projects:
+        trl = p.trl or 1
+        if trl not in projects_by_trl:
+            projects_by_trl[trl] = []
+        projects_by_trl[trl].append({
+            'code': p.code,
+            'title': p.title,
+            'status': p.status
+        })
+
     return render_template('portfolio/dashboard.html',
         tenant=tenant,
         total_projects=len(projects),
@@ -141,7 +175,12 @@ def dashboard():
         total_resources=total_resources,
         overall_progress=round(overall_progress, 1),
         delayed_count=len(delayed_milestones),
-        projects=projects
+        projects=projects,
+        trl_distribution=trl_distribution,
+        innovation_type_distribution=innovation_type_distribution,
+        innovation_scope_distribution=innovation_scope_distribution,
+        avg_trl=round(avg_trl, 1),
+        projects_by_trl=projects_by_trl
     )
 
 
