@@ -80,6 +80,9 @@ class User(UserMixin, db.Model):
     email_briefing_daily = db.Column(db.Boolean, default=True)  # Receive daily briefing
     email_alerts = db.Column(db.Boolean, default=True)  # Receive critical alerts
 
+    # Language preference
+    language = db.Column(db.String(10), default='pt_BR')  # pt_BR, en, es
+
     __table_args__ = (
         db.UniqueConstraint('tenant_id', 'username', name='uq_tenant_username'),
         db.UniqueConstraint('tenant_id', 'email', name='uq_tenant_email'),

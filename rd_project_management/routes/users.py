@@ -1,5 +1,6 @@
-from flask import Blueprint, render_template, redirect, url_for, flash, request
+from flask import Blueprint, render_template, redirect, url_for, flash, request, session
 from flask_login import login_required, current_user
+from flask_babel import refresh
 from functools import wraps
 from models import db, User
 from services.tenant_utils import tenant_required, admin_required, get_current_tenant_id
@@ -361,6 +362,13 @@ def profile():
         current_user.email_notifications = request.form.get('email_notifications') == 'on'
         current_user.email_briefing_daily = request.form.get('email_briefing_daily') == 'on'
         current_user.email_alerts = request.form.get('email_alerts') == 'on'
+
+        # Language preference
+        language = request.form.get('language', 'pt_BR')
+        if language in ['pt_BR', 'en', 'es']:
+            current_user.language = language
+            session['language'] = language
+            refresh()
 
         # Change password if provided
         if new_password:

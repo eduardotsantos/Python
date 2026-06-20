@@ -1,6 +1,8 @@
-from flask import Blueprint, render_template, redirect, url_for, flash, request
+from flask import Blueprint, render_template, redirect, url_for, flash, request, session
 from flask_login import login_user, logout_user, login_required, current_user
+from flask_babel import refresh
 from models import db, User, AuditLog
+from extensions import LANGUAGES
 
 auth_bp = Blueprint('auth', __name__)
 
@@ -119,3 +121,29 @@ def logout():
     logout_user()
     flash('Logout realizado com sucesso.', 'info')
     return redirect(url_for('auth.login'))
+
+
+@auth_bp.route('/set-language/<lang>')
+def set_language(lang):
+    """Set user language preference."""
+    # Normalize language code
+    lang = lang.replace('-', '_')
+
+    if lang not in LANGUAGES:
+        lang = 'pt_BR'
+
+    if current_user.is_authenticated:
+        current_user.language = lang
+        db.session.commit()
+
+    # Also store in session for anonymous users
+    session['language'] = lang
+
+    # Refresh babel to use new language
+    refresh()
+
+    # Redirect back to previous page
+    referrer = request.referrer
+    if referrer and 'login' not in referrer:
+        return redirect(referrer)
+    return redirect(url_for('home.dashboard') if current_user.is_authenticated else url_for('auth.login'))

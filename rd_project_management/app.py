@@ -1,14 +1,16 @@
 import os
 import sys
 import logging
-from flask import Flask, redirect, url_for, g
+from flask import Flask, redirect, url_for, g, request, session
 from flask_login import LoginManager, current_user
 from flask_mail import Mail
+from flask_babel import Babel, format_datetime, format_date, get_locale
 
 # Add project directory to path
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
 from models import db, User, Tenant
+from extensions import babel, LANGUAGES, DEFAULT_LANGUAGE
 
 # Configure logging
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
@@ -44,6 +46,22 @@ def create_app():
     # Initialize extensions
     db.init_app(app)
     mail.init_app(app)
+
+    # Flask-Babel configuration
+    app.config['BABEL_DEFAULT_LOCALE'] = 'pt_BR'
+    app.config['BABEL_DEFAULT_TIMEZONE'] = 'America/Sao_Paulo'
+    app.config['LANGUAGES'] = LANGUAGES
+
+    def get_locale_selector():
+        # Priority: 1) User preference, 2) Session, 3) Request header, 4) Default
+        if current_user.is_authenticated:
+            if hasattr(current_user, 'language') and current_user.language:
+                return current_user.language
+        if 'language' in session:
+            return session['language']
+        return request.accept_languages.best_match(LANGUAGES.keys()) or DEFAULT_LANGUAGE
+
+    babel.init_app(app, locale_selector=get_locale_selector)
 
     # Flask-Login
     login_manager = LoginManager()
@@ -146,7 +164,7 @@ def create_app():
         if current_user.is_authenticated and current_user.tenant_id:
             g.current_tenant = current_user.tenant
 
-    # Context processor to make tenant available in templates
+    # Context processor to make tenant and i18n available in templates
     @app.context_processor
     def inject_tenant():
         return {
@@ -157,7 +175,9 @@ def create_app():
             'has_audit_module': has_audit,
             'has_agile_module': has_agile,
             'has_compliance_module': has_compliance,
-            'has_pmo_agents_module': has_pmo_agents
+            'has_pmo_agents_module': has_pmo_agents,
+            'current_locale': str(get_locale()),
+            'available_languages': LANGUAGES
         }
 
     # Root redirect

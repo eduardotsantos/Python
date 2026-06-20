@@ -1,0 +1,542 @@
+# Spanish translations for Orion R&D Project Management System
+# Copyright (C) 2024 Orion PMO
+# This file is distributed under the same license as the Orion project.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Orion 1.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-01-01 00:00+0000\n"
+"PO-Revision-Date: 2024-01-01 00:00+0000\n"
+"Last-Translator: Orion Team\n"
+"Language: es\n"
+"Language-Team: es <es@orion.com>\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+# Navigation
+msgid "Inicio"
+msgstr "Inicio"
+
+msgid "Projetos"
+msgstr "Proyectos"
+
+msgid "Programas"
+msgstr "Programas"
+
+msgid "Portfolio"
+msgstr "Portafolio"
+
+msgid "Chamadas"
+msgstr "Convocatorias"
+
+msgid "Chamadas Publicas"
+msgstr "Convocatorias Públicas"
+
+msgid "Conformidade"
+msgstr "Cumplimiento"
+
+msgid "Despesas"
+msgstr "Gastos"
+
+msgid "Recursos"
+msgstr "Recursos"
+
+msgid "Cronograma"
+msgstr "Cronograma"
+
+msgid "Timesheet"
+msgstr "Hoja de Tiempo"
+
+msgid "Usuarios"
+msgstr "Usuarios"
+
+msgid "Empresas"
+msgstr "Empresas"
+
+msgid "Assistente IA"
+msgstr "Asistente IA"
+
+msgid "PMO Autonomo"
+msgstr "PMO Autónomo"
+
+msgid "Meu Perfil"
+msgstr "Mi Perfil"
+
+msgid "Sair"
+msgstr "Salir"
+
+# Actions
+msgid "Salvar"
+msgstr "Guardar"
+
+msgid "Cancelar"
+msgstr "Cancelar"
+
+msgid "Excluir"
+msgstr "Eliminar"
+
+msgid "Editar"
+msgstr "Editar"
+
+msgid "Adicionar"
+msgstr "Agregar"
+
+msgid "Novo"
+msgstr "Nuevo"
+
+msgid "Nova"
+msgstr "Nueva"
+
+msgid "Voltar"
+msgstr "Volver"
+
+msgid "Buscar"
+msgstr "Buscar"
+
+msgid "Filtrar"
+msgstr "Filtrar"
+
+msgid "Exportar"
+msgstr "Exportar"
+
+msgid "Importar"
+msgstr "Importar"
+
+msgid "Ver"
+msgstr "Ver"
+
+msgid "Acoes"
+msgstr "Acciones"
+
+# Status
+msgid "Planejamento"
+msgstr "Planificación"
+
+msgid "Em Andamento"
+msgstr "En Progreso"
+
+msgid "Concluido"
+msgstr "Completado"
+
+msgid "Cancelado"
+msgstr "Cancelado"
+
+msgid "Pendente"
+msgstr "Pendiente"
+
+msgid "Atrasado"
+msgstr "Atrasado"
+
+msgid "Ativo"
+msgstr "Activo"
+
+msgid "Inativo"
+msgstr "Inactivo"
+
+msgid "Aberta"
+msgstr "Abierta"
+
+msgid "Fechada"
+msgstr "Cerrada"
+
+# Projects
+msgid "Novo Projeto"
+msgstr "Nuevo Proyecto"
+
+msgid "Projeto"
+msgstr "Proyecto"
+
+msgid "Codigo"
+msgstr "Código"
+
+msgid "Titulo"
+msgstr "Título"
+
+msgid "Descricao"
+msgstr "Descripción"
+
+msgid "Categoria"
+msgstr "Categoría"
+
+msgid "Orcamento"
+msgstr "Presupuesto"
+
+msgid "Data Inicio"
+msgstr "Fecha de Inicio"
+
+msgid "Data Termino"
+msgstr "Fecha de Fin"
+
+msgid "Responsavel"
+msgstr "Responsable"
+
+msgid "Progresso"
+msgstr "Progreso"
+
+msgid "Fonte de Financiamento"
+msgstr "Fuente de Financiamiento"
+
+# Schedule
+msgid "Marco"
+msgstr "Hito"
+
+msgid "Marcos"
+msgstr "Hitos"
+
+msgid "Novo Marco"
+msgstr "Nuevo Hito"
+
+msgid "Predecessora"
+msgstr "Predecesora"
+
+msgid "Grafico de Gantt"
+msgstr "Diagrama de Gantt"
+
+msgid "Alocacao"
+msgstr "Asignación"
+
+msgid "Ordem"
+msgstr "Orden"
+
+# Expenses
+msgid "Nova Despesa"
+msgstr "Nuevo Gasto"
+
+msgid "Despesa"
+msgstr "Gasto"
+
+msgid "Valor"
+msgstr "Valor"
+
+msgid "Data"
+msgstr "Fecha"
+
+msgid "Fornecedor"
+msgstr "Proveedor"
+
+msgid "Anexos"
+msgstr "Anexos"
+
+# Resources
+msgid "Novo Recurso"
+msgstr "Nuevo Recurso"
+
+msgid "Recurso"
+msgstr "Recurso"
+
+msgid "Nome"
+msgstr "Nombre"
+
+msgid "Tipo"
+msgstr "Tipo"
+
+msgid "Funcao"
+msgstr "Función"
+
+msgid "Custo/Hora"
+msgstr "Costo/Hora"
+
+msgid "Horas Alocadas"
+msgstr "Horas Asignadas"
+
+msgid "Pessoa"
+msgstr "Persona"
+
+msgid "Equipamento"
+msgstr "Equipo"
+
+msgid "Equipe"
+msgstr "Equipo"
+
+# Agile
+msgid "Quadro Kanban"
+msgstr "Tablero Kanban"
+
+msgid "Sprint"
+msgstr "Sprint"
+
+msgid "Sprints"
+msgstr "Sprints"
+
+msgid "Novo Sprint"
+msgstr "Nuevo Sprint"
+
+msgid "Story Points"
+msgstr "Puntos de Historia"
+
+msgid "Prioridade"
+msgstr "Prioridad"
+
+msgid "Baixa"
+msgstr "Baja"
+
+msgid "Media"
+msgstr "Media"
+
+msgid "Alta"
+msgstr "Alta"
+
+msgid "Critica"
+msgstr "Crítica"
+
+msgid "Velocidade"
+msgstr "Velocidad"
+
+msgid "Burndown"
+msgstr "Burndown"
+
+# AI Features
+msgid "Chat IA"
+msgstr "Chat IA"
+
+msgid "Analise de Riscos"
+msgstr "Análisis de Riesgos"
+
+msgid "Gerar Relatorio"
+msgstr "Generar Informe"
+
+msgid "Matching com Editais"
+msgstr "Coincidencia con Convocatorias"
+
+msgid "Gerar Proposta"
+msgstr "Generar Propuesta"
+
+# Compliance
+msgid "Central de Pendencias"
+msgstr "Centro de Pendientes"
+
+msgid "Riscos"
+msgstr "Riesgos"
+
+msgid "Risco"
+msgstr "Riesgo"
+
+msgid "Novo Risco"
+msgstr "Nuevo Riesgo"
+
+msgid "Pendencias"
+msgstr "Pendientes"
+
+msgid "Pendencia"
+msgstr "Pendiente"
+
+msgid "Nova Pendencia"
+msgstr "Nuevo Pendiente"
+
+msgid "Nao Conformidades"
+msgstr "No Conformidades"
+
+msgid "Nao Conformidade"
+msgstr "No Conformidad"
+
+msgid "Bugs"
+msgstr "Bugs"
+
+msgid "Bug"
+msgstr "Bug"
+
+msgid "Novo Bug"
+msgstr "Nuevo Bug"
+
+msgid "Acoes Corretivas"
+msgstr "Acciones Correctivas"
+
+msgid "Acao Corretiva"
+msgstr "Acción Correctiva"
+
+msgid "Probabilidade"
+msgstr "Probabilidad"
+
+msgid "Impacto"
+msgstr "Impacto"
+
+msgid "Severidade"
+msgstr "Severidad"
+
+# TRL and Innovation
+msgid "TRL - Technology Readiness Level"
+msgstr "TRL - Nivel de Madurez Tecnológica"
+
+msgid "Nivel TRL Atual"
+msgstr "Nivel TRL Actual"
+
+msgid "Historico TRL"
+msgstr "Historial TRL"
+
+msgid "KPIs de Inovacao"
+msgstr "KPIs de Innovación"
+
+msgid "Tipo de Inovacao"
+msgstr "Tipo de Innovación"
+
+msgid "Escopo de Inovacao"
+msgstr "Alcance de Innovación"
+
+msgid "Estrategia de PI"
+msgstr "Estrategia de PI"
+
+msgid "Mercado-Alvo"
+msgstr "Mercado Objetivo"
+
+msgid "Vantagem Competitiva"
+msgstr "Ventaja Competitiva"
+
+msgid "Sugerir com IA"
+msgstr "Sugerir con IA"
+
+msgid "Radical"
+msgstr "Radical"
+
+msgid "Incremental"
+msgstr "Incremental"
+
+msgid "Disruptiva"
+msgstr "Disruptiva"
+
+msgid "Arquitetural"
+msgstr "Arquitectural"
+
+msgid "Produto"
+msgstr "Producto"
+
+msgid "Processo"
+msgstr "Proceso"
+
+msgid "Modelo de Negocio"
+msgstr "Modelo de Negocio"
+
+msgid "Organizacional"
+msgstr "Organizacional"
+
+msgid "Patente"
+msgstr "Patente"
+
+msgid "Segredo Industrial"
+msgstr "Secreto Industrial"
+
+msgid "Open Source"
+msgstr "Código Abierto"
+
+# Stakeholders
+msgid "Stakeholders"
+msgstr "Partes Interesadas"
+
+msgid "Novo Stakeholder"
+msgstr "Nueva Parte Interesada"
+
+msgid "Papel"
+msgstr "Rol"
+
+msgid "Influencia"
+msgstr "Influencia"
+
+msgid "Interesse"
+msgstr "Interés"
+
+msgid "Estrategia de Engajamento"
+msgstr "Estrategia de Compromiso"
+
+msgid "Comunicacoes"
+msgstr "Comunicaciones"
+
+msgid "Patrocinador"
+msgstr "Patrocinador"
+
+msgid "Cliente"
+msgstr "Cliente"
+
+msgid "Parceiro"
+msgstr "Socio"
+
+msgid "Regulador"
+msgstr "Regulador"
+
+msgid "Consultor"
+msgstr "Consultor"
+
+# PMBOK 8
+msgid "Entrega de Valor"
+msgstr "Entrega de Valor"
+
+msgid "Valor Esperado"
+msgstr "Valor Esperado"
+
+msgid "Valor Realizado"
+msgstr "Valor Realizado"
+
+msgid "Status do Valor"
+msgstr "Estado del Valor"
+
+msgid "Tipo de Valor"
+msgstr "Tipo de Valor"
+
+# Dashboard
+msgid "Projetos Ativos"
+msgstr "Proyectos Activos"
+
+msgid "Orcamento Total"
+msgstr "Presupuesto Total"
+
+msgid "Despesas Totais"
+msgstr "Gastos Totales"
+
+msgid "Chamadas Abertas"
+msgstr "Convocatorias Abiertas"
+
+msgid "Acoes Rapidas"
+msgstr "Acciones Rápidas"
+
+msgid "Proximos Marcos"
+msgstr "Próximos Hitos"
+
+msgid "Distribuicao de Custos"
+msgstr "Distribución de Costos"
+
+# Messages
+msgid "Bem-vindo"
+msgstr "Bienvenido"
+
+msgid "Alteracoes salvas com sucesso"
+msgstr "Cambios guardados con éxito"
+
+msgid "Erro ao salvar alteracoes"
+msgstr "Error al guardar cambios"
+
+msgid "Tem certeza?"
+msgstr "¿Está seguro?"
+
+msgid "Nenhum dado disponivel"
+msgstr "No hay datos disponibles"
+
+msgid "Campo obrigatorio"
+msgstr "Campo obligatorio"
+
+msgid "Valor invalido"
+msgstr "Valor inválido"
+
+# Language
+msgid "Idioma"
+msgstr "Idioma"
+
+msgid "Idioma da Interface"
+msgstr "Idioma de la Interfaz"
+
+msgid "Selecione o idioma de sua preferencia"
+msgstr "Seleccione su idioma preferido"
+
+# Reports
+msgid "Relatorio de Status"
+msgstr "Informe de Estado"
+
+msgid "Status Report"
+msgstr "Informe de Estado"
+
+msgid "Imprimir"
+msgstr "Imprimir"
+
+msgid "Gerar PDF"
+msgstr "Generar PDF"
+

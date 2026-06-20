@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="pt-BR" data-bs-theme="light">
+<html lang="{{ current_locale|default('pt_BR')|replace('_', '-') }}" data-bs-theme="light">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -77,15 +77,36 @@
                 </ul>
                 <ul class="navbar-nav">
                     <!-- Language Selector -->
-                    <li class="nav-item me-2">
-                        <div class="language-selector d-flex align-items-center h-100">
-                            <span class="lang-flag" data-lang="pt-BR" title="Português (Brasil)">
-                                <img src="https://flagcdn.com/w40/br.png" alt="BR" style="width: 24px; height: 16px; border-radius: 2px; pointer-events: none;">
-                            </span>
-                            <span class="lang-flag" data-lang="en" title="English">
-                                <img src="https://flagcdn.com/w40/gb.png" alt="EN" style="width: 24px; height: 16px; border-radius: 2px; pointer-events: none;">
-                            </span>
-                        </div>
+                    <li class="nav-item dropdown me-2">
+                        <a class="nav-link dropdown-toggle py-0" href="#" role="button" data-bs-toggle="dropdown" title="Idioma">
+                            {% if current_locale == 'en' %}
+                            <img src="https://flagcdn.com/w40/gb.png" alt="EN" style="width: 24px; height: 16px; border-radius: 2px;">
+                            {% elif current_locale == 'es' %}
+                            <img src="https://flagcdn.com/w40/es.png" alt="ES" style="width: 24px; height: 16px; border-radius: 2px;">
+                            {% else %}
+                            <img src="https://flagcdn.com/w40/br.png" alt="BR" style="width: 24px; height: 16px; border-radius: 2px;">
+                            {% endif %}
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end">
+                            <li>
+                                <a class="dropdown-item {% if current_locale == 'pt_BR' %}active{% endif %}" href="{{ url_for('auth.set_language', lang='pt_BR') }}">
+                                    <img src="https://flagcdn.com/w40/br.png" alt="BR" style="width: 20px; height: 14px; border-radius: 2px; margin-right: 8px;">
+                                    Português (Brasil)
+                                </a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item {% if current_locale == 'en' %}active{% endif %}" href="{{ url_for('auth.set_language', lang='en') }}">
+                                    <img src="https://flagcdn.com/w40/gb.png" alt="EN" style="width: 20px; height: 14px; border-radius: 2px; margin-right: 8px;">
+                                    English
+                                </a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item {% if current_locale == 'es' %}active{% endif %}" href="{{ url_for('auth.set_language', lang='es') }}">
+                                    <img src="https://flagcdn.com/w40/es.png" alt="ES" style="width: 20px; height: 14px; border-radius: 2px; margin-right: 8px;">
+                                    Español
+                                </a>
+                            </li>
+                        </ul>
                     </li>
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
