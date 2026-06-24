@@ -61,12 +61,26 @@
                                 <strong>Admin:</strong> Acesso total
                             </div>
                         </div>
-                        <div class="col-12">
-                            <div class="form-check form-switch">
+                        <div class="col-md-6">
+                            <label for="language" class="form-label">{{ _('Idioma da Interface') }}</label>
+                            <select class="form-select" id="language" name="language">
+                                <option value="pt_BR" {{ 'selected' if not user or not user.language or user.language == 'pt_BR' }}>
+                                    🇧🇷 Português (Brasil)
+                                </option>
+                                <option value="en" {{ 'selected' if user and user.language == 'en' }}>
+                                    🇬🇧 English
+                                </option>
+                                <option value="es" {{ 'selected' if user and user.language == 'es' }}>
+                                    🇪🇸 Español
+                                </option>
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-check form-switch mt-4">
                                 <input class="form-check-input" type="checkbox" id="active" name="active"
                                        {{ 'checked' if not user or user.active }}>
                                 <label class="form-check-label" for="active">
-                                    Usuário ativo
+                                    {{ _('Ativo') }}
                                     <small class="text-muted d-block">Usuários inativos não conseguem fazer login</small>
                                 </label>
                             </div>

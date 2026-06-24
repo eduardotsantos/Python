@@ -126,6 +126,10 @@ def create_user():
             flash('Este email já está cadastrado.', 'danger')
             return render_template('users/form.html', user=None)
 
+        language = request.form.get('language', 'pt_BR')
+        if language not in ['pt_BR', 'en', 'es']:
+            language = 'pt_BR'
+
         user = User(
             tenant_id=tenant_id,
             username=username,
@@ -133,6 +137,7 @@ def create_user():
             full_name=full_name,
             role=role,
             active=active,
+            language=language,
             email_notifications=request.form.get('email_notifications') == 'on',
             email_briefing_daily=request.form.get('email_briefing_daily') == 'on',
             email_alerts=request.form.get('email_alerts') == 'on'
@@ -244,6 +249,11 @@ def edit_user(user_id):
         user.email_notifications = request.form.get('email_notifications') == 'on'
         user.email_briefing_daily = request.form.get('email_briefing_daily') == 'on'
         user.email_alerts = request.form.get('email_alerts') == 'on'
+
+        # Language preference
+        language = request.form.get('language', 'pt_BR')
+        if language in ['pt_BR', 'en', 'es']:
+            user.language = language
 
         # Update password only if provided
         if password:
