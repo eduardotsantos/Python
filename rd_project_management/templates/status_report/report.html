@@ -568,7 +568,7 @@
                 {% endif %}
                 {% else %}
                 <div class="text-center text-success">
-                    <i class="bi bi-check-circle"></i> Projeto em conformidade
+                    <i class="bi bi-check-circle"></i> {{ _('Projeto em conformidade') }}
                 </div>
                 {% endif %}
             </div>
@@ -578,7 +578,7 @@
         <!-- Upcoming Milestones -->
         <div class="card shadow-sm mb-4">
             <div class="card-header bg-white">
-                <h6 class="mb-0 fw-bold"><i class="bi bi-flag text-info"></i> Proximos Marcos</h6>
+                <h6 class="mb-0 fw-bold"><i class="bi bi-flag text-info"></i> {{ _('Próximos Marcos') }}</h6>
             </div>
             <div class="card-body">
                 {% if upcoming_milestones %}
@@ -601,7 +601,7 @@
                     {% endfor %}
                 </div>
                 {% else %}
-                <p class="text-muted text-center mb-0">Nenhum marco pendente</p>
+                <p class="text-muted text-center mb-0">{{ _('Nenhum marco pendente') }}</p>
                 {% endif %}
             </div>
         </div>
@@ -609,7 +609,7 @@
         <!-- Team -->
         <div class="card shadow-sm">
             <div class="card-header bg-white">
-                <h6 class="mb-0 fw-bold"><i class="bi bi-people text-primary"></i> Equipe</h6>
+                <h6 class="mb-0 fw-bold"><i class="bi bi-people text-primary"></i> {{ _('Equipe') }}</h6>
             </div>
             <div class="card-body">
                 {% if team %}
@@ -627,10 +627,10 @@
                     {% endfor %}
                 </div>
                 {% if team|length > 6 %}
-                <small class="text-muted">+ {{ team|length - 6 }} outros membros</small>
+                <small class="text-muted">+ {{ team|length - 6 }} {{ _('outros membros') }}</small>
                 {% endif %}
                 {% else %}
-                <p class="text-muted text-center mb-0">Nenhum recurso alocado</p>
+                <p class="text-muted text-center mb-0">{{ _('Nenhum recurso alocado') }}</p>
                 {% endif %}
             </div>
         </div>
@@ -641,17 +641,17 @@
 {% if recent_activities %}
 <div class="card shadow-sm mt-4">
     <div class="card-header bg-white">
-        <h6 class="mb-0 fw-bold"><i class="bi bi-clock-history"></i> Atividades Recentes</h6>
+        <h6 class="mb-0 fw-bold"><i class="bi bi-clock-history"></i> {{ _('Atividades Recentes') }}</h6>
     </div>
     <div class="card-body p-0">
         <div class="table-responsive">
             <table class="table table-sm mb-0">
                 <thead class="table-light">
                     <tr>
-                        <th>Data</th>
-                        <th>Responsavel</th>
-                        <th>Atividade</th>
-                        <th class="text-end">Horas</th>
+                        <th>{{ _('Data') }}</th>
+                        <th>{{ _('Responsável') }}</th>
+                        <th>{{ _('Atividade') }}</th>
+                        <th class="text-end">{{ _('Horas') }}</th>
                     </tr>
                 </thead>
                 <tbody>

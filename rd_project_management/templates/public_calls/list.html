@@ -1,20 +1,20 @@
 {% extends "base.html" %}
-{% block title %}Chamadas Publicas - Orion P&D{% endblock %}
+{% block title %}{{ _('Chamadas Publicas') }} - Orion P&D{% endblock %}
 
 {% block content %}
 <div class="d-flex align-items-center mb-4">
     <div class="flex-grow-1">
-        <h4 class="fw-bold mb-0"><i class="bi bi-megaphone text-primary"></i> Chamadas Publicas</h4>
-        <span class="text-muted">FINEP, BNDES, FAPESC e outras fontes de fomento</span>
+        <h4 class="fw-bold mb-0"><i class="bi bi-megaphone text-primary"></i> {{ _('Chamadas Publicas') }}</h4>
+        <span class="text-muted">{{ _('FINEP, BNDES, FAPESC e outras fontes de fomento') }}</span>
     </div>
     <a href="{{ url_for('public_calls.create_call') }}" class="btn btn-primary me-2">
-        <i class="bi bi-plus-lg"></i> Nova Chamada
+        <i class="bi bi-plus-lg"></i> {{ _('Nova Chamada') }}
     </a>
     <button type="button" class="btn btn-success me-2" onclick="refreshPublicCalls(this)">
-        <i class="bi bi-arrow-clockwise"></i> Sincronizar Chamadas
+        <i class="bi bi-arrow-clockwise"></i> {{ _('Sincronizar Chamadas') }}
     </button>
     <button type="button" class="btn btn-info" onclick="suggestAutoLinks(this)">
-        <i class="bi bi-link-45deg"></i> Sugerir Vinculos
+        <i class="bi bi-link-45deg"></i> {{ _('Sugerir Vinculos') }}
     </button>
 </div>
 
@@ -23,7 +23,7 @@
     <div class="col-6 col-md-2">
         <div class="card card-stats border-primary shadow-sm">
             <div class="card-body py-2">
-                <p class="text-muted mb-0 small">Total</p>
+                <p class="text-muted mb-0 small">{{ _('Total') }}</p>
                 <h4 class="fw-bold mb-0">{{ calls|length }}</h4>
             </div>
         </div>
@@ -55,7 +55,7 @@
     <div class="col-6 col-md-2">
         <div class="card card-stats border-warning shadow-sm">
             <div class="card-body py-2">
-                <p class="text-muted mb-0 small">Outras</p>
+                <p class="text-muted mb-0 small">{{ _('Outras') }}</p>
                 <h4 class="fw-bold mb-0">{{ total_other }}</h4>
             </div>
         </div>
@@ -69,20 +69,20 @@
             <div class="col-md-5">
                 <div class="search-box">
                     <i class="bi bi-search"></i>
-                    <input type="text" class="form-control" name="search" placeholder="Buscar chamadas..." value="{{ search }}">
+                    <input type="text" class="form-control" name="search" placeholder="{{ _('Buscar chamadas...') }}" value="{{ search }}">
                 </div>
             </div>
             <div class="col-md-4">
                 <select name="source" class="form-select">
-                    <option value="">Todas as Fontes</option>
+                    <option value="">{{ _('Todas as Fontes') }}</option>
                     <option value="FINEP" {{ 'selected' if source_filter == 'FINEP' }}>FINEP</option>
                     <option value="BNDES" {{ 'selected' if source_filter == 'BNDES' }}>BNDES</option>
                     <option value="FAPESC" {{ 'selected' if source_filter == 'FAPESC' }}>FAPESC</option>
-                    <option value="Outro" {{ 'selected' if source_filter == 'Outro' }}>Outras</option>
+                    <option value="Outro" {{ 'selected' if source_filter == 'Outro' }}>{{ _('Outras') }}</option>
                 </select>
             </div>
             <div class="col-md-3 text-end">
-                <button type="submit" class="btn btn-outline-primary btn-sm"><i class="bi bi-filter"></i> Filtrar</button>
+                <button type="submit" class="btn btn-outline-primary btn-sm"><i class="bi bi-filter"></i> {{ _('Filtrar') }}</button>
                 <a href="{{ url_for('public_calls.list_calls') }}" class="btn btn-outline-secondary btn-sm"><i class="bi bi-x"></i></a>
             </div>
         </form>
@@ -133,12 +133,12 @@
                     </div>
                     <div class="ms-3 text-nowrap">
                         {% if call.url %}
-                        <a href="{{ call.url }}" target="_blank" class="btn btn-sm btn-outline-primary" title="Abrir no site">
+                        <a href="{{ call.url }}" target="_blank" class="btn btn-sm btn-outline-primary" title="{{ _('Abrir no site') }}">
                             <i class="bi bi-box-arrow-up-right"></i>
                         </a>
                         {% endif %}
                         <form method="POST" action="{{ url_for('public_calls.delete_call', call_id=call.id) }}" class="d-inline">
-                            <button type="submit" class="btn btn-sm btn-outline-danger" data-confirm="Remover esta chamada?">
+                            <button type="submit" class="btn btn-sm btn-outline-danger" data-confirm="{{ _('Remover esta chamada?') }}">
                                 <i class="bi bi-trash"></i>
                             </button>
                         </form>
@@ -153,11 +153,11 @@
 <div class="card shadow-sm">
     <div class="empty-state">
         <i class="bi bi-megaphone"></i>
-        <h5>Nenhuma chamada publica encontrada</h5>
-        <p>Clique no botao "Sincronizar Chamadas" para buscar chamadas disponiveis</p>
+        <h5>{{ _('Nenhuma chamada publica encontrada') }}</h5>
+        <p>{{ _('Clique no botao "Sincronizar Chamadas" para buscar chamadas disponiveis') }}</p>
         <form method="POST" action="{{ url_for('public_calls.refresh_calls') }}" class="d-inline">
             <button type="submit" class="btn btn-success">
-                <i class="bi bi-arrow-clockwise"></i> Sincronizar Agora
+                <i class="bi bi-arrow-clockwise"></i> {{ _('Sincronizar Agora') }}
             </button>
         </form>
     </div>
@@ -170,7 +170,7 @@
 async function refreshPublicCalls(btn) {
     const originalHtml = btn.innerHTML;
     btn.disabled = true;
-    btn.innerHTML = '<span class="spinner-border spinner-border-sm"></span> Sincronizando...';
+    btn.innerHTML = '<span class="spinner-border spinner-border-sm"></span> {{ _("Sincronizando...") }}';
 
     try {
         const response = await fetch('{{ url_for("public_calls.refresh_calls_ajax") }}', {
@@ -179,15 +179,15 @@ async function refreshPublicCalls(btn) {
         });
         const data = await response.json();
 
-        let msg = `FINEP: ${data.finep}, BNDES: ${data.bndes}, FAPESC: ${data.fapesc} chamadas`;
+        let msg = `FINEP: ${data.finep}, BNDES: ${data.bndes}, FAPESC: ${data.fapesc} {{ _("chamadas") }}`;
         if (data.errors && data.errors.length > 0) {
-            alert('Sincronização parcial. ' + msg + '\nErros: ' + data.errors.join('; '));
+            alert('{{ _("Sincronizacao parcial.") }} ' + msg + '\n{{ _("Erros:") }} ' + data.errors.join('; '));
         } else {
-            alert('Sincronização concluída! ' + msg);
+            alert('{{ _("Sincronizacao concluida!") }} ' + msg);
         }
         location.reload();
     } catch (error) {
-        alert('Erro ao sincronizar: ' + error.message);
+        alert('{{ _("Erro ao sincronizar:") }} ' + error.message);
         btn.disabled = false;
         btn.innerHTML = originalHtml;
     }
@@ -196,7 +196,7 @@ async function refreshPublicCalls(btn) {
 async function suggestAutoLinks(btn) {
     const originalHtml = btn.innerHTML;
     btn.disabled = true;
-    btn.innerHTML = '<span class="spinner-border spinner-border-sm"></span> Analisando...';
+    btn.innerHTML = '<span class="spinner-border spinner-border-sm"></span> {{ _("Analisando...") }}';
 
     try {
         const response = await fetch('{{ url_for("public_calls.suggest_links") }}', {
@@ -209,7 +209,7 @@ async function suggestAutoLinks(btn) {
             location.reload();
         }
     } catch (error) {
-        alert('Erro ao sugerir vinculos: ' + error.message);
+        alert('{{ _("Erro ao sugerir vinculos:") }} ' + error.message);
     } finally {
         btn.disabled = false;
         btn.innerHTML = originalHtml;

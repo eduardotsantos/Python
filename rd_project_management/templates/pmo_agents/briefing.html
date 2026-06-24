@@ -17,7 +17,7 @@
             <i class="bi bi-lightning"></i> {{ _('Ações') }}
         </a>
         <a href="{{ url_for('pmo_agents.dashboard') }}" class="btn btn-outline-secondary">
-            <i class="bi bi-arrow-left"></i> Voltar
+            <i class="bi bi-arrow-left"></i> {{ _('Voltar') }}
         </a>
     </div>
 </div>
@@ -36,7 +36,7 @@
             </div>
             <div>
                 <h4 class="mb-1 fw-bold">
-                    Status Geral: {{ briefing.overall_status.value | upper }}
+                    {{ _('Status Geral:') }} {{ briefing.overall_status.value | upper }}
                 </h4>
                 <p class="mb-0">
                     <i class="bi bi-clock"></i> Análise realizada em {{ briefing.generated_at.strftime('%d/%m/%Y às %H:%M') }}
@@ -55,7 +55,7 @@
         <div class="card border-0 shadow-sm h-100" style="background: linear-gradient(135deg, #27ae60, #2ecc71);">
             <div class="card-body text-white text-center">
                 <h2 class="mb-0 fw-bold">{{ briefing.metrics.agents_healthy }}</h2>
-                <small>Agentes Saudáveis</small>
+                <small>{{ _('Agentes Saudáveis') }}</small>
             </div>
         </div>
     </div>
@@ -63,7 +63,7 @@
         <div class="card border-0 shadow-sm h-100" style="background: linear-gradient(135deg, #f39c12, #f1c40f);">
             <div class="card-body text-white text-center">
                 <h2 class="mb-0 fw-bold">{{ briefing.metrics.agents_attention }}</h2>
-                <small>Requerem Atenção</small>
+                <small>{{ _('Requerem Atenção') }}</small>
             </div>
         </div>
     </div>
@@ -71,7 +71,7 @@
         <div class="card border-0 shadow-sm h-100" style="background: linear-gradient(135deg, #e74c3c, #c0392b);">
             <div class="card-body text-white text-center">
                 <h2 class="mb-0 fw-bold">{{ briefing.metrics.agents_critical }}</h2>
-                <small>Críticos</small>
+                <small>{{ _('Críticos') }}</small>
             </div>
         </div>
     </div>
@@ -79,7 +79,7 @@
         <div class="card border-0 shadow-sm h-100" style="background: linear-gradient(135deg, #3498db, #2980b9);">
             <div class="card-body text-white text-center">
                 <h2 class="mb-0 fw-bold">{{ briefing.metrics.total_insights }}</h2>
-                <small>Total Insights</small>
+                <small>{{ _('Total Insights') }}</small>
             </div>
         </div>
     </div>
@@ -89,25 +89,25 @@
 {% if briefing.cost_analysis %}
 <div class="card shadow-sm mb-4 border-0">
     <div class="card-header bg-success text-white">
-        <h5 class="mb-0"><i class="bi bi-currency-dollar"></i> Análise Financeira Consolidada</h5>
+        <h5 class="mb-0"><i class="bi bi-currency-dollar"></i> {{ _('Análise Financeira Consolidada') }}</h5>
     </div>
     <div class="card-body">
         <div class="row g-3">
             <div class="col-md-3 col-6">
                 <div class="border rounded p-3 text-center">
-                    <small class="text-muted d-block">Orçamento Total</small>
+                    <small class="text-muted d-block">{{ _('Orçamento Total') }}</small>
                     <h4 class="mb-0 text-primary">R$ {{ "{:,.2f}".format(briefing.cost_analysis.total_budget) }}</h4>
                 </div>
             </div>
             <div class="col-md-3 col-6">
                 <div class="border rounded p-3 text-center">
-                    <small class="text-muted d-block">Realizado</small>
+                    <small class="text-muted d-block">{{ _('Realizado') }}</small>
                     <h4 class="mb-0 text-dark">R$ {{ "{:,.2f}".format(briefing.cost_analysis.total_spent) }}</h4>
                 </div>
             </div>
             <div class="col-md-3 col-6">
                 <div class="border rounded p-3 text-center">
-                    <small class="text-muted d-block">Variação</small>
+                    <small class="text-muted d-block">{{ _('Variação') }}</small>
                     <h4 class="mb-0 {% if briefing.cost_analysis.budget_variance > 10 %}text-danger{% elif briefing.cost_analysis.budget_variance < -10 %}text-success{% else %}text-secondary{% endif %}">
                         {{ "{:+.1f}".format(briefing.cost_analysis.budget_variance) }}%
                     </h4>
@@ -115,7 +115,7 @@
             </div>
             <div class="col-md-3 col-6">
                 <div class="border rounded p-3 text-center">
-                    <small class="text-muted d-block">Gasto do Mês</small>
+                    <small class="text-muted d-block">{{ _('Gasto do Mês') }}</small>
                     <h4 class="mb-0 text-info">R$ {{ "{:,.2f}".format(briefing.cost_analysis.month_spent) }}</h4>
                 </div>
             </div>
@@ -124,7 +124,7 @@
         <div class="row mt-3">
             <div class="col-md-6">
                 <div class="d-flex justify-content-between small text-muted mb-1">
-                    <span>Mão de Obra</span>
+                    <span>{{ _('Mão de Obra') }}</span>
                     <span>{{ "{:.1f}".format(briefing.cost_analysis.labor_percentage) }}%</span>
                 </div>
                 <div class="progress" style="height: 8px;">
@@ -133,7 +133,7 @@
             </div>
             <div class="col-md-6">
                 <div class="d-flex justify-content-between small text-muted mb-1">
-                    <span>Despesas</span>
+                    <span>{{ _('Despesas') }}</span>
                     <span>{{ "{:.1f}".format(100 - briefing.cost_analysis.labor_percentage) }}%</span>
                 </div>
                 <div class="progress" style="height: 8px;">
@@ -144,15 +144,15 @@
 
         {% if briefing.cost_analysis.projects_over_budget %}
         <div class="mt-3">
-            <h6 class="text-danger"><i class="bi bi-exclamation-triangle"></i> Projetos Acima do Orçamento</h6>
+            <h6 class="text-danger"><i class="bi bi-exclamation-triangle"></i> {{ _('Projetos Acima do Orçamento') }}</h6>
             <div class="table-responsive">
                 <table class="table table-sm table-hover mb-0">
                     <thead class="table-danger">
                         <tr>
-                            <th>Projeto</th>
-                            <th class="text-end">Orçamento</th>
-                            <th class="text-end">Realizado</th>
-                            <th class="text-end">Variação</th>
+                            <th>{{ _('Projeto') }}</th>
+                            <th class="text-end">{{ _('Orçamento') }}</th>
+                            <th class="text-end">{{ _('Realizado') }}</th>
+                            <th class="text-end">{{ _('Variação') }}</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -180,7 +180,7 @@
         {% if briefing.upcoming_activities %}
         <div class="card shadow-sm mb-4 border-0">
             <div class="card-header bg-primary text-white">
-                <h5 class="mb-0"><i class="bi bi-calendar-event"></i> Próximas Atividades (14 dias)</h5>
+                <h5 class="mb-0"><i class="bi bi-calendar-event"></i> {{ _('Próximas Atividades') }} (14 {{ _('dias') }})</h5>
             </div>
             <div class="card-body p-0">
                 <div class="table-responsive">
@@ -241,7 +241,7 @@
         {% if briefing.past_activities %}
         <div class="card shadow-sm mb-4 border-0">
             <div class="card-header bg-secondary text-white">
-                <h5 class="mb-0"><i class="bi bi-clock-history"></i> Atividades Recentes (7 dias)</h5>
+                <h5 class="mb-0"><i class="bi bi-clock-history"></i> {{ _('Atividades Recentes') }} (7 {{ _('dias') }})</h5>
             </div>
             <div class="card-body p-0">
                 <div class="table-responsive">
@@ -299,7 +299,7 @@
         {% if briefing.project_summaries %}
         <div class="card shadow-sm mb-4 border-0">
             <div class="card-header bg-purple text-white" style="background: linear-gradient(135deg, #8e44ad, #9b59b6);">
-                <h5 class="mb-0"><i class="bi bi-folder"></i> Resumo por Projeto</h5>
+                <h5 class="mb-0"><i class="bi bi-folder"></i> {{ _('Resumo por Projeto') }}</h5>
             </div>
             <div class="card-body p-0">
                 <div class="accordion accordion-flush" id="projectsAccordion">
@@ -331,12 +331,12 @@
                                         <p><strong>Realizado:</strong> R$ {{ "{:,.2f}".format(proj.spent) }}</p>
                                     </div>
                                     <div class="col-md-6">
-                                        <p><strong>Marcos:</strong> {{ proj.completed_milestones }}/{{ proj.total_milestones }} concluídos</p>
-                                        <p><strong>Atrasados:</strong> <span class="{% if proj.late_milestones > 0 %}text-danger{% endif %}">{{ proj.late_milestones }}</span></p>
+                                        <p><strong>Marcos:</strong> {{ proj.completed_milestones }}/{{ proj.total_milestones }} {{ _('concluídos') }}</p>
+                                        <p><strong>{{ _('Atrasados') }}:</strong> <span class="{% if proj.late_milestones > 0 %}text-danger{% endif %}">{{ proj.late_milestones }}</span></p>
                                     </div>
                                 </div>
                                 {% if proj.upcoming_milestones %}
-                                <h6 class="mt-2"><i class="bi bi-arrow-right"></i> Próximos Marcos:</h6>
+                                <h6 class="mt-2"><i class="bi bi-arrow-right"></i> {{ _('Próximos Marcos:') }}</h6>
                                 <ul class="list-unstyled small">
                                     {% for ms in proj.upcoming_milestones %}
                                     <li>• {{ ms.title }} <span class="text-muted">({{ ms.end_date[:10] }})</span></li>
@@ -344,7 +344,7 @@
                                 </ul>
                                 {% endif %}
                                 <a href="{{ url_for('projects.view_project', project_id=proj.project_id) }}" class="btn btn-sm btn-outline-primary">
-                                    Ver Projeto <i class="bi bi-arrow-right"></i>
+                                    {{ _('Ver Projeto') }} <i class="bi bi-arrow-right"></i>
                                 </a>
                             </div>
                         </div>
@@ -359,7 +359,7 @@
         {% if briefing.priority_items %}
         <div class="card shadow-sm mb-4 border-0">
             <div class="card-header bg-danger text-white">
-                <h5 class="mb-0"><i class="bi bi-exclamation-triangle"></i> Prioridades do Dia ({{ briefing.priority_items | length }})</h5>
+                <h5 class="mb-0"><i class="bi bi-exclamation-triangle"></i> {{ _('Prioridades do Dia') }} ({{ briefing.priority_items | length }})</h5>
             </div>
             <div class="card-body p-0">
                 <div class="list-group list-group-flush">
@@ -384,7 +384,7 @@
                         </div>
                         {% if item.recommendation %}
                         <div class="mt-2 p-2 bg-light rounded">
-                            <small><i class="bi bi-lightbulb text-warning"></i> <strong>Recomendação:</strong> {{ item.recommendation }}</small>
+                            <small><i class="bi bi-lightbulb text-warning"></i> <strong>{{ _('Recomendação:') }}</strong> {{ item.recommendation }}</small>
                         </div>
                         {% endif %}
                     </div>
@@ -400,7 +400,7 @@
         <!-- Agent Results Summary -->
         <div class="card shadow-sm mb-4 border-0">
             <div class="card-header">
-                <h6 class="mb-0"><i class="bi bi-robot"></i> Status dos Agentes</h6>
+                <h6 class="mb-0"><i class="bi bi-robot"></i> {{ _('Status dos Agentes') }}</h6>
             </div>
             <div class="card-body p-0">
                 <div class="list-group list-group-flush">
@@ -422,7 +422,7 @@
                                 {% endif %}
                             {% endif %}
                             <br/>
-                            <small class="text-muted">{{ result.insights | length }} insights</small>
+                            <small class="text-muted">{{ result.insights | length }} {{ _('insights') }}</small>
                         </div>
                     </div>
                     {% endfor %}
@@ -434,7 +434,7 @@
         {% if briefing.recommended_actions %}
         <div class="card shadow-sm border-0">
             <div class="card-header bg-success text-white">
-                <h6 class="mb-0"><i class="bi bi-lightning"></i> Ações Recomendadas</h6>
+                <h6 class="mb-0"><i class="bi bi-lightning"></i> {{ _('Ações Recomendadas') }}</h6>
             </div>
             <div class="card-body p-0">
                 <div class="list-group list-group-flush">
@@ -451,7 +451,7 @@
                                     data-action-type="{{ action.action_type.value }}"
                                     data-title="{{ action.title }}"
                                     data-description="{{ action.description }}">
-                                <i class="bi bi-check-lg"></i> Executar
+                                <i class="bi bi-check-lg"></i> {{ _('Executar') }}
                             </button>
                             <button class="btn btn-outline-secondary btn-sm">
                                 <i class="bi bi-x"></i> Ignorar
