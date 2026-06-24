@@ -149,24 +149,24 @@
                                     {% if action.data %}
                                         {% if action.data.type == 'pending_resolution' %}
                                         <a href="{{ url_for('compliance.pending_edit', item_id=action.data.item_id) }}" class="btn btn-sm btn-outline-primary me-1">
-                                            <i class="bi bi-pencil"></i> Editar Pendencia
+                                            <i class="bi bi-pencil"></i> {{ _('Editar Pendência') }}
                                         </a>
                                         <a href="{{ url_for('compliance.action_create') }}?pending_item_id={{ action.data.item_id }}&project_id={{ action.project_id }}" class="btn btn-sm btn-success">
-                                            <i class="bi bi-plus-circle"></i> Criar Acao Corretiva
+                                            <i class="bi bi-plus-circle"></i> {{ _('Criar Ação Corretiva') }}
                                         </a>
                                         {% elif action.data.type == 'bug_fix' %}
                                         <a href="{{ url_for('compliance.bug_edit', bug_id=action.data.item_id) }}" class="btn btn-sm btn-outline-primary me-1">
-                                            <i class="bi bi-pencil"></i> Editar Bug
+                                            <i class="bi bi-pencil"></i> {{ _('Editar Bug') }}
                                         </a>
                                         <a href="{{ url_for('compliance.action_create') }}?bug_id={{ action.data.item_id }}&project_id={{ action.project_id }}" class="btn btn-sm btn-success">
-                                            <i class="bi bi-plus-circle"></i> Criar Acao Corretiva
+                                            <i class="bi bi-plus-circle"></i> {{ _('Criar Ação Corretiva') }}
                                         </a>
                                         {% elif action.data.type == 'nc_treatment' %}
                                         <a href="{{ url_for('compliance.nc_edit', item_id=action.data.item_id) }}" class="btn btn-sm btn-outline-primary me-1">
-                                            <i class="bi bi-pencil"></i> Editar NC
+                                            <i class="bi bi-pencil"></i> {{ _('Editar NC') }}
                                         </a>
                                         <a href="{{ url_for('compliance.action_create') }}?non_conformity_id={{ action.data.item_id }}&project_id={{ action.project_id }}" class="btn btn-sm btn-success">
-                                            <i class="bi bi-plus-circle"></i> Criar Acao Corretiva
+                                            <i class="bi bi-plus-circle"></i> {{ _('Criar Ação Corretiva') }}
                                         </a>
                                         {% endif %}
                                     {% endif %}
@@ -179,7 +179,7 @@
                 {% else %}
                 <div class="text-center py-4 text-muted">
                     <i class="bi bi-hand-thumbs-up fs-1 text-success"></i>
-                    <p class="mb-0 mt-2">Nenhuma acao necessaria no momento</p>
+                    <p class="mb-0 mt-2">{{ _('Nenhuma ação necessária no momento') }}</p>
                 </div>
                 {% endif %}
             </div>
@@ -190,25 +190,25 @@
 <!-- Age Distribution -->
 <div class="card shadow-sm">
     <div class="card-header bg-white">
-        <h6 class="mb-0 fw-bold"><i class="bi bi-clock-history"></i> Distribuicao por Idade</h6>
+        <h6 class="mb-0 fw-bold"><i class="bi bi-clock-history"></i> {{ _('Distribuição por Idade') }}</h6>
     </div>
     <div class="card-body">
         <div class="row text-center">
             <div class="col">
                 <div class="fs-3 fw-bold text-success">{{ result.metrics.items_by_age.new }}</div>
-                <div class="text-muted small">Novos<br>(até 7 dias)</div>
+                <div class="text-muted small">{{ _('Novos') }}<br>({{ _('até 7 dias') }})</div>
             </div>
             <div class="col">
                 <div class="fs-3 fw-bold text-info">{{ result.metrics.items_by_age.medium }}</div>
-                <div class="text-muted small">Medio<br>(8-30 dias)</div>
+                <div class="text-muted small">{{ _('Médio') }}<br>({{ _('8-30 dias') }})</div>
             </div>
             <div class="col">
                 <div class="fs-3 fw-bold text-warning">{{ result.metrics.items_by_age.old }}</div>
-                <div class="text-muted small">Antigos<br>(31-60 dias)</div>
+                <div class="text-muted small">{{ _('Antigos') }}<br>({{ _('31-60 dias') }})</div>
             </div>
             <div class="col">
                 <div class="fs-3 fw-bold text-danger">{{ result.metrics.items_by_age.critical }}</div>
-                <div class="text-muted small">Criticos<br>(+60 dias)</div>
+                <div class="text-muted small">{{ _('Críticos') }}<br>({{ _('+60 dias') }})</div>
             </div>
         </div>
     </div>
