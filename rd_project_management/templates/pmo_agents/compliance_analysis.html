@@ -4,11 +4,11 @@
 {% block content %}
 <div class="d-flex justify-content-between align-items-center mb-4">
     <h4 class="fw-bold mb-0">
-        <i class="bi bi-shield-check text-primary"></i> Analise de Conformidade
+        <i class="bi bi-shield-check text-primary"></i> {{ _('Análise de Conformidade') }}
     </h4>
     <div>
         <a href="{{ url_for('pmo_agents.dashboard') }}" class="btn btn-outline-secondary">
-            <i class="bi bi-arrow-left"></i> Voltar
+            <i class="bi bi-arrow-left"></i> {{ _('Voltar') }}
         </a>
     </div>
 </div>
@@ -18,9 +18,9 @@
     <div class="card-body">
         <form method="GET" class="row g-3 align-items-end">
             <div class="col-md-6">
-                <label class="form-label">Filtrar por Projeto</label>
+                <label class="form-label">{{ _('Filtrar por Projeto') }}</label>
                 <select name="project_id" class="form-select" onchange="this.form.submit()">
-                    <option value="">Todos os Projetos</option>
+                    <option value="">{{ _('Todos os Projetos') }}</option>
                     {% for project in projects %}
                     <option value="{{ project.id }}" {{ 'selected' if selected_project and selected_project.id == project.id }}>
                         {{ project.code }} - {{ project.title }}
@@ -30,7 +30,7 @@
             </div>
             <div class="col-md-6">
                 <a href="{{ url_for('pmo_agents.compliance_analysis') }}" class="btn btn-outline-secondary">
-                    <i class="bi bi-arrow-counterclockwise"></i> Limpar Filtro
+                    <i class="bi bi-arrow-counterclockwise"></i> {{ _('Limpar Filtro') }}
                 </a>
             </div>
         </form>

@@ -479,12 +479,12 @@
         <div class="modal-content">
             <form action="{{ url_for('pmo_agents.briefing_email') }}" method="POST">
                 <div class="modal-header bg-primary text-white">
-                    <h5 class="modal-title"><i class="bi bi-envelope"></i> Enviar Briefing por Email</h5>
+                    <h5 class="modal-title"><i class="bi bi-envelope"></i> {{ _('Enviar Briefing por Email') }}</h5>
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body">
                     <div class="mb-3">
-                        <label class="form-label fw-bold">Selecione os Projetos (destinatários serão os responsáveis)</label>
+                        <label class="form-label fw-bold">{{ _('Selecione os Projetos') }} (destinatários serão os responsáveis)</label>
                         <div class="row">
                             {% for proj in briefing.project_summaries %}
                             <div class="col-md-6">
@@ -500,7 +500,7 @@
                         <small class="text-muted">Deixe em branco para enviar a todos os responsáveis de projetos ativos.</small>
                     </div>
                     <div class="mb-3">
-                        <label class="form-label fw-bold">Emails Adicionais</label>
+                        <label class="form-label fw-bold">{{ _('Emails Adicionais') }}</label>
                         <input type="text" class="form-control" name="additional_emails" placeholder="email1@empresa.com, email2@empresa.com">
                         <small class="text-muted">Separe múltiplos emails por vírgula.</small>
                     </div>
@@ -509,9 +509,9 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{ _('Cancelar') }}</button>
                     <button type="submit" class="btn btn-primary">
-                        <i class="bi bi-send"></i> Enviar Briefing
+                        <i class="bi bi-send"></i> {{ _('Enviar Briefing') }}
                     </button>
                 </div>
             </form>
