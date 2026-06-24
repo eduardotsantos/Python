@@ -43,7 +43,7 @@
         <div class="card border-0 shadow-sm h-100">
             <div class="card-body text-center">
                 <div class="fs-1 fw-bold text-primary">{{ result.metrics.total_items_analyzed }}</div>
-                <div class="text-muted">Itens Analisados</div>
+                <div class="text-muted">{{ _('Itens Analisados') }}</div>
             </div>
         </div>
     </div>
@@ -53,7 +53,7 @@
                 <div class="fs-1 fw-bold text-{{ 'danger' if result.metrics.items_needing_action > 0 else 'success' }}">
                     {{ result.metrics.items_needing_action }}
                 </div>
-                <div class="text-muted">Requerem Acao</div>
+                <div class="text-muted">{{ _('Requerem Ação') }}</div>
             </div>
         </div>
     </div>
@@ -61,7 +61,7 @@
         <div class="card border-0 shadow-sm h-100">
             <div class="card-body text-center">
                 <div class="fs-1 fw-bold text-info">{{ result.metrics.correlations_found }}</div>
-                <div class="text-muted">Correlacoes Encontradas</div>
+                <div class="text-muted">{{ _('Correlações Encontradas') }}</div>
             </div>
         </div>
     </div>
@@ -71,7 +71,7 @@
                 <div class="fs-1 fw-bold text-{{ 'danger' if result.metrics.items_by_age.critical > 0 else 'warning' if result.metrics.items_by_age.old > 0 else 'success' }}">
                     {{ result.metrics.items_by_age.critical + result.metrics.items_by_age.old }}
                 </div>
-                <div class="text-muted">Itens Criticos/Antigos</div>
+                <div class="text-muted">{{ _('Itens Críticos/Antigos') }}</div>
             </div>
         </div>
     </div>
@@ -88,7 +88,7 @@
     <div class="col-lg-6">
         <div class="card shadow-sm mb-4">
             <div class="card-header bg-white">
-                <h6 class="mb-0 fw-bold"><i class="bi bi-lightbulb text-warning"></i> Analises ({{ result.insights|length }})</h6>
+                <h6 class="mb-0 fw-bold"><i class="bi bi-lightbulb text-warning"></i> {{ _('Análises') }} ({{ result.insights|length }})</h6>
             </div>
             <div class="card-body p-0">
                 {% if result.insights %}
@@ -113,7 +113,7 @@
                 {% else %}
                 <div class="text-center py-4 text-muted">
                     <i class="bi bi-check-circle fs-1 text-success"></i>
-                    <p class="mb-0 mt-2">Nenhum item requer atencao</p>
+                    <p class="mb-0 mt-2">{{ _('Nenhum item requer atenção') }}</p>
                 </div>
                 {% endif %}
             </div>
@@ -124,7 +124,7 @@
     <div class="col-lg-6">
         <div class="card shadow-sm mb-4">
             <div class="card-header bg-white">
-                <h6 class="mb-0 fw-bold"><i class="bi bi-lightning text-success"></i> Acoes Sugeridas ({{ result.actions|length }})</h6>
+                <h6 class="mb-0 fw-bold"><i class="bi bi-lightning text-success"></i> {{ _('Ações Sugeridas') }} ({{ result.actions|length }})</h6>
             </div>
             <div class="card-body p-0">
                 {% if result.actions %}
