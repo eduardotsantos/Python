@@ -1,14 +1,14 @@
 {% extends "base.html" %}
-{% block title %}Historico TRL - {{ project.title }}{% endblock %}
+{% block title %}{{ _('Histórico TRL') }} - {{ project.title }}{% endblock %}
 
 {% block content %}
 <div class="container-fluid">
     <div class="d-flex justify-content-between align-items-center mb-4">
         <div>
             <a href="{{ url_for('projects.view_project', project_id=project.id) }}" class="btn btn-outline-secondary btn-sm">
-                <i class="bi bi-arrow-left"></i> Voltar ao Projeto
+                <i class="bi bi-arrow-left"></i> {{ _('Voltar ao Projeto') }}
             </a>
-            <h4 class="mt-2"><i class="bi bi-graph-up-arrow text-success"></i> Historico TRL</h4>
+            <h4 class="mt-2"><i class="bi bi-graph-up-arrow text-success"></i> {{ _('Histórico TRL') }}</h4>
             <p class="text-muted mb-0">{{ project.code }} - {{ project.title }}</p>
         </div>
     </div>
@@ -23,20 +23,20 @@
                             <div class="display-1 text-primary fw-bold">{{ project.trl or 1 }}</div>
                         </div>
                         <div>
-                            <h5 class="mb-1">TRL Atual</h5>
+                            <h5 class="mb-1">{{ _('TRL Atual') }}</h5>
                             <p class="text-muted mb-0">
                                 {% set trl_descriptions = {
-                                    1: 'Principios basicos observados',
-                                    2: 'Conceito de tecnologia formulado',
-                                    3: 'Prova de conceito experimental',
-                                    4: 'Validacao em laboratorio',
-                                    5: 'Validacao em ambiente relevante',
-                                    6: 'Demonstracao em ambiente relevante',
-                                    7: 'Demonstracao em ambiente operacional',
-                                    8: 'Sistema completo e qualificado',
-                                    9: 'Sistema comprovado em operacao'
+                                    1: _('Princípios básicos observados'),
+                                    2: _('Conceito de tecnologia formulado'),
+                                    3: _('Prova de conceito experimental'),
+                                    4: _('Validação em laboratório'),
+                                    5: _('Validação em ambiente relevante'),
+                                    6: _('Demonstração em ambiente relevante'),
+                                    7: _('Demonstração em ambiente operacional'),
+                                    8: _('Sistema completo e qualificado'),
+                                    9: _('Sistema comprovado em operação')
                                 } %}
-                                {{ trl_descriptions.get(project.trl or 1, 'Nivel nao definido') }}
+                                {{ trl_descriptions.get(project.trl or 1, _('Nível não definido')) }}
                             </p>
                         </div>
                     </div>
@@ -46,13 +46,13 @@
         <div class="col-md-6">
             <div class="card">
                 <div class="card-header">
-                    <i class="bi bi-arrow-up-circle"></i> Atualizar TRL
+                    <i class="bi bi-arrow-up-circle"></i> {{ _('Atualizar TRL') }}
                 </div>
                 <div class="card-body">
                     <form action="{{ url_for('projects.update_trl', project_id=project.id) }}" method="POST">
                         <div class="row">
                             <div class="col-md-4 mb-3">
-                                <label class="form-label">Novo TRL</label>
+                                <label class="form-label">{{ _('Novo TRL') }}</label>
                                 <select name="trl" class="form-select" required>
                                     {% for i in range(1, 10) %}
                                     <option value="{{ i }}" {{ 'selected' if project.trl == i else '' }}>
@@ -62,26 +62,26 @@
                                 </select>
                             </div>
                             <div class="col-md-4 mb-3">
-                                <label class="form-label">Data da Mudanca</label>
+                                <label class="form-label">{{ _('Data da Mudança') }}</label>
                                 <input type="date" name="change_date" class="form-control" value="{{ today }}">
                             </div>
                             <div class="col-md-4 mb-3">
-                                <label class="form-label">Verificado por</label>
-                                <input type="text" name="verified_by" class="form-control" placeholder="Nome do verificador">
+                                <label class="form-label">{{ _('Verificado por') }}</label>
+                                <input type="text" name="verified_by" class="form-control" placeholder="{{ _('Nome do verificador') }}">
                             </div>
                         </div>
                         <div class="mb-3">
-                            <label class="form-label">Justificativa</label>
+                            <label class="form-label">{{ _('Justificativa') }}</label>
                             <textarea name="justification" class="form-control" rows="2"
-                                      placeholder="Por que o TRL mudou?"></textarea>
+                                      placeholder="{{ _('Por que o TRL mudou?') }}"></textarea>
                         </div>
                         <div class="mb-3">
-                            <label class="form-label">Evidencias</label>
+                            <label class="form-label">{{ _('Evidências') }}</label>
                             <textarea name="evidence" class="form-control" rows="2"
-                                      placeholder="Quais evidencias suportam esta mudanca?"></textarea>
+                                      placeholder="{{ _('Quais evidências suportam esta mudança?') }}"></textarea>
                         </div>
                         <button type="submit" class="btn btn-primary">
-                            <i class="bi bi-check-lg"></i> Atualizar TRL
+                            <i class="bi bi-check-lg"></i> {{ _('Atualizar TRL') }}
                         </button>
                     </form>
                 </div>
@@ -92,7 +92,7 @@
     <!-- TRL Scale Reference -->
     <div class="card mb-4">
         <div class="card-header">
-            <i class="bi bi-info-circle"></i> Escala TRL (Technology Readiness Level)
+            <i class="bi bi-info-circle"></i> {{ _('Escala TRL (Technology Readiness Level)') }}
         </div>
         <div class="card-body">
             <div class="row">
@@ -111,7 +111,7 @@
     <!-- History Timeline -->
     <div class="card">
         <div class="card-header">
-            <i class="bi bi-clock-history"></i> Linha do Tempo
+            <i class="bi bi-clock-history"></i> {{ _('Linha do Tempo') }}
         </div>
         <div class="card-body">
             {% if history %}
@@ -133,26 +133,26 @@
                                                 {% if h.trl_from %}
                                                 TRL {{ h.trl_from }} <i class="bi bi-arrow-right"></i> TRL {{ h.trl_to }}
                                                 {% else %}
-                                                TRL Inicial: {{ h.trl_to }}
+                                                {{ _('TRL Inicial:') }} {{ h.trl_to }}
                                                 {% endif %}
                                             </h6>
                                             <small class="text-muted">
                                                 {{ h.change_date.strftime('%d/%m/%Y') }}
                                                 {% if h.changed_by %}
-                                                - por {{ h.changed_by.full_name }}
+                                                - {{ _('por') }} {{ h.changed_by.full_name }}
                                                 {% endif %}
                                             </small>
                                         </div>
                                         <span class="badge bg-primary fs-5">{{ h.trl_to }}</span>
                                     </div>
                                     {% if h.justification %}
-                                    <p class="mt-2 mb-1"><strong>Justificativa:</strong> {{ h.justification }}</p>
+                                    <p class="mt-2 mb-1"><strong>{{ _('Justificativa:') }}</strong> {{ h.justification }}</p>
                                     {% endif %}
                                     {% if h.evidence %}
-                                    <p class="mb-1"><strong>Evidencias:</strong> {{ h.evidence }}</p>
+                                    <p class="mb-1"><strong>{{ _('Evidências:') }}</strong> {{ h.evidence }}</p>
                                     {% endif %}
                                     {% if h.verified_by %}
-                                    <p class="mb-0 small text-muted"><i class="bi bi-patch-check"></i> Verificado por: {{ h.verified_by }}</p>
+                                    <p class="mb-0 small text-muted"><i class="bi bi-patch-check"></i> {{ _('Verificado por:') }} {{ h.verified_by }}</p>
                                     {% endif %}
                                 </div>
                             </div>
@@ -164,8 +164,8 @@
             {% else %}
             <div class="text-center py-5 text-muted">
                 <i class="bi bi-clock-history fs-1"></i>
-                <p class="mt-2">Nenhuma mudanca de TRL registrada.</p>
-                <p class="small">O historico sera criado quando o TRL for atualizado.</p>
+                <p class="mt-2">{{ _('Nenhuma mudança de TRL registrada.') }}</p>
+                <p class="small">{{ _('O histórico será criado quando o TRL for atualizado.') }}</p>
             </div>
             {% endif %}
         </div>

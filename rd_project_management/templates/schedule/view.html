@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% block title %}Cronograma - {{ project.title }}{% endblock %}
+{% block title %}{{ _('Cronograma') }} - {{ project.title }}{% endblock %}
 
 {% block content %}
 <div class="d-flex align-items-center mb-4">
@@ -7,18 +7,18 @@
         <i class="bi bi-arrow-left"></i>
     </a>
     <div class="flex-grow-1">
-        <h4 class="fw-bold mb-0"><i class="bi bi-calendar3 text-warning"></i> Cronograma</h4>
+        <h4 class="fw-bold mb-0"><i class="bi bi-calendar3 text-warning"></i> {{ _('Cronograma') }}</h4>
         <span class="text-muted">{{ project.title }}</span>
     </div>
     <div class="btn-group">
-        <a href="{{ url_for('schedule.import_schedule', project_id=project.id) }}" class="btn btn-outline-success" title="Importar do MS Project">
-            <i class="bi bi-upload"></i> Importar
+        <a href="{{ url_for('schedule.import_schedule', project_id=project.id) }}" class="btn btn-outline-success" title="{{ _('Importar do MS Project') }}">
+            <i class="bi bi-upload"></i> {{ _('Importar') }}
         </a>
-        <a href="{{ url_for('schedule.export_schedule', project_id=project.id) }}" class="btn btn-outline-secondary" title="Exportar para MS Project">
-            <i class="bi bi-download"></i> Exportar
+        <a href="{{ url_for('schedule.export_schedule', project_id=project.id) }}" class="btn btn-outline-secondary" title="{{ _('Exportar para MS Project') }}">
+            <i class="bi bi-download"></i> {{ _('Exportar') }}
         </a>
         <a href="{{ url_for('schedule.create_milestone', project_id=project.id) }}" class="btn btn-primary">
-            <i class="bi bi-plus-lg"></i> Novo Marco
+            <i class="bi bi-plus-lg"></i> {{ _('Novo Marco') }}
         </a>
     </div>
 </div>
@@ -29,7 +29,7 @@
 <div class="card shadow-sm mb-4">
     <div class="card-body">
         <div class="d-flex justify-content-between mb-2">
-            <strong>Progresso Geral</strong>
+            <strong>{{ _('Progresso Geral') }}</strong>
             <strong>{{ overall }}%</strong>
         </div>
         <div class="progress" style="height: 12px;">
@@ -41,7 +41,7 @@
 <!-- Gantt Chart Visual -->
 <div class="card shadow-sm mb-4">
     <div class="card-header bg-white">
-        <h6 class="mb-0 fw-bold">Gráfico de Gantt</h6>
+        <h6 class="mb-0 fw-bold">{{ _('Grafico de Gantt') }}</h6>
     </div>
     <div class="card-body">
         <div class="gantt-container position-relative" id="ganttContainer">
@@ -55,7 +55,7 @@
                 <div style="width: 250px; min-width: 250px;" class="pe-3">
                     <div class="fw-bold small">
                         {% if milestone.predecessor %}
-                        <i class="bi bi-link-45deg text-secondary" title="Depende de: {{ milestone.predecessor.title }}"></i>
+                        <i class="bi bi-link-45deg text-secondary" title="{{ _('Depende de:') }} {{ milestone.predecessor.title }}"></i>
                         {% endif %}
                         {{ milestone.title }}
                     </div>
@@ -67,7 +67,7 @@
                     {% set offset = ((milestone.start_date - min_date).days / total_days * 100) %}
                     {% set width = (((milestone.end_date - milestone.start_date).days + 1) / total_days * 100) %}
                     <div class="gantt-bar
-                        {{ 'bg-success' if milestone.status == 'Concluído' else 'bg-warning' if milestone.status == 'Em Andamento' else 'bg-info' if milestone.status == 'Pendente' else 'bg-danger' }}"
+                        {{ 'bg-success' if milestone.status == 'Concluido' else 'bg-warning' if milestone.status == 'Em Andamento' else 'bg-info' if milestone.status == 'Pendente' else 'bg-danger' }}"
                         data-offset="{{ offset }}" data-width="{{ width }}"
                         style="position:absolute; left:{{ offset }}%; width:{{ width }}%; top:3px; height:30px;"
                         title="{{ milestone.title }} ({{ milestone.progress }}%)">
@@ -84,21 +84,21 @@
 <!-- Milestone List -->
 <div class="card shadow-sm">
     <div class="card-header bg-white">
-        <h6 class="mb-0 fw-bold">Marcos do Projeto</h6>
+        <h6 class="mb-0 fw-bold">{{ _('Marcos do Projeto') }}</h6>
     </div>
     <div class="table-responsive">
         <table class="table table-hover mb-0">
             <thead>
                 <tr>
                     <th>#</th>
-                    <th>Marco</th>
-                    <th>Predecessora</th>
-                    <th>Responsável</th>
-                    <th>Início</th>
-                    <th>Término</th>
-                    <th>Progresso</th>
-                    <th>Status</th>
-                    <th class="text-end">Ações</th>
+                    <th>{{ _('Marco') }}</th>
+                    <th>{{ _('Predecessora') }}</th>
+                    <th>{{ _('Responsavel') }}</th>
+                    <th>{{ _('Inicio') }}</th>
+                    <th>{{ _('Termino') }}</th>
+                    <th>{{ _('Progresso') }}</th>
+                    <th>{{ _('Status') }}</th>
+                    <th class="text-end">{{ _('Acoes') }}</th>
                 </tr>
             </thead>
             <tbody>
@@ -123,7 +123,7 @@
                     <td>
                         {% if milestone.resource_assignments %}
                             {% for ra in milestone.resource_assignments %}
-                            <span class="badge bg-light text-dark mb-1" title="{{ ra.allocation }}% alocação">
+                            <span class="badge bg-light text-dark mb-1" title="{{ ra.allocation }}% {{ _('alocacao') }}">
                                 <i class="bi bi-person"></i> {{ ra.resource.name }} <small>({{ ra.allocation }}%)</small>
                             </span>
                             {% endfor %}
@@ -145,8 +145,8 @@
                     </td>
                     <td>
                         <span id="status-{{ milestone.id }}" class="badge
-                            {{ 'bg-success' if milestone.status == 'Concluído' else 'bg-warning text-dark' if milestone.status == 'Em Andamento' else 'bg-danger' if milestone.status == 'Atrasado' else 'bg-info' }}">
-                            {{ milestone.status }}
+                            {{ 'bg-success' if milestone.status == 'Concluido' else 'bg-warning text-dark' if milestone.status == 'Em Andamento' else 'bg-danger' if milestone.status == 'Atrasado' else 'bg-info' }}">
+                            {{ _(milestone.status) }}
                         </span>
                     </td>
                     <td class="text-end">
@@ -154,7 +154,7 @@
                             <i class="bi bi-pencil"></i>
                         </a>
                         <form method="POST" action="{{ url_for('schedule.delete_milestone', project_id=project.id, milestone_id=milestone.id) }}" class="d-inline">
-                            <button type="submit" class="btn btn-sm btn-outline-danger" data-confirm="Excluir este marco?">
+                            <button type="submit" class="btn btn-sm btn-outline-danger" data-confirm="{{ _('Excluir este marco?') }}">
                                 <i class="bi bi-trash"></i>
                             </button>
                         </form>
@@ -169,10 +169,10 @@
 <div class="card shadow-sm">
     <div class="empty-state">
         <i class="bi bi-calendar3"></i>
-        <h5>Nenhum marco definido</h5>
-        <p>Defina marcos e etapas para o cronograma do projeto</p>
+        <h5>{{ _('Nenhum marco definido') }}</h5>
+        <p>{{ _('Defina marcos e etapas para o cronograma do projeto') }}</p>
         <a href="{{ url_for('schedule.create_milestone', project_id=project.id) }}" class="btn btn-primary">
-            <i class="bi bi-plus-lg"></i> Criar Marco
+            <i class="bi bi-plus-lg"></i> {{ _('Criar Marco') }}
         </a>
     </div>
 </div>
@@ -286,7 +286,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     const statusBadge = document.getElementById('status-' + milestoneId);
                     statusBadge.textContent = data.status;
                     statusBadge.className = 'badge ' + (
-                        data.status === 'Concluído' ? 'bg-success' :
+                        data.status === 'Concluido' ? 'bg-success' :
                         data.status === 'Em Andamento' ? 'bg-warning text-dark' :
                         data.status === 'Atrasado' ? 'bg-danger' : 'bg-info'
                     );

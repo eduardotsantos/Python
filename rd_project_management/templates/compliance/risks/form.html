@@ -1,14 +1,14 @@
 {% extends "base.html" %}
-{% block title %}{{ 'Editar' if risk else 'Novo' }} Risco - Gestão P&D{% endblock %}
+{% block title %}{{ _('Editar') if risk else _('Novo') }} {{ _('Risco') }} - {{ _('Gestão P&D') }}{% endblock %}
 
 {% block content %}
 <div class="d-flex justify-content-between align-items-center mb-4">
     <h4 class="fw-bold mb-0">
         <i class="bi bi-exclamation-triangle text-danger"></i>
-        {{ 'Editar Risco' if risk else 'Novo Risco' }}
+        {{ _('Editar Risco') if risk else _('Novo Risco') }}
     </h4>
     <a href="{{ url_for('compliance.risks_list') }}" class="btn btn-outline-secondary">
-        <i class="bi bi-arrow-left"></i> Voltar
+        <i class="bi bi-arrow-left"></i> {{ _('Voltar') }}
     </a>
 </div>
 
@@ -17,101 +17,101 @@
         <form method="POST">
             <div class="row g-3">
                 <div class="col-md-8">
-                    <label class="form-label">Título *</label>
+                    <label class="form-label">{{ _('Título') }} *</label>
                     <input type="text" name="title" class="form-control" required value="{{ risk.title if risk else '' }}">
                 </div>
                 <div class="col-md-4">
-                    <label class="form-label">Projeto *</label>
+                    <label class="form-label">{{ _('Projeto') }} *</label>
                     <select name="project_id" class="form-select" required>
-                        <option value="">-- Selecione --</option>
+                        <option value="">-- {{ _('Selecione') }} --</option>
                         {% for project in projects %}
                         <option value="{{ project.id }}" {{ 'selected' if risk and risk.project_id == project.id }}>{{ project.title }}</option>
                         {% endfor %}
                     </select>
-                    <small class="text-muted">Obrigatório para aparecer no Status Report</small>
+                    <small class="text-muted">{{ _('Obrigatório para aparecer no Status Report') }}</small>
                 </div>
                 <div class="col-12">
-                    <label class="form-label">Descrição</label>
+                    <label class="form-label">{{ _('Descrição') }}</label>
                     <textarea name="description" class="form-control" rows="3">{{ risk.description if risk else '' }}</textarea>
                 </div>
                 <div class="col-md-4">
-                    <label class="form-label">Categoria *</label>
+                    <label class="form-label">{{ _('Categoria') }} *</label>
                     <select name="category" class="form-select" required>
-                        <option value="">-- Selecione --</option>
-                        {% set categories = ['Técnico', 'Financeiro', 'Cronograma', 'Recursos', 'Escopo', 'Externo', 'Organizacional'] %}
-                        {% for cat in categories %}
-                        <option value="{{ cat }}" {{ 'selected' if risk and risk.category == cat }}>{{ cat }}</option>
+                        <option value="">-- {{ _('Selecione') }} --</option>
+                        {% set categories = [(_('Técnico'), 'Técnico'), (_('Financeiro'), 'Financeiro'), (_('Cronograma'), 'Cronograma'), (_('Recursos'), 'Recursos'), (_('Escopo'), 'Escopo'), (_('Externo'), 'Externo'), (_('Organizacional'), 'Organizacional')] %}
+                        {% for label, cat in categories %}
+                        <option value="{{ cat }}" {{ 'selected' if risk and risk.category == cat }}>{{ label }}</option>
                         {% endfor %}
                     </select>
                 </div>
                 <div class="col-md-4">
-                    <label class="form-label">Probabilidade (1-5) *</label>
+                    <label class="form-label">{{ _('Probabilidade (1-5)') }} *</label>
                     <select name="probability" class="form-select" required>
-                        <option value="">-- Selecione --</option>
-                        <option value="1" {{ 'selected' if risk and risk.probability == 1 }}>1 - Muito Baixa</option>
-                        <option value="2" {{ 'selected' if risk and risk.probability == 2 }}>2 - Baixa</option>
-                        <option value="3" {{ 'selected' if risk and risk.probability == 3 }}>3 - Média</option>
-                        <option value="4" {{ 'selected' if risk and risk.probability == 4 }}>4 - Alta</option>
-                        <option value="5" {{ 'selected' if risk and risk.probability == 5 }}>5 - Muito Alta</option>
+                        <option value="">-- {{ _('Selecione') }} --</option>
+                        <option value="1" {{ 'selected' if risk and risk.probability == 1 }}>1 - {{ _('Muito Baixa') }}</option>
+                        <option value="2" {{ 'selected' if risk and risk.probability == 2 }}>2 - {{ _('Baixa') }}</option>
+                        <option value="3" {{ 'selected' if risk and risk.probability == 3 }}>3 - {{ _('Média') }}</option>
+                        <option value="4" {{ 'selected' if risk and risk.probability == 4 }}>4 - {{ _('Alta') }}</option>
+                        <option value="5" {{ 'selected' if risk and risk.probability == 5 }}>5 - {{ _('Muito Alta') }}</option>
                     </select>
                 </div>
                 <div class="col-md-4">
-                    <label class="form-label">Impacto (1-5) *</label>
+                    <label class="form-label">{{ _('Impacto (1-5)') }} *</label>
                     <select name="impact" class="form-select" required>
-                        <option value="">-- Selecione --</option>
-                        <option value="1" {{ 'selected' if risk and risk.impact == 1 }}>1 - Muito Baixo</option>
-                        <option value="2" {{ 'selected' if risk and risk.impact == 2 }}>2 - Baixo</option>
-                        <option value="3" {{ 'selected' if risk and risk.impact == 3 }}>3 - Médio</option>
-                        <option value="4" {{ 'selected' if risk and risk.impact == 4 }}>4 - Alto</option>
-                        <option value="5" {{ 'selected' if risk and risk.impact == 5 }}>5 - Muito Alto</option>
+                        <option value="">-- {{ _('Selecione') }} --</option>
+                        <option value="1" {{ 'selected' if risk and risk.impact == 1 }}>1 - {{ _('Muito Baixo') }}</option>
+                        <option value="2" {{ 'selected' if risk and risk.impact == 2 }}>2 - {{ _('Baixo') }}</option>
+                        <option value="3" {{ 'selected' if risk and risk.impact == 3 }}>3 - {{ _('Médio') }}</option>
+                        <option value="4" {{ 'selected' if risk and risk.impact == 4 }}>4 - {{ _('Alto') }}</option>
+                        <option value="5" {{ 'selected' if risk and risk.impact == 5 }}>5 - {{ _('Muito Alto') }}</option>
                     </select>
                 </div>
                 <div class="col-md-6">
-                    <label class="form-label">Estratégia de Resposta</label>
+                    <label class="form-label">{{ _('Estratégia de Resposta') }}</label>
                     <select name="response_strategy" class="form-select">
-                        <option value="">-- Selecione --</option>
-                        {% set strategies = ['Evitar', 'Mitigar', 'Transferir', 'Aceitar'] %}
-                        {% for strat in strategies %}
-                        <option value="{{ strat }}" {{ 'selected' if risk and risk.response_strategy == strat }}>{{ strat }}</option>
+                        <option value="">-- {{ _('Selecione') }} --</option>
+                        {% set strategies = [(_('Evitar'), 'Evitar'), (_('Mitigar'), 'Mitigar'), (_('Transferir'), 'Transferir'), (_('Aceitar'), 'Aceitar')] %}
+                        {% for label, strat in strategies %}
+                        <option value="{{ strat }}" {{ 'selected' if risk and risk.response_strategy == strat }}>{{ label }}</option>
                         {% endfor %}
                     </select>
                 </div>
                 <div class="col-md-6">
-                    <label class="form-label">Status</label>
+                    <label class="form-label">{{ _('Status') }}</label>
                     <select name="status" class="form-select">
-                        {% set statuses = ['Identificado', 'Analisado', 'Em Tratamento', 'Mitigado', 'Fechado'] %}
-                        {% for status in statuses %}
-                        <option value="{{ status }}" {{ 'selected' if risk and risk.status == status }}>{{ status }}</option>
+                        {% set statuses = [(_('Identificado'), 'Identificado'), (_('Analisado'), 'Analisado'), (_('Em Tratamento'), 'Em Tratamento'), (_('Mitigado'), 'Mitigado'), (_('Fechado'), 'Fechado')] %}
+                        {% for label, status in statuses %}
+                        <option value="{{ status }}" {{ 'selected' if risk and risk.status == status }}>{{ label }}</option>
                         {% endfor %}
                     </select>
                 </div>
                 <div class="col-12">
-                    <label class="form-label">Plano de Mitigação</label>
+                    <label class="form-label">{{ _('Plano de Mitigação') }}</label>
                     <textarea name="mitigation_plan" class="form-control" rows="3">{{ risk.mitigation_plan if risk else '' }}</textarea>
                 </div>
                 <div class="col-12">
-                    <label class="form-label">Plano de Contingência</label>
+                    <label class="form-label">{{ _('Plano de Contingência') }}</label>
                     <textarea name="contingency_plan" class="form-control" rows="3">{{ risk.contingency_plan if risk else '' }}</textarea>
                 </div>
                 <div class="col-md-6">
-                    <label class="form-label">Responsável</label>
+                    <label class="form-label">{{ _('Responsável') }}</label>
                     <select name="owner_id" class="form-select">
-                        <option value="">-- Selecione --</option>
+                        <option value="">-- {{ _('Selecione') }} --</option>
                         {% for user in users %}
                         <option value="{{ user.id }}" {{ 'selected' if risk and risk.owner_id == user.id }}>{{ user.full_name }}</option>
                         {% endfor %}
                     </select>
                 </div>
                 <div class="col-md-6">
-                    <label class="form-label">Data Identificação</label>
+                    <label class="form-label">{{ _('Data Identificação') }}</label>
                     <input type="date" name="identified_date" class="form-control" value="{{ risk.identified_date.strftime('%Y-%m-%d') if risk and risk.identified_date else '' }}">
                 </div>
             </div>
             <div class="mt-4">
                 <button type="submit" class="btn btn-danger">
-                    <i class="bi bi-check-lg"></i> {{ 'Atualizar' if risk else 'Salvar' }}
+                    <i class="bi bi-check-lg"></i> {{ _('Atualizar') if risk else _('Salvar') }}
                 </button>
-                <a href="{{ url_for('compliance.risks_list') }}" class="btn btn-outline-secondary">Cancelar</a>
+                <a href="{{ url_for('compliance.risks_list') }}" class="btn btn-outline-secondary">{{ _('Cancelar') }}</a>
             </div>
         </form>
     </div>

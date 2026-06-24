@@ -1,16 +1,16 @@
 {% extends "base.html" %}
-{% block title %}{{ 'Editar' if stakeholder else 'Adicionar' }} Stakeholder - {{ project.title }}{% endblock %}
+{% block title %}{{ _('Editar') if stakeholder else _('Adicionar') }} {{ _('Stakeholder') }} - {{ project.title }}{% endblock %}
 
 {% block content %}
 <div class="container-fluid">
     <div class="d-flex justify-content-between align-items-center mb-4">
         <div>
             <a href="{{ url_for('projects.list_stakeholders', project_id=project.id) }}" class="btn btn-outline-secondary btn-sm">
-                <i class="bi bi-arrow-left"></i> Voltar
+                <i class="bi bi-arrow-left"></i> {{ _('Voltar') }}
             </a>
             <h4 class="mt-2">
                 <i class="bi bi-person text-primary"></i>
-                {{ 'Editar' if stakeholder else 'Adicionar' }} Stakeholder
+                {{ _('Editar') if stakeholder else _('Adicionar') }} {{ _('Stakeholder') }}
             </h4>
             <p class="text-muted mb-0">{{ project.code }} - {{ project.title }}</p>
         </div>
@@ -22,43 +22,43 @@
             <div class="col-md-6">
                 <div class="card mb-4">
                     <div class="card-header">
-                        <i class="bi bi-person-badge"></i> Informacoes Basicas
+                        <i class="bi bi-person-badge"></i> {{ _('Informações Básicas') }}
                     </div>
                     <div class="card-body">
                         <div class="mb-3">
-                            <label class="form-label">Nome <span class="text-danger">*</span></label>
+                            <label class="form-label">{{ _('Nome') }} <span class="text-danger">*</span></label>
                             <input type="text" name="name" class="form-control" required
                                    value="{{ stakeholder.name if stakeholder else '' }}"
-                                   placeholder="Nome completo do stakeholder">
+                                   placeholder="{{ _('Nome completo do stakeholder') }}">
                         </div>
                         <div class="mb-3">
-                            <label class="form-label">Papel no Projeto <span class="text-danger">*</span></label>
+                            <label class="form-label">{{ _('Papel no Projeto') }} <span class="text-danger">*</span></label>
                             <select name="role" class="form-select" required>
-                                <option value="">Selecione...</option>
-                                {% set roles = ['Patrocinador', 'Cliente', 'Usuario Final', 'Fornecedor', 'Parceiro',
-                                                'Regulador', 'Equipe Tecnica', 'Consultor', 'Financiador', 'Outro'] %}
+                                <option value="">{{ _('Selecione...') }}</option>
+                                {% set roles = ['Patrocinador', 'Cliente', 'Usuário Final', 'Fornecedor', 'Parceiro',
+                                                'Regulador', 'Equipe Técnica', 'Consultor', 'Financiador', 'Outro'] %}
                                 {% for role in roles %}
                                 <option value="{{ role }}" {{ 'selected' if stakeholder and stakeholder.role == role else '' }}>
-                                    {{ role }}
+                                    {{ _(role) }}
                                 </option>
                                 {% endfor %}
                             </select>
                         </div>
                         <div class="mb-3">
-                            <label class="form-label">Organizacao</label>
+                            <label class="form-label">{{ _('Organização') }}</label>
                             <input type="text" name="organization" class="form-control"
                                    value="{{ stakeholder.organization if stakeholder else '' }}"
-                                   placeholder="Empresa ou instituicao">
+                                   placeholder="{{ _('Empresa ou instituição') }}">
                         </div>
                         <div class="row">
                             <div class="col-md-6 mb-3">
-                                <label class="form-label">Email</label>
+                                <label class="form-label">{{ _('Email') }}</label>
                                 <input type="email" name="email" class="form-control"
                                        value="{{ stakeholder.email if stakeholder else '' }}"
                                        placeholder="email@exemplo.com">
                             </div>
                             <div class="col-md-6 mb-3">
-                                <label class="form-label">Telefone</label>
+                                <label class="form-label">{{ _('Telefone') }}</label>
                                 <input type="text" name="phone" class="form-control"
                                        value="{{ stakeholder.phone if stakeholder else '' }}"
                                        placeholder="(00) 00000-0000">
@@ -69,7 +69,7 @@
                             <div class="form-check">
                                 <input type="checkbox" name="active" class="form-check-input" id="active"
                                        {{ 'checked' if stakeholder.active else '' }}>
-                                <label class="form-check-label" for="active">Stakeholder ativo</label>
+                                <label class="form-check-label" for="active">{{ _('Stakeholder ativo') }}</label>
                             </div>
                         </div>
                         {% endif %}
@@ -81,54 +81,54 @@
             <div class="col-md-6">
                 <div class="card mb-4">
                     <div class="card-header">
-                        <i class="bi bi-diagram-3"></i> Matriz Poder/Interesse
+                        <i class="bi bi-diagram-3"></i> {{ _('Matriz Poder/Interesse') }}
                     </div>
                     <div class="card-body">
                         <div class="row">
                             <div class="col-md-6 mb-3">
-                                <label class="form-label">Nivel de Influencia (Poder)</label>
+                                <label class="form-label">{{ _('Nível de Influência (Poder)') }}</label>
                                 <select name="influence_level" class="form-select">
                                     {% for level in ['Baixo', 'Médio', 'Alto', 'Muito Alto'] %}
                                     <option value="{{ level }}"
                                             {{ 'selected' if stakeholder and stakeholder.influence_level == level else ('selected' if not stakeholder and level == 'Médio' else '') }}>
-                                        {{ level }}
+                                        {{ _(level) }}
                                     </option>
                                     {% endfor %}
                                 </select>
-                                <small class="text-muted">Capacidade de impactar o projeto</small>
+                                <small class="text-muted">{{ _('Capacidade de impactar o projeto') }}</small>
                             </div>
                             <div class="col-md-6 mb-3">
-                                <label class="form-label">Nivel de Interesse</label>
+                                <label class="form-label">{{ _('Nível de Interesse') }}</label>
                                 <select name="interest_level" class="form-select">
                                     {% for level in ['Baixo', 'Médio', 'Alto', 'Muito Alto'] %}
                                     <option value="{{ level }}"
                                             {{ 'selected' if stakeholder and stakeholder.interest_level == level else ('selected' if not stakeholder and level == 'Médio' else '') }}>
-                                        {{ level }}
+                                        {{ _(level) }}
                                     </option>
                                     {% endfor %}
                                 </select>
-                                <small class="text-muted">Interesse nos resultados</small>
+                                <small class="text-muted">{{ _('Interesse nos resultados') }}</small>
                             </div>
                         </div>
                         <div class="mb-3">
-                            <label class="form-label">Estrategia de Engajamento</label>
+                            <label class="form-label">{{ _('Estratégia de Engajamento') }}</label>
                             <select name="engagement_strategy" class="form-select">
-                                <option value="">Automatico (baseado na matriz)</option>
+                                <option value="">{{ _('Automático (baseado na matriz)') }}</option>
                                 {% for strategy in ['Monitorar', 'Manter Informado', 'Manter Satisfeito', 'Gerenciar de Perto'] %}
                                 <option value="{{ strategy }}"
                                         {{ 'selected' if stakeholder and stakeholder.engagement_strategy == strategy else '' }}>
-                                    {{ strategy }}
+                                    {{ _(strategy) }}
                                 </option>
                                 {% endfor %}
                             </select>
                         </div>
                         <div class="alert alert-info small mb-0">
                             <i class="bi bi-info-circle"></i>
-                            <strong>Matriz Poder/Interesse:</strong><br>
-                            - <strong>Gerenciar de Perto:</strong> Alto poder + Alto interesse<br>
-                            - <strong>Manter Satisfeito:</strong> Alto poder + Baixo interesse<br>
-                            - <strong>Manter Informado:</strong> Baixo poder + Alto interesse<br>
-                            - <strong>Monitorar:</strong> Baixo poder + Baixo interesse
+                            <strong>{{ _('Matriz Poder/Interesse:') }}</strong><br>
+                            - <strong>{{ _('Gerenciar de Perto:') }}</strong> {{ _('Alto poder + Alto interesse') }}<br>
+                            - <strong>{{ _('Manter Satisfeito:') }}</strong> {{ _('Alto poder + Baixo interesse') }}<br>
+                            - <strong>{{ _('Manter Informado:') }}</strong> {{ _('Baixo poder + Alto interesse') }}<br>
+                            - <strong>{{ _('Monitorar:') }}</strong> {{ _('Baixo poder + Baixo interesse') }}
                         </div>
                     </div>
                 </div>
@@ -138,24 +138,24 @@
         <!-- Communications -->
         <div class="card mb-4">
             <div class="card-header">
-                <i class="bi bi-bell"></i> Comunicacoes dos Agentes de IA
+                <i class="bi bi-bell"></i> {{ _('Comunicações dos Agentes de IA') }}
             </div>
             <div class="card-body">
-                <p class="text-muted small">Selecione quais comunicacoes automaticas este stakeholder deve receber:</p>
+                <p class="text-muted small">{{ _('Selecione quais comunicações automáticas este stakeholder deve receber:') }}</p>
                 <div class="row">
                     <div class="col-md-4">
                         <div class="form-check mb-2">
                             <input type="checkbox" name="receive_briefing" class="form-check-input" id="receive_briefing"
                                    {{ 'checked' if stakeholder and stakeholder.receive_briefing else '' }}>
                             <label class="form-check-label" for="receive_briefing">
-                                <i class="bi bi-sunrise text-warning"></i> Briefing Executivo Diario
+                                <i class="bi bi-sunrise text-warning"></i> {{ _('Briefing Executivo Diário') }}
                             </label>
                         </div>
                         <div class="form-check mb-2">
                             <input type="checkbox" name="receive_status_reports" class="form-check-input" id="receive_status_reports"
                                    {{ 'checked' if stakeholder and stakeholder.receive_status_reports else '' }}>
                             <label class="form-check-label" for="receive_status_reports">
-                                <i class="bi bi-file-earmark-text text-primary"></i> Relatorios de Status
+                                <i class="bi bi-file-earmark-text text-primary"></i> {{ _('Relatórios de Status') }}
                             </label>
                         </div>
                     </div>
@@ -164,14 +164,14 @@
                             <input type="checkbox" name="receive_risk_alerts" class="form-check-input" id="receive_risk_alerts"
                                    {{ 'checked' if stakeholder and stakeholder.receive_risk_alerts else '' }}>
                             <label class="form-check-label" for="receive_risk_alerts">
-                                <i class="bi bi-shield-exclamation text-danger"></i> Alertas de Riscos
+                                <i class="bi bi-shield-exclamation text-danger"></i> {{ _('Alertas de Riscos') }}
                             </label>
                         </div>
                         <div class="form-check mb-2">
                             <input type="checkbox" name="receive_financial_alerts" class="form-check-input" id="receive_financial_alerts"
                                    {{ 'checked' if stakeholder and stakeholder.receive_financial_alerts else '' }}>
                             <label class="form-check-label" for="receive_financial_alerts">
-                                <i class="bi bi-currency-dollar text-success"></i> Alertas Financeiros
+                                <i class="bi bi-currency-dollar text-success"></i> {{ _('Alertas Financeiros') }}
                             </label>
                         </div>
                     </div>
@@ -180,21 +180,21 @@
                             <input type="checkbox" name="receive_schedule_alerts" class="form-check-input" id="receive_schedule_alerts"
                                    {{ 'checked' if stakeholder and stakeholder.receive_schedule_alerts else '' }}>
                             <label class="form-check-label" for="receive_schedule_alerts">
-                                <i class="bi bi-calendar-x text-warning"></i> Alertas de Cronograma
+                                <i class="bi bi-calendar-x text-warning"></i> {{ _('Alertas de Cronograma') }}
                             </label>
                         </div>
                         <div class="form-check mb-2">
                             <input type="checkbox" name="receive_quality_alerts" class="form-check-input" id="receive_quality_alerts"
                                    {{ 'checked' if stakeholder and stakeholder.receive_quality_alerts else '' }}>
                             <label class="form-check-label" for="receive_quality_alerts">
-                                <i class="bi bi-patch-check text-info"></i> Alertas de Qualidade
+                                <i class="bi bi-patch-check text-info"></i> {{ _('Alertas de Qualidade') }}
                             </label>
                         </div>
                         <div class="form-check mb-2">
                             <input type="checkbox" name="receive_compliance_alerts" class="form-check-input" id="receive_compliance_alerts"
                                    {{ 'checked' if stakeholder and stakeholder.receive_compliance_alerts else '' }}>
                             <label class="form-check-label" for="receive_compliance_alerts">
-                                <i class="bi bi-clipboard-check text-secondary"></i> Alertas de Conformidade
+                                <i class="bi bi-clipboard-check text-secondary"></i> {{ _('Alertas de Conformidade') }}
                             </label>
                         </div>
                     </div>
@@ -205,21 +205,21 @@
         <!-- Notes -->
         <div class="card mb-4">
             <div class="card-header">
-                <i class="bi bi-sticky"></i> Observacoes
+                <i class="bi bi-sticky"></i> {{ _('Observações') }}
             </div>
             <div class="card-body">
                 <textarea name="notes" class="form-control" rows="3"
-                          placeholder="Observacoes sobre este stakeholder...">{{ stakeholder.notes if stakeholder else '' }}</textarea>
+                          placeholder="{{ _('Observações sobre este stakeholder...') }}">{{ stakeholder.notes if stakeholder else '' }}</textarea>
             </div>
         </div>
 
         <!-- Actions -->
         <div class="d-flex justify-content-end gap-2">
             <a href="{{ url_for('projects.list_stakeholders', project_id=project.id) }}" class="btn btn-secondary">
-                Cancelar
+                {{ _('Cancelar') }}
             </a>
             <button type="submit" class="btn btn-primary">
-                <i class="bi bi-check-lg"></i> {{ 'Salvar Alteracoes' if stakeholder else 'Adicionar Stakeholder' }}
+                <i class="bi bi-check-lg"></i> {{ _('Salvar Alterações') if stakeholder else _('Adicionar Stakeholder') }}
             </button>
         </div>
     </form>

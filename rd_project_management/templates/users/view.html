@@ -9,14 +9,14 @@
                 <i class="bi bi-arrow-left"></i>
             </a>
             <div class="flex-grow-1">
-                <h4 class="fw-bold mb-0">Detalhes do Usuário</h4>
+                <h4 class="fw-bold mb-0">{{ _('Detalhes do Usuário') }}</h4>
             </div>
             <a href="{{ url_for('users.edit_user', user_id=user.id) }}" class="btn btn-outline-primary btn-sm me-2">
-                <i class="bi bi-pencil"></i> Editar
+                <i class="bi bi-pencil"></i> {{ _('Editar') }}
             </a>
             {% if user.id != current_user.id %}
             <form method="POST" action="{{ url_for('users.delete_user', user_id=user.id) }}" class="d-inline">
-                <button type="submit" class="btn btn-outline-danger btn-sm" data-confirm="Excluir usuário '{{ user.full_name }}'?">
+                <button type="submit" class="btn btn-outline-danger btn-sm" data-confirm="{{ _('Excluir usuário') }} '{{ user.full_name }}'?">
                     <i class="bi bi-trash"></i>
                 </button>
             </form>
@@ -36,16 +36,16 @@
                         <p class="text-muted mb-1">@{{ user.username }}</p>
                         <div>
                             {% if user.role == 'admin' %}
-                                <span class="badge bg-danger"><i class="bi bi-shield-lock"></i> Administrador</span>
+                                <span class="badge bg-danger"><i class="bi bi-shield-lock"></i> {{ _('Administrador') }}</span>
                             {% elif user.role == 'manager' %}
-                                <span class="badge bg-warning text-dark"><i class="bi bi-briefcase"></i> Gerente</span>
+                                <span class="badge bg-warning text-dark"><i class="bi bi-briefcase"></i> {{ _('Gerente') }}</span>
                             {% else %}
-                                <span class="badge bg-secondary"><i class="bi bi-person"></i> Usuário</span>
+                                <span class="badge bg-secondary"><i class="bi bi-person"></i> {{ _('Usuário') }}</span>
                             {% endif %}
                             {% if user.active %}
-                                <span class="badge bg-success ms-1"><i class="bi bi-check-circle"></i> Ativo</span>
+                                <span class="badge bg-success ms-1"><i class="bi bi-check-circle"></i> {{ _('Ativo') }}</span>
                             {% else %}
-                                <span class="badge bg-secondary ms-1"><i class="bi bi-pause-circle"></i> Inativo</span>
+                                <span class="badge bg-secondary ms-1"><i class="bi bi-pause-circle"></i> {{ _('Inativo') }}</span>
                             {% endif %}
                         </div>
                     </div>
@@ -53,11 +53,11 @@
 
                 <div class="row g-3">
                     <div class="col-md-6">
-                        <h6 class="text-muted small">Email</h6>
+                        <h6 class="text-muted small">{{ _('Email') }}</h6>
                         <p class="fw-bold"><i class="bi bi-envelope"></i> {{ user.email }}</p>
                     </div>
                     <div class="col-md-6">
-                        <h6 class="text-muted small">Cadastrado em</h6>
+                        <h6 class="text-muted small">{{ _('Cadastrado em') }}</h6>
                         <p class="fw-bold"><i class="bi bi-calendar"></i> {{ user.created_at.strftime('%d/%m/%Y às %H:%M') if user.created_at else '-' }}</p>
                     </div>
                 </div>
@@ -71,7 +71,7 @@
                     <div class="card-body text-center">
                         <i class="bi bi-folder text-primary" style="font-size: 2rem;"></i>
                         <h3 class="fw-bold mt-2 mb-0">{{ projects_count }}</h3>
-                        <p class="text-muted small mb-0">Projetos Responsável</p>
+                        <p class="text-muted small mb-0">{{ _('Projetos Responsável') }}</p>
                     </div>
                 </div>
             </div>
@@ -80,7 +80,7 @@
                     <div class="card-body text-center">
                         <i class="bi bi-clock text-info" style="font-size: 2rem;"></i>
                         <h3 class="fw-bold mt-2 mb-0">{{ timesheets_count }}</h3>
-                        <p class="text-muted small mb-0">Registros de Horas</p>
+                        <p class="text-muted small mb-0">{{ _('Registros de Horas') }}</p>
                     </div>
                 </div>
             </div>
@@ -89,7 +89,7 @@
                     <div class="card-body text-center">
                         <i class="bi bi-cash-coin text-warning" style="font-size: 2rem;"></i>
                         <h3 class="fw-bold mt-2 mb-0">{{ expenses_count }}</h3>
-                        <p class="text-muted small mb-0">Despesas Cadastradas</p>
+                        <p class="text-muted small mb-0">{{ _('Despesas Cadastradas') }}</p>
                     </div>
                 </div>
             </div>

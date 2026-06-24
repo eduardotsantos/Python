@@ -1,11 +1,11 @@
 {% extends "base.html" %}
-{% block title %}Programas - Orion P&D{% endblock %}
+{% block title %}{{ _('Programas') }} - Orion P&D{% endblock %}
 
 {% block content %}
 <div class="d-flex justify-content-between align-items-center mb-4">
-    <h4 class="fw-bold mb-0"><i class="bi bi-collection text-primary"></i> Programas</h4>
+    <h4 class="fw-bold mb-0"><i class="bi bi-collection text-primary"></i> {{ _('Programas') }}</h4>
     <a href="{{ url_for('programs.create_program') }}" class="btn btn-primary">
-        <i class="bi bi-plus-lg"></i> Novo Programa
+        <i class="bi bi-plus-lg"></i> {{ _('Novo Programa') }}
     </a>
 </div>
 
@@ -22,26 +22,26 @@
             </div>
             <div class="card-body">
                 <h5 class="card-title">{{ item.program.name }}</h5>
-                <p class="text-muted small mb-3">{{ item.program.description|truncate(100) if item.program.description else 'Sem descricao' }}</p>
+                <p class="text-muted small mb-3">{{ item.program.description|truncate(100) if item.program.description else _('Sem descricao') }}</p>
 
                 <div class="row g-2 mb-3">
                     <div class="col-6">
                         <div class="text-center p-2 bg-light rounded">
                             <div class="fw-bold text-primary">{{ item.project_count }}</div>
-                            <small class="text-muted">Projetos</small>
+                            <small class="text-muted">{{ _('Projetos') }}</small>
                         </div>
                     </div>
                     <div class="col-6">
                         <div class="text-center p-2 bg-light rounded">
                             <div class="fw-bold">{{ item.progress }}%</div>
-                            <small class="text-muted">Progresso</small>
+                            <small class="text-muted">{{ _('Progresso') }}</small>
                         </div>
                     </div>
                 </div>
 
                 <div class="mb-2">
                     <div class="d-flex justify-content-between small mb-1">
-                        <span>Orçamento</span>
+                        <span>{{ _('Orcamento') }}</span>
                         <span>R$ {{ "{:,.0f}".format(item.total_budget) }}</span>
                     </div>
                     <div class="progress" style="height: 6px;">
@@ -49,18 +49,18 @@
                         <div class="progress-bar bg-{{ 'danger' if percent > 100 else 'warning' if percent > 85 else 'success' }}"
                              style="width: {{ [percent, 100]|min }}%"></div>
                     </div>
-                    <small class="text-muted">R$ {{ "{:,.0f}".format(item.total_spent) }} utilizado</small>
+                    <small class="text-muted">R$ {{ "{:,.0f}".format(item.total_spent) }} {{ _('utilizado') }}</small>
                 </div>
             </div>
             <div class="card-footer bg-white">
                 <div class="d-flex gap-2">
                     <a href="{{ url_for('programs.view_program', program_id=item.program.id) }}" class="btn btn-sm btn-outline-primary flex-grow-1">
-                        <i class="bi bi-eye"></i> Ver
+                        <i class="bi bi-eye"></i> {{ _('Ver') }}
                     </a>
-                    <a href="{{ url_for('programs.program_status_report', program_id=item.program.id) }}" class="btn btn-sm btn-outline-success" title="Status Report">
+                    <a href="{{ url_for('programs.program_status_report', program_id=item.program.id) }}" class="btn btn-sm btn-outline-success" title="{{ _('Status Report') }}">
                         <i class="bi bi-clipboard-data"></i>
                     </a>
-                    <a href="{{ url_for('programs.edit_program', program_id=item.program.id) }}" class="btn btn-sm btn-outline-secondary" title="Editar">
+                    <a href="{{ url_for('programs.edit_program', program_id=item.program.id) }}" class="btn btn-sm btn-outline-secondary" title="{{ _('Editar') }}">
                         <i class="bi bi-pencil"></i>
                     </a>
                 </div>
@@ -72,10 +72,10 @@
 {% else %}
 <div class="text-center py-5">
     <i class="bi bi-collection text-muted" style="font-size: 3rem;"></i>
-    <h5 class="mt-3">Nenhum programa cadastrado</h5>
-    <p class="text-muted">Crie seu primeiro programa para agrupar projetos relacionados</p>
+    <h5 class="mt-3">{{ _('Nenhum programa cadastrado') }}</h5>
+    <p class="text-muted">{{ _('Crie seu primeiro programa para agrupar projetos relacionados') }}</p>
     <a href="{{ url_for('programs.create_program') }}" class="btn btn-primary">
-        <i class="bi bi-plus-lg"></i> Criar Programa
+        <i class="bi bi-plus-lg"></i> {{ _('Criar Programa') }}
     </a>
 </div>
 {% endif %}

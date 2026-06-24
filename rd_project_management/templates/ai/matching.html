@@ -1,14 +1,14 @@
 {% extends "base.html" %}
-{% block title %}Matching Projeto-Edital - {{ project.title }}{% endblock %}
+{% block title %}{{ _('Matching Projeto-Edital') }} - {{ project.title }}{% endblock %}
 
 {% block content %}
 <div class="container-fluid">
     <div class="d-flex justify-content-between align-items-center mb-4">
         <div>
             <a href="{{ url_for('projects.view_project', project_id=project.id) }}" class="btn btn-outline-secondary btn-sm">
-                <i class="bi bi-arrow-left"></i> Voltar ao Projeto
+                <i class="bi bi-arrow-left"></i> {{ _('Voltar ao Projeto') }}
             </a>
-            <h4 class="mt-2"><i class="bi bi-link-45deg text-warning"></i> Matching Projeto-Edital</h4>
+            <h4 class="mt-2"><i class="bi bi-link-45deg text-warning"></i> {{ _('Matching Projeto-Edital') }}</h4>
             <p class="text-muted mb-0">{{ project.code }} - {{ project.title }}</p>
         </div>
     </div>
@@ -16,22 +16,22 @@
     {% if not ai_configured %}
     <div class="alert alert-warning">
         <i class="bi bi-exclamation-triangle"></i>
-        <strong>API de IA nao configurada.</strong>
-        Configure a variavel de ambiente <code>ANTHROPIC_API_KEY</code>.
+        <strong>{{ _('API de IA nao configurada.') }}</strong>
+        {{ _('Configure a variavel de ambiente') }} <code>ANTHROPIC_API_KEY</code>.
     </div>
     {% else %}
     <div class="row mb-4">
         <div class="col-md-6">
             <div class="card">
                 <div class="card-header bg-primary text-white">
-                    <i class="bi bi-folder"></i> Dados do Projeto
+                    <i class="bi bi-folder"></i> {{ _('Dados do Projeto') }}
                 </div>
                 <div class="card-body">
-                    <p><strong>Titulo:</strong> {{ project.title }}</p>
-                    <p><strong>Categoria:</strong> {{ project.category or 'Nao definida' }}</p>
-                    <p><strong>Orçamento:</strong> {{ project.budget|currency_brl }}</p>
-                    <p><strong>Descricao:</strong></p>
-                    <p class="text-muted small">{{ project.description or 'Sem descricao' }}</p>
+                    <p><strong>{{ _('Titulo:') }}</strong> {{ project.title }}</p>
+                    <p><strong>{{ _('Categoria:') }}</strong> {{ project.category or _('Nao definida') }}</p>
+                    <p><strong>{{ _('Orcamento:') }}</strong> {{ project.budget|currency_brl }}</p>
+                    <p><strong>{{ _('Descricao:') }}</strong></p>
+                    <p class="text-muted small">{{ project.description or _('Sem descricao') }}</p>
                 </div>
             </div>
         </div>
@@ -39,15 +39,15 @@
             <div class="card">
                 <div class="card-body text-center" id="searchSection">
                     <i class="bi bi-search fs-1 text-warning"></i>
-                    <h5 class="mt-2">Encontrar Editais Compativeis</h5>
-                    <p class="text-muted">A IA analisara seu projeto e encontrara as melhores chamadas públicas.</p>
+                    <h5 class="mt-2">{{ _('Encontrar Editais Compativeis') }}</h5>
+                    <p class="text-muted">{{ _('A IA analisara seu projeto e encontrara as melhores chamadas publicas.') }}</p>
                     <button class="btn btn-warning btn-lg" onclick="runMatching()">
-                        <i class="bi bi-magic"></i> Buscar Correspondencias
+                        <i class="bi bi-magic"></i> {{ _('Buscar Correspondencias') }}
                     </button>
                 </div>
                 <div class="card-body text-center d-none" id="loadingSection">
                     <div class="spinner-border text-warning" role="status"></div>
-                    <p class="mt-2">Analisando compatibilidade com editais...</p>
+                    <p class="mt-2">{{ _('Analisando compatibilidade com editais...') }}</p>
                 </div>
             </div>
         </div>
@@ -58,16 +58,16 @@
         <div id="documentSavedSection" class="d-none mb-3">
             <div class="alert alert-success">
                 <i class="bi bi-file-earmark-check"></i>
-                <strong>Documento salvo!</strong> O matching foi salvo em <a href="{{ url_for('projects.view_project', project_id=project.id) }}#documents" class="alert-link">Documentos do Projeto</a>.
+                <strong>{{ _('Documento salvo!') }}</strong> {{ _('O matching foi salvo em') }} <a href="{{ url_for('projects.view_project', project_id=project.id) }}#documents" class="alert-link">{{ _('Documentos do Projeto') }}</a>.
                 <span id="documentName"></span>
             </div>
         </div>
 
-        <h5><i class="bi bi-trophy"></i> Editais Compativeis Encontrados</h5>
+        <h5><i class="bi bi-trophy"></i> {{ _('Editais Compativeis Encontrados') }}</h5>
         <div id="matchesList"></div>
         <div id="noMatches" class="alert alert-info d-none">
             <i class="bi bi-info-circle"></i>
-            Nenhum edital compativel encontrado. Verifique se ha chamadas públicas abertas cadastradas no sistema.
+            {{ _('Nenhum edital compativel encontrado. Verifique se ha chamadas publicas abertas cadastradas no sistema.') }}
         </div>
     </div>
     {% endif %}
@@ -76,6 +76,14 @@
 
 {% block extra_js %}
 <script>
+const deadlineText = '{{ _("Prazo:") }}';
+const notInformedText = '{{ _("Nao informado") }}';
+const justificationText = '{{ _("Justificativa:") }}';
+const strengthsText = '{{ _("Pontos Fortes:") }}';
+const adaptationsText = '{{ _("Adaptacoes Necessarias:") }}';
+const risksText = '{{ _("Riscos:") }}';
+const viewCallText = '{{ _("Ver Edital") }}';
+
 async function runMatching() {
     document.getElementById('searchSection').classList.add('d-none');
     document.getElementById('loadingSection').classList.remove('d-none');
@@ -89,7 +97,7 @@ async function runMatching() {
         const data = await response.json();
 
         if (data.error) {
-            alert('Erro: ' + data.error);
+            alert('{{ _("Erro:") }} ' + data.error);
             document.getElementById('searchSection').classList.remove('d-none');
             document.getElementById('loadingSection').classList.add('d-none');
             return;
@@ -106,7 +114,7 @@ async function runMatching() {
         }
 
     } catch (error) {
-        alert('Erro de conexao: ' + error.message);
+        alert('{{ _("Erro de conexao:") }} ' + error.message);
         document.getElementById('searchSection').classList.remove('d-none');
     } finally {
         document.getElementById('loadingSection').classList.add('d-none');
@@ -138,33 +146,33 @@ function displayMatches(matches) {
                     <span class="badge bg-secondary">${match.call_source || ''}</span>
                 </div>
                 <div class="card-body">
-                    <p><strong>Prazo:</strong> ${match.call_deadline || 'Nao informado'}</p>
-                    <p><strong>Justificativa:</strong> ${match.justificativa || ''}</p>
+                    <p><strong>${deadlineText}</strong> ${match.call_deadline || notInformedText}</p>
+                    <p><strong>${justificationText}</strong> ${match.justificativa || ''}</p>
 
                     ${pontosFortes ? `
                     <div class="mb-2">
-                        <strong><i class="bi bi-check-circle text-success"></i> Pontos Fortes:</strong>
+                        <strong><i class="bi bi-check-circle text-success"></i> ${strengthsText}</strong>
                         <ul class="small mb-0">${pontosFortes}</ul>
                     </div>
                     ` : ''}
 
                     ${adaptacoes ? `
                     <div class="mb-2">
-                        <strong><i class="bi bi-pencil text-warning"></i> Adaptacoes Necessarias:</strong>
+                        <strong><i class="bi bi-pencil text-warning"></i> ${adaptationsText}</strong>
                         <ul class="small mb-0">${adaptacoes}</ul>
                     </div>
                     ` : ''}
 
                     ${riscos ? `
                     <div class="mb-2">
-                        <strong><i class="bi bi-exclamation-triangle text-danger"></i> Riscos:</strong>
+                        <strong><i class="bi bi-exclamation-triangle text-danger"></i> ${risksText}</strong>
                         <ul class="small mb-0">${riscos}</ul>
                     </div>
                     ` : ''}
 
                     ${match.call_url ? `
                     <a href="${match.call_url}" target="_blank" class="btn btn-outline-primary btn-sm mt-2">
-                        <i class="bi bi-box-arrow-up-right"></i> Ver Edital
+                        <i class="bi bi-box-arrow-up-right"></i> ${viewCallText}
                     </a>
                     ` : ''}
                 </div>

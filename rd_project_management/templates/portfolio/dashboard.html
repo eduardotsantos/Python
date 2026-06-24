@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% block title %}Portfolio - Orion P&D{% endblock %}
+{% block title %}{{ _('Portfolio') }} - Orion P&D{% endblock %}
 
 {% block extra_css %}
 <style>
@@ -18,15 +18,15 @@
 {% block content %}
 <div class="d-flex justify-content-between align-items-center mb-4">
     <div>
-        <h4 class="fw-bold mb-0"><i class="bi bi-pie-chart text-primary"></i> Portfolio</h4>
-        <small class="text-muted">Visao consolidada de todos os projetos</small>
+        <h4 class="fw-bold mb-0"><i class="bi bi-pie-chart text-primary"></i> {{ _('Portfolio') }}</h4>
+        <small class="text-muted">{{ _('Visao consolidada de todos os projetos') }}</small>
     </div>
     <div class="d-flex gap-2">
         <a href="{{ url_for('portfolio.status_report') }}" class="btn btn-success">
-            <i class="bi bi-clipboard-data"></i> Status Report
+            <i class="bi bi-clipboard-data"></i> {{ _('Status Report') }}
         </a>
         <a href="{{ url_for('portfolio.export_portfolio_to_project') }}" class="btn btn-outline-info">
-            <i class="bi bi-download"></i> Exportar MS Project
+            <i class="bi bi-download"></i> {{ _('Exportar MS Project') }}
         </a>
     </div>
 </div>
@@ -39,8 +39,8 @@
                 <div class="d-flex justify-content-between align-items-center">
                     <div>
                         <h3 class="fw-bold mb-0">{{ total_projects }}</h3>
-                        <small class="text-muted">Projetos Totais</small>
-                        <div class="small text-success">{{ active_projects }} ativos</div>
+                        <small class="text-muted">{{ _('Projetos Totais') }}</small>
+                        <div class="small text-success">{{ active_projects }} {{ _('ativos') }}</div>
                     </div>
                     <i class="bi bi-folder-check text-primary opacity-50" style="font-size: 2rem;"></i>
                 </div>
@@ -53,9 +53,9 @@
                 <div class="d-flex justify-content-between align-items-center">
                     <div>
                         <h3 class="fw-bold mb-0">R$ {{ "{:,.0f}".format(total_budget) }}</h3>
-                        <small class="text-muted">Orçamento Total</small>
+                        <small class="text-muted">{{ _('Orcamento Total') }}</small>
                         <div class="small text-{{ 'danger' if budget_percent > 100 else 'warning' if budget_percent > 85 else 'success' }}">
-                            {{ budget_percent }}% utilizado
+                            {{ budget_percent }}% {{ _('utilizado') }}
                         </div>
                     </div>
                     <i class="bi bi-cash-stack text-success opacity-50" style="font-size: 2rem;"></i>
@@ -69,7 +69,7 @@
                 <div class="d-flex justify-content-between align-items-center">
                     <div>
                         <h3 class="fw-bold mb-0">{{ overall_progress }}%</h3>
-                        <small class="text-muted">Progresso Geral</small>
+                        <small class="text-muted">{{ _('Progresso Geral') }}</small>
                         <div class="progress mt-2" style="height: 6px; width: 80px;">
                             <div class="progress-bar" style="width: {{ overall_progress }}%"></div>
                         </div>
@@ -85,8 +85,8 @@
                 <div class="d-flex justify-content-between align-items-center">
                     <div>
                         <h3 class="fw-bold mb-0 text-{{ 'danger' if delayed_count > 0 else 'success' }}">{{ delayed_count }}</h3>
-                        <small class="text-muted">Marcos Atrasados</small>
-                        <div class="small text-muted">{{ total_hours|round(0)|int }}h trabalhadas</div>
+                        <small class="text-muted">{{ _('Marcos Atrasados') }}</small>
+                        <div class="small text-muted">{{ total_hours|round(0)|int }}h {{ _('trabalhadas') }}</div>
                     </div>
                     <i class="bi bi-exclamation-triangle text-{{ 'danger' if delayed_count > 0 else 'success' }} opacity-50" style="font-size: 2rem;"></i>
                 </div>
@@ -100,7 +100,7 @@
     <div class="col-lg-6">
         <div class="card shadow-sm h-100">
             <div class="card-header bg-white">
-                <h6 class="mb-0 fw-bold"><i class="bi bi-pie-chart text-primary"></i> Distribuicao de Custos por Projeto</h6>
+                <h6 class="mb-0 fw-bold"><i class="bi bi-pie-chart text-primary"></i> {{ _('Distribuicao de Custos por Projeto') }}</h6>
             </div>
             <div class="card-body">
                 <canvas id="costPieChart" height="250"></canvas>
@@ -112,7 +112,7 @@
     <div class="col-lg-6">
         <div class="card shadow-sm h-100">
             <div class="card-header bg-white">
-                <h6 class="mb-0 fw-bold"><i class="bi bi-bar-chart text-success"></i> Despesas por Categoria</h6>
+                <h6 class="mb-0 fw-bold"><i class="bi bi-bar-chart text-success"></i> {{ _('Despesas por Categoria') }}</h6>
             </div>
             <div class="card-body">
                 <canvas id="categoryChart" height="250"></canvas>
@@ -127,8 +127,8 @@
     <div class="col-lg-4">
         <div class="card shadow-sm h-100">
             <div class="card-header bg-white d-flex justify-content-between align-items-center">
-                <h6 class="mb-0 fw-bold"><i class="bi bi-graph-up-arrow text-success"></i> Distribuicao TRL</h6>
-                <span class="badge bg-success fs-6">Media: {{ avg_trl }}</span>
+                <h6 class="mb-0 fw-bold"><i class="bi bi-graph-up-arrow text-success"></i> {{ _('Distribuicao TRL') }}</h6>
+                <span class="badge bg-success fs-6">{{ _('Media') }}: {{ avg_trl }}</span>
             </div>
             <div class="card-body">
                 <canvas id="trlChart" height="200"></canvas>
@@ -140,7 +140,7 @@
     <div class="col-lg-4">
         <div class="card shadow-sm h-100">
             <div class="card-header bg-white">
-                <h6 class="mb-0 fw-bold"><i class="bi bi-lightbulb text-warning"></i> Tipo de Inovacao</h6>
+                <h6 class="mb-0 fw-bold"><i class="bi bi-lightbulb text-warning"></i> {{ _('Tipo de Inovacao') }}</h6>
             </div>
             <div class="card-body">
                 <canvas id="innovationTypeChart" height="200"></canvas>
@@ -152,7 +152,7 @@
     <div class="col-lg-4">
         <div class="card shadow-sm h-100">
             <div class="card-header bg-white">
-                <h6 class="mb-0 fw-bold"><i class="bi bi-bullseye text-primary"></i> Escopo de Inovacao</h6>
+                <h6 class="mb-0 fw-bold"><i class="bi bi-bullseye text-primary"></i> {{ _('Escopo de Inovacao') }}</h6>
             </div>
             <div class="card-body">
                 <canvas id="innovationScopeChart" height="200"></canvas>
@@ -164,7 +164,7 @@
 <!-- TRL Details Table -->
 <div class="card shadow-sm mt-4">
     <div class="card-header bg-white">
-        <h6 class="mb-0 fw-bold"><i class="bi bi-list-check text-success"></i> Projetos por Nivel TRL</h6>
+        <h6 class="mb-0 fw-bold"><i class="bi bi-list-check text-success"></i> {{ _('Projetos por Nivel TRL') }}</h6>
     </div>
     <div class="card-body">
         <div class="row">
@@ -184,10 +184,10 @@
                             </div>
                             {% endfor %}
                             {% if projects_by_trl.get(trl, [])|length > 5 %}
-                            <small class="text-muted">+{{ projects_by_trl.get(trl, [])|length - 5 }} mais...</small>
+                            <small class="text-muted">+{{ projects_by_trl.get(trl, [])|length - 5 }} {{ _('mais...') }}</small>
                             {% endif %}
                         {% else %}
-                        <small class="text-muted">Nenhum projeto</small>
+                        <small class="text-muted">{{ _('Nenhum projeto') }}</small>
                         {% endif %}
                     </div>
                 </div>
@@ -200,7 +200,7 @@
 <!-- Gantt Chart -->
 <div class="card shadow-sm mt-4">
     <div class="card-header bg-white">
-        <h6 class="mb-0 fw-bold"><i class="bi bi-calendar-range text-info"></i> Timeline dos Marcos</h6>
+        <h6 class="mb-0 fw-bold"><i class="bi bi-calendar-range text-info"></i> {{ _('Timeline dos Marcos') }}</h6>
     </div>
     <div class="card-body">
         <div id="ganttChart" style="height: 400px; overflow-x: auto;"></div>
@@ -212,7 +212,7 @@
     <div class="col-lg-6">
         <div class="card shadow-sm">
             <div class="card-header bg-white">
-                <h6 class="mb-0 fw-bold"><i class="bi bi-diagram-3"></i> Projetos por Status</h6>
+                <h6 class="mb-0 fw-bold"><i class="bi bi-diagram-3"></i> {{ _('Projetos por Status') }}</h6>
             </div>
             <div class="card-body">
                 <canvas id="statusChart" height="200"></canvas>
@@ -222,7 +222,7 @@
     <div class="col-lg-6">
         <div class="card shadow-sm">
             <div class="card-header bg-white">
-                <h6 class="mb-0 fw-bold"><i class="bi bi-collection"></i> Programas</h6>
+                <h6 class="mb-0 fw-bold"><i class="bi bi-collection"></i> {{ _('Programas') }}</h6>
             </div>
             <div class="card-body p-0">
                 {% if programs %}
@@ -231,7 +231,7 @@
                     <li class="list-group-item d-flex justify-content-between align-items-center">
                         <div>
                             <strong>{{ p.code }}</strong> - {{ p.name|truncate(30) }}
-                            <br><small class="text-muted">{{ p.projects.count() }} projetos</small>
+                            <br><small class="text-muted">{{ p.projects.count() }} {{ _('projetos') }}</small>
                         </div>
                         <a href="{{ url_for('programs.view_program', program_id=p.id) }}" class="btn btn-sm btn-outline-primary">
                             <i class="bi bi-eye"></i>
@@ -241,8 +241,8 @@
                 </ul>
                 {% else %}
                 <div class="text-center py-4 text-muted">
-                    <p class="mb-0">Nenhum programa criado</p>
-                    <a href="{{ url_for('programs.create_program') }}" class="btn btn-sm btn-primary mt-2">Criar Programa</a>
+                    <p class="mb-0">{{ _('Nenhum programa criado') }}</p>
+                    <a href="{{ url_for('programs.create_program') }}" class="btn btn-sm btn-primary mt-2">{{ _('Criar Programa') }}</a>
                 </div>
                 {% endif %}
             </div>
@@ -281,7 +281,7 @@ const categoryData = {{ expenses_by_category|tojson }};
 new Chart(document.getElementById('categoryChart'), {
     type: 'bar',
     data: {
-        labels: categoryData.map(d => d[0] || 'Outros'),
+        labels: categoryData.map(d => d[0] || '{{ _("Outros") }}'),
         datasets: [{
             label: 'R$',
             data: categoryData.map(d => d[1]),
@@ -325,7 +325,7 @@ new Chart(document.getElementById('trlChart'), {
     data: {
         labels: trlLabels,
         datasets: [{
-            label: 'Projetos',
+            label: '{{ _("Projetos") }}',
             data: trlValues,
             backgroundColor: [
                 '#17a2b8', '#17a2b8', '#17a2b8',  // TRL 1-3: Research (blue)
@@ -388,7 +388,7 @@ if (ganttData.length > 0) {
     const maxDate = new Date(Math.max(...dates.map(d => d.getTime())));
 
     let html = '<table class="table table-sm table-bordered" style="font-size: 0.85rem;">';
-    html += '<thead><tr><th style="width: 200px;">Marco</th><th style="width: 100px;">Projeto</th><th style="width: 80px;">Data</th><th>Progresso</th></tr></thead>';
+    html += '<thead><tr><th style="width: 200px;">{{ _("Marco") }}</th><th style="width: 100px;">{{ _("Projeto") }}</th><th style="width: 80px;">{{ _("Data") }}</th><th>{{ _("Progresso") }}</th></tr></thead>';
     html += '<tbody>';
 
     ganttData.slice(0, 20).forEach(m => {
@@ -415,7 +415,7 @@ if (ganttData.length > 0) {
     html += '</tbody></table>';
     ganttContainer.innerHTML = html;
 } else {
-    ganttContainer.innerHTML = '<div class="text-center py-5 text-muted">Nenhum marco cadastrado</div>';
+    ganttContainer.innerHTML = '<div class="text-center py-5 text-muted">{{ _("Nenhum marco cadastrado") }}</div>';
 }
 </script>
 {% endblock %}

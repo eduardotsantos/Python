@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% block title %}Chat IA - Gestão P&D{% endblock %}
+{% block title %}{{ _('Chat IA - Gestao P&D') }}{% endblock %}
 
 {% block extra_css %}
 <style>
@@ -70,41 +70,39 @@
     <div class="d-flex justify-content-between align-items-center mb-3">
         <div>
             <a href="{{ url_for('ai.ai_dashboard') }}" class="btn btn-outline-secondary btn-sm">
-                <i class="bi bi-arrow-left"></i> Voltar
+                <i class="bi bi-arrow-left"></i> {{ _('Voltar') }}
             </a>
-            <span class="ms-2 fs-5"><i class="bi bi-chat-dots"></i> Assistente de Chat</span>
+            <span class="ms-2 fs-5"><i class="bi bi-chat-dots"></i> {{ _('Assistente de Chat') }}</span>
         </div>
         <button class="btn btn-outline-danger btn-sm" onclick="clearChat()">
-            <i class="bi bi-trash"></i> Limpar Historico
+            <i class="bi bi-trash"></i> {{ _('Limpar Historico') }}
         </button>
     </div>
 
     {% if not ai_configured %}
     <div class="alert alert-warning">
         <i class="bi bi-exclamation-triangle"></i>
-        <strong>API de IA nao configurada.</strong>
-        Configure a variavel de ambiente <code>ANTHROPIC_API_KEY</code>.
+        <strong>{{ _('API de IA nao configurada.') }}</strong>
+        {{ _('Configure a variavel de ambiente') }} <code>ANTHROPIC_API_KEY</code>.
     </div>
     {% else %}
     <div class="card">
         <div class="card-body chat-container">
             <div class="chat-messages" id="chatMessages">
                 <div class="message message-assistant">
-                    <strong><i class="bi bi-robot"></i> Assistente</strong><br>
-                    Olá! Sou seu assistente de IA para gestão de projetos de P&D.
-                    Como posso ajudar hoje? Posso responder perguntas sobre seus projetos,
-                    despesas, prazos e muito mais.
+                    <strong><i class="bi bi-robot"></i> {{ _('Assistente') }}</strong><br>
+                    {{ _('Ola! Sou seu assistente de IA para gestao de projetos de P&D. Como posso ajudar hoje? Posso responder perguntas sobre seus projetos, despesas, prazos e muito mais.') }}
                 </div>
             </div>
             <div class="typing-indicator" id="typingIndicator">
-                <span></span><span></span><span></span> Pensando...
+                <span></span><span></span><span></span> {{ _('Pensando...') }}
             </div>
             <form id="chatForm" class="mt-3">
                 <div class="input-group">
                     <input type="text" class="form-control" id="messageInput"
-                           placeholder="Digite sua mensagem..." autocomplete="off">
+                           placeholder="{{ _('Digite sua mensagem...') }}" autocomplete="off">
                     <button type="submit" class="btn btn-primary" id="sendBtn">
-                        <i class="bi bi-send"></i> Enviar
+                        <i class="bi bi-send"></i> {{ _('Enviar') }}
                     </button>
                 </div>
             </form>
@@ -113,15 +111,15 @@
 
     <div class="mt-3">
         <small class="text-muted">
-            <strong>Sugestoes:</strong>
+            <strong>{{ _('Sugestoes:') }}</strong>
             <button class="btn btn-outline-secondary btn-sm ms-2" onclick="sendSuggestion('Quais projetos estao em andamento?')">
-                Projetos em andamento
+                {{ _('Projetos em andamento') }}
             </button>
             <button class="btn btn-outline-secondary btn-sm" onclick="sendSuggestion('Quanto gastamos este mes?')">
-                Gastos do mes
+                {{ _('Gastos do mes') }}
             </button>
             <button class="btn btn-outline-secondary btn-sm" onclick="sendSuggestion('Quais projetos tem prazo proximo?')">
-                Prazos proximos
+                {{ _('Prazos proximos') }}
             </button>
         </small>
     </div>
@@ -138,6 +136,13 @@ const messageInput = document.getElementById('messageInput');
 const typingIndicator = document.getElementById('typingIndicator');
 const sendBtn = document.getElementById('sendBtn');
 
+const assistantLabel = '{{ _("Assistente") }}';
+const historyCleared = '{{ _("Historico limpo. Como posso ajudar?") }}';
+const errorPrefix = '{{ _("Erro:") }}';
+const connectionError = '{{ _("Erro de conexao:") }}';
+const clearConfirm = '{{ _("Limpar todo o historico do chat?") }}';
+const clearError = '{{ _("Erro ao limpar historico") }}';
+
 function addMessage(content, isUser) {
     const div = document.createElement('div');
     div.className = `message ${isUser ? 'message-user' : 'message-assistant'}`;
@@ -145,7 +150,7 @@ function addMessage(content, isUser) {
     if (isUser) {
         div.textContent = content;
     } else {
-        div.innerHTML = `<strong><i class="bi bi-robot"></i> Assistente</strong><br>${marked.parse(content)}`;
+        div.innerHTML = `<strong><i class="bi bi-robot"></i> ${assistantLabel}</strong><br>${marked.parse(content)}`;
     }
 
     chatMessages.appendChild(div);
@@ -175,12 +180,12 @@ async function sendMessage(message) {
         const data = await response.json();
 
         if (data.error) {
-            addMessage(`Erro: ${data.error}`, false);
+            addMessage(`${errorPrefix} ${data.error}`, false);
         } else {
             addMessage(data.response, false);
         }
     } catch (error) {
-        addMessage(`Erro de conexao: ${error.message}`, false);
+        addMessage(`${connectionError} ${error.message}`, false);
     } finally {
         setLoading(false);
         messageInput.focus();
@@ -197,18 +202,18 @@ function sendSuggestion(text) {
 }
 
 async function clearChat() {
-    if (!confirm('Limpar todo o historico do chat?')) return;
+    if (!confirm(clearConfirm)) return;
 
     try {
         await fetch('{{ url_for("ai.clear_chat") }}', { method: 'POST' });
         chatMessages.innerHTML = `
             <div class="message message-assistant">
-                <strong><i class="bi bi-robot"></i> Assistente</strong><br>
-                Historico limpo. Como posso ajudar?
+                <strong><i class="bi bi-robot"></i> ${assistantLabel}</strong><br>
+                ${historyCleared}
             </div>
         `;
     } catch (error) {
-        alert('Erro ao limpar historico');
+        alert(clearError);
     }
 }
 

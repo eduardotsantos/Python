@@ -46,11 +46,11 @@
     </div>
     <div class="btn-group">
         <a href="{{ url_for('meeting_minutes.edit_minutes', project_id=project.id, minutes_id=minutes.id) }}" class="btn btn-outline-primary">
-            <i class="bi bi-pencil"></i> Editar
+            <i class="bi bi-pencil"></i> {{ _('Editar') }}
         </a>
         {% if minutes.generated_minutes %}
         <a href="{{ url_for('meeting_minutes.print_minutes', project_id=project.id, minutes_id=minutes.id) }}" class="btn btn-success" target="_blank">
-            <i class="bi bi-file-earmark-pdf"></i> Exportar PDF
+            <i class="bi bi-file-earmark-pdf"></i> {{ _('Exportar PDF') }}
         </a>
         {% endif %}
     </div>
@@ -61,21 +61,21 @@
         <!-- Info Card -->
         <div class="card shadow-sm mb-4">
             <div class="card-header bg-white">
-                <h6 class="mb-0 fw-bold"><i class="bi bi-info-circle"></i> Informações</h6>
+                <h6 class="mb-0 fw-bold"><i class="bi bi-info-circle"></i> {{ _('Informações') }}</h6>
             </div>
             <div class="card-body">
                 <div class="mb-3">
-                    <small class="text-muted d-block">Status</small>
+                    <small class="text-muted d-block">{{ _('Status') }}</small>
                     {% if minutes.status == 'Finalizada' %}
-                        <span class="badge bg-success">Finalizada</span>
+                        <span class="badge bg-success">{{ _('Finalizada') }}</span>
                     {% elif minutes.status == 'Gerada' %}
-                        <span class="badge bg-info">Gerada</span>
+                        <span class="badge bg-info">{{ _('Gerada') }}</span>
                     {% else %}
-                        <span class="badge bg-warning text-dark">Rascunho</span>
+                        <span class="badge bg-warning text-dark">{{ _('Rascunho') }}</span>
                     {% endif %}
                 </div>
                 <div class="mb-3">
-                    <small class="text-muted d-block">Data</small>
+                    <small class="text-muted d-block">{{ _('Data') }}</small>
                     <strong>{{ minutes.meeting_date.strftime('%d/%m/%Y') }}</strong>
                     {% if minutes.meeting_time %}
                     <span class="text-muted">às {{ minutes.meeting_time }}</span>
@@ -83,24 +83,24 @@
                 </div>
                 {% if minutes.location %}
                 <div class="mb-3">
-                    <small class="text-muted d-block">Local</small>
+                    <small class="text-muted d-block">{{ _('Local') }}</small>
                     <strong>{{ minutes.location }}</strong>
                 </div>
                 {% endif %}
                 {% if minutes.participants %}
                 <div class="mb-3">
-                    <small class="text-muted d-block">Participantes</small>
+                    <small class="text-muted d-block">{{ _('Participantes') }}</small>
                     <strong>{{ minutes.participants }}</strong>
                 </div>
                 {% endif %}
                 {% if minutes.attachment_filename %}
                 <div class="mb-3">
-                    <small class="text-muted d-block">Anexo</small>
+                    <small class="text-muted d-block">{{ _('Anexo') }}</small>
                     <i class="bi bi-paperclip"></i> {{ minutes.attachment_filename }}
                 </div>
                 {% endif %}
                 <div>
-                    <small class="text-muted d-block">Criado por</small>
+                    <small class="text-muted d-block">{{ _('Criado por') }}</small>
                     <strong>{{ minutes.created_by.full_name if minutes.created_by else '-' }}</strong>
                     <br><small class="text-muted">{{ minutes.created_at.strftime('%d/%m/%Y %H:%M') }}</small>
                 </div>
@@ -112,10 +112,10 @@
         <div class="card shadow-sm border-primary mb-4">
             <div class="card-body text-center">
                 <i class="bi bi-robot fs-1 text-primary"></i>
-                <h6 class="mt-2 fw-bold">Gerar Ata com IA</h6>
-                <p class="small text-muted">A IA irá criar uma ata formal baseada na transcrição</p>
+                <h6 class="mt-2 fw-bold">{{ _('Gerar Ata com IA') }}</h6>
+                <p class="small text-muted">{{ _('A IA irá criar uma ata formal baseada na transcrição') }}</p>
                 <button id="btnGenerate" class="btn btn-primary w-100" onclick="generateMinutes()">
-                    <i class="bi bi-magic"></i> Gerar Ata
+                    <i class="bi bi-magic"></i> {{ _('Gerar Ata') }}
                 </button>
             </div>
         </div>
@@ -125,7 +125,7 @@
         {% if minutes.transcription %}
         <div class="card shadow-sm">
             <div class="card-header bg-white">
-                <h6 class="mb-0 fw-bold"><i class="bi bi-chat-quote"></i> Transcrição</h6>
+                <h6 class="mb-0 fw-bold"><i class="bi bi-chat-quote"></i> {{ _('Transcrição') }}</h6>
             </div>
             <div class="card-body">
                 <div style="max-height: 300px; overflow-y: auto;">
@@ -140,19 +140,19 @@
         <!-- Generated Minutes -->
         <div class="card shadow-sm">
             <div class="card-header bg-white d-flex justify-content-between align-items-center">
-                <h6 class="mb-0 fw-bold"><i class="bi bi-journal-text"></i> Ata de Reunião</h6>
+                <h6 class="mb-0 fw-bold"><i class="bi bi-journal-text"></i> {{ _('Ata de Reunião') }}</h6>
                 {% if minutes.generated_minutes %}
                 <button class="btn btn-sm btn-outline-primary" onclick="toggleEdit()">
-                    <i class="bi bi-pencil"></i> Editar
+                    <i class="bi bi-pencil"></i> {{ _('Editar') }}
                 </button>
                 {% endif %}
             </div>
             <div class="card-body">
                 <div id="generatingSpinner" class="generating d-none">
                     <div class="spinner-border text-primary" role="status">
-                        <span class="visually-hidden">Gerando...</span>
+                        <span class="visually-hidden">{{ _('Gerando...') }}</span>
                     </div>
-                    <p class="mt-3 text-muted">Gerando ata com inteligência artificial...</p>
+                    <p class="mt-3 text-muted">{{ _('Gerando ata com inteligência artificial...') }}</p>
                 </div>
 
                 <div id="minutesView">
@@ -163,13 +163,13 @@
                     {% else %}
                     <div class="text-center py-5 text-muted">
                         <i class="bi bi-journal-text fs-1"></i>
-                        <h5 class="mt-3">Ata não gerada</h5>
+                        <h5 class="mt-3">{{ _('Ata não gerada') }}</h5>
                         {% if minutes.transcription %}
                         <p>Clique em "Gerar Ata" para criar a ata automaticamente</p>
                         {% else %}
                         <p>Adicione uma transcrição ou anotações para gerar a ata</p>
                         <a href="{{ url_for('meeting_minutes.edit_minutes', project_id=project.id, minutes_id=minutes.id) }}" class="btn btn-primary">
-                            <i class="bi bi-pencil"></i> Adicionar Transcrição
+                            <i class="bi bi-pencil"></i> {{ _('Adicionar Transcrição') }}
                         </a>
                         {% endif %}
                     </div>
@@ -180,10 +180,10 @@
                     <textarea id="minutesTextarea" class="form-control" rows="20" style="font-family: monospace;">{{ minutes.generated_minutes if minutes.generated_minutes else '' }}</textarea>
                     <div class="mt-3 d-flex gap-2">
                         <button class="btn btn-primary" onclick="saveMinutes()">
-                            <i class="bi bi-check-lg"></i> Salvar
+                            <i class="bi bi-check-lg"></i> {{ _('Salvar') }}
                         </button>
                         <button class="btn btn-outline-secondary" onclick="toggleEdit()">
-                            Cancelar
+                            {{ _('Cancelar') }}
                         </button>
                     </div>
                 </div>

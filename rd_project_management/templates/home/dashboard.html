@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% block title %}Home - Orion P&D{% endblock %}
+{% block title %}{{ _('Home') }} - Orion P&D{% endblock %}
 
 {% block content %}
 <div class="container-fluid">
@@ -17,16 +17,16 @@
                             <p class="mb-0 opacity-75">
                                 <i class="bi bi-calendar3 me-1"></i>
                                 <span id="currentDate"></span> -
-                                Bem-vindo, {{ current_user.full_name }}
+                                {{ _('Bem-vindo') }}, {{ current_user.full_name }}
                             </p>
                         </div>
                         <div class="col-md-4 text-md-end mt-3 mt-md-0">
                             {% if ai_configured %}
                             <a href="{{ url_for('ai.chat_page') }}" class="btn btn-light me-2">
-                                <i class="bi bi-chat-dots"></i> Chat IA
+                                <i class="bi bi-chat-dots"></i> {{ _('Chat IA') }}
                             </a>
                             <button class="btn btn-light" onclick="generateInsights()">
-                                <i class="bi bi-lightbulb"></i> Gerar Insights IA
+                                <i class="bi bi-lightbulb"></i> {{ _('Gerar Insights IA') }}
                             </button>
                             {% endif %}
                         </div>
@@ -43,9 +43,9 @@
                 <div class="card-body">
                     <div class="d-flex justify-content-between align-items-center">
                         <div>
-                            <p class="text-muted mb-1 small">Projetos Ativos</p>
+                            <p class="text-muted mb-1 small">{{ _('Projetos Ativos') }}</p>
                             <h3 class="fw-bold mb-0">{{ active_projects }}</h3>
-                            <small class="text-muted">de {{ total_projects }} total</small>
+                            <small class="text-muted">{{ _('de') }} {{ total_projects }} {{ _('total') }}</small>
                         </div>
                         <i class="bi bi-folder-check text-primary opacity-50" style="font-size:2.5rem"></i>
                     </div>
@@ -57,7 +57,7 @@
                 <div class="card-body">
                     <div class="d-flex justify-content-between align-items-center">
                         <div>
-                            <p class="text-muted mb-1 small">Orçamento Total</p>
+                            <p class="text-muted mb-1 small">{{ _('Orçamento Total') }}</p>
                             <h3 class="fw-bold mb-0">{{ "R$ {:,.0f}".format(total_budget).replace(",", ".") }}</h3>
                         </div>
                         <i class="bi bi-cash-stack text-success opacity-50" style="font-size:2.5rem"></i>
@@ -70,7 +70,7 @@
                 <div class="card-body">
                     <div class="d-flex justify-content-between align-items-center">
                         <div>
-                            <p class="text-muted mb-1 small">Despesas</p>
+                            <p class="text-muted mb-1 small">{{ _('Despesas') }}</p>
                             <h3 class="fw-bold mb-0">{{ "R$ {:,.0f}".format(total_expenses).replace(",", ".") }}</h3>
                         </div>
                         <i class="bi bi-receipt text-danger opacity-50" style="font-size:2.5rem"></i>
@@ -83,9 +83,9 @@
                 <div class="card-body">
                     <div class="d-flex justify-content-between align-items-center">
                         <div>
-                            <p class="text-muted mb-1 small">Chamadas Abertas</p>
+                            <p class="text-muted mb-1 small">{{ _('Chamadas Abertas') }}</p>
                             <h3 class="fw-bold mb-0">{{ open_calls_count }}</h3>
-                            <a href="{{ url_for('public_calls.list_calls') }}" class="small text-primary">Ver todas</a>
+                            <a href="{{ url_for('public_calls.list_calls') }}" class="small text-primary">{{ _('Ver todas') }}</a>
                         </div>
                         <i class="bi bi-megaphone text-warning opacity-50" style="font-size:2.5rem"></i>
                     </div>
@@ -99,13 +99,13 @@
         <div class="col-12">
             <div class="card border-info shadow-sm">
                 <div class="card-header bg-info text-white d-flex justify-content-between align-items-center">
-                    <span><i class="bi bi-lightbulb"></i> Insights de IA para seu setor de P&D</span>
+                    <span><i class="bi bi-lightbulb"></i> {{ _('Insights de IA para seu setor de P&D') }}</span>
                     <button type="button" class="btn-close btn-close-white" onclick="hideInsights()"></button>
                 </div>
                 <div class="card-body" id="insightsContent">
                     <div class="text-center py-4">
                         <div class="spinner-border text-info"></div>
-                        <p class="mt-2">Analisando dados e gerando insights...</p>
+                        <p class="mt-2">{{ _('Analisando dados e gerando insights...') }}</p>
                     </div>
                 </div>
             </div>
@@ -118,8 +118,8 @@
             <!-- Cost Distribution Chart -->
             <div class="card shadow-sm mb-4">
                 <div class="card-header bg-white d-flex justify-content-between align-items-center">
-                    <h6 class="mb-0 fw-bold"><i class="bi bi-pie-chart text-primary"></i> Distribuicao de Custos por Projeto</h6>
-                    <a href="{{ url_for('projects.list_projects') }}" class="btn btn-sm btn-outline-primary">Ver Projetos</a>
+                    <h6 class="mb-0 fw-bold"><i class="bi bi-pie-chart text-primary"></i> {{ _('Distribuição de Custos por Projeto') }}</h6>
+                    <a href="{{ url_for('projects.list_projects') }}" class="btn btn-sm btn-outline-primary">{{ _('Ver Projetos') }}</a>
                 </div>
                 <div class="card-body">
                     {% if expenses_by_project %}
@@ -127,7 +127,7 @@
                     {% else %}
                     <div class="text-center py-4 text-muted">
                         <i class="bi bi-pie-chart" style="font-size: 2rem;"></i>
-                        <p class="mt-2 mb-0">Nenhuma despesa registrada</p>
+                        <p class="mt-2 mb-0">{{ _('Nenhuma despesa registrada') }}</p>
                     </div>
                     {% endif %}
                 </div>
@@ -136,8 +136,8 @@
             <!-- Gantt Chart -->
             <div class="card shadow-sm">
                 <div class="card-header bg-white d-flex justify-content-between align-items-center">
-                    <h6 class="mb-0 fw-bold"><i class="bi bi-calendar-range text-info"></i> Timeline de Marcos</h6>
-                    <a href="{{ url_for('projects.list_projects') }}" class="btn btn-sm btn-outline-primary">Ver Projetos</a>
+                    <h6 class="mb-0 fw-bold"><i class="bi bi-calendar-range text-info"></i> {{ _('Timeline de Marcos') }}</h6>
+                    <a href="{{ url_for('projects.list_projects') }}" class="btn btn-sm btn-outline-primary">{{ _('Ver Projetos') }}</a>
                 </div>
                 <div class="card-body p-0">
                     {% if gantt_data %}
@@ -145,10 +145,10 @@
                         <table class="table table-sm table-hover mb-0">
                             <thead class="table-light sticky-top">
                                 <tr>
-                                    <th>Marco</th>
-                                    <th>Projeto</th>
-                                    <th class="text-center">Prazo</th>
-                                    <th style="width: 150px;">Progresso</th>
+                                    <th>{{ _('Marco') }}</th>
+                                    <th>{{ _('Projeto') }}</th>
+                                    <th class="text-center">{{ _('Prazo') }}</th>
+                                    <th style="width: 150px;">{{ _('Progresso') }}</th>
                                 </tr>
                             </thead>
                             <tbody id="ganttBody"></tbody>
@@ -157,7 +157,7 @@
                     {% else %}
                     <div class="text-center py-4 text-muted">
                         <i class="bi bi-calendar-x" style="font-size: 2rem;"></i>
-                        <p class="mt-2 mb-0">Nenhum marco cadastrado</p>
+                        <p class="mt-2 mb-0">{{ _('Nenhum marco cadastrado') }}</p>
                     </div>
                     {% endif %}
                 </div>
@@ -169,7 +169,7 @@
             <!-- Recent News from Entities -->
             <div class="card shadow-sm mb-4">
                 <div class="card-header bg-white">
-                    <h6 class="mb-0 fw-bold"><i class="bi bi-newspaper text-success"></i> Noticias de Editais</h6>
+                    <h6 class="mb-0 fw-bold"><i class="bi bi-newspaper text-success"></i> {{ _('Notícias de Editais') }}</h6>
                 </div>
                 <div class="card-body p-0">
                     {% if recent_calls %}
@@ -189,13 +189,13 @@
                     </ul>
                     {% else %}
                     <div class="text-center py-3 text-muted">
-                        <small>Nenhuma chamada recente</small>
+                        <small>{{ _('Nenhuma chamada recente') }}</small>
                     </div>
                     {% endif %}
                 </div>
                 <div class="card-footer bg-white text-center">
                     <a href="{{ url_for('public_calls.list_calls') }}" class="btn btn-sm btn-outline-success">
-                        <i class="bi bi-megaphone"></i> Ver Todas
+                        <i class="bi bi-megaphone"></i> {{ _('Ver Todas') }}
                     </a>
                 </div>
             </div>
@@ -203,7 +203,7 @@
             <!-- Upcoming Milestones -->
             <div class="card shadow-sm mb-4">
                 <div class="card-header bg-white">
-                    <h6 class="mb-0 fw-bold"><i class="bi bi-flag text-warning"></i> Proximos Marcos</h6>
+                    <h6 class="mb-0 fw-bold"><i class="bi bi-flag text-warning"></i> {{ _('Próximos Marcos') }}</h6>
                 </div>
                 <div class="card-body p-0">
                     {% if upcoming_milestones %}
@@ -226,7 +226,7 @@
                     {% else %}
                     <div class="text-center py-3 text-success">
                         <i class="bi bi-check-circle"></i>
-                        <small class="d-block text-muted">Nenhum marco proximo</small>
+                        <small class="d-block text-muted">{{ _('Nenhum marco próximo') }}</small>
                     </div>
                     {% endif %}
                 </div>
@@ -236,7 +236,7 @@
             {% if projects_ending_soon %}
             <div class="card shadow-sm mb-4 border-warning">
                 <div class="card-header bg-warning text-dark">
-                    <h6 class="mb-0 fw-bold"><i class="bi bi-exclamation-triangle"></i> Projetos Encerrando</h6>
+                    <h6 class="mb-0 fw-bold"><i class="bi bi-exclamation-triangle"></i> {{ _('Projetos Encerrando') }}</h6>
                 </div>
                 <div class="card-body p-0">
                     <ul class="list-group list-group-flush">
@@ -256,18 +256,18 @@
             <!-- Quick Actions -->
             <div class="card shadow-sm">
                 <div class="card-header bg-white">
-                    <h6 class="mb-0 fw-bold"><i class="bi bi-lightning"></i> Acoes Rapidas</h6>
+                    <h6 class="mb-0 fw-bold"><i class="bi bi-lightning"></i> {{ _('Ações Rápidas') }}</h6>
                 </div>
                 <div class="card-body">
                     <div class="d-grid gap-2">
                         <a href="{{ url_for('projects.create_project') }}" class="btn btn-outline-primary btn-sm">
-                            <i class="bi bi-plus-lg"></i> Novo Projeto
+                            <i class="bi bi-plus-lg"></i> {{ _('Novo Projeto') }}
                         </a>
                         <a href="{{ url_for('public_calls.list_calls') }}" class="btn btn-outline-success btn-sm">
-                            <i class="bi bi-megaphone"></i> Ver Chamadas
+                            <i class="bi bi-megaphone"></i> {{ _('Ver Chamadas') }}
                         </a>
                         <a href="{{ url_for('ai.ai_dashboard') }}" class="btn btn-outline-info btn-sm">
-                            <i class="bi bi-robot"></i> Assistente IA
+                            <i class="bi bi-robot"></i> {{ _('Assistente IA') }}
                         </a>
                     </div>
                 </div>
@@ -351,7 +351,7 @@ function generateInsights() {
     content.innerHTML = `
         <div class="text-center py-4">
             <div class="spinner-border text-info"></div>
-            <p class="mt-2">Analisando dados e gerando insights...</p>
+            <p class="mt-2">{{ _('Analisando dados e gerando insights...') }}</p>
         </div>
     `;
 

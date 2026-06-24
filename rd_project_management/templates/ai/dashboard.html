@@ -1,17 +1,17 @@
 {% extends "base.html" %}
-{% block title %}Assistente de IA - Gestão P&D{% endblock %}
+{% block title %}{{ _('Assistente de IA - Gestao P&D') }}{% endblock %}
 
 {% block content %}
 <div class="container-fluid">
     <div class="d-flex justify-content-between align-items-center mb-4">
-        <h2><i class="bi bi-robot"></i> Assistente de IA</h2>
+        <h2><i class="bi bi-robot"></i> {{ _('Assistente de IA') }}</h2>
     </div>
 
     {% if not ai_configured %}
     <div class="alert alert-warning">
         <i class="bi bi-exclamation-triangle"></i>
-        <strong>API de IA nao configurada.</strong>
-        Configure a variavel de ambiente <code>ANTHROPIC_API_KEY</code> para habilitar as funcionalidades de IA.
+        <strong>{{ _('API de IA nao configurada.') }}</strong>
+        {{ _('Configure a variavel de ambiente') }} <code>ANTHROPIC_API_KEY</code> {{ _('para habilitar as funcionalidades de IA.') }}
     </div>
     {% endif %}
 
@@ -23,15 +23,15 @@
                     <div class="d-flex align-items-center mb-3">
                         <i class="bi bi-chat-dots fs-1 text-primary me-3"></i>
                         <div>
-                            <h5 class="card-title mb-0">Assistente de Chat</h5>
-                            <small class="text-muted">Converse com a IA sobre seus projetos</small>
+                            <h5 class="card-title mb-0">{{ _('Assistente de Chat') }}</h5>
+                            <small class="text-muted">{{ _('Converse com a IA sobre seus projetos') }}</small>
                         </div>
                     </div>
                     <p class="card-text">
-                        Faca perguntas como: "Quanto gastamos em bolsas?", "Quais projetos vencem em 30 dias?"
+                        {{ _('Faca perguntas como: "Quanto gastamos em bolsas?", "Quais projetos vencem em 30 dias?"') }}
                     </p>
                     <a href="{{ url_for('ai.chat_page') }}" class="btn btn-primary {% if not ai_configured %}disabled{% endif %}">
-                        <i class="bi bi-chat-dots"></i> Iniciar Chat
+                        <i class="bi bi-chat-dots"></i> {{ _('Iniciar Chat') }}
                     </a>
                 </div>
             </div>
@@ -39,13 +39,13 @@
         <div class="col-md-6">
             <div class="card bg-light h-100">
                 <div class="card-body">
-                    <h6><i class="bi bi-lightbulb"></i> Funcionalidades Disponiveis</h6>
+                    <h6><i class="bi bi-lightbulb"></i> {{ _('Funcionalidades Disponiveis') }}</h6>
                     <ul class="mb-0 small">
-                        <li><strong class="text-danger">Análise de Riscos</strong> - Identifique riscos de orçamento e cronograma</li>
-                        <li><strong class="text-success">Geração de Relatórios</strong> - Crie relatórios técnicos automaticamente</li>
-                        <li><strong class="text-warning">Matching Projeto-Edital</strong> - Encontre editais compativeis</li>
-                        <li><strong class="text-info">Análise de Documentos</strong> - Extraia dados de editais em PDF</li>
-                        <li><strong class="text-primary">Geração de Propostas</strong> <span class="badge bg-warning text-dark">PRO</span> - Crie propostas para chamadas públicas</li>
+                        <li><strong class="text-danger">{{ _('Analise de Riscos') }}</strong> - {{ _('Identifique riscos de orcamento e cronograma') }}</li>
+                        <li><strong class="text-success">{{ _('Geracao de Relatorios') }}</strong> - {{ _('Crie relatorios tecnicos automaticamente') }}</li>
+                        <li><strong class="text-warning">{{ _('Matching Projeto-Edital') }}</strong> - {{ _('Encontre editais compativeis') }}</li>
+                        <li><strong class="text-info">{{ _('Analise de Documentos') }}</strong> - {{ _('Extraia dados de editais em PDF') }}</li>
+                        <li><strong class="text-primary">{{ _('Geracao de Propostas') }}</strong> <span class="badge bg-warning text-dark">PRO</span> - {{ _('Crie propostas para chamadas publicas') }}</li>
                     </ul>
                 </div>
             </div>
@@ -58,21 +58,21 @@
             {% if can_generate_proposals %}
             <div class="card border-success">
                 <div class="card-header bg-success text-white">
-                    <h5 class="mb-0"><i class="bi bi-file-earmark-richtext"></i> Geração de Propostas</h5>
+                    <h5 class="mb-0"><i class="bi bi-file-earmark-richtext"></i> {{ _('Geracao de Propostas') }}</h5>
                 </div>
                 <div class="card-body">
-                    <p>Para gerar uma proposta, vincule um projeto a uma chamada publica e clique em "Gerar Proposta".</p>
+                    <p>{{ _('Para gerar uma proposta, vincule um projeto a uma chamada publica e clique em "Gerar Proposta".') }}</p>
                     <div class="row">
                         <div class="col-md-6">
-                            <h6><i class="bi bi-1-circle text-success"></i> Passo 1: Vincular Projeto</h6>
-                            <p class="small text-muted">Acesse uma chamada publica e vincule seu projeto a ela.</p>
+                            <h6><i class="bi bi-1-circle text-success"></i> {{ _('Passo 1: Vincular Projeto') }}</h6>
+                            <p class="small text-muted">{{ _('Acesse uma chamada publica e vincule seu projeto a ela.') }}</p>
                             <a href="{{ url_for('public_calls.list_calls') }}" class="btn btn-outline-success btn-sm">
-                                <i class="bi bi-megaphone"></i> Ver Chamadas Publicas
+                                <i class="bi bi-megaphone"></i> {{ _('Ver Chamadas Publicas') }}
                             </a>
                         </div>
                         <div class="col-md-6">
-                            <h6><i class="bi bi-2-circle text-success"></i> Passo 2: Gerar Proposta</h6>
-                            <p class="small text-muted">Na pagina da chamada, clique em "Gerar Proposta" ao lado do projeto vinculado.</p>
+                            <h6><i class="bi bi-2-circle text-success"></i> {{ _('Passo 2: Gerar Proposta') }}</h6>
+                            <p class="small text-muted">{{ _('Na pagina da chamada, clique em "Gerar Proposta" ao lado do projeto vinculado.') }}</p>
                         </div>
                     </div>
                 </div>
@@ -80,13 +80,13 @@
             {% else %}
             <div class="card border-secondary">
                 <div class="card-header bg-secondary text-white">
-                    <h5 class="mb-0"><i class="bi bi-file-earmark-richtext"></i> Geração de Propostas <span class="badge bg-warning text-dark ms-2">PRO</span></h5>
+                    <h5 class="mb-0"><i class="bi bi-file-earmark-richtext"></i> {{ _('Geracao de Propostas') }} <span class="badge bg-warning text-dark ms-2">PRO</span></h5>
                 </div>
                 <div class="card-body text-center py-4">
                     <i class="bi bi-lock fs-1 text-muted"></i>
-                    <h5 class="mt-3">Recurso exclusivo dos planos Profissional e Enterprise</h5>
-                    <p class="text-muted">Gere propostas completas para chamadas públicas utilizando inteligencia artificial.</p>
-                    <p class="small text-muted mb-0">Entre em contato para fazer upgrade do seu plano.</p>
+                    <h5 class="mt-3">{{ _('Recurso exclusivo dos planos Profissional e Enterprise') }}</h5>
+                    <p class="text-muted">{{ _('Gere propostas completas para chamadas publicas utilizando inteligencia artificial.') }}</p>
+                    <p class="small text-muted mb-0">{{ _('Entre em contato para fazer upgrade do seu plano.') }}</p>
                 </div>
             </div>
             {% endif %}
@@ -96,8 +96,8 @@
     <!-- Projects List with AI Actions -->
     <div class="card">
         <div class="card-header bg-white d-flex justify-content-between align-items-center">
-            <h5 class="mb-0"><i class="bi bi-folder"></i> Selecione um Projeto</h5>
-            <span class="badge bg-secondary">{{ projects|length }} projetos</span>
+            <h5 class="mb-0"><i class="bi bi-folder"></i> {{ _('Selecione um Projeto') }}</h5>
+            <span class="badge bg-secondary">{{ projects|length }} {{ _('projetos') }}</span>
         </div>
         <div class="card-body p-0">
             {% if projects %}
@@ -105,9 +105,9 @@
                 <table class="table table-hover mb-0">
                     <thead class="table-light">
                         <tr>
-                            <th>Projeto</th>
-                            <th>Status</th>
-                            <th class="text-center">Acoes de IA</th>
+                            <th>{{ _('Projeto') }}</th>
+                            <th>{{ _('Status') }}</th>
+                            <th class="text-center">{{ _('Acoes de IA') }}</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -132,22 +132,22 @@
                                 <div class="btn-group btn-group-sm">
                                     <a href="{{ url_for('ai.risks_page', project_id=project.id) }}"
                                        class="btn btn-outline-danger {% if not ai_configured %}disabled{% endif %}"
-                                       title="Análise de Riscos">
+                                       title="{{ _('Analise de Riscos') }}">
                                         <i class="bi bi-shield-exclamation"></i>
                                     </a>
                                     <a href="{{ url_for('ai.report_page', project_id=project.id) }}"
                                        class="btn btn-outline-success {% if not ai_configured %}disabled{% endif %}"
-                                       title="Gerar Relatório">
+                                       title="{{ _('Gerar Relatorio') }}">
                                         <i class="bi bi-file-earmark-text"></i>
                                     </a>
                                     <a href="{{ url_for('ai.matching_page', project_id=project.id) }}"
                                        class="btn btn-outline-warning {% if not ai_configured %}disabled{% endif %}"
-                                       title="Matching com Editais">
+                                       title="{{ _('Matching com Editais') }}">
                                         <i class="bi bi-link-45deg"></i>
                                     </a>
                                     <a href="{{ url_for('ai.project_ai_actions', project_id=project.id) }}"
                                        class="btn btn-outline-info"
-                                       title="Todas as Acoes">
+                                       title="{{ _('Todas as Acoes') }}">
                                         <i class="bi bi-three-dots"></i>
                                     </a>
                                 </div>
@@ -160,9 +160,9 @@
             {% else %}
             <div class="text-center py-5">
                 <i class="bi bi-folder-x fs-1 text-muted"></i>
-                <p class="text-muted mt-2">Nenhum projeto encontrado.</p>
+                <p class="text-muted mt-2">{{ _('Nenhum projeto encontrado.') }}</p>
                 <a href="{{ url_for('projects.create_project') }}" class="btn btn-primary">
-                    <i class="bi bi-plus"></i> Criar Projeto
+                    <i class="bi bi-plus"></i> {{ _('Criar Projeto') }}
                 </a>
             </div>
             {% endif %}
@@ -172,11 +172,11 @@
     <!-- Legend -->
     <div class="mt-3">
         <small class="text-muted">
-            <strong>Legenda:</strong>
-            <span class="ms-2"><i class="bi bi-shield-exclamation text-danger"></i> Riscos</span>
-            <span class="ms-2"><i class="bi bi-file-earmark-text text-success"></i> Relatório</span>
-            <span class="ms-2"><i class="bi bi-link-45deg text-warning"></i> Matching</span>
-            <span class="ms-2"><i class="bi bi-three-dots text-info"></i> Mais opcoes</span>
+            <strong>{{ _('Legenda:') }}</strong>
+            <span class="ms-2"><i class="bi bi-shield-exclamation text-danger"></i> {{ _('Riscos') }}</span>
+            <span class="ms-2"><i class="bi bi-file-earmark-text text-success"></i> {{ _('Relatorio') }}</span>
+            <span class="ms-2"><i class="bi bi-link-45deg text-warning"></i> {{ _('Matching') }}</span>
+            <span class="ms-2"><i class="bi bi-three-dots text-info"></i> {{ _('Mais opcoes') }}</span>
         </small>
     </div>
 </div>

@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% block title %}{{ 'Editar' if expense else 'Nova' }} Despesa - Gestão P&D{% endblock %}
+{% block title %}{{ _('Editar') if expense else _('Nova') }} {{ _('Despesa') }} - {{ _('Gestao P&D') }}{% endblock %}
 
 {% block content %}
 <div class="row justify-content-center">
@@ -8,7 +8,7 @@
             <a href="{{ url_for('expenses.list_expenses', project_id=project.id) }}" class="btn btn-outline-secondary btn-sm me-3">
                 <i class="bi bi-arrow-left"></i>
             </a>
-            <h4 class="fw-bold mb-0">{{ 'Editar' if expense else 'Nova' }} Despesa</h4>
+            <h4 class="fw-bold mb-0">{{ _('Editar') if expense else _('Nova') }} {{ _('Despesa') }}</h4>
         </div>
 
         <div class="card shadow-sm">
@@ -16,57 +16,57 @@
                 <form method="POST">
                     <div class="row g-3">
                         <div class="col-12">
-                            <label for="description" class="form-label">Descrição *</label>
+                            <label for="description" class="form-label">{{ _('Descricao') }} *</label>
                             <input type="text" class="form-control" id="description" name="description"
                                    value="{{ expense.description if expense else '' }}" required>
                         </div>
                         <div class="col-md-6">
-                            <label for="category" class="form-label">Categoria *</label>
+                            <label for="category" class="form-label">{{ _('Categoria') }} *</label>
                             <select class="form-select" id="category" name="category" required>
-                                <option value="">Selecione...</option>
-                                {% for cat in ['Pessoal', 'Equipamento', 'Material', 'Viagem', 'Serviço Terceiro', 'Outros'] %}
-                                <option value="{{ cat }}" {{ 'selected' if expense and expense.category == cat }}>{{ cat }}</option>
+                                <option value="">{{ _('Selecione...') }}</option>
+                                {% for cat in ['Pessoal', 'Equipamento', 'Material', 'Viagem', 'Servico Terceiro', 'Outros'] %}
+                                <option value="{{ cat }}" {{ 'selected' if expense and expense.category == cat }}>{{ _(cat) }}</option>
                                 {% endfor %}
                             </select>
                         </div>
                         <div class="col-md-6">
-                            <label for="amount" class="form-label">Valor (R$) *</label>
+                            <label for="amount" class="form-label">{{ _('Valor') }} (R$) *</label>
                             <input type="number" step="0.01" class="form-control" id="amount" name="amount"
                                    value="{{ expense.amount if expense else '' }}" required data-currency>
                         </div>
                         <div class="col-md-6">
-                            <label for="date" class="form-label">Data *</label>
+                            <label for="date" class="form-label">{{ _('Data') }} *</label>
                             <input type="date" class="form-control" id="date" name="date"
                                    value="{{ expense.date.strftime('%Y-%m-%d') if expense and expense.date else '' }}" required>
                         </div>
                         <div class="col-md-6">
-                            <label for="status" class="form-label">Status</label>
+                            <label for="status" class="form-label">{{ _('Status') }}</label>
                             <select class="form-select" id="status" name="status">
                                 {% for s in ['Pendente', 'Aprovada', 'Rejeitada', 'Paga'] %}
-                                <option value="{{ s }}" {{ 'selected' if expense and expense.status == s }}>{{ s }}</option>
+                                <option value="{{ s }}" {{ 'selected' if expense and expense.status == s }}>{{ _(s) }}</option>
                                 {% endfor %}
                             </select>
                         </div>
                         <div class="col-md-6">
-                            <label for="supplier" class="form-label">Fornecedor</label>
+                            <label for="supplier" class="form-label">{{ _('Fornecedor') }}</label>
                             <input type="text" class="form-control" id="supplier" name="supplier"
                                    value="{{ expense.supplier if expense else '' }}">
                         </div>
                         <div class="col-md-6">
-                            <label for="receipt_number" class="form-label">Nº Nota Fiscal</label>
+                            <label for="receipt_number" class="form-label">{{ _('No Nota Fiscal') }}</label>
                             <input type="text" class="form-control" id="receipt_number" name="receipt_number"
                                    value="{{ expense.receipt_number if expense else '' }}">
                         </div>
                         <div class="col-12">
-                            <label for="notes" class="form-label">Observações</label>
+                            <label for="notes" class="form-label">{{ _('Observacoes') }}</label>
                             <textarea class="form-control" id="notes" name="notes" rows="3">{{ expense.notes if expense else '' }}</textarea>
                         </div>
                     </div>
                     <hr class="my-4">
                     <div class="d-flex justify-content-end gap-2">
-                        <a href="{{ url_for('expenses.list_expenses', project_id=project.id) }}" class="btn btn-outline-secondary">Cancelar</a>
+                        <a href="{{ url_for('expenses.list_expenses', project_id=project.id) }}" class="btn btn-outline-secondary">{{ _('Cancelar') }}</a>
                         <button type="submit" class="btn btn-primary">
-                            <i class="bi bi-check-lg"></i> {{ 'Salvar' if expense else 'Adicionar' }}
+                            <i class="bi bi-check-lg"></i> {{ _('Salvar') if expense else _('Adicionar') }}
                         </button>
                     </div>
                 </form>
@@ -77,7 +77,7 @@
         <!-- Attachments Section -->
         <div class="card shadow-sm mt-4">
             <div class="card-header bg-white">
-                <h5 class="mb-0"><i class="bi bi-paperclip"></i> Anexos</h5>
+                <h5 class="mb-0"><i class="bi bi-paperclip"></i> {{ _('Anexos') }}</h5>
             </div>
             <div class="card-body">
                 {% if expense.attachments %}
@@ -85,11 +85,11 @@
                     <table class="table table-sm">
                         <thead>
                             <tr>
-                                <th>Tipo</th>
-                                <th>Arquivo</th>
-                                <th>Tamanho</th>
-                                <th>Data</th>
-                                <th class="text-end">Ações</th>
+                                <th>{{ _('Tipo') }}</th>
+                                <th>{{ _('Arquivo') }}</th>
+                                <th>{{ _('Tamanho') }}</th>
+                                <th>{{ _('Data') }}</th>
+                                <th class="text-end">{{ _('Acoes') }}</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -97,11 +97,11 @@
                             <tr>
                                 <td>
                                     {% if att.attachment_type == 'boleto' %}
-                                        <span class="badge bg-warning text-dark"><i class="bi bi-upc-scan"></i> Boleto</span>
+                                        <span class="badge bg-warning text-dark"><i class="bi bi-upc-scan"></i> {{ _('Boleto') }}</span>
                                     {% elif att.attachment_type == 'nota_fiscal' %}
-                                        <span class="badge bg-info"><i class="bi bi-receipt"></i> Nota Fiscal</span>
+                                        <span class="badge bg-info"><i class="bi bi-receipt"></i> {{ _('Nota Fiscal') }}</span>
                                     {% else %}
-                                        <span class="badge bg-success"><i class="bi bi-check-circle"></i> Comprovante</span>
+                                        <span class="badge bg-success"><i class="bi bi-check-circle"></i> {{ _('Comprovante') }}</span>
                                     {% endif %}
                                 </td>
                                 <td>
@@ -112,11 +112,11 @@
                                 <td class="text-muted small">{{ att.created_at.strftime('%d/%m/%Y') }}</td>
                                 <td class="text-end">
                                     <a href="{{ url_for('expenses.download_attachment', project_id=project.id, expense_id=expense.id, attachment_id=att.id) }}"
-                                       class="btn btn-sm btn-outline-primary" title="Baixar">
+                                       class="btn btn-sm btn-outline-primary" title="{{ _('Baixar') }}">
                                         <i class="bi bi-download"></i>
                                     </a>
                                     <form method="POST" action="{{ url_for('expenses.delete_attachment', project_id=project.id, expense_id=expense.id, attachment_id=att.id) }}" class="d-inline">
-                                        <button type="submit" class="btn btn-sm btn-outline-danger" title="Excluir" data-confirm="Excluir este anexo?">
+                                        <button type="submit" class="btn btn-sm btn-outline-danger" title="{{ _('Excluir') }}" data-confirm="{{ _('Excluir este anexo?') }}">
                                             <i class="bi bi-trash"></i>
                                         </button>
                                     </form>
@@ -127,27 +127,27 @@
                     </table>
                 </div>
                 {% else %}
-                <p class="text-muted mb-3"><i class="bi bi-info-circle"></i> Nenhum anexo adicionado.</p>
+                <p class="text-muted mb-3"><i class="bi bi-info-circle"></i> {{ _('Nenhum anexo adicionado.') }}</p>
                 {% endif %}
 
                 <!-- Upload Form -->
                 <form method="POST" action="{{ url_for('expenses.upload_attachment', project_id=project.id, expense_id=expense.id) }}" enctype="multipart/form-data">
                     <div class="row g-2 align-items-end">
                         <div class="col-md-4">
-                            <label class="form-label small">Tipo de Anexo</label>
+                            <label class="form-label small">{{ _('Tipo de Anexo') }}</label>
                             <select name="attachment_type" class="form-select form-select-sm">
-                                <option value="boleto">Boleto</option>
-                                <option value="nota_fiscal">Nota Fiscal</option>
-                                <option value="comprovante">Comprovante de Pagamento</option>
+                                <option value="boleto">{{ _('Boleto') }}</option>
+                                <option value="nota_fiscal">{{ _('Nota Fiscal') }}</option>
+                                <option value="comprovante">{{ _('Comprovante de Pagamento') }}</option>
                             </select>
                         </div>
                         <div class="col-md-5">
-                            <label class="form-label small">Arquivo (PDF, JPG, PNG, Word)</label>
+                            <label class="form-label small">{{ _('Arquivo') }} (PDF, JPG, PNG, Word)</label>
                             <input type="file" name="attachment" class="form-control form-control-sm" accept=".pdf,.jpg,.jpeg,.png,.doc,.docx" required>
                         </div>
                         <div class="col-md-3">
                             <button type="submit" class="btn btn-primary btn-sm w-100">
-                                <i class="bi bi-upload"></i> Enviar
+                                <i class="bi bi-upload"></i> {{ _('Enviar') }}
                             </button>
                         </div>
                     </div>

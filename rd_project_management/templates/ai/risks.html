@@ -1,14 +1,14 @@
 {% extends "base.html" %}
-{% block title %}Análise de Riscos - {{ project.title }}{% endblock %}
+{% block title %}{{ _('Analise de Riscos') }} - {{ project.title }}{% endblock %}
 
 {% block content %}
 <div class="container-fluid">
     <div class="d-flex justify-content-between align-items-center mb-4">
         <div>
             <a href="{{ url_for('projects.view_project', project_id=project.id) }}" class="btn btn-outline-secondary btn-sm">
-                <i class="bi bi-arrow-left"></i> Voltar ao Projeto
+                <i class="bi bi-arrow-left"></i> {{ _('Voltar ao Projeto') }}
             </a>
-            <h4 class="mt-2"><i class="bi bi-shield-exclamation text-danger"></i> Análise de Riscos</h4>
+            <h4 class="mt-2"><i class="bi bi-shield-exclamation text-danger"></i> {{ _('Analise de Riscos') }}</h4>
             <p class="text-muted mb-0">{{ project.code }} - {{ project.title }}</p>
         </div>
     </div>
@@ -16,21 +16,21 @@
     {% if not ai_configured %}
     <div class="alert alert-warning">
         <i class="bi bi-exclamation-triangle"></i>
-        <strong>API de IA nao configurada.</strong>
-        Configure a variavel de ambiente <code>ANTHROPIC_API_KEY</code>.
+        <strong>{{ _('API de IA nao configurada.') }}</strong>
+        {{ _('Configure a variavel de ambiente') }} <code>ANTHROPIC_API_KEY</code>.
     </div>
     {% else %}
     <div class="card mb-4">
         <div class="card-body text-center" id="analyzeSection">
-            <p class="mb-3">Clique no botao abaixo para analisar os riscos do projeto com IA.</p>
+            <p class="mb-3">{{ _('Clique no botao abaixo para analisar os riscos do projeto com IA.') }}</p>
             <button class="btn btn-danger btn-lg" onclick="analyzeRisks()">
-                <i class="bi bi-shield-exclamation"></i> Analisar Riscos
+                <i class="bi bi-shield-exclamation"></i> {{ _('Analisar Riscos') }}
             </button>
         </div>
         <div class="card-body d-none" id="loadingSection">
             <div class="text-center">
                 <div class="spinner-border text-danger" role="status"></div>
-                <p class="mt-2">Analisando riscos do projeto...</p>
+                <p class="mt-2">{{ _('Analisando riscos do projeto...') }}</p>
             </div>
         </div>
     </div>
@@ -41,7 +41,7 @@
             <div class="col-md-4">
                 <div class="card text-center" id="riskLevelCard">
                     <div class="card-body">
-                        <h6 class="text-muted">Nivel de Risco Geral</h6>
+                        <h6 class="text-muted">{{ _('Nivel de Risco Geral') }}</h6>
                         <h2 id="riskLevel" class="mb-0">-</h2>
                         <div class="progress mt-2" style="height: 10px;">
                             <div class="progress-bar" id="riskBar" role="progressbar" style="width: 0%"></div>
@@ -53,7 +53,7 @@
             <div class="col-md-4">
                 <div class="card text-center">
                     <div class="card-body">
-                        <h6 class="text-muted">Previsao de Conclusao</h6>
+                        <h6 class="text-muted">{{ _('Previsao de Conclusao') }}</h6>
                         <h4 id="completionStatus" class="mb-1">-</h4>
                         <p id="completionEstimate" class="text-muted small mb-0">-</p>
                     </div>
@@ -62,11 +62,11 @@
             <div class="col-md-4">
                 <div class="card text-center">
                     <div class="card-body">
-                        <h6 class="text-muted">Burn Rate</h6>
+                        <h6 class="text-muted">{{ _('Burn Rate') }}</h6>
                         <h4 id="burnRateStatus" class="mb-1">-</h4>
                         <p class="text-muted small mb-0">
-                            Mensal: <span id="burnRateMonthly">R$ 0</span><br>
-                            Projecao Final: <span id="burnRateProjection">R$ 0</span>
+                            {{ _('Mensal:') }} <span id="burnRateMonthly">R$ 0</span><br>
+                            {{ _('Projecao Final:') }} <span id="burnRateProjection">R$ 0</span>
                         </p>
                     </div>
                 </div>
@@ -80,7 +80,7 @@
         <div id="documentSavedSection" class="d-none mb-4">
             <div class="alert alert-success">
                 <i class="bi bi-file-earmark-check"></i>
-                <strong>Documento salvo!</strong> A análise foi salva em <a href="{{ url_for('projects.view_project', project_id=project.id) }}#documents" class="alert-link">Documentos do Projeto</a>.
+                <strong>{{ _('Documento salvo!') }}</strong> {{ _('A analise foi salva em') }} <a href="{{ url_for('projects.view_project', project_id=project.id) }}#documents" class="alert-link">{{ _('Documentos do Projeto') }}</a>.
                 <span id="documentName"></span>
             </div>
         </div>
@@ -88,7 +88,7 @@
         <!-- Identified Risks -->
         <div class="card mb-4">
             <div class="card-header bg-danger text-white">
-                <i class="bi bi-exclamation-triangle"></i> Riscos Identificados
+                <i class="bi bi-exclamation-triangle"></i> {{ _('Riscos Identificados') }}
             </div>
             <div class="card-body">
                 <div id="risksList"></div>
@@ -98,7 +98,7 @@
         <!-- Recommendations -->
         <div class="card">
             <div class="card-header bg-success text-white">
-                <i class="bi bi-lightbulb"></i> Recomendacoes
+                <i class="bi bi-lightbulb"></i> {{ _('Recomendacoes') }}
             </div>
             <div class="card-body">
                 <ul id="recommendationsList" class="mb-0"></ul>
@@ -111,6 +111,17 @@
 
 {% block extra_js %}
 <script>
+const noRisksText = '{{ _("Nenhum risco critico identificado.") }}';
+const noRecsText = '{{ _("Nenhuma recomendacao adicional.") }}';
+const onTimeText = '{{ _("No Prazo") }}';
+const delayedText = '{{ _("Atrasado") }}';
+const atRiskText = '{{ _("Em Risco") }}';
+const withinBudgetText = '{{ _("Dentro do Orcamento") }}';
+const aboveBudgetText = '{{ _("Acima do Orcamento") }}';
+const probText = '{{ _("Prob:") }}';
+const impactText = '{{ _("Impacto:") }}';
+const mitigationText = '{{ _("Mitigacao:") }}';
+
 async function analyzeRisks() {
     document.getElementById('analyzeSection').classList.add('d-none');
     document.getElementById('loadingSection').classList.remove('d-none');
@@ -124,7 +135,7 @@ async function analyzeRisks() {
         const data = await response.json();
 
         if (data.error) {
-            alert('Erro: ' + data.error);
+            alert('{{ _("Erro:") }} ' + data.error);
             document.getElementById('analyzeSection').classList.remove('d-none');
             document.getElementById('loadingSection').classList.add('d-none');
             return;
@@ -133,7 +144,7 @@ async function analyzeRisks() {
         displayResults(data);
 
     } catch (error) {
-        alert('Erro de conexao: ' + error.message);
+        alert('{{ _("Erro de conexao:") }} ' + error.message);
         document.getElementById('analyzeSection').classList.remove('d-none');
     } finally {
         document.getElementById('loadingSection').classList.add('d-none');
@@ -173,9 +184,9 @@ function displayResults(data) {
     // Completion prediction
     if (data.previsao_conclusao) {
         const statusMap = {
-            'no_prazo': '<span class="text-success">No Prazo</span>',
-            'atrasado': '<span class="text-danger">Atrasado</span>',
-            'em_risco': '<span class="text-warning">Em Risco</span>'
+            'no_prazo': `<span class="text-success">${onTimeText}</span>`,
+            'atrasado': `<span class="text-danger">${delayedText}</span>`,
+            'em_risco': `<span class="text-warning">${atRiskText}</span>`
         };
         document.getElementById('completionStatus').innerHTML = statusMap[data.previsao_conclusao.status] || data.previsao_conclusao.status;
         document.getElementById('completionEstimate').textContent = data.previsao_conclusao.estimativa || '';
@@ -184,9 +195,9 @@ function displayResults(data) {
     // Burn rate
     if (data.burn_rate) {
         const brStatusMap = {
-            'dentro_orçamento': '<span class="text-success">Dentro do Orçamento</span>',
-            'em_risco': '<span class="text-warning">Em Risco</span>',
-            'acima_orçamento': '<span class="text-danger">Acima do Orçamento</span>'
+            'dentro_orçamento': `<span class="text-success">${withinBudgetText}</span>`,
+            'em_risco': `<span class="text-warning">${atRiskText}</span>`,
+            'acima_orçamento': `<span class="text-danger">${aboveBudgetText}</span>`
         };
         document.getElementById('burnRateStatus').innerHTML = brStatusMap[data.burn_rate.status] || data.burn_rate.status;
         document.getElementById('burnRateMonthly').textContent = formatCurrency(data.burn_rate.mensal);
@@ -217,20 +228,20 @@ function displayResults(data) {
                             <span class="badge bg-${sColor}">${risk.severidade?.toUpperCase()}</span>
                             ${risk.categoria?.toUpperCase()}
                         </h6>
-                        <small class="text-muted">Prob: ${risk.probabilidade}</small>
+                        <small class="text-muted">${probText} ${risk.probabilidade}</small>
                     </div>
                     <p class="mb-1">${risk.descricao}</p>
-                    <small class="text-muted"><strong>Impacto:</strong> ${risk.impacto}</small><br>
-                    <small class="text-success"><strong>Mitigacao:</strong> ${risk.mitigacao}</small>
+                    <small class="text-muted"><strong>${impactText}</strong> ${risk.impacto}</small><br>
+                    <small class="text-success"><strong>${mitigationText}</strong> ${risk.mitigacao}</small>
                 </div>
             </div>
         `;
     }).join('');
-    document.getElementById('risksList').innerHTML = risksHtml || '<p class="text-muted">Nenhum risco critico identificado.</p>';
+    document.getElementById('risksList').innerHTML = risksHtml || `<p class="text-muted">${noRisksText}</p>`;
 
     // Recommendations
     const recsHtml = (data.recomendacoes || []).map(rec => `<li>${rec}</li>`).join('');
-    document.getElementById('recommendationsList').innerHTML = recsHtml || '<li>Nenhuma recomendacao adicional.</li>';
+    document.getElementById('recommendationsList').innerHTML = recsHtml || `<li>${noRecsText}</li>`;
 }
 
 function formatCurrency(value) {

@@ -541,3 +541,159 @@ msgstr "Imprimir"
 msgid "Gerar PDF"
 msgstr "Gerar PDF"
 
+# Status Report labels
+msgid "Sem marcos"
+msgstr "Sem marcos"
+
+msgid "No prazo"
+msgstr "No prazo"
+
+msgid "Sem orcamento"
+msgstr "Sem orçamento"
+
+msgid "Estourado"
+msgstr "Estourado"
+
+msgid "Saudavel"
+msgstr "Saudável"
+
+msgid "Acima do planejado"
+msgstr "Acima do planejado"
+
+msgid "Dentro do planejado"
+msgstr "Dentro do planejado"
+
+msgid "Sem planejamento"
+msgstr "Sem planejamento"
+
+msgid "Critico"
+msgstr "Crítico"
+
+msgid "Conforme"
+msgstr "Conforme"
+
+msgid "Sem dados"
+msgstr "Sem dados"
+
+msgid "Existem marcos com data de entrega ultrapassada"
+msgstr "Existem marcos com data de entrega ultrapassada"
+
+msgid "Revisar cronograma e realocar recursos"
+msgstr "Revisar cronograma e realocar recursos"
+
+msgid "Projeto expirado"
+msgstr "Projeto expirado"
+
+msgid "Solicitar prorrogacao ou encerrar projeto"
+msgstr "Solicitar prorrogação ou encerrar projeto"
+
+msgid "Prazo de encerramento proximo"
+msgstr "Prazo de encerramento próximo"
+
+msgid "Acelerar entregas finais"
+msgstr "Acelerar entregas finais"
+
+msgid "Orcamento estourado"
+msgstr "Orçamento estourado"
+
+msgid "Solicitar remanejamento ou aditivo"
+msgstr "Solicitar remanejamento ou aditivo"
+
+msgid "Orcamento critico"
+msgstr "Orçamento crítico"
+
+msgid "Controlar gastos e priorizar despesas essenciais"
+msgstr "Controlar gastos e priorizar despesas essenciais"
+
+msgid "Progresso abaixo do esperado"
+msgstr "Progresso abaixo do esperado"
+
+msgid "Revisar escopo ou aumentar equipe"
+msgstr "Revisar escopo ou aumentar equipe"
+
+msgid "Sem recursos alocados"
+msgstr "Sem recursos alocados"
+
+msgid "Nenhum recurso ativo no projeto"
+msgstr "Nenhum recurso ativo no projeto"
+
+msgid "Alocar equipe para execucao"
+msgstr "Alocar equipe para execução"
+
+# Profile and User form
+msgid "Informacoes da Conta"
+msgstr "Informações da Conta"
+
+msgid "Editar Perfil"
+msgstr "Editar Perfil"
+
+msgid "Nome Completo"
+msgstr "Nome Completo"
+
+msgid "Alterar Senha"
+msgstr "Alterar Senha"
+
+msgid "Senha Atual"
+msgstr "Senha Atual"
+
+msgid "Nova Senha"
+msgstr "Nova Senha"
+
+msgid "Confirmar Nova Senha"
+msgstr "Confirmar Nova Senha"
+
+msgid "Preferencias de Email"
+msgstr "Preferências de Email"
+
+msgid "Receber notificacoes por email"
+msgstr "Receber notificações por email"
+
+msgid "Briefing diario"
+msgstr "Briefing diário"
+
+msgid "Alertas criticos"
+msgstr "Alertas críticos"
+
+msgid "Salvar Alteracoes"
+msgstr "Salvar Alterações"
+
+msgid "Membro desde"
+msgstr "Membro desde"
+
+msgid "Administrador"
+msgstr "Administrador"
+
+msgid "Gerente"
+msgstr "Gerente"
+
+msgid "Usuario"
+msgstr "Usuário"
+
+msgid "Visualizador"
+msgstr "Visualizador"
+
+# Common form labels
+msgid "Entrar"
+msgstr "Entrar"
+
+msgid "Email"
+msgstr "Email"
+
+msgid "Senha"
+msgstr "Senha"
+
+msgid "Lembrar-me"
+msgstr "Lembrar-me"
+
+msgid "Criar conta"
+msgstr "Criar conta"
+
+msgid "Cadastrar"
+msgstr "Cadastrar"
+
+msgid "Outros"
+msgstr "Outros"
+
+msgid "Atencao"
+msgstr "Atenção"
+

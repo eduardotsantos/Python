@@ -1,15 +1,15 @@
 {% extends "base.html" %}
-{% block title %}Riscos - Gestão P&D{% endblock %}
+{% block title %}{{ _('Riscos') }} - {{ _('Gestão P&D') }}{% endblock %}
 
 {% block content %}
 <div class="d-flex justify-content-between align-items-center mb-4">
-    <h4 class="fw-bold mb-0"><i class="bi bi-exclamation-triangle text-danger"></i> Registro de Riscos</h4>
+    <h4 class="fw-bold mb-0"><i class="bi bi-exclamation-triangle text-danger"></i> {{ _('Registro de Riscos') }}</h4>
     <div>
         <a href="{{ url_for('compliance.dashboard') }}" class="btn btn-outline-secondary me-2">
-            <i class="bi bi-arrow-left"></i> Voltar
+            <i class="bi bi-arrow-left"></i> {{ _('Voltar') }}
         </a>
         <a href="{{ url_for('compliance.risk_create') }}" class="btn btn-danger">
-            <i class="bi bi-plus-lg"></i> Novo Risco
+            <i class="bi bi-plus-lg"></i> {{ _('Novo Risco') }}
         </a>
     </div>
 </div>
@@ -20,25 +20,25 @@
         <form method="GET" class="row g-2 align-items-center">
             <div class="col-md-4">
                 <select name="status" class="form-select form-select-sm">
-                    <option value="">Todos os Status</option>
-                    <option value="Identificado" {{ 'selected' if status_filter == 'Identificado' }}>Identificado</option>
-                    <option value="Analisado" {{ 'selected' if status_filter == 'Analisado' }}>Analisado</option>
-                    <option value="Em Tratamento" {{ 'selected' if status_filter == 'Em Tratamento' }}>Em Tratamento</option>
-                    <option value="Mitigado" {{ 'selected' if status_filter == 'Mitigado' }}>Mitigado</option>
-                    <option value="Fechado" {{ 'selected' if status_filter == 'Fechado' }}>Fechado</option>
+                    <option value="">{{ _('Todos os Status') }}</option>
+                    <option value="Identificado" {{ 'selected' if status_filter == 'Identificado' }}>{{ _('Identificado') }}</option>
+                    <option value="Analisado" {{ 'selected' if status_filter == 'Analisado' }}>{{ _('Analisado') }}</option>
+                    <option value="Em Tratamento" {{ 'selected' if status_filter == 'Em Tratamento' }}>{{ _('Em Tratamento') }}</option>
+                    <option value="Mitigado" {{ 'selected' if status_filter == 'Mitigado' }}>{{ _('Mitigado') }}</option>
+                    <option value="Fechado" {{ 'selected' if status_filter == 'Fechado' }}>{{ _('Fechado') }}</option>
                 </select>
             </div>
             <div class="col-md-4">
                 <select name="project_id" class="form-select form-select-sm">
-                    <option value="">Todos os Projetos</option>
+                    <option value="">{{ _('Todos os Projetos') }}</option>
                     {% for project in projects %}
                     <option value="{{ project.id }}" {{ 'selected' if project_filter == project.id|string }}>{{ project.title }}</option>
                     {% endfor %}
                 </select>
             </div>
             <div class="col-md-4 text-end">
-                <button type="submit" class="btn btn-outline-primary btn-sm"><i class="bi bi-filter"></i> Filtrar</button>
-                <a href="{{ url_for('compliance.risks_list') }}" class="btn btn-outline-secondary btn-sm"><i class="bi bi-x"></i> Limpar</a>
+                <button type="submit" class="btn btn-outline-primary btn-sm"><i class="bi bi-filter"></i> {{ _('Filtrar') }}</button>
+                <a href="{{ url_for('compliance.risks_list') }}" class="btn btn-outline-secondary btn-sm"><i class="bi bi-x"></i> {{ _('Limpar') }}</a>
             </div>
         </form>
     </div>
@@ -50,16 +50,16 @@
         <table class="table table-hover mb-0">
             <thead>
                 <tr>
-                    <th>Código</th>
-                    <th>Título</th>
-                    <th>Projeto</th>
-                    <th>Categoria</th>
-                    <th>Probabilidade</th>
-                    <th>Impacto</th>
-                    <th>Score</th>
-                    <th>Status</th>
-                    <th>Responsável</th>
-                    <th class="text-end">Ações</th>
+                    <th>{{ _('Código') }}</th>
+                    <th>{{ _('Título') }}</th>
+                    <th>{{ _('Projeto') }}</th>
+                    <th>{{ _('Categoria') }}</th>
+                    <th>{{ _('Probabilidade') }}</th>
+                    <th>{{ _('Impacto') }}</th>
+                    <th>{{ _('Score') }}</th>
+                    <th>{{ _('Status') }}</th>
+                    <th>{{ _('Responsável') }}</th>
+                    <th class="text-end">{{ _('Ações') }}</th>
                 </tr>
             </thead>
             <tbody>
@@ -68,7 +68,7 @@
                     <td><strong>{{ risk.code }}</strong></td>
                     <td>{{ risk.title }}</td>
                     <td>{{ risk.project.title if risk.project else '-' }}</td>
-                    <td><span class="badge bg-secondary">{{ risk.category }}</span></td>
+                    <td><span class="badge bg-secondary">{{ _(risk.category) }}</span></td>
                     <td>
                         {% if risk.probability >= 4 %}
                             <span class="badge bg-danger">{{ risk.probability }}</span>
@@ -99,22 +99,22 @@
                     </td>
                     <td>
                         {% if risk.status == 'Identificado' %}
-                            <span class="badge bg-info">{{ risk.status }}</span>
+                            <span class="badge bg-info">{{ _('Identificado') }}</span>
                         {% elif risk.status == 'Em Tratamento' %}
-                            <span class="badge bg-warning text-dark">{{ risk.status }}</span>
+                            <span class="badge bg-warning text-dark">{{ _('Em Tratamento') }}</span>
                         {% elif risk.status == 'Mitigado' or risk.status == 'Fechado' %}
-                            <span class="badge bg-success">{{ risk.status }}</span>
+                            <span class="badge bg-success">{{ _(risk.status) }}</span>
                         {% else %}
-                            <span class="badge bg-secondary">{{ risk.status }}</span>
+                            <span class="badge bg-secondary">{{ _(risk.status) }}</span>
                         {% endif %}
                     </td>
                     <td>{{ risk.owner.full_name if risk.owner else '-' }}</td>
                     <td class="text-end">
-                        <a href="{{ url_for('compliance.risk_edit', risk_id=risk.id) }}" class="btn btn-sm btn-outline-primary" title="Editar">
+                        <a href="{{ url_for('compliance.risk_edit', risk_id=risk.id) }}" class="btn btn-sm btn-outline-primary" title="{{ _('Editar') }}">
                             <i class="bi bi-pencil"></i>
                         </a>
-                        <form action="{{ url_for('compliance.risk_delete', risk_id=risk.id) }}" method="POST" class="d-inline" onsubmit="return confirm('Confirma exclusão?')">
-                            <button type="submit" class="btn btn-sm btn-outline-danger" title="Excluir">
+                        <form action="{{ url_for('compliance.risk_delete', risk_id=risk.id) }}" method="POST" class="d-inline" onsubmit="return confirm('{{ _('Confirma exclusão?') }}')">
+                            <button type="submit" class="btn btn-sm btn-outline-danger" title="{{ _('Excluir') }}">
                                 <i class="bi bi-trash"></i>
                             </button>
                         </form>
@@ -129,10 +129,10 @@
 <div class="card shadow-sm">
     <div class="empty-state">
         <i class="bi bi-exclamation-triangle"></i>
-        <h5>Nenhum risco encontrado</h5>
-        <p>Registre riscos para gerenciá-los proativamente</p>
+        <h5>{{ _('Nenhum risco encontrado') }}</h5>
+        <p>{{ _('Registre riscos para gerenciá-los proativamente') }}</p>
         <a href="{{ url_for('compliance.risk_create') }}" class="btn btn-danger">
-            <i class="bi bi-plus-lg"></i> Registrar Risco
+            <i class="bi bi-plus-lg"></i> {{ _('Registrar Risco') }}
         </a>
     </div>
 </div>

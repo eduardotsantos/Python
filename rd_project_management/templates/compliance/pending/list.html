@@ -1,15 +1,15 @@
 {% extends "base.html" %}
-{% block title %}Pendências - Gestão P&D{% endblock %}
+{% block title %}{{ _('Pendências') }} - {{ _('Gestão P&D') }}{% endblock %}
 
 {% block content %}
 <div class="d-flex justify-content-between align-items-center mb-4">
-    <h4 class="fw-bold mb-0"><i class="bi bi-clock-history text-warning"></i> Pendências</h4>
+    <h4 class="fw-bold mb-0"><i class="bi bi-clock-history text-warning"></i> {{ _('Pendências') }}</h4>
     <div>
         <a href="{{ url_for('compliance.dashboard') }}" class="btn btn-outline-secondary me-2">
-            <i class="bi bi-arrow-left"></i> Voltar
+            <i class="bi bi-arrow-left"></i> {{ _('Voltar') }}
         </a>
         <a href="{{ url_for('compliance.pending_create') }}" class="btn btn-warning">
-            <i class="bi bi-plus-lg"></i> Nova Pendência
+            <i class="bi bi-plus-lg"></i> {{ _('Nova Pendência') }}
         </a>
     </div>
 </div>
@@ -20,24 +20,24 @@
         <form method="GET" class="row g-2 align-items-center">
             <div class="col-md-4">
                 <select name="status" class="form-select form-select-sm">
-                    <option value="">Todos os Status</option>
-                    <option value="Aberta" {{ 'selected' if status_filter == 'Aberta' }}>Aberta</option>
-                    <option value="Em Andamento" {{ 'selected' if status_filter == 'Em Andamento' }}>Em Andamento</option>
-                    <option value="Resolvida" {{ 'selected' if status_filter == 'Resolvida' }}>Resolvida</option>
-                    <option value="Cancelada" {{ 'selected' if status_filter == 'Cancelada' }}>Cancelada</option>
+                    <option value="">{{ _('Todos os Status') }}</option>
+                    <option value="Aberta" {{ 'selected' if status_filter == 'Aberta' }}>{{ _('Aberta') }}</option>
+                    <option value="Em Andamento" {{ 'selected' if status_filter == 'Em Andamento' }}>{{ _('Em Andamento') }}</option>
+                    <option value="Resolvida" {{ 'selected' if status_filter == 'Resolvida' }}>{{ _('Resolvida') }}</option>
+                    <option value="Cancelada" {{ 'selected' if status_filter == 'Cancelada' }}>{{ _('Cancelada') }}</option>
                 </select>
             </div>
             <div class="col-md-4">
                 <select name="project_id" class="form-select form-select-sm">
-                    <option value="">Todos os Projetos</option>
+                    <option value="">{{ _('Todos os Projetos') }}</option>
                     {% for project in projects %}
                     <option value="{{ project.id }}" {{ 'selected' if project_filter == project.id|string }}>{{ project.title }}</option>
                     {% endfor %}
                 </select>
             </div>
             <div class="col-md-4 text-end">
-                <button type="submit" class="btn btn-outline-primary btn-sm"><i class="bi bi-filter"></i> Filtrar</button>
-                <a href="{{ url_for('compliance.pending_list') }}" class="btn btn-outline-secondary btn-sm"><i class="bi bi-x"></i> Limpar</a>
+                <button type="submit" class="btn btn-outline-primary btn-sm"><i class="bi bi-filter"></i> {{ _('Filtrar') }}</button>
+                <a href="{{ url_for('compliance.pending_list') }}" class="btn btn-outline-secondary btn-sm"><i class="bi bi-x"></i> {{ _('Limpar') }}</a>
             </div>
         </form>
     </div>
@@ -49,14 +49,14 @@
         <table class="table table-hover mb-0">
             <thead>
                 <tr>
-                    <th>Código</th>
-                    <th>Título</th>
-                    <th>Projeto</th>
-                    <th>Prioridade</th>
-                    <th>Data Limite</th>
-                    <th>Status</th>
-                    <th>Responsável</th>
-                    <th class="text-end">Ações</th>
+                    <th>{{ _('Código') }}</th>
+                    <th>{{ _('Título') }}</th>
+                    <th>{{ _('Projeto') }}</th>
+                    <th>{{ _('Prioridade') }}</th>
+                    <th>{{ _('Data Limite') }}</th>
+                    <th>{{ _('Status') }}</th>
+                    <th>{{ _('Responsável') }}</th>
+                    <th class="text-end">{{ _('Ações') }}</th>
                 </tr>
             </thead>
             <tbody>
@@ -67,13 +67,13 @@
                     <td>{{ item.project.title if item.project else '-' }}</td>
                     <td>
                         {% if item.priority == 'Crítica' %}
-                            <span class="badge bg-danger">{{ item.priority }}</span>
+                            <span class="badge bg-danger">{{ _('Crítica') }}</span>
                         {% elif item.priority == 'Alta' %}
-                            <span class="badge bg-warning text-dark">{{ item.priority }}</span>
+                            <span class="badge bg-warning text-dark">{{ _('Alta') }}</span>
                         {% elif item.priority == 'Média' %}
-                            <span class="badge bg-info">{{ item.priority }}</span>
+                            <span class="badge bg-info">{{ _('Média') }}</span>
                         {% else %}
-                            <span class="badge bg-secondary">{{ item.priority }}</span>
+                            <span class="badge bg-secondary">{{ _('Baixa') }}</span>
                         {% endif %}
                     </td>
                     <td>
@@ -89,22 +89,22 @@
                     </td>
                     <td>
                         {% if item.status == 'Aberta' %}
-                            <span class="badge bg-info">{{ item.status }}</span>
+                            <span class="badge bg-info">{{ _('Aberta') }}</span>
                         {% elif item.status == 'Em Andamento' %}
-                            <span class="badge bg-warning text-dark">{{ item.status }}</span>
+                            <span class="badge bg-warning text-dark">{{ _('Em Andamento') }}</span>
                         {% elif item.status == 'Resolvida' %}
-                            <span class="badge bg-success">{{ item.status }}</span>
+                            <span class="badge bg-success">{{ _('Resolvida') }}</span>
                         {% else %}
-                            <span class="badge bg-secondary">{{ item.status }}</span>
+                            <span class="badge bg-secondary">{{ _('Cancelada') }}</span>
                         {% endif %}
                     </td>
                     <td>{{ item.responsible.full_name if item.responsible else '-' }}</td>
                     <td class="text-end">
-                        <a href="{{ url_for('compliance.pending_edit', item_id=item.id) }}" class="btn btn-sm btn-outline-primary" title="Editar">
+                        <a href="{{ url_for('compliance.pending_edit', item_id=item.id) }}" class="btn btn-sm btn-outline-primary" title="{{ _('Editar') }}">
                             <i class="bi bi-pencil"></i>
                         </a>
-                        <form action="{{ url_for('compliance.pending_delete', item_id=item.id) }}" method="POST" class="d-inline" onsubmit="return confirm('Confirma exclusão?')">
-                            <button type="submit" class="btn btn-sm btn-outline-danger" title="Excluir">
+                        <form action="{{ url_for('compliance.pending_delete', item_id=item.id) }}" method="POST" class="d-inline" onsubmit="return confirm('{{ _('Confirma exclusão?') }}')">
+                            <button type="submit" class="btn btn-sm btn-outline-danger" title="{{ _('Excluir') }}">
                                 <i class="bi bi-trash"></i>
                             </button>
                         </form>
@@ -119,10 +119,10 @@
 <div class="card shadow-sm">
     <div class="empty-state">
         <i class="bi bi-clock-history"></i>
-        <h5>Nenhuma pendência encontrada</h5>
-        <p>Registre pendências para acompanhamento</p>
+        <h5>{{ _('Nenhuma pendência encontrada') }}</h5>
+        <p>{{ _('Registre pendências para acompanhamento') }}</p>
         <a href="{{ url_for('compliance.pending_create') }}" class="btn btn-warning">
-            <i class="bi bi-plus-lg"></i> Registrar Pendência
+            <i class="bi bi-plus-lg"></i> {{ _('Registrar Pendência') }}
         </a>
     </div>
 </div>

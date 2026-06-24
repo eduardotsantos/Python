@@ -1,9 +1,9 @@
 {% extends "base.html" %}
-{% block title %}Central de Conformidade - Gestão P&D{% endblock %}
+{% block title %}{{ _('Central de Conformidade') }} - {{ _('Gestão P&D') }}{% endblock %}
 
 {% block content %}
 <div class="d-flex justify-content-between align-items-center mb-4">
-    <h4 class="fw-bold mb-0"><i class="bi bi-shield-check text-primary"></i> Central de Pendências e Conformidade</h4>
+    <h4 class="fw-bold mb-0"><i class="bi bi-shield-check text-primary"></i> {{ _('Central de Pendências e Conformidade') }}</h4>
 </div>
 
 <!-- Stats Cards -->
@@ -13,7 +13,7 @@
             <div class="card-body">
                 <div class="d-flex justify-content-between">
                     <div>
-                        <p class="text-muted mb-1 small">Riscos</p>
+                        <p class="text-muted mb-1 small">{{ _('Riscos') }}</p>
                         <h3 class="fw-bold mb-0">{{ counts.risks }}</h3>
                     </div>
                     <div class="text-danger opacity-50"><i class="bi bi-exclamation-triangle" style="font-size:2rem"></i></div>
@@ -26,7 +26,7 @@
             <div class="card-body">
                 <div class="d-flex justify-content-between">
                     <div>
-                        <p class="text-muted mb-1 small">Pendências</p>
+                        <p class="text-muted mb-1 small">{{ _('Pendências') }}</p>
                         <h3 class="fw-bold mb-0">{{ counts.pending }}</h3>
                     </div>
                     <div class="text-warning opacity-50"><i class="bi bi-clock-history" style="font-size:2rem"></i></div>
@@ -39,7 +39,7 @@
             <div class="card-body">
                 <div class="d-flex justify-content-between">
                     <div>
-                        <p class="text-muted mb-1 small">Não Conformidades</p>
+                        <p class="text-muted mb-1 small">{{ _('Não Conformidades') }}</p>
                         <h3 class="fw-bold mb-0">{{ counts.nc }}</h3>
                     </div>
                     <div class="text-info opacity-50"><i class="bi bi-x-octagon" style="font-size:2rem"></i></div>
@@ -52,7 +52,7 @@
             <div class="card-body">
                 <div class="d-flex justify-content-between">
                     <div>
-                        <p class="text-muted mb-1 small">Bugs</p>
+                        <p class="text-muted mb-1 small">{{ _('Bugs') }}</p>
                         <h3 class="fw-bold mb-0">{{ counts.bugs }}</h3>
                     </div>
                     <div class="text-dark opacity-50"><i class="bi bi-bug" style="font-size:2rem"></i></div>
@@ -65,7 +65,7 @@
             <div class="card-body">
                 <div class="d-flex justify-content-between">
                     <div>
-                        <p class="text-muted mb-1 small">Ações Corretivas</p>
+                        <p class="text-muted mb-1 small">{{ _('Ações Corretivas') }}</p>
                         <h3 class="fw-bold mb-0">{{ counts.actions }}</h3>
                     </div>
                     <div class="text-success opacity-50"><i class="bi bi-check2-square" style="font-size:2rem"></i></div>
@@ -80,15 +80,15 @@
     <div class="col-md-4">
         <div class="card shadow-sm h-100">
             <div class="card-header bg-danger text-white">
-                <i class="bi bi-exclamation-triangle"></i> Riscos
+                <i class="bi bi-exclamation-triangle"></i> {{ _('Riscos') }}
             </div>
             <div class="card-body">
-                <p class="text-muted small">Gerencie os riscos identificados nos projetos</p>
+                <p class="text-muted small">{{ _('Gerencie os riscos identificados nos projetos') }}</p>
                 <a href="{{ url_for('compliance.risks_list') }}" class="btn btn-outline-danger btn-sm me-2">
-                    <i class="bi bi-list"></i> Ver Lista
+                    <i class="bi bi-list"></i> {{ _('Ver Lista') }}
                 </a>
                 <a href="{{ url_for('compliance.risk_create') }}" class="btn btn-danger btn-sm">
-                    <i class="bi bi-plus-lg"></i> Novo
+                    <i class="bi bi-plus-lg"></i> {{ _('Novo') }}
                 </a>
             </div>
         </div>
@@ -96,15 +96,15 @@
     <div class="col-md-4">
         <div class="card shadow-sm h-100">
             <div class="card-header bg-warning text-dark">
-                <i class="bi bi-clock-history"></i> Pendências
+                <i class="bi bi-clock-history"></i> {{ _('Pendências') }}
             </div>
             <div class="card-body">
-                <p class="text-muted small">Acompanhe itens pendentes dos projetos</p>
+                <p class="text-muted small">{{ _('Acompanhe itens pendentes dos projetos') }}</p>
                 <a href="{{ url_for('compliance.pending_list') }}" class="btn btn-outline-warning btn-sm me-2">
-                    <i class="bi bi-list"></i> Ver Lista
+                    <i class="bi bi-list"></i> {{ _('Ver Lista') }}
                 </a>
                 <a href="{{ url_for('compliance.pending_create') }}" class="btn btn-warning btn-sm">
-                    <i class="bi bi-plus-lg"></i> Nova
+                    <i class="bi bi-plus-lg"></i> {{ _('Nova') }}
                 </a>
             </div>
         </div>
@@ -112,15 +112,15 @@
     <div class="col-md-4">
         <div class="card shadow-sm h-100">
             <div class="card-header bg-info text-white">
-                <i class="bi bi-x-octagon"></i> Não Conformidades
+                <i class="bi bi-x-octagon"></i> {{ _('Não Conformidades') }}
             </div>
             <div class="card-body">
-                <p class="text-muted small">Registre e trate não conformidades</p>
+                <p class="text-muted small">{{ _('Registre e trate não conformidades') }}</p>
                 <a href="{{ url_for('compliance.nc_list') }}" class="btn btn-outline-info btn-sm me-2">
-                    <i class="bi bi-list"></i> Ver Lista
+                    <i class="bi bi-list"></i> {{ _('Ver Lista') }}
                 </a>
                 <a href="{{ url_for('compliance.nc_create') }}" class="btn btn-info btn-sm">
-                    <i class="bi bi-plus-lg"></i> Nova
+                    <i class="bi bi-plus-lg"></i> {{ _('Nova') }}
                 </a>
             </div>
         </div>
@@ -131,15 +131,15 @@
     <div class="col-md-6">
         <div class="card shadow-sm h-100">
             <div class="card-header bg-dark text-white">
-                <i class="bi bi-bug"></i> Bugs
+                <i class="bi bi-bug"></i> {{ _('Bugs') }}
             </div>
             <div class="card-body">
-                <p class="text-muted small">Rastreie bugs e problemas técnicos</p>
+                <p class="text-muted small">{{ _('Rastreie bugs e problemas técnicos') }}</p>
                 <a href="{{ url_for('compliance.bugs_list') }}" class="btn btn-outline-dark btn-sm me-2">
-                    <i class="bi bi-list"></i> Ver Lista
+                    <i class="bi bi-list"></i> {{ _('Ver Lista') }}
                 </a>
                 <a href="{{ url_for('compliance.bug_create') }}" class="btn btn-dark btn-sm">
-                    <i class="bi bi-plus-lg"></i> Novo
+                    <i class="bi bi-plus-lg"></i> {{ _('Novo') }}
                 </a>
             </div>
         </div>
@@ -147,15 +147,15 @@
     <div class="col-md-6">
         <div class="card shadow-sm h-100">
             <div class="card-header bg-success text-white">
-                <i class="bi bi-check2-square"></i> Ações Corretivas
+                <i class="bi bi-check2-square"></i> {{ _('Ações Corretivas') }}
             </div>
             <div class="card-body">
-                <p class="text-muted small">Gerencie ações para resolver pendências, NC, bugs e riscos</p>
+                <p class="text-muted small">{{ _('Gerencie ações para resolver pendências, NC, bugs e riscos') }}</p>
                 <a href="{{ url_for('compliance.actions_list') }}" class="btn btn-outline-success btn-sm me-2">
-                    <i class="bi bi-list"></i> Ver Lista
+                    <i class="bi bi-list"></i> {{ _('Ver Lista') }}
                 </a>
                 <a href="{{ url_for('compliance.action_create') }}" class="btn btn-success btn-sm">
-                    <i class="bi bi-plus-lg"></i> Nova
+                    <i class="bi bi-plus-lg"></i> {{ _('Nova') }}
                 </a>
             </div>
         </div>
@@ -167,7 +167,7 @@
     <div class="col-md-6">
         <div class="card shadow-sm">
             <div class="card-header">
-                <i class="bi bi-clock"></i> Últimos Itens Registrados
+                <i class="bi bi-clock"></i> {{ _('Últimos Itens Registrados') }}
             </div>
             <div class="card-body p-0">
                 <ul class="list-group list-group-flush">
@@ -175,22 +175,22 @@
                     <li class="list-group-item d-flex justify-content-between align-items-center">
                         <div>
                             {% if item.type == 'risk' %}
-                                <span class="badge bg-danger me-2">Risco</span>
+                                <span class="badge bg-danger me-2">{{ _('Risco') }}</span>
                             {% elif item.type == 'pending' %}
-                                <span class="badge bg-warning text-dark me-2">Pendência</span>
+                                <span class="badge bg-warning text-dark me-2">{{ _('Pendência') }}</span>
                             {% elif item.type == 'nc' %}
-                                <span class="badge bg-info me-2">NC</span>
+                                <span class="badge bg-info me-2">{{ _('NC') }}</span>
                             {% elif item.type == 'bug' %}
-                                <span class="badge bg-dark me-2">Bug</span>
+                                <span class="badge bg-dark me-2">{{ _('Bug') }}</span>
                             {% elif item.type == 'action' %}
-                                <span class="badge bg-success me-2">Ação</span>
+                                <span class="badge bg-success me-2">{{ _('Ação') }}</span>
                             {% endif %}
                             {{ item.title }}
                         </div>
                         <small class="text-muted">{{ item.date.strftime('%d/%m/%Y') }}</small>
                     </li>
                     {% else %}
-                    <li class="list-group-item text-muted text-center">Nenhum item registrado</li>
+                    <li class="list-group-item text-muted text-center">{{ _('Nenhum item registrado') }}</li>
                     {% endfor %}
                 </ul>
             </div>
@@ -199,13 +199,13 @@
     <div class="col-md-6">
         <div class="card shadow-sm">
             <div class="card-header">
-                <i class="bi bi-graph-up"></i> Resumo por Projeto
+                <i class="bi bi-graph-up"></i> {{ _('Resumo por Projeto') }}
             </div>
             <div class="card-body">
-                <p class="text-muted text-center">Selecione um projeto na lista para ver estatísticas detalhadas</p>
+                <p class="text-muted text-center">{{ _('Selecione um projeto na lista para ver estatísticas detalhadas') }}</p>
                 <div class="text-center">
                     <a href="{{ url_for('projects.list_projects') }}" class="btn btn-outline-primary btn-sm">
-                        <i class="bi bi-folder"></i> Ir para Projetos
+                        <i class="bi bi-folder"></i> {{ _('Ir para Projetos') }}
                     </a>
                 </div>
             </div>

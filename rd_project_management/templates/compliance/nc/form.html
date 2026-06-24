@@ -1,14 +1,14 @@
 {% extends "base.html" %}
-{% block title %}{{ 'Editar' if item else 'Nova' }} Não Conformidade - Gestão P&D{% endblock %}
+{% block title %}{{ _('Editar') if item else _('Nova') }} {{ _('Não Conformidade') }} - {{ _('Gestão P&D') }}{% endblock %}
 
 {% block content %}
 <div class="d-flex justify-content-between align-items-center mb-4">
     <h4 class="fw-bold mb-0">
         <i class="bi bi-x-octagon text-info"></i>
-        {{ 'Editar Não Conformidade' if item else 'Nova Não Conformidade' }}
+        {{ _('Editar Não Conformidade') if item else _('Nova Não Conformidade') }}
     </h4>
     <a href="{{ url_for('compliance.nc_list') }}" class="btn btn-outline-secondary">
-        <i class="bi bi-arrow-left"></i> Voltar
+        <i class="bi bi-arrow-left"></i> {{ _('Voltar') }}
     </a>
 </div>
 
@@ -17,86 +17,86 @@
         <form method="POST">
             <div class="row g-3">
                 <div class="col-md-8">
-                    <label class="form-label">Título *</label>
+                    <label class="form-label">{{ _('Título') }} *</label>
                     <input type="text" name="title" class="form-control" required value="{{ item.title if item else '' }}">
                 </div>
                 <div class="col-md-4">
-                    <label class="form-label">Projeto *</label>
+                    <label class="form-label">{{ _('Projeto') }} *</label>
                     <select name="project_id" class="form-select" required>
-                        <option value="">-- Selecione --</option>
+                        <option value="">-- {{ _('Selecione') }} --</option>
                         {% for project in projects %}
                         <option value="{{ project.id }}" {{ 'selected' if item and item.project_id == project.id }}>{{ project.title }}</option>
                         {% endfor %}
                     </select>
-                    <small class="text-muted">Obrigatório para aparecer no Status Report</small>
+                    <small class="text-muted">{{ _('Obrigatório para aparecer no Status Report') }}</small>
                 </div>
                 <div class="col-12">
-                    <label class="form-label">Descrição</label>
+                    <label class="form-label">{{ _('Descrição') }}</label>
                     <textarea name="description" class="form-control" rows="3">{{ item.description if item else '' }}</textarea>
                 </div>
                 <div class="col-md-4">
-                    <label class="form-label">Tipo *</label>
+                    <label class="form-label">{{ _('Tipo') }} *</label>
                     <select name="nc_type" class="form-select" required>
-                        <option value="">-- Selecione --</option>
-                        {% set types = ['Processo', 'Produto', 'Documentação', 'Auditoria', 'Cliente', 'Regulatório'] %}
-                        {% for t in types %}
-                        <option value="{{ t }}" {{ 'selected' if item and item.nc_type == t }}>{{ t }}</option>
+                        <option value="">-- {{ _('Selecione') }} --</option>
+                        {% set types = [(_('Processo'), 'Processo'), (_('Produto'), 'Produto'), (_('Documentação'), 'Documentação'), (_('Auditoria'), 'Auditoria'), (_('Cliente'), 'Cliente'), (_('Regulatório'), 'Regulatório')] %}
+                        {% for label, t in types %}
+                        <option value="{{ t }}" {{ 'selected' if item and item.nc_type == t }}>{{ label }}</option>
                         {% endfor %}
                     </select>
                 </div>
                 <div class="col-md-4">
-                    <label class="form-label">Impacto *</label>
+                    <label class="form-label">{{ _('Impacto') }} *</label>
                     <select name="impact" class="form-select" required>
-                        {% set impacts = ['Baixo', 'Médio', 'Alto'] %}
-                        {% for i in impacts %}
-                        <option value="{{ i }}" {{ 'selected' if item and item.impact == i }}>{{ i }}</option>
+                        {% set impacts = [(_('Baixo'), 'Baixo'), (_('Médio'), 'Médio'), (_('Alto'), 'Alto')] %}
+                        {% for label, i in impacts %}
+                        <option value="{{ i }}" {{ 'selected' if item and item.impact == i }}>{{ label }}</option>
                         {% endfor %}
                     </select>
                 </div>
                 <div class="col-md-4">
-                    <label class="form-label">Status</label>
+                    <label class="form-label">{{ _('Status') }}</label>
                     <select name="status" class="form-select">
-                        {% set statuses = ['Aberta', 'Em Análise', 'Em Tratamento', 'Verificação', 'Fechada'] %}
-                        {% for status in statuses %}
-                        <option value="{{ status }}" {{ 'selected' if item and item.status == status }}>{{ status }}</option>
+                        {% set statuses = [(_('Aberta'), 'Aberta'), (_('Em Análise'), 'Em Análise'), (_('Em Tratamento'), 'Em Tratamento'), (_('Verificação'), 'Verificação'), (_('Fechada'), 'Fechada')] %}
+                        {% for label, status in statuses %}
+                        <option value="{{ status }}" {{ 'selected' if item and item.status == status }}>{{ label }}</option>
                         {% endfor %}
                     </select>
                 </div>
                 <div class="col-12">
-                    <label class="form-label">Causa Raiz</label>
+                    <label class="form-label">{{ _('Causa Raiz') }}</label>
                     <textarea name="root_cause" class="form-control" rows="2">{{ item.root_cause if item else '' }}</textarea>
                 </div>
                 <div class="col-12">
-                    <label class="form-label">Plano Corretivo</label>
+                    <label class="form-label">{{ _('Plano Corretivo') }}</label>
                     <textarea name="corrective_plan" class="form-control" rows="3">{{ item.corrective_plan if item else '' }}</textarea>
                 </div>
                 <div class="col-md-4">
-                    <label class="form-label">Responsável</label>
+                    <label class="form-label">{{ _('Responsável') }}</label>
                     <select name="responsible_id" class="form-select">
-                        <option value="">-- Selecione --</option>
+                        <option value="">-- {{ _('Selecione') }} --</option>
                         {% for user in users %}
                         <option value="{{ user.id }}" {{ 'selected' if item and item.responsible_id == user.id }}>{{ user.full_name }}</option>
                         {% endfor %}
                     </select>
                 </div>
                 <div class="col-md-4">
-                    <label class="form-label">Data Identificação</label>
+                    <label class="form-label">{{ _('Data Identificação') }}</label>
                     <input type="date" name="identified_date" class="form-control" value="{{ item.identified_date.strftime('%Y-%m-%d') if item and item.identified_date else '' }}">
                 </div>
                 <div class="col-md-4">
-                    <label class="form-label">Data Fechamento</label>
+                    <label class="form-label">{{ _('Data Fechamento') }}</label>
                     <input type="date" name="closure_date" class="form-control" value="{{ item.closure_date.strftime('%Y-%m-%d') if item and item.closure_date else '' }}">
                 </div>
                 <div class="col-12">
-                    <label class="form-label">Evidência</label>
+                    <label class="form-label">{{ _('Evidência') }}</label>
                     <textarea name="evidence" class="form-control" rows="2">{{ item.evidence if item else '' }}</textarea>
                 </div>
             </div>
             <div class="mt-4">
                 <button type="submit" class="btn btn-info">
-                    <i class="bi bi-check-lg"></i> {{ 'Atualizar' if item else 'Salvar' }}
+                    <i class="bi bi-check-lg"></i> {{ _('Atualizar') if item else _('Salvar') }}
                 </button>
-                <a href="{{ url_for('compliance.nc_list') }}" class="btn btn-outline-secondary">Cancelar</a>
+                <a href="{{ url_for('compliance.nc_list') }}" class="btn btn-outline-secondary">{{ _('Cancelar') }}</a>
             </div>
         </form>
     </div>

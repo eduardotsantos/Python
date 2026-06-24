@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% block title %}Atas de Reunião - {{ project.title }}{% endblock %}
+{% block title %}{{ _('Atas de Reunião') }} - {{ project.title }}{% endblock %}
 
 {% block content %}
 <div class="d-flex align-items-center mb-4">
@@ -7,11 +7,11 @@
         <i class="bi bi-arrow-left"></i>
     </a>
     <div class="flex-grow-1">
-        <h4 class="fw-bold mb-0"><i class="bi bi-journal-text text-primary"></i> Atas de Reunião</h4>
+        <h4 class="fw-bold mb-0"><i class="bi bi-journal-text text-primary"></i> {{ _('Atas de Reunião') }}</h4>
         <span class="text-muted">{{ project.title }}</span>
     </div>
     <a href="{{ url_for('meeting_minutes.create_minutes', project_id=project.id) }}" class="btn btn-primary">
-        <i class="bi bi-plus-lg"></i> Nova Ata
+        <i class="bi bi-plus-lg"></i> {{ _('Nova Ata') }}
     </a>
 </div>
 
@@ -20,7 +20,7 @@
     <div class="col-md-4">
         <div class="card card-stats border-primary shadow-sm">
             <div class="card-body">
-                <p class="text-muted mb-1 small">Total de Atas</p>
+                <p class="text-muted mb-1 small">{{ _('Total de Atas') }}</p>
                 <h3 class="fw-bold mb-0">{{ minutes|length }}</h3>
             </div>
         </div>
@@ -28,7 +28,7 @@
     <div class="col-md-4">
         <div class="card card-stats border-success shadow-sm">
             <div class="card-body">
-                <p class="text-muted mb-1 small">Finalizadas</p>
+                <p class="text-muted mb-1 small">{{ _('Finalizadas') }}</p>
                 <h3 class="fw-bold mb-0">{{ minutes|selectattr('status', 'equalto', 'Finalizada')|list|length }}</h3>
             </div>
         </div>
@@ -36,7 +36,7 @@
     <div class="col-md-4">
         <div class="card card-stats border-warning shadow-sm">
             <div class="card-body">
-                <p class="text-muted mb-1 small">Rascunhos</p>
+                <p class="text-muted mb-1 small">{{ _('Rascunhos') }}</p>
                 <h3 class="fw-bold mb-0">{{ minutes|selectattr('status', 'equalto', 'Rascunho')|list|length }}</h3>
             </div>
         </div>
@@ -49,11 +49,11 @@
         <table class="table table-hover mb-0">
             <thead class="table-light">
                 <tr>
-                    <th>Data</th>
-                    <th>Título</th>
-                    <th>Local</th>
-                    <th>Status</th>
-                    <th class="text-end">Ações</th>
+                    <th>{{ _('Data') }}</th>
+                    <th>{{ _('Título') }}</th>
+                    <th>{{ _('Local') }}</th>
+                    <th>{{ _('Status') }}</th>
+                    <th class="text-end">{{ _('Ações') }}</th>
                 </tr>
             </thead>
             <tbody>
@@ -76,11 +76,11 @@
                     <td>{{ m.location or '-' }}</td>
                     <td>
                         {% if m.status == 'Finalizada' %}
-                            <span class="badge bg-success">Finalizada</span>
+                            <span class="badge bg-success">{{ _('Finalizada') }}</span>
                         {% elif m.status == 'Gerada' %}
-                            <span class="badge bg-info">Gerada</span>
+                            <span class="badge bg-info">{{ _('Gerada') }}</span>
                         {% else %}
-                            <span class="badge bg-warning text-dark">Rascunho</span>
+                            <span class="badge bg-warning text-dark">{{ _('Rascunho') }}</span>
                         {% endif %}
                     </td>
                     <td class="text-end">
@@ -111,10 +111,10 @@
 <div class="card shadow-sm">
     <div class="empty-state">
         <i class="bi bi-journal-text"></i>
-        <h5>Nenhuma ata registrada</h5>
-        <p>Registre as atas das reuniões do projeto</p>
+        <h5>{{ _('Nenhuma ata registrada') }}</h5>
+        <p>{{ _('Registre as atas das reuniões do projeto') }}</p>
         <a href="{{ url_for('meeting_minutes.create_minutes', project_id=project.id) }}" class="btn btn-primary">
-            <i class="bi bi-plus-lg"></i> Nova Ata
+            <i class="bi bi-plus-lg"></i> {{ _('Nova Ata') }}
         </a>
     </div>
 </div>

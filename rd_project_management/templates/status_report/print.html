@@ -392,13 +392,13 @@
 </head>
 <body>
     <button class="print-button no-print" onclick="window.print()">
-        Salvar como PDF
+        {{ _('Salvar como PDF') }}
     </button>
 
     <!-- Header -->
     <div class="header">
         <div class="header-left">
-            <h1>Status Report</h1>
+            <h1>{{ _('Status Report') }}</h1>
             <div class="project-code">{{ project.code }} - {{ project.title }}</div>
             {% if tenant %}
             <div class="company">{{ tenant.name }}</div>
@@ -416,56 +416,56 @@
     <div class="metrics">
         <div class="metric-box schedule">
             <div class="metric-value">{{ schedule_status.progress }}%</div>
-            <div class="metric-label">Progresso</div>
-            <div class="metric-detail">{{ schedule_status.completed }}/{{ schedule_status.total }} marcos</div>
+            <div class="metric-label">{{ _('Progresso') }}</div>
+            <div class="metric-detail">{{ schedule_status.completed }}/{{ schedule_status.total }} {{ _('marcos') }}</div>
         </div>
         <div class="metric-box cost">
             <div class="metric-value">{{ cost_status.percent_used }}%</div>
-            <div class="metric-label">Orçamento</div>
-            <div class="metric-detail">R$ {{ "{:,.0f}".format(cost_status.spent) }} de R$ {{ "{:,.0f}".format(cost_status.budget) }}</div>
+            <div class="metric-label">{{ _('Orçamento') }}</div>
+            <div class="metric-detail">R$ {{ "{:,.0f}".format(cost_status.spent) }} {{ _('de') }} R$ {{ "{:,.0f}".format(cost_status.budget) }}</div>
         </div>
         <div class="metric-box hours">
             <div class="metric-value">{{ total_hours|round(0)|int }}</div>
-            <div class="metric-label">Horas</div>
-            <div class="metric-detail">Total trabalhado</div>
+            <div class="metric-label">{{ _('Horas') }}</div>
+            <div class="metric-detail">{{ _('Total trabalhado') }}</div>
         </div>
         <div class="metric-box risks">
             <div class="metric-value">{{ risks|length }}</div>
-            <div class="metric-label">Riscos</div>
-            <div class="metric-detail">{{ risks|selectattr('severity', 'equalto', 'high')|list|length }} criticos</div>
+            <div class="metric-label">{{ _('Riscos') }}</div>
+            <div class="metric-detail">{{ risks|selectattr('severity', 'equalto', 'high')|list|length }} {{ _('críticos') }}</div>
         </div>
     </div>
 
     <!-- EVM Metrics -->
     {% if evm_metrics and evm_metrics.has_data %}
     <div class="section">
-        <div class="section-title">Indicadores de Valor Agregado (EVM)</div>
+        <div class="section-title">{{ _('Indicadores de Valor Agregado (EVM)') }}</div>
         <div class="evm-grid">
             <div class="evm-box highlight">
                 <div class="evm-value {{ 'good' if evm_metrics.cpi >= 1 else 'warning' if evm_metrics.cpi >= 0.9 else 'bad' }}">
                     {{ evm_metrics.cpi }}
                 </div>
                 <div class="evm-label">CPI</div>
-                <div class="evm-desc">Desempenho de Custo</div>
+                <div class="evm-desc">{{ _('Desempenho de Custo') }}</div>
             </div>
             <div class="evm-box highlight">
                 <div class="evm-value {{ 'good' if evm_metrics.spi >= 1 else 'warning' if evm_metrics.spi >= 0.9 else 'bad' }}">
                     {{ evm_metrics.spi }}
                 </div>
                 <div class="evm-label">SPI</div>
-                <div class="evm-desc">Desempenho de Prazo</div>
+                <div class="evm-desc">{{ _('Desempenho de Prazo') }}</div>
             </div>
             <div class="evm-box">
                 <div class="evm-value" style="color: #0d6efd;">R$ {{ "{:,.0f}".format(evm_metrics.etc) }}</div>
                 <div class="evm-label">ETC</div>
-                <div class="evm-desc">Estimativa p/ Terminar</div>
+                <div class="evm-desc">{{ _('Estimativa p/ Terminar') }}</div>
             </div>
             <div class="evm-box">
                 <div class="evm-value {{ 'good' if evm_metrics.eac <= evm_metrics.bac else 'bad' }}">
                     R$ {{ "{:,.0f}".format(evm_metrics.eac) }}
                 </div>
                 <div class="evm-label">EAC</div>
-                <div class="evm-desc">Estimativa no Termino</div>
+                <div class="evm-desc">{{ _('Estimativa no Término') }}</div>
             </div>
         </div>
         <div class="evm-secondary">
@@ -503,7 +503,7 @@
         <div class="column">
             <!-- Schedule -->
             <div class="section">
-                <div class="section-title">Cronograma</div>
+                <div class="section-title">{{ _('Cronograma') }}</div>
                 <div class="progress-bar-container">
                     <div class="progress-bar-fill {{ 'green' if schedule_status.progress >= 70 else 'yellow' if schedule_status.progress >= 40 else 'red' }}"
                          style="width: {{ schedule_status.progress }}%"></div>
@@ -511,24 +511,24 @@
                 <div class="stats-row">
                     <div class="stat-item">
                         <div class="stat-value" style="color: #28a745;">{{ schedule_status.completed }}</div>
-                        <div class="stat-label">Concluidos</div>
+                        <div class="stat-label">{{ _('Concluídos') }}</div>
                     </div>
                     <div class="stat-item">
                         <div class="stat-value" style="color: #0d6efd;">{{ schedule_status.on_track }}</div>
-                        <div class="stat-label">No prazo</div>
+                        <div class="stat-label">{{ _('No prazo') }}</div>
                     </div>
                     <div class="stat-item">
                         <div class="stat-value" style="color: #dc3545;">{{ schedule_status.delayed }}</div>
-                        <div class="stat-label">Atrasados</div>
+                        <div class="stat-label">{{ _('Atrasados') }}</div>
                     </div>
                 </div>
                 <div class="stats-row" style="margin-top: 10px;">
                     <div class="stat-item" style="text-align: left;">
-                        <div class="stat-label">Inicio</div>
+                        <div class="stat-label">{{ _('Início') }}</div>
                         <div style="font-weight: bold;">{{ project.start_date.strftime('%d/%m/%Y') if project.start_date else '-' }}</div>
                     </div>
                     <div class="stat-item" style="text-align: right;">
-                        <div class="stat-label">Termino</div>
+                        <div class="stat-label">{{ _('Término') }}</div>
                         <div style="font-weight: bold;">{{ project.end_date.strftime('%d/%m/%Y') if project.end_date else '-' }}</div>
                     </div>
                 </div>
@@ -536,7 +536,7 @@
 
             <!-- Budget -->
             <div class="section">
-                <div class="section-title">Orçamento</div>
+                <div class="section-title">{{ _('Orçamento') }}</div>
                 <div class="progress-bar-container">
                     <div class="progress-bar-fill {{ 'red' if cost_status.percent_used > 100 else 'yellow' if cost_status.percent_used > 85 else 'green' }}"
                          style="width: {{ [cost_status.percent_used, 100]|min }}%"></div>
@@ -544,17 +544,17 @@
                 <div class="stats-row">
                     <div class="stat-item">
                         <div class="stat-value">R$ {{ "{:,.0f}".format(cost_status.budget) }}</div>
-                        <div class="stat-label">Orçamento</div>
+                        <div class="stat-label">{{ _('Orçamento') }}</div>
                     </div>
                     <div class="stat-item">
                         <div class="stat-value" style="color: #0d6efd;">R$ {{ "{:,.0f}".format(cost_status.spent) }}</div>
-                        <div class="stat-label">Gasto</div>
+                        <div class="stat-label">{{ _('Gasto') }}</div>
                     </div>
                     <div class="stat-item">
                         <div class="stat-value" style="color: {{ '#dc3545' if cost_status.remaining < 0 else '#28a745' }};">
                             R$ {{ "{:,.0f}".format(cost_status.remaining) }}
                         </div>
-                        <div class="stat-label">Saldo</div>
+                        <div class="stat-label">{{ _('Saldo') }}</div>
                     </div>
                 </div>
             </div>
@@ -562,7 +562,7 @@
             <!-- Resource Cost: Planned vs Realized -->
             {% if resource_cost_status and resource_cost_status.has_data %}
             <div class="section">
-                <div class="section-title">Custo de Recursos (Planejado x Realizado)</div>
+                <div class="section-title">{{ _('Custo de Recursos (Planejado x Realizado)') }}</div>
                 <div class="progress-bar-container">
                     <div class="progress-bar-fill {{ 'red' if resource_cost_status.cost_percent > 100 else 'yellow' if resource_cost_status.cost_percent > 85 else 'green' }}"
                          style="width: {{ [resource_cost_status.cost_percent, 100]|min }}%"></div>
@@ -570,33 +570,33 @@
                 <div class="stats-row">
                     <div class="stat-item">
                         <div class="stat-value" style="color: #6c757d;">R$ {{ "{:,.0f}".format(resource_cost_status.planned_cost) }}</div>
-                        <div class="stat-label">Planejado</div>
+                        <div class="stat-label">{{ _('Planejado') }}</div>
                     </div>
                     <div class="stat-item">
                         <div class="stat-value" style="color: #0d6efd;">R$ {{ "{:,.0f}".format(resource_cost_status.realized_cost) }}</div>
-                        <div class="stat-label">Realizado</div>
+                        <div class="stat-label">{{ _('Realizado') }}</div>
                     </div>
                     <div class="stat-item">
                         <div class="stat-value" style="color: {{ '#dc3545' if resource_cost_status.cost_variance < 0 else '#28a745' }};">
                             R$ {{ "{:,.0f}".format(resource_cost_status.cost_variance) }}
                         </div>
-                        <div class="stat-label">Variação</div>
+                        <div class="stat-label">{{ _('Variação') }}</div>
                     </div>
                 </div>
                 <div class="stats-row" style="margin-top: 8px;">
                     <div class="stat-item">
                         <div class="stat-value" style="font-size: 10pt; color: #6c757d;">{{ resource_cost_status.planned_hours }}h</div>
-                        <div class="stat-label">Horas Plan.</div>
+                        <div class="stat-label">{{ _('Horas Plan.') }}</div>
                     </div>
                     <div class="stat-item">
                         <div class="stat-value" style="font-size: 10pt; color: #0d6efd;">{{ resource_cost_status.realized_hours }}h</div>
-                        <div class="stat-label">Horas Real.</div>
+                        <div class="stat-label">{{ _('Horas Real.') }}</div>
                     </div>
                     <div class="stat-item">
                         <div class="stat-value" style="font-size: 10pt; color: {{ '#dc3545' if resource_cost_status.hours_variance < 0 else '#28a745' }};">
                             {{ resource_cost_status.hours_variance }}h
                         </div>
-                        <div class="stat-label">Variação</div>
+                        <div class="stat-label">{{ _('Variação') }}</div>
                     </div>
                 </div>
             </div>
@@ -604,7 +604,7 @@
 
             <!-- Team -->
             <div class="section">
-                <div class="section-title">Equipe</div>
+                <div class="section-title">{{ _('Equipe') }}</div>
                 {% if team %}
                 <div class="team-grid">
                     {% for r in team[:6] %}
@@ -615,10 +615,10 @@
                     {% endfor %}
                 </div>
                 {% if team|length > 6 %}
-                <div style="font-size: 8pt; color: #888; margin-top: 5px;">+ {{ team|length - 6 }} outros membros</div>
+                <div style="font-size: 8pt; color: #888; margin-top: 5px;">+ {{ team|length - 6 }} {{ _('outros membros') }}</div>
                 {% endif %}
                 {% else %}
-                <div style="color: #888; font-size: 9pt;">Nenhum recurso alocado</div>
+                <div style="color: #888; font-size: 9pt;">{{ _('Nenhum recurso alocado') }}</div>
                 {% endif %}
             </div>
         </div>
@@ -627,21 +627,21 @@
         <div class="column">
             <!-- Risks -->
             <div class="section">
-                <div class="section-title">Riscos e Alertas</div>
+                <div class="section-title">{{ _('Riscos e Alertas') }}</div>
                 {% if risks %}
                     {% for risk in risks %}
                     <div class="risk-item {{ risk.severity }}">
                         <span class="risk-badge {{ risk.severity }}">
-                            {{ 'ALTO' if risk.severity == 'high' else 'MEDIO' if risk.severity == 'medium' else 'BAIXO' }}
+                            {{ _('ALTO') if risk.severity == 'high' else _('MÉDIO') if risk.severity == 'medium' else _('BAIXO') }}
                         </span>
                         <div class="risk-title">{{ risk.title }}</div>
                         <div class="risk-description">{{ risk.description }}</div>
-                        <div class="risk-action">Acao: {{ risk.action }}</div>
+                        <div class="risk-action">{{ _('Ação:') }} {{ risk.action }}</div>
                     </div>
                     {% endfor %}
                 {% else %}
                 <div class="no-risks">
-                    Nenhum risco identificado
+                    {{ _('Nenhum risco identificado') }}
                 </div>
                 {% endif %}
             </div>
@@ -649,7 +649,7 @@
             <!-- Compliance Status -->
             {% if compliance_status %}
             <div class="section">
-                <div class="section-title">Conformidade
+                <div class="section-title">{{ _('Conformidade') }}
                     <span style="float: right; font-size: 9pt; padding: 2px 8px; border-radius: 4px; background: {{ '#f8d7da' if compliance_status.status == 'red' else '#fff3cd' if compliance_status.status == 'yellow' else '#d4edda' }}; color: {{ '#721c24' if compliance_status.status == 'red' else '#856404' if compliance_status.status == 'yellow' else '#155724' }};">
                         {{ compliance_status.label }}
                     </span>
@@ -658,19 +658,19 @@
                     <tr>
                         <td style="text-align: center; padding: 5px;">
                             <div style="font-size: 14pt; font-weight: bold; color: {{ '#dc3545' if compliance_status.open_risks > 0 else '#333' }};">{{ compliance_status.open_risks }}</div>
-                            <div style="font-size: 8pt; color: #888;">Riscos</div>
+                            <div style="font-size: 8pt; color: #888;">{{ _('Riscos') }}</div>
                         </td>
                         <td style="text-align: center; padding: 5px;">
                             <div style="font-size: 14pt; font-weight: bold; color: {{ '#ffc107' if compliance_status.open_pending > 0 else '#333' }};">{{ compliance_status.open_pending }}</div>
-                            <div style="font-size: 8pt; color: #888;">Pendencias</div>
+                            <div style="font-size: 8pt; color: #888;">{{ _('Pendências') }}</div>
                         </td>
                         <td style="text-align: center; padding: 5px;">
                             <div style="font-size: 14pt; font-weight: bold; color: {{ '#dc3545' if compliance_status.open_bugs > 0 else '#333' }};">{{ compliance_status.open_bugs }}</div>
-                            <div style="font-size: 8pt; color: #888;">Bugs</div>
+                            <div style="font-size: 8pt; color: #888;">{{ _('Bugs') }}</div>
                         </td>
                         <td style="text-align: center; padding: 5px;">
                             <div style="font-size: 14pt; font-weight: bold; color: {{ '#ffc107' if compliance_status.open_ncs > 0 else '#333' }};">{{ compliance_status.open_ncs }}</div>
-                            <div style="font-size: 8pt; color: #888;">NCs</div>
+                            <div style="font-size: 8pt; color: #888;">{{ _('NCs') }}</div>
                         </td>
                     </tr>
                 </table>
@@ -692,7 +692,7 @@
 
                 {% if compliance_status.overdue_items %}
                 <div style="font-size: 8pt; margin-top: 5px;">
-                    <strong style="color: #dc3545;">Itens Atrasados:</strong>
+                    <strong style="color: #dc3545;">{{ _('Itens Atrasados') }}:</strong>
                     {% for item in compliance_status.overdue_items[:5] %}
                     <div style="margin-left: 10px;">- {{ item.title|truncate(40) }} ({{ item.due_date.strftime('%d/%m') if item.due_date else '' }})</div>
                     {% endfor %}
@@ -704,19 +704,19 @@
 
             <!-- Upcoming Milestones -->
             <div class="section">
-                <div class="section-title">Proximos Marcos</div>
+                <div class="section-title">{{ _('Próximos Marcos') }}</div>
                 {% if upcoming_milestones %}
                     {% for m in upcoming_milestones %}
                     <div class="milestone-item">
                         <div>
                             <span class="milestone-name">{{ m.title }}</span>
-                            <div style="font-size: 8pt; color: #888;">{{ m.progress }}% concluido</div>
+                            <div style="font-size: 8pt; color: #888;">{{ m.progress }}% {{ _('concluído') }}</div>
                         </div>
                         <span class="milestone-date">{{ m.end_date.strftime('%d/%m/%Y') }}</span>
                     </div>
                     {% endfor %}
                 {% else %}
-                <div style="color: #888; font-size: 9pt;">Nenhum marco pendente</div>
+                <div style="color: #888; font-size: 9pt;">{{ _('Nenhum marco pendente') }}</div>
                 {% endif %}
             </div>
         </div>
@@ -725,14 +725,14 @@
     <!-- Recent Activities -->
     {% if recent_activities %}
     <div class="section">
-        <div class="section-title">Atividades Recentes</div>
+        <div class="section-title">{{ _('Atividades Recentes') }}</div>
         <table class="activities-table">
             <thead>
                 <tr>
-                    <th>Data</th>
-                    <th>Responsavel</th>
-                    <th>Atividade</th>
-                    <th>Horas</th>
+                    <th>{{ _('Data') }}</th>
+                    <th>{{ _('Responsável') }}</th>
+                    <th>{{ _('Atividade') }}</th>
+                    <th>{{ _('Horas') }}</th>
                 </tr>
             </thead>
             <tbody>
@@ -751,7 +751,7 @@
 
     <!-- Footer -->
     <div class="footer">
-        Gerado por Orion Gestão de P&D em {{ report_date.strftime('%d/%m/%Y as %H:%M') }}
+        {{ _('Gerado por Orion Gestão de P&D em') }} {{ report_date.strftime('%d/%m/%Y as %H:%M') }}
         {% if tenant %} | {{ tenant.name }}{% endif %}
     </div>
 

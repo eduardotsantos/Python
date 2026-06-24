@@ -1,14 +1,14 @@
 {% extends "base.html" %}
-{% block title %}Analisar Documento - {{ document.filename }}{% endblock %}
+{% block title %}{{ _('Analisar Documento') }} - {{ document.filename }}{% endblock %}
 
 {% block content %}
 <div class="container-fluid">
     <div class="d-flex justify-content-between align-items-center mb-4">
         <div>
             <a href="{{ url_for('projects.view_project', project_id=document.project_id) }}" class="btn btn-outline-secondary btn-sm">
-                <i class="bi bi-arrow-left"></i> Voltar ao Projeto
+                <i class="bi bi-arrow-left"></i> {{ _('Voltar ao Projeto') }}
             </a>
-            <h4 class="mt-2"><i class="bi bi-file-earmark-pdf text-info"></i> Análise de Documento</h4>
+            <h4 class="mt-2"><i class="bi bi-file-earmark-pdf text-info"></i> {{ _('Analise de Documento') }}</h4>
             <p class="text-muted mb-0">{{ document.filename }}</p>
         </div>
     </div>
@@ -16,42 +16,42 @@
     {% if not ai_configured %}
     <div class="alert alert-warning">
         <i class="bi bi-exclamation-triangle"></i>
-        <strong>API de IA nao configurada.</strong>
-        Configure a variavel de ambiente <code>ANTHROPIC_API_KEY</code>.
+        <strong>{{ _('API de IA nao configurada.') }}</strong>
+        {{ _('Configure a variavel de ambiente') }} <code>ANTHROPIC_API_KEY</code>.
     </div>
     {% elif document.file_type != 'pdf' %}
     <div class="alert alert-warning">
         <i class="bi bi-exclamation-triangle"></i>
-        Apenas documentos PDF podem ser analisados pela IA.
+        {{ _('Apenas documentos PDF podem ser analisados pela IA.') }}
     </div>
     {% else %}
     <div class="row">
         <div class="col-md-4">
             <div class="card">
                 <div class="card-header">
-                    <i class="{{ document.file_icon }}"></i> Informacoes do Documento
+                    <i class="{{ document.file_icon }}"></i> {{ _('Informacoes do Documento') }}
                 </div>
                 <div class="card-body">
-                    <p><strong>Nome:</strong> {{ document.filename }}</p>
-                    <p><strong>Tamanho:</strong> {{ document.file_size_display }}</p>
-                    <p><strong>Upload:</strong> {{ document.uploaded_at.strftime('%d/%m/%Y %H:%M') if document.uploaded_at else 'N/A' }}</p>
-                    <p><strong>Por:</strong> {{ document.uploaded_by.full_name if document.uploaded_by else 'N/A' }}</p>
+                    <p><strong>{{ _('Nome:') }}</strong> {{ document.filename }}</p>
+                    <p><strong>{{ _('Tamanho:') }}</strong> {{ document.file_size_display }}</p>
+                    <p><strong>{{ _('Upload:') }}</strong> {{ document.uploaded_at.strftime('%d/%m/%Y %H:%M') if document.uploaded_at else 'N/A' }}</p>
+                    <p><strong>{{ _('Por:') }}</strong> {{ document.uploaded_by.full_name if document.uploaded_by else 'N/A' }}</p>
                     {% if document.description %}
-                    <p><strong>Descricao:</strong> {{ document.description }}</p>
+                    <p><strong>{{ _('Descricao:') }}</strong> {{ document.description }}</p>
                     {% endif %}
 
                     <hr>
 
                     <div class="text-center" id="analyzeSection">
-                        <p class="small text-muted">A IA extraira informacoes chave deste edital/documento.</p>
+                        <p class="small text-muted">{{ _('A IA extraira informacoes chave deste edital/documento.') }}</p>
                         <button class="btn btn-info" onclick="analyzeDocument()">
-                            <i class="bi bi-magic"></i> Analisar com IA
+                            <i class="bi bi-magic"></i> {{ _('Analisar com IA') }}
                         </button>
                     </div>
 
                     <div class="text-center d-none" id="loadingSection">
                         <div class="spinner-border text-info" role="status"></div>
-                        <p class="mt-2 small">Analisando documento...</p>
+                        <p class="mt-2 small">{{ _('Analisando documento...') }}</p>
                     </div>
                 </div>
             </div>
@@ -62,14 +62,14 @@
             <div id="documentSavedSection" class="d-none mb-3">
                 <div class="alert alert-success">
                     <i class="bi bi-file-earmark-check"></i>
-                    <strong>Documento salvo!</strong> A análise foi salva em <a href="{{ url_for('projects.view_project', project_id=document.project_id) }}#documents" class="alert-link">Documentos do Projeto</a>.
+                    <strong>{{ _('Documento salvo!') }}</strong> {{ _('A analise foi salva em') }} <a href="{{ url_for('projects.view_project', project_id=document.project_id) }}#documents" class="alert-link">{{ _('Documentos do Projeto') }}</a>.
                     <span id="documentName"></span>
                 </div>
             </div>
 
             <div class="card d-none" id="resultsCard">
                 <div class="card-header bg-info text-white">
-                    <i class="bi bi-lightbulb"></i> Análise do Documento
+                    <i class="bi bi-lightbulb"></i> {{ _('Analise do Documento') }}
                 </div>
                 <div class="card-body" id="analysisResults"></div>
             </div>
@@ -77,7 +77,7 @@
             <div class="card" id="placeholderCard">
                 <div class="card-body text-center text-muted py-5">
                     <i class="bi bi-file-earmark-text fs-1"></i>
-                    <p class="mt-2">Clique em "Analisar com IA" para extrair informacoes do documento.</p>
+                    <p class="mt-2">{{ _('Clique em "Analisar com IA" para extrair informacoes do documento.') }}</p>
                 </div>
             </div>
         </div>
@@ -88,6 +88,19 @@
 
 {% block extra_js %}
 <script>
+const summaryText = '{{ _("Resumo:") }}';
+const submissionDeadlineText = '{{ _("Prazo de Submissao") }}';
+const fundingValueText = '{{ _("Valor do Financiamento") }}';
+const projectDurationText = '{{ _("Duracao do Projeto:") }}';
+const counterpartText = '{{ _("Contrapartida:") }}';
+const thematicAreasText = '{{ _("Areas Tematicas:") }}';
+const eligibilityText = '{{ _("Requisitos de Elegibilidade:") }}';
+const fundableItemsText = '{{ _("Itens Financiaveis:") }}';
+const requiredDocsText = '{{ _("Documentos Necessarios:") }}';
+const attentionPointsText = '{{ _("Pontos de Atencao:") }}';
+const contactText = '{{ _("Contato:") }}';
+const agencyText = '{{ _("Orgao:") }}';
+
 async function analyzeDocument() {
     document.getElementById('analyzeSection').classList.add('d-none');
     document.getElementById('loadingSection').classList.remove('d-none');
@@ -101,7 +114,7 @@ async function analyzeDocument() {
         const data = await response.json();
 
         if (data.error) {
-            alert('Erro: ' + data.error);
+            alert('{{ _("Erro:") }} ' + data.error);
             document.getElementById('analyzeSection').classList.remove('d-none');
             document.getElementById('loadingSection').classList.add('d-none');
             return;
@@ -110,7 +123,7 @@ async function analyzeDocument() {
         displayAnalysis(data);
 
     } catch (error) {
-        alert('Erro de conexao: ' + error.message);
+        alert('{{ _("Erro de conexao:") }} ' + error.message);
         document.getElementById('analyzeSection').classList.remove('d-none');
     } finally {
         document.getElementById('loadingSection').classList.add('d-none');
@@ -136,14 +149,14 @@ function displayAnalysis(data) {
         html += `<h5 class="text-primary">${data.titulo}</h5>`;
     }
     if (data.orgao) {
-        html += `<p><strong>Orgao:</strong> ${data.orgao}</p>`;
+        html += `<p><strong>${agencyText}</strong> ${data.orgao}</p>`;
     }
 
     // Resumo
     if (data.resumo) {
         html += `
             <div class="alert alert-info">
-                <strong><i class="bi bi-info-circle"></i> Resumo:</strong><br>
+                <strong><i class="bi bi-info-circle"></i> ${summaryText}</strong><br>
                 ${data.resumo}
             </div>
         `;
@@ -156,7 +169,7 @@ function displayAnalysis(data) {
             <div class="col-md-6">
                 <div class="card bg-light">
                     <div class="card-body py-2">
-                        <small class="text-muted">Prazo de Submissao</small>
+                        <small class="text-muted">${submissionDeadlineText}</small>
                         <h6 class="mb-0 text-danger">${data.prazo_submissao}</h6>
                     </div>
                 </div>
@@ -168,7 +181,7 @@ function displayAnalysis(data) {
             <div class="col-md-6">
                 <div class="card bg-light">
                     <div class="card-body py-2">
-                        <small class="text-muted">Valor do Financiamento</small>
+                        <small class="text-muted">${fundingValueText}</small>
                         <h6 class="mb-0 text-success">
                             ${data.valor_minimo ? 'Min: R$ ' + data.valor_minimo.toLocaleString('pt-BR') : ''}
                             ${data.valor_maximo ? ' - Max: R$ ' + data.valor_maximo.toLocaleString('pt-BR') : ''}
@@ -182,19 +195,19 @@ function displayAnalysis(data) {
 
     // Duracao
     if (data.duracao_projeto) {
-        html += `<p><strong>Duracao do Projeto:</strong> ${data.duracao_projeto}</p>`;
+        html += `<p><strong>${projectDurationText}</strong> ${data.duracao_projeto}</p>`;
     }
 
     // Contrapartida
     if (data.contrapartida) {
-        html += `<p><strong>Contrapartida:</strong> ${data.contrapartida}</p>`;
+        html += `<p><strong>${counterpartText}</strong> ${data.contrapartida}</p>`;
     }
 
     // Areas Tematicas
     if (data.areas_tematicas && data.areas_tematicas.length) {
         html += `
             <div class="mb-3">
-                <strong><i class="bi bi-tags"></i> Areas Tematicas:</strong>
+                <strong><i class="bi bi-tags"></i> ${thematicAreasText}</strong>
                 <div class="mt-1">
                     ${data.areas_tematicas.map(a => `<span class="badge bg-primary me-1">${a}</span>`).join('')}
                 </div>
@@ -206,7 +219,7 @@ function displayAnalysis(data) {
     if (data.requisitos_elegibilidade && data.requisitos_elegibilidade.length) {
         html += `
             <div class="mb-3">
-                <strong><i class="bi bi-check2-square"></i> Requisitos de Elegibilidade:</strong>
+                <strong><i class="bi bi-check2-square"></i> ${eligibilityText}</strong>
                 <ul class="mb-0 mt-1">
                     ${data.requisitos_elegibilidade.map(r => `<li>${r}</li>`).join('')}
                 </ul>
@@ -218,7 +231,7 @@ function displayAnalysis(data) {
     if (data.itens_financiaveis && data.itens_financiaveis.length) {
         html += `
             <div class="mb-3">
-                <strong><i class="bi bi-currency-dollar"></i> Itens Financiaveis:</strong>
+                <strong><i class="bi bi-currency-dollar"></i> ${fundableItemsText}</strong>
                 <ul class="mb-0 mt-1">
                     ${data.itens_financiaveis.map(i => `<li>${i}</li>`).join('')}
                 </ul>
@@ -230,7 +243,7 @@ function displayAnalysis(data) {
     if (data.documentos_necessarios && data.documentos_necessarios.length) {
         html += `
             <div class="mb-3">
-                <strong><i class="bi bi-file-earmark-text"></i> Documentos Necessarios:</strong>
+                <strong><i class="bi bi-file-earmark-text"></i> ${requiredDocsText}</strong>
                 <ul class="mb-0 mt-1">
                     ${data.documentos_necessarios.map(d => `<li>${d}</li>`).join('')}
                 </ul>
@@ -242,7 +255,7 @@ function displayAnalysis(data) {
     if (data.pontos_atencao && data.pontos_atencao.length) {
         html += `
             <div class="alert alert-warning">
-                <strong><i class="bi bi-exclamation-triangle"></i> Pontos de Atencao:</strong>
+                <strong><i class="bi bi-exclamation-triangle"></i> ${attentionPointsText}</strong>
                 <ul class="mb-0 mt-1">
                     ${data.pontos_atencao.map(p => `<li>${p}</li>`).join('')}
                 </ul>
@@ -252,7 +265,7 @@ function displayAnalysis(data) {
 
     // Contato
     if (data.contato) {
-        html += `<p><strong><i class="bi bi-envelope"></i> Contato:</strong> ${data.contato}</p>`;
+        html += `<p><strong><i class="bi bi-envelope"></i> ${contactText}</strong> ${data.contato}</p>`;
     }
 
     document.getElementById('analysisResults').innerHTML = html;

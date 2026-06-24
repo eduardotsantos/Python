@@ -1,18 +1,18 @@
 {% extends "base.html" %}
-{% block title %}Stakeholders - {{ project.title }}{% endblock %}
+{% block title %}{{ _('Stakeholders') }} - {{ project.title }}{% endblock %}
 
 {% block content %}
 <div class="container-fluid">
     <div class="d-flex justify-content-between align-items-center mb-4">
         <div>
             <a href="{{ url_for('projects.view_project', project_id=project.id) }}" class="btn btn-outline-secondary btn-sm">
-                <i class="bi bi-arrow-left"></i> Voltar ao Projeto
+                <i class="bi bi-arrow-left"></i> {{ _('Voltar ao Projeto') }}
             </a>
-            <h4 class="mt-2"><i class="bi bi-people text-primary"></i> Stakeholders</h4>
+            <h4 class="mt-2"><i class="bi bi-people text-primary"></i> {{ _('Stakeholders') }}</h4>
             <p class="text-muted mb-0">{{ project.code }} - {{ project.title }}</p>
         </div>
         <a href="{{ url_for('projects.add_stakeholder', project_id=project.id) }}" class="btn btn-primary">
-            <i class="bi bi-plus-lg"></i> Adicionar Stakeholder
+            <i class="bi bi-plus-lg"></i> {{ _('Adicionar Stakeholder') }}
         </a>
     </div>
 
@@ -22,36 +22,36 @@
         <div class="col-md-3">
             <div class="card border-danger h-100">
                 <div class="card-body text-center">
-                    <h6 class="text-danger mb-1">Gerenciar de Perto</h6>
+                    <h6 class="text-danger mb-1">{{ _('Gerenciar de Perto') }}</h6>
                     <h3 class="mb-0">{{ stakeholders|selectattr('power_interest_quadrant', 'equalto', 'Gerenciar de Perto')|list|length }}</h3>
-                    <small class="text-muted">Alto poder + Alto interesse</small>
+                    <small class="text-muted">{{ _('Alto poder + Alto interesse') }}</small>
                 </div>
             </div>
         </div>
         <div class="col-md-3">
             <div class="card border-warning h-100">
                 <div class="card-body text-center">
-                    <h6 class="text-warning mb-1">Manter Satisfeito</h6>
+                    <h6 class="text-warning mb-1">{{ _('Manter Satisfeito') }}</h6>
                     <h3 class="mb-0">{{ stakeholders|selectattr('power_interest_quadrant', 'equalto', 'Manter Satisfeito')|list|length }}</h3>
-                    <small class="text-muted">Alto poder + Baixo interesse</small>
+                    <small class="text-muted">{{ _('Alto poder + Baixo interesse') }}</small>
                 </div>
             </div>
         </div>
         <div class="col-md-3">
             <div class="card border-info h-100">
                 <div class="card-body text-center">
-                    <h6 class="text-info mb-1">Manter Informado</h6>
+                    <h6 class="text-info mb-1">{{ _('Manter Informado') }}</h6>
                     <h3 class="mb-0">{{ stakeholders|selectattr('power_interest_quadrant', 'equalto', 'Manter Informado')|list|length }}</h3>
-                    <small class="text-muted">Baixo poder + Alto interesse</small>
+                    <small class="text-muted">{{ _('Baixo poder + Alto interesse') }}</small>
                 </div>
             </div>
         </div>
         <div class="col-md-3">
             <div class="card border-secondary h-100">
                 <div class="card-body text-center">
-                    <h6 class="text-secondary mb-1">Monitorar</h6>
+                    <h6 class="text-secondary mb-1">{{ _('Monitorar') }}</h6>
                     <h3 class="mb-0">{{ stakeholders|selectattr('power_interest_quadrant', 'equalto', 'Monitorar')|list|length }}</h3>
-                    <small class="text-muted">Baixo poder + Baixo interesse</small>
+                    <small class="text-muted">{{ _('Baixo poder + Baixo interesse') }}</small>
                 </div>
             </div>
         </div>
@@ -64,15 +64,15 @@
                 <table class="table table-hover">
                     <thead>
                         <tr>
-                            <th>Nome</th>
-                            <th>Papel</th>
-                            <th>Organizacao</th>
-                            <th>Influencia</th>
-                            <th>Interesse</th>
-                            <th>Estrategia</th>
-                            <th>Comunicacoes</th>
-                            <th>Status</th>
-                            <th>Acoes</th>
+                            <th>{{ _('Nome') }}</th>
+                            <th>{{ _('Papel') }}</th>
+                            <th>{{ _('Organização') }}</th>
+                            <th>{{ _('Influência') }}</th>
+                            <th>{{ _('Interesse') }}</th>
+                            <th>{{ _('Estratégia') }}</th>
+                            <th>{{ _('Comunicações') }}</th>
+                            <th>{{ _('Status') }}</th>
+                            <th>{{ _('Ações') }}</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -84,55 +84,55 @@
                                 <br><small class="text-muted"><i class="bi bi-envelope"></i> {{ s.email }}</small>
                                 {% endif %}
                             </td>
-                            <td>{{ s.role }}</td>
+                            <td>{{ _(s.role) }}</td>
                             <td>{{ s.organization or '-' }}</td>
                             <td>
                                 {% if s.influence_level == 'Muito Alto' %}
-                                <span class="badge bg-danger">{{ s.influence_level }}</span>
+                                <span class="badge bg-danger">{{ _('Muito Alto') }}</span>
                                 {% elif s.influence_level == 'Alto' %}
-                                <span class="badge bg-warning text-dark">{{ s.influence_level }}</span>
+                                <span class="badge bg-warning text-dark">{{ _('Alto') }}</span>
                                 {% elif s.influence_level == 'Médio' %}
-                                <span class="badge bg-info">{{ s.influence_level }}</span>
+                                <span class="badge bg-info">{{ _('Médio') }}</span>
                                 {% else %}
-                                <span class="badge bg-secondary">{{ s.influence_level }}</span>
+                                <span class="badge bg-secondary">{{ _('Baixo') }}</span>
                                 {% endif %}
                             </td>
                             <td>
                                 {% if s.interest_level == 'Muito Alto' %}
-                                <span class="badge bg-danger">{{ s.interest_level }}</span>
+                                <span class="badge bg-danger">{{ _('Muito Alto') }}</span>
                                 {% elif s.interest_level == 'Alto' %}
-                                <span class="badge bg-warning text-dark">{{ s.interest_level }}</span>
+                                <span class="badge bg-warning text-dark">{{ _('Alto') }}</span>
                                 {% elif s.interest_level == 'Médio' %}
-                                <span class="badge bg-info">{{ s.interest_level }}</span>
+                                <span class="badge bg-info">{{ _('Médio') }}</span>
                                 {% else %}
-                                <span class="badge bg-secondary">{{ s.interest_level }}</span>
+                                <span class="badge bg-secondary">{{ _('Baixo') }}</span>
                                 {% endif %}
                             </td>
                             <td>
-                                <span class="badge bg-dark">{{ s.power_interest_quadrant }}</span>
+                                <span class="badge bg-dark">{{ _(s.power_interest_quadrant) }}</span>
                             </td>
                             <td>
                                 {% if s.communication_count > 0 %}
-                                <span class="badge bg-success">{{ s.communication_count }} ativas</span>
+                                <span class="badge bg-success">{{ s.communication_count }} {{ _('ativas') }}</span>
                                 {% else %}
-                                <span class="badge bg-secondary">Nenhuma</span>
+                                <span class="badge bg-secondary">{{ _('Nenhuma') }}</span>
                                 {% endif %}
                             </td>
                             <td>
                                 {% if s.active %}
-                                <span class="badge bg-success">Ativo</span>
+                                <span class="badge bg-success">{{ _('Ativo') }}</span>
                                 {% else %}
-                                <span class="badge bg-secondary">Inativo</span>
+                                <span class="badge bg-secondary">{{ _('Inativo') }}</span>
                                 {% endif %}
                             </td>
                             <td>
                                 <a href="{{ url_for('projects.edit_stakeholder', project_id=project.id, stakeholder_id=s.id) }}"
-                                   class="btn btn-sm btn-outline-primary" title="Editar">
+                                   class="btn btn-sm btn-outline-primary" title="{{ _('Editar') }}">
                                     <i class="bi bi-pencil"></i>
                                 </a>
                                 <form action="{{ url_for('projects.delete_stakeholder', project_id=project.id, stakeholder_id=s.id) }}"
-                                      method="POST" class="d-inline" onsubmit="return confirm('Excluir stakeholder?');">
-                                    <button type="submit" class="btn btn-sm btn-outline-danger" title="Excluir">
+                                      method="POST" class="d-inline" onsubmit="return confirm('{{ _('Excluir stakeholder?') }}');">
+                                    <button type="submit" class="btn btn-sm btn-outline-danger" title="{{ _('Excluir') }}">
                                         <i class="bi bi-trash"></i>
                                     </button>
                                 </form>
@@ -148,9 +148,9 @@
     <div class="card">
         <div class="card-body text-center py-5">
             <i class="bi bi-people fs-1 text-muted"></i>
-            <p class="mt-3 text-muted">Nenhum stakeholder cadastrado.</p>
+            <p class="mt-3 text-muted">{{ _('Nenhum stakeholder cadastrado.') }}</p>
             <a href="{{ url_for('projects.add_stakeholder', project_id=project.id) }}" class="btn btn-primary">
-                <i class="bi bi-plus-lg"></i> Adicionar Primeiro Stakeholder
+                <i class="bi bi-plus-lg"></i> {{ _('Adicionar Primeiro Stakeholder') }}
             </a>
         </div>
     </div>

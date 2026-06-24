@@ -540,3 +540,159 @@ msgstr "Imprimir"
 msgid "Gerar PDF"
 msgstr "Generar PDF"
 
+# Status Report labels
+msgid "Sem marcos"
+msgstr "Sin hitos"
+
+msgid "No prazo"
+msgstr "A tiempo"
+
+msgid "Sem orcamento"
+msgstr "Sin presupuesto"
+
+msgid "Estourado"
+msgstr "Excedido"
+
+msgid "Saudavel"
+msgstr "Saludable"
+
+msgid "Acima do planejado"
+msgstr "Por encima de lo planificado"
+
+msgid "Dentro do planejado"
+msgstr "Dentro de lo planificado"
+
+msgid "Sem planejamento"
+msgstr "Sin planificación"
+
+msgid "Critico"
+msgstr "Crítico"
+
+msgid "Conforme"
+msgstr "Conforme"
+
+msgid "Sem dados"
+msgstr "Sin datos"
+
+msgid "Existem marcos com data de entrega ultrapassada"
+msgstr "Hay hitos con fecha de entrega vencida"
+
+msgid "Revisar cronograma e realocar recursos"
+msgstr "Revisar cronograma y reasignar recursos"
+
+msgid "Projeto expirado"
+msgstr "Proyecto expirado"
+
+msgid "Solicitar prorrogacao ou encerrar projeto"
+msgstr "Solicitar prórroga o cerrar proyecto"
+
+msgid "Prazo de encerramento proximo"
+msgstr "Fecha límite cercana"
+
+msgid "Acelerar entregas finais"
+msgstr "Acelerar entregas finales"
+
+msgid "Orcamento estourado"
+msgstr "Presupuesto excedido"
+
+msgid "Solicitar remanejamento ou aditivo"
+msgstr "Solicitar reasignación o adenda"
+
+msgid "Orcamento critico"
+msgstr "Presupuesto crítico"
+
+msgid "Controlar gastos e priorizar despesas essenciais"
+msgstr "Controlar gastos y priorizar gastos esenciales"
+
+msgid "Progresso abaixo do esperado"
+msgstr "Progreso por debajo de lo esperado"
+
+msgid "Revisar escopo ou aumentar equipe"
+msgstr "Revisar alcance o aumentar equipo"
+
+msgid "Sem recursos alocados"
+msgstr "Sin recursos asignados"
+
+msgid "Nenhum recurso ativo no projeto"
+msgstr "Ningún recurso activo en el proyecto"
+
+msgid "Alocar equipe para execucao"
+msgstr "Asignar equipo para ejecución"
+
+# Profile and User form
+msgid "Informacoes da Conta"
+msgstr "Información de la Cuenta"
+
+msgid "Editar Perfil"
+msgstr "Editar Perfil"
+
+msgid "Nome Completo"
+msgstr "Nombre Completo"
+
+msgid "Alterar Senha"
+msgstr "Cambiar Contraseña"
+
+msgid "Senha Atual"
+msgstr "Contraseña Actual"
+
+msgid "Nova Senha"
+msgstr "Nueva Contraseña"
+
+msgid "Confirmar Nova Senha"
+msgstr "Confirmar Nueva Contraseña"
+
+msgid "Preferencias de Email"
+msgstr "Preferencias de Email"
+
+msgid "Receber notificacoes por email"
+msgstr "Recibir notificaciones por email"
+
+msgid "Briefing diario"
+msgstr "Resumen diario"
+
+msgid "Alertas criticos"
+msgstr "Alertas críticas"
+
+msgid "Salvar Alteracoes"
+msgstr "Guardar Cambios"
+
+msgid "Membro desde"
+msgstr "Miembro desde"
+
+msgid "Administrador"
+msgstr "Administrador"
+
+msgid "Gerente"
+msgstr "Gerente"
+
+msgid "Usuario"
+msgstr "Usuario"
+
+msgid "Visualizador"
+msgstr "Visualizador"
+
+# Common form labels
+msgid "Entrar"
+msgstr "Iniciar Sesión"
+
+msgid "Email"
+msgstr "Email"
+
+msgid "Senha"
+msgstr "Contraseña"
+
+msgid "Lembrar-me"
+msgstr "Recordarme"
+
+msgid "Criar conta"
+msgstr "Crear cuenta"
+
+msgid "Cadastrar"
+msgstr "Registrar"
+
+msgid "Outros"
+msgstr "Otros"
+
+msgid "Atencao"
+msgstr "Atención"
+

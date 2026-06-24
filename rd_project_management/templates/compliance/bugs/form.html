@@ -1,14 +1,14 @@
 {% extends "base.html" %}
-{% block title %}{{ 'Editar' if bug else 'Novo' }} Bug - Gestão P&D{% endblock %}
+{% block title %}{{ _('Editar') if bug else _('Novo') }} {{ _('Bug') }} - {{ _('Gestão P&D') }}{% endblock %}
 
 {% block content %}
 <div class="d-flex justify-content-between align-items-center mb-4">
     <h4 class="fw-bold mb-0">
         <i class="bi bi-bug text-dark"></i>
-        {{ 'Editar Bug' if bug else 'Novo Bug' }}
+        {{ _('Editar Bug') if bug else _('Novo Bug') }}
     </h4>
     <a href="{{ url_for('compliance.bugs_list') }}" class="btn btn-outline-secondary">
-        <i class="bi bi-arrow-left"></i> Voltar
+        <i class="bi bi-arrow-left"></i> {{ _('Voltar') }}
     </a>
 </div>
 
@@ -17,93 +17,93 @@
         <form method="POST">
             <div class="row g-3">
                 <div class="col-md-8">
-                    <label class="form-label">Título *</label>
+                    <label class="form-label">{{ _('Título') }} *</label>
                     <input type="text" name="title" class="form-control" required value="{{ bug.title if bug else '' }}">
                 </div>
                 <div class="col-md-4">
-                    <label class="form-label">Projeto *</label>
+                    <label class="form-label">{{ _('Projeto') }} *</label>
                     <select name="project_id" class="form-select" required>
-                        <option value="">-- Selecione --</option>
+                        <option value="">-- {{ _('Selecione') }} --</option>
                         {% for project in projects %}
                         <option value="{{ project.id }}" {{ 'selected' if bug and bug.project_id == project.id }}>{{ project.title }}</option>
                         {% endfor %}
                     </select>
-                    <small class="text-muted">Obrigatório para aparecer no Status Report</small>
+                    <small class="text-muted">{{ _('Obrigatório para aparecer no Status Report') }}</small>
                 </div>
                 <div class="col-12">
-                    <label class="form-label">Descrição</label>
+                    <label class="form-label">{{ _('Descrição') }}</label>
                     <textarea name="description" class="form-control" rows="3">{{ bug.description if bug else '' }}</textarea>
                 </div>
                 <div class="col-md-4">
-                    <label class="form-label">Severidade *</label>
+                    <label class="form-label">{{ _('Severidade') }} *</label>
                     <select name="severity" class="form-select" required>
-                        {% set severities = ['Baixa', 'Média', 'Alta', 'Crítica'] %}
-                        {% for s in severities %}
-                        <option value="{{ s }}" {{ 'selected' if bug and bug.severity == s }}>{{ s }}</option>
+                        {% set severities = [(_('Baixa'), 'Baixa'), (_('Média'), 'Média'), (_('Alta'), 'Alta'), (_('Crítica'), 'Crítica')] %}
+                        {% for label, s in severities %}
+                        <option value="{{ s }}" {{ 'selected' if bug and bug.severity == s }}>{{ label }}</option>
                         {% endfor %}
                     </select>
                 </div>
                 <div class="col-md-4">
-                    <label class="form-label">Ambiente *</label>
+                    <label class="form-label">{{ _('Ambiente') }} *</label>
                     <select name="environment" class="form-select" required>
-                        {% set environments = ['Desenvolvimento', 'Homologação', 'Produção'] %}
-                        {% for e in environments %}
-                        <option value="{{ e }}" {{ 'selected' if bug and bug.environment == e }}>{{ e }}</option>
+                        {% set environments = [(_('Desenvolvimento'), 'Desenvolvimento'), (_('Homologação'), 'Homologação'), (_('Produção'), 'Produção')] %}
+                        {% for label, e in environments %}
+                        <option value="{{ e }}" {{ 'selected' if bug and bug.environment == e }}>{{ label }}</option>
                         {% endfor %}
                     </select>
                 </div>
                 <div class="col-md-4">
-                    <label class="form-label">Status</label>
+                    <label class="form-label">{{ _('Status') }}</label>
                     <select name="status" class="form-select">
-                        {% set statuses = ['Aberto', 'Em Análise', 'Em Correção', 'Teste', 'Resolvido', 'Fechado'] %}
-                        {% for status in statuses %}
-                        <option value="{{ status }}" {{ 'selected' if bug and bug.status == status }}>{{ status }}</option>
+                        {% set statuses = [(_('Aberto'), 'Aberto'), (_('Em Análise'), 'Em Análise'), (_('Em Correção'), 'Em Correção'), (_('Teste'), 'Teste'), (_('Resolvido'), 'Resolvido'), (_('Fechado'), 'Fechado')] %}
+                        {% for label, status in statuses %}
+                        <option value="{{ status }}" {{ 'selected' if bug and bug.status == status }}>{{ label }}</option>
                         {% endfor %}
                     </select>
                 </div>
                 <div class="col-12">
-                    <label class="form-label">Passos para Reproduzir</label>
-                    <textarea name="steps_to_reproduce" class="form-control" rows="3" placeholder="1. Acessar a tela X&#10;2. Clicar no botão Y&#10;3. Observar o erro Z">{{ bug.steps_to_reproduce if bug else '' }}</textarea>
+                    <label class="form-label">{{ _('Passos para Reproduzir') }}</label>
+                    <textarea name="steps_to_reproduce" class="form-control" rows="3" placeholder="{{ _('1. Acessar a tela X') }}&#10;{{ _('2. Clicar no botão Y') }}&#10;{{ _('3. Observar o erro Z') }}">{{ bug.steps_to_reproduce if bug else '' }}</textarea>
                 </div>
                 <div class="col-md-6">
-                    <label class="form-label">Comportamento Esperado</label>
+                    <label class="form-label">{{ _('Comportamento Esperado') }}</label>
                     <textarea name="expected_behavior" class="form-control" rows="2">{{ bug.expected_behavior if bug else '' }}</textarea>
                 </div>
                 <div class="col-md-6">
-                    <label class="form-label">Comportamento Atual</label>
+                    <label class="form-label">{{ _('Comportamento Atual') }}</label>
                     <textarea name="actual_behavior" class="form-control" rows="2">{{ bug.actual_behavior if bug else '' }}</textarea>
                 </div>
                 <div class="col-12">
-                    <label class="form-label">Evidência (URL ou descrição)</label>
+                    <label class="form-label">{{ _('Evidência (URL ou descrição)') }}</label>
                     <textarea name="evidence" class="form-control" rows="2">{{ bug.evidence if bug else '' }}</textarea>
                 </div>
                 <div class="col-md-4">
-                    <label class="form-label">Responsável</label>
+                    <label class="form-label">{{ _('Responsável') }}</label>
                     <select name="assigned_to_id" class="form-select">
-                        <option value="">-- Selecione --</option>
+                        <option value="">-- {{ _('Selecione') }} --</option>
                         {% for user in users %}
                         <option value="{{ user.id }}" {{ 'selected' if bug and bug.assigned_to_id == user.id }}>{{ user.full_name }}</option>
                         {% endfor %}
                     </select>
                 </div>
                 <div class="col-md-4">
-                    <label class="form-label">Data Identificação</label>
+                    <label class="form-label">{{ _('Data Identificação') }}</label>
                     <input type="date" name="reported_date" class="form-control" value="{{ bug.reported_date.strftime('%Y-%m-%d') if bug and bug.reported_date else '' }}">
                 </div>
                 <div class="col-md-4">
-                    <label class="form-label">Data Resolução</label>
+                    <label class="form-label">{{ _('Data Resolução') }}</label>
                     <input type="date" name="resolved_date" class="form-control" value="{{ bug.resolved_date.strftime('%Y-%m-%d') if bug and bug.resolved_date else '' }}">
                 </div>
                 <div class="col-12">
-                    <label class="form-label">Notas de Resolução</label>
+                    <label class="form-label">{{ _('Notas de Resolução') }}</label>
                     <textarea name="resolution_notes" class="form-control" rows="2">{{ bug.resolution_notes if bug else '' }}</textarea>
                 </div>
             </div>
             <div class="mt-4">
                 <button type="submit" class="btn btn-dark">
-                    <i class="bi bi-check-lg"></i> {{ 'Atualizar' if bug else 'Salvar' }}
+                    <i class="bi bi-check-lg"></i> {{ _('Atualizar') if bug else _('Salvar') }}
                 </button>
-                <a href="{{ url_for('compliance.bugs_list') }}" class="btn btn-outline-secondary">Cancelar</a>
+                <a href="{{ url_for('compliance.bugs_list') }}" class="btn btn-outline-secondary">{{ _('Cancelar') }}</a>
             </div>
         </form>
     </div>

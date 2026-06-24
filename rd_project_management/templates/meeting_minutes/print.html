@@ -203,10 +203,10 @@
 </head>
 <body>
     <a href="{{ url_for('meeting_minutes.view_minutes', project_id=project.id, minutes_id=minutes.id) }}" class="back-link no-print">
-        ← Voltar
+        {{ _('Voltar') }}
     </a>
     <button class="print-button no-print" onclick="window.print()">
-        Salvar como PDF
+        {{ _('Salvar como PDF') }}
     </button>
 
     <!-- Header -->
@@ -221,9 +221,9 @@
                 </div>
             </div>
             <div class="report-date">
-                Data da Reunião: {{ minutes.meeting_date.strftime('%d/%m/%Y') }}<br>
-                {% if minutes.meeting_time %}Horário: {{ minutes.meeting_time }}<br>{% endif %}
-                {% if minutes.location %}Local: {{ minutes.location }}{% endif %}
+                {{ _('Data da Reunião:') }} {{ minutes.meeting_date.strftime('%d/%m/%Y') }}<br>
+                {% if minutes.meeting_time %}{{ _('Horário') }}: {{ minutes.meeting_time }}<br>{% endif %}
+                {% if minutes.location %}{{ _('Local') }}: {{ minutes.location }}{% endif %}
             </div>
         </div>
     </div>
@@ -235,7 +235,7 @@
 
     <!-- Footer -->
     <div class="footer">
-        Documento gerado pelo sistema Orion Gestão de P&D<br>
+        {{ _('Documento gerado pelo sistema Orion Gestão de P&D') }}<br>
         {% if tenant %}{{ tenant.name }} | {% endif %}{{ minutes.created_at.strftime('%d/%m/%Y %H:%M') }}
     </div>
 

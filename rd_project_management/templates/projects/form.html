@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% block title %}{{ 'Editar' if project else 'Novo' }} Projeto - Gestão P&D{% endblock %}
+{% block title %}{{ _('Editar') if project else _('Novo') }} {{ _('Projeto - Gestão P&D') }}{% endblock %}
 
 {% block content %}
 <div class="row justify-content-center">
@@ -8,7 +8,7 @@
             <a href="{{ url_for('projects.list_projects') }}" class="btn btn-outline-secondary btn-sm me-3">
                 <i class="bi bi-arrow-left"></i>
             </a>
-            <h4 class="fw-bold mb-0">{{ 'Editar' if project else 'Novo' }} Projeto</h4>
+            <h4 class="fw-bold mb-0">{{ _('Editar') if project else _('Novo') }} {{ _('Projeto') }}</h4>
         </div>
 
         <div class="card shadow-sm">
@@ -17,77 +17,77 @@
                     <div class="row g-3">
                         {% if is_superadmin and not project %}
                         <div class="col-12">
-                            <label for="tenant_id" class="form-label">Empresa *</label>
+                            <label for="tenant_id" class="form-label">{{ _('Empresa') }} *</label>
                             <select class="form-select" id="tenant_id" name="tenant_id" required>
-                                <option value="">Selecione a empresa...</option>
+                                <option value="">{{ _('Selecione a empresa...') }}</option>
                                 {% for tenant in tenants %}
                                 <option value="{{ tenant.id }}">{{ tenant.name }}</option>
                                 {% endfor %}
                             </select>
-                            <small class="text-muted">Como superadmin, você precisa selecionar a empresa para criar o projeto.</small>
+                            <small class="text-muted">{{ _('Como superadmin, você precisa selecionar a empresa para criar o projeto.') }}</small>
                         </div>
                         {% endif %}
                         <div class="col-md-4">
-                            <label for="code" class="form-label">Código do Projeto *</label>
+                            <label for="code" class="form-label">{{ _('Código do Projeto') }} *</label>
                             <input type="text" class="form-control" id="code" name="code"
                                    value="{{ project.code if project else '' }}" required
-                                   placeholder="Ex: PD-2024-001">
+                                   placeholder="{{ _('Ex: PD-2024-001') }}">
                         </div>
                         <div class="col-md-8">
-                            <label for="title" class="form-label">Título *</label>
+                            <label for="title" class="form-label">{{ _('Título') }} *</label>
                             <input type="text" class="form-control" id="title" name="title"
                                    value="{{ project.title if project else '' }}" required>
                         </div>
                         <div class="col-12">
-                            <label for="description" class="form-label">Descrição</label>
+                            <label for="description" class="form-label">{{ _('Descrição') }}</label>
                             <textarea class="form-control" id="description" name="description" rows="4">{{ project.description if project else '' }}</textarea>
                         </div>
                         <div class="col-md-6">
-                            <label for="category" class="form-label">Categoria</label>
+                            <label for="category" class="form-label">{{ _('Categoria') }}</label>
                             <select class="form-select" id="category" name="category">
-                                <option value="">Selecione...</option>
+                                <option value="">{{ _('Selecione...') }}</option>
                                 {% set categories = ['Pesquisa Básica', 'Pesquisa Aplicada', 'Desenvolvimento Experimental', 'Inovação Tecnológica', 'Inovação de Processo'] %}
                                 {% for cat in categories %}
-                                <option value="{{ cat }}" {{ 'selected' if project and project.category == cat }}>{{ cat }}</option>
+                                <option value="{{ cat }}" {{ 'selected' if project and project.category == cat }}>{{ _(cat) }}</option>
                                 {% endfor %}
                             </select>
                         </div>
                         <div class="col-md-6">
-                            <label for="status" class="form-label">Status</label>
+                            <label for="status" class="form-label">{{ _('Status') }}</label>
                             <select class="form-select" id="status" name="status">
                                 {% set statuses = ['Planejamento', 'Em Andamento', 'Concluído', 'Cancelado'] %}
                                 {% for s in statuses %}
-                                <option value="{{ s }}" {{ 'selected' if project and project.status == s }}>{{ s }}</option>
+                                <option value="{{ s }}" {{ 'selected' if project and project.status == s }}>{{ _(s) }}</option>
                                 {% endfor %}
                             </select>
                         </div>
                         <div class="col-md-4">
-                            <label for="start_date" class="form-label">Data Início</label>
+                            <label for="start_date" class="form-label">{{ _('Data Início') }}</label>
                             <input type="date" class="form-control" id="start_date" name="start_date"
                                    value="{{ project.start_date.strftime('%Y-%m-%d') if project and project.start_date else '' }}">
                         </div>
                         <div class="col-md-4">
-                            <label for="end_date" class="form-label">Data Término</label>
+                            <label for="end_date" class="form-label">{{ _('Data Término') }}</label>
                             <input type="date" class="form-control" id="end_date" name="end_date"
                                    value="{{ project.end_date.strftime('%Y-%m-%d') if project and project.end_date else '' }}">
                         </div>
                         <div class="col-md-4">
-                            <label for="budget" class="form-label">Orçamento (R$)</label>
+                            <label for="budget" class="form-label">{{ _('Orçamento (R$)') }}</label>
                             <input type="number" step="0.01" class="form-control" id="budget" name="budget"
                                    value="{{ project.budget if project else '0.00' }}" data-currency>
                         </div>
                         <div class="col-md-6">
-                            <label for="funding_source" class="form-label">Fonte de Recursos</label>
+                            <label for="funding_source" class="form-label">{{ _('Fonte de Recursos') }}</label>
                             <select class="form-select" id="funding_source" name="funding_source">
-                                <option value="">Selecione...</option>
+                                <option value="">{{ _('Selecione...') }}</option>
                                 {% set sources = ['Recursos Próprios', 'FINEP', 'BNDES', 'CNPq', 'CAPES', 'FAPESP', 'Embrapii', 'Lei do Bem', 'Lei de Informática', 'Misto'] %}
                                 {% for src in sources %}
-                                <option value="{{ src }}" {{ 'selected' if project and project.funding_source == src }}>{{ src }}</option>
+                                <option value="{{ src }}" {{ 'selected' if project and project.funding_source == src }}>{{ _(src) }}</option>
                                 {% endfor %}
                             </select>
                         </div>
                         <div class="col-md-6">
-                            <label for="responsible_id" class="form-label">Responsável</label>
+                            <label for="responsible_id" class="form-label">{{ _('Responsável') }}</label>
                             <select class="form-select" id="responsible_id" name="responsible_id">
                                 {% for user in users %}
                                 <option value="{{ user.id }}" {{ 'selected' if project and project.responsible_id == user.id }}>{{ user.full_name }}</option>
@@ -98,35 +98,35 @@
                         <!-- PMBOK 8 - Value Delivery Section -->
                         <div class="col-12 mt-4">
                             <div class="alert alert-info alert-permanent py-2 mb-3">
-                                <i class="bi bi-award me-1"></i> <strong>Entrega de Valor (PMBOK 8)</strong> - Defina o valor esperado do projeto
+                                <i class="bi bi-award me-1"></i> <strong>{{ _('Entrega de Valor (PMBOK 8)') }}</strong> - {{ _('Defina o valor esperado do projeto') }}
                             </div>
                         </div>
                         <div class="col-md-3">
-                            <label for="value_type" class="form-label">Tipo de Valor</label>
+                            <label for="value_type" class="form-label">{{ _('Tipo de Valor') }}</label>
                             <select class="form-select" id="value_type" name="value_type">
-                                <option value="">Selecione...</option>
+                                <option value="">{{ _('Selecione...') }}</option>
                                 {% set value_types = ['ROI', 'Economia', 'Receita', 'Estratégico'] %}
                                 {% for vt in value_types %}
-                                <option value="{{ vt }}" {{ 'selected' if project and project.value_type == vt }}>{{ vt }}</option>
+                                <option value="{{ vt }}" {{ 'selected' if project and project.value_type == vt }}>{{ _(vt) }}</option>
                                 {% endfor %}
                             </select>
                         </div>
                         <div class="col-md-3">
-                            <label for="expected_value" class="form-label">Valor Esperado (R$)</label>
+                            <label for="expected_value" class="form-label">{{ _('Valor Esperado (R$)') }}</label>
                             <input type="number" step="0.01" class="form-control" id="expected_value" name="expected_value"
                                    value="{{ project.expected_value if project and project.expected_value else '0.00' }}" data-currency>
                         </div>
                         <div class="col-md-3">
-                            <label for="realized_value" class="form-label">Valor Realizado (R$)</label>
+                            <label for="realized_value" class="form-label">{{ _('Valor Realizado (R$)') }}</label>
                             <input type="number" step="0.01" class="form-control" id="realized_value" name="realized_value"
                                    value="{{ project.realized_value if project and project.realized_value else '0.00' }}" data-currency>
                         </div>
                         <div class="col-md-3">
-                            <label for="value_status" class="form-label">Status do Valor</label>
+                            <label for="value_status" class="form-label">{{ _('Status do Valor') }}</label>
                             <select class="form-select" id="value_status" name="value_status">
                                 {% set value_statuses = ['Não iniciado', 'Em captura', 'Parcial', 'Realizado'] %}
                                 {% for vs in value_statuses %}
-                                <option value="{{ vs }}" {{ 'selected' if project and project.value_status == vs }}>{{ vs }}</option>
+                                <option value="{{ vs }}" {{ 'selected' if project and project.value_status == vs }}>{{ _(vs) }}</option>
                                 {% endfor %}
                             </select>
                         </div>
@@ -134,27 +134,27 @@
                         <!-- TRL Section -->
                         <div class="col-12 mt-4">
                             <div class="alert alert-success alert-permanent py-2 mb-3 d-flex justify-content-between align-items-center">
-                                <span><i class="bi bi-graph-up-arrow me-1"></i> <strong>TRL - Technology Readiness Level</strong></span>
+                                <span><i class="bi bi-graph-up-arrow me-1"></i> <strong>{{ _('TRL - Technology Readiness Level') }}</strong></span>
                                 {% if project %}
                                 <a href="{{ url_for('projects.trl_history', project_id=project.id) }}" class="btn btn-sm btn-outline-success">
-                                    <i class="bi bi-clock-history"></i> Ver Historico
+                                    <i class="bi bi-clock-history"></i> {{ _('Ver Histórico') }}
                                 </a>
                                 {% endif %}
                             </div>
                         </div>
                         <div class="col-md-4">
-                            <label for="trl" class="form-label">Nivel TRL Atual</label>
+                            <label for="trl" class="form-label">{{ _('Nível TRL Atual') }}</label>
                             <select class="form-select" id="trl" name="trl">
                                 {% set trl_descriptions = {
-                                    1: 'Principios basicos observados',
-                                    2: 'Conceito de tecnologia formulado',
-                                    3: 'Prova de conceito experimental',
-                                    4: 'Validacao em laboratorio',
-                                    5: 'Validacao em ambiente relevante',
-                                    6: 'Demonstracao em ambiente relevante',
-                                    7: 'Demonstracao em ambiente operacional',
-                                    8: 'Sistema completo e qualificado',
-                                    9: 'Sistema comprovado em operacao'
+                                    1: _('Princípios básicos observados'),
+                                    2: _('Conceito de tecnologia formulado'),
+                                    3: _('Prova de conceito experimental'),
+                                    4: _('Validação em laboratório'),
+                                    5: _('Validação em ambiente relevante'),
+                                    6: _('Demonstração em ambiente relevante'),
+                                    7: _('Demonstração em ambiente operacional'),
+                                    8: _('Sistema completo e qualificado'),
+                                    9: _('Sistema comprovado em operação')
                                 } %}
                                 {% for i in range(1, 10) %}
                                 <option value="{{ i }}" {{ 'selected' if project and project.trl == i else ('selected' if not project and i == 1 else '') }}>
@@ -164,92 +164,92 @@
                             </select>
                         </div>
                         <div class="col-md-8">
-                            <label for="trl_justification" class="form-label">Justificativa da Mudanca (se alterado)</label>
+                            <label for="trl_justification" class="form-label">{{ _('Justificativa da Mudança (se alterado)') }}</label>
                             <input type="text" class="form-control" id="trl_justification" name="trl_justification"
-                                   placeholder="Por que o TRL mudou?">
+                                   placeholder="{{ _('Por que o TRL mudou?') }}">
                         </div>
 
                         <!-- Innovation KPIs Section -->
                         <div class="col-12 mt-4">
                             <div class="alert alert-warning alert-permanent py-2 mb-3 d-flex justify-content-between align-items-center">
-                                <span><i class="bi bi-lightbulb me-1"></i> <strong>KPIs de Inovacao</strong></span>
+                                <span><i class="bi bi-lightbulb me-1"></i> <strong>{{ _('KPIs de Inovação') }}</strong></span>
                                 {% if project %}
                                 <button type="button" class="btn btn-sm btn-outline-warning" onclick="suggestTrlKpi()">
-                                    <i class="bi bi-magic"></i> Sugerir com IA
+                                    <i class="bi bi-magic"></i> {{ _('Sugerir com IA') }}
                                 </button>
                                 {% endif %}
                             </div>
                         </div>
                         <div class="col-md-3">
-                            <label for="innovation_type" class="form-label">Tipo de Inovacao</label>
+                            <label for="innovation_type" class="form-label">{{ _('Tipo de Inovação') }}</label>
                             <select class="form-select" id="innovation_type" name="innovation_type">
-                                <option value="">Selecione...</option>
+                                <option value="">{{ _('Selecione...') }}</option>
                                 {% set innovation_types = ['Radical', 'Incremental', 'Disruptiva', 'Arquitetural'] %}
                                 {% for it in innovation_types %}
-                                <option value="{{ it }}" {{ 'selected' if project and project.innovation_type == it }}>{{ it }}</option>
+                                <option value="{{ it }}" {{ 'selected' if project and project.innovation_type == it }}>{{ _(it) }}</option>
                                 {% endfor %}
                             </select>
                         </div>
                         <div class="col-md-3">
-                            <label for="innovation_scope" class="form-label">Escopo</label>
+                            <label for="innovation_scope" class="form-label">{{ _('Escopo') }}</label>
                             <select class="form-select" id="innovation_scope" name="innovation_scope">
-                                <option value="">Selecione...</option>
+                                <option value="">{{ _('Selecione...') }}</option>
                                 {% set scopes = ['Produto', 'Processo', 'Modelo de Negócio', 'Organizacional'] %}
                                 {% for scope in scopes %}
-                                <option value="{{ scope }}" {{ 'selected' if project and project.innovation_scope == scope }}>{{ scope }}</option>
+                                <option value="{{ scope }}" {{ 'selected' if project and project.innovation_scope == scope }}>{{ _(scope) }}</option>
                                 {% endfor %}
                             </select>
                         </div>
                         <div class="col-md-3">
-                            <label for="ip_strategy" class="form-label">Estrategia de PI</label>
+                            <label for="ip_strategy" class="form-label">{{ _('Estratégia de PI') }}</label>
                             <select class="form-select" id="ip_strategy" name="ip_strategy">
-                                <option value="">Selecione...</option>
+                                <option value="">{{ _('Selecione...') }}</option>
                                 {% set ip_strategies = ['Patente', 'Segredo Industrial', 'Open Source', 'Nenhuma'] %}
                                 {% for ip in ip_strategies %}
-                                <option value="{{ ip }}" {{ 'selected' if project and project.ip_strategy == ip }}>{{ ip }}</option>
+                                <option value="{{ ip }}" {{ 'selected' if project and project.ip_strategy == ip }}>{{ _(ip) }}</option>
                                 {% endfor %}
                             </select>
                         </div>
                         <div class="col-md-3">
-                            <label for="innovation_risk_level" class="form-label">Nivel de Risco</label>
+                            <label for="innovation_risk_level" class="form-label">{{ _('Nível de Risco') }}</label>
                             <select class="form-select" id="innovation_risk_level" name="innovation_risk_level">
-                                <option value="">Selecione...</option>
+                                <option value="">{{ _('Selecione...') }}</option>
                                 {% set risk_levels = ['Baixo', 'Médio', 'Alto', 'Muito Alto'] %}
                                 {% for rl in risk_levels %}
-                                <option value="{{ rl }}" {{ 'selected' if project and project.innovation_risk_level == rl }}>{{ rl }}</option>
+                                <option value="{{ rl }}" {{ 'selected' if project and project.innovation_risk_level == rl }}>{{ _(rl) }}</option>
                                 {% endfor %}
                             </select>
                         </div>
                         <div class="col-md-4">
-                            <label for="target_market" class="form-label">Mercado-Alvo</label>
+                            <label for="target_market" class="form-label">{{ _('Mercado-Alvo') }}</label>
                             <input type="text" class="form-control" id="target_market" name="target_market"
                                    value="{{ project.target_market if project else '' }}"
-                                   placeholder="Ex: Industria automotiva, Saude">
+                                   placeholder="{{ _('Ex: Indústria automotiva, Saúde') }}">
                         </div>
                         <div class="col-md-4">
-                            <label for="time_to_market" class="form-label">Time to Market (meses)</label>
+                            <label for="time_to_market" class="form-label">{{ _('Time to Market (meses)') }}</label>
                             <input type="number" class="form-control" id="time_to_market" name="time_to_market"
                                    value="{{ project.time_to_market if project and project.time_to_market else '' }}"
-                                   placeholder="Meses estimados">
+                                   placeholder="{{ _('Meses estimados') }}">
                         </div>
                         <div class="col-md-4">
-                            <label for="expected_roi_percent" class="form-label">ROI Esperado (%)</label>
+                            <label for="expected_roi_percent" class="form-label">{{ _('ROI Esperado (%)') }}</label>
                             <input type="number" step="0.1" class="form-control" id="expected_roi_percent" name="expected_roi_percent"
                                    value="{{ project.expected_roi_percent if project and project.expected_roi_percent else '' }}"
-                                   placeholder="Ex: 150">
+                                   placeholder="{{ _('Ex: 150') }}">
                         </div>
                         <div class="col-12">
-                            <label for="competitive_advantage" class="form-label">Vantagem Competitiva</label>
+                            <label for="competitive_advantage" class="form-label">{{ _('Vantagem Competitiva') }}</label>
                             <textarea class="form-control" id="competitive_advantage" name="competitive_advantage" rows="2"
-                                      placeholder="Qual a vantagem competitiva esperada?">{{ project.competitive_advantage if project else '' }}</textarea>
+                                      placeholder="{{ _('Qual a vantagem competitiva esperada?') }}">{{ project.competitive_advantage if project else '' }}</textarea>
                         </div>
                     </div>
 
                     <hr class="my-4">
                     <div class="d-flex justify-content-end gap-2">
-                        <a href="{{ url_for('projects.list_projects') }}" class="btn btn-outline-secondary">Cancelar</a>
+                        <a href="{{ url_for('projects.list_projects') }}" class="btn btn-outline-secondary">{{ _('Cancelar') }}</a>
                         <button type="submit" class="btn btn-primary">
-                            <i class="bi bi-check-lg"></i> {{ 'Salvar Alterações' if project else 'Criar Projeto' }}
+                            <i class="bi bi-check-lg"></i> {{ _('Salvar Alterações') if project else _('Criar Projeto') }}
                         </button>
                     </div>
                 </form>
@@ -260,13 +260,13 @@
         <!-- Document Upload Section - Only for existing projects -->
         <div class="card shadow-sm mt-4">
             <div class="card-header bg-white">
-                <h6 class="mb-0 fw-bold"><i class="bi bi-file-earmark-text text-primary"></i> Documentos do Projeto</h6>
+                <h6 class="mb-0 fw-bold"><i class="bi bi-file-earmark-text text-primary"></i> {{ _('Documentos do Projeto') }}</h6>
             </div>
             <div class="card-body">
                 <!-- Existing Documents -->
                 {% if project.documents %}
                 <div class="mb-4">
-                    <h6 class="text-muted small">Documentos Anexados ({{ project.documents|length }}/3)</h6>
+                    <h6 class="text-muted small">{{ _('Documentos Anexados') }} ({{ project.documents|length }}/3)</h6>
                     <div class="list-group">
                         {% for doc in project.documents %}
                         <div class="list-group-item d-flex justify-content-between align-items-center">
@@ -286,14 +286,14 @@
                                 {% if doc.description %}
                                     <br><small class="text-muted">{{ doc.description }}</small>
                                 {% endif %}
-                                <br><small class="text-muted">{{ (doc.file_size / 1024)|round(1) }} KB - Enviado em {{ doc.uploaded_at.strftime('%d/%m/%Y %H:%M') }}</small>
+                                <br><small class="text-muted">{{ (doc.file_size / 1024)|round(1) }} KB - {{ _('Enviado em') }} {{ doc.uploaded_at.strftime('%d/%m/%Y %H:%M') }}</small>
                             </div>
                             <div>
-                                <a href="{{ url_for('projects.download_document', project_id=project.id, doc_id=doc.id) }}" class="btn btn-sm btn-outline-primary" title="Baixar">
+                                <a href="{{ url_for('projects.download_document', project_id=project.id, doc_id=doc.id) }}" class="btn btn-sm btn-outline-primary" title="{{ _('Baixar') }}">
                                     <i class="bi bi-download"></i>
                                 </a>
                                 <form method="POST" action="{{ url_for('projects.delete_document', project_id=project.id, doc_id=doc.id) }}" class="d-inline">
-                                    <button type="submit" class="btn btn-sm btn-outline-danger" title="Excluir" data-confirm="Tem certeza que deseja excluir este documento?">
+                                    <button type="submit" class="btn btn-sm btn-outline-danger" title="{{ _('Excluir') }}" data-confirm="{{ _('Tem certeza que deseja excluir este documento?') }}">
                                         <i class="bi bi-trash"></i>
                                     </button>
                                 </form>
@@ -309,26 +309,26 @@
                 <form method="POST" action="{{ url_for('projects.upload_document', project_id=project.id) }}" enctype="multipart/form-data">
                     <div class="row g-3">
                         <div class="col-md-6">
-                            <label for="document" class="form-label">Adicionar Documento</label>
+                            <label for="document" class="form-label">{{ _('Adicionar Documento') }}</label>
                             <input type="file" class="form-control" id="document" name="document"
                                    accept=".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx" required>
-                            <small class="text-muted">PDF, Word, Excel ou PowerPoint (máx. 16 MB)</small>
+                            <small class="text-muted">{{ _('PDF, Word, Excel ou PowerPoint (máx. 16 MB)') }}</small>
                         </div>
                         <div class="col-md-6">
-                            <label for="description" class="form-label">Descrição (opcional)</label>
+                            <label for="description" class="form-label">{{ _('Descrição (opcional)') }}</label>
                             <input type="text" class="form-control" id="description" name="description"
-                                   placeholder="Ex: Proposta técnica, Relatório parcial..." maxlength="300">
+                                   placeholder="{{ _('Ex: Proposta técnica, Relatório parcial...') }}" maxlength="300">
                         </div>
                         <div class="col-12">
                             <button type="submit" class="btn btn-outline-primary">
-                                <i class="bi bi-upload"></i> Enviar Documento
+                                <i class="bi bi-upload"></i> {{ _('Enviar Documento') }}
                             </button>
                         </div>
                     </div>
                 </form>
                 {% else %}
                 <div class="alert alert-info mb-0">
-                    <i class="bi bi-info-circle"></i> Limite de 3 documentos atingido. Exclua um documento para adicionar outro.
+                    <i class="bi bi-info-circle"></i> {{ _('Limite de 3 documentos atingido. Exclua um documento para adicionar outro.') }}
                 </div>
                 {% endif %}
             </div>
@@ -344,7 +344,7 @@
 async function suggestTrlKpi() {
     const btn = event.target;
     const originalText = btn.innerHTML;
-    btn.innerHTML = '<span class="spinner-border spinner-border-sm"></span> Analisando...';
+    btn.innerHTML = '<span class="spinner-border spinner-border-sm"></span> {{ _("Analisando...") }}';
     btn.disabled = true;
 
     try {
@@ -356,7 +356,7 @@ async function suggestTrlKpi() {
         const data = await response.json();
 
         if (data.error) {
-            alert('Erro: ' + data.error);
+            alert('{{ _("Erro:") }} ' + data.error);
             return;
         }
 
@@ -394,10 +394,10 @@ async function suggestTrlKpi() {
             document.getElementById('competitive_advantage').value = data.competitive_advantage;
         }
 
-        alert('Sugestoes aplicadas! Revise os valores antes de salvar.');
+        alert('{{ _("Sugestões aplicadas! Revise os valores antes de salvar.") }}');
 
     } catch (error) {
-        alert('Erro de conexao: ' + error.message);
+        alert('{{ _("Erro de conexão:") }} ' + error.message);
     } finally {
         btn.innerHTML = originalText;
         btn.disabled = false;

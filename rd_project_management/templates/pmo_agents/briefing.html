@@ -4,17 +4,17 @@
 {% block content %}
 <div class="d-flex justify-content-between align-items-center mb-4">
     <h4 class="fw-bold mb-0">
-        <i class="bi bi-sun text-warning"></i> Briefing Executivo Diário
+        <i class="bi bi-sun text-warning"></i> {{ _('Briefing Executivo Diário') }}
     </h4>
     <div class="btn-group">
         <a href="{{ url_for('pmo_agents.briefing_pdf') }}" class="btn btn-danger" title="Exportar PDF">
             <i class="bi bi-file-pdf"></i> PDF
         </a>
         <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#emailModal" title="Enviar por Email">
-            <i class="bi bi-envelope"></i> Email
+            <i class="bi bi-envelope"></i> {{ _('Email') }}
         </button>
         <a href="{{ url_for('pmo_agents.action_center') }}" class="btn btn-success">
-            <i class="bi bi-lightning"></i> Ações
+            <i class="bi bi-lightning"></i> {{ _('Ações') }}
         </a>
         <a href="{{ url_for('pmo_agents.dashboard') }}" class="btn btn-outline-secondary">
             <i class="bi bi-arrow-left"></i> Voltar

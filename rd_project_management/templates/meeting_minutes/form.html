@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% block title %}{{ 'Editar Ata' if minutes else 'Nova Ata' }} - {{ project.title }}{% endblock %}
+{% block title %}{{ _('Editar Ata') if minutes else _('Nova Ata') }} - {{ project.title }}{% endblock %}
 
 {% block content %}
 <div class="d-flex align-items-center mb-4">
@@ -7,7 +7,7 @@
         <i class="bi bi-arrow-left"></i>
     </a>
     <div class="flex-grow-1">
-        <h4 class="fw-bold mb-0"><i class="bi bi-journal-text text-primary"></i> {{ 'Editar Ata' if minutes else 'Nova Ata' }}</h4>
+        <h4 class="fw-bold mb-0"><i class="bi bi-journal-text text-primary"></i> {{ _('Editar Ata') if minutes else _('Nova Ata') }}</h4>
         <span class="text-muted">{{ project.title }}</span>
     </div>
 </div>
@@ -19,50 +19,50 @@
                 <form method="POST" enctype="multipart/form-data">
                     <div class="row g-3">
                         <div class="col-12">
-                            <label class="form-label">Título da Reunião *</label>
+                            <label class="form-label">{{ _('Título da Reunião') }} *</label>
                             <input type="text" name="title" class="form-control" required
                                    value="{{ minutes.title if minutes else '' }}"
                                    placeholder="Ex: Reunião de Acompanhamento - Sprint 3">
                         </div>
 
                         <div class="col-md-4">
-                            <label class="form-label">Data *</label>
+                            <label class="form-label">{{ _('Data') }} *</label>
                             <input type="date" name="meeting_date" class="form-control" required
                                    value="{{ minutes.meeting_date.strftime('%Y-%m-%d') if minutes else '' }}">
                         </div>
 
                         <div class="col-md-4">
-                            <label class="form-label">Horário</label>
+                            <label class="form-label">{{ _('Horário') }}</label>
                             <input type="time" name="meeting_time" class="form-control"
                                    value="{{ minutes.meeting_time if minutes else '' }}">
                         </div>
 
                         <div class="col-md-4">
-                            <label class="form-label">Local</label>
+                            <label class="form-label">{{ _('Local') }}</label>
                             <input type="text" name="location" class="form-control"
                                    value="{{ minutes.location if minutes else '' }}"
                                    placeholder="Sala de reuniões / Google Meet">
                         </div>
 
                         <div class="col-12">
-                            <label class="form-label">Participantes</label>
+                            <label class="form-label">{{ _('Participantes') }}</label>
                             <textarea name="participants" class="form-control" rows="2"
                                       placeholder="Nome dos participantes, separados por vírgula">{{ minutes.participants if minutes else '' }}</textarea>
                         </div>
 
                         <div class="col-12">
-                            <label class="form-label">Documento/Gravação (PDF, DOC, TXT)</label>
+                            <label class="form-label">{{ _('Documento/Gravação (PDF, DOC, TXT)') }}</label>
                             <input type="file" name="attachment" class="form-control" accept=".pdf,.doc,.docx,.txt">
                             {% if minutes and minutes.attachment_filename %}
                             <div class="form-text">
-                                <i class="bi bi-paperclip"></i> Arquivo atual: {{ minutes.attachment_filename }}
+                                <i class="bi bi-paperclip"></i> {{ _('Arquivo atual:') }} {{ minutes.attachment_filename }}
                             </div>
                             {% endif %}
-                            <div class="form-text">O texto de PDFs será extraído automaticamente</div>
+                            <div class="form-text">{{ _('O texto de PDFs será extraído automaticamente') }}</div>
                         </div>
 
                         <div class="col-12">
-                            <label class="form-label">Transcrição / Anotações</label>
+                            <label class="form-label">{{ _('Transcrição / Anotações') }}</label>
                             <textarea name="transcription" class="form-control" rows="10"
                                       placeholder="Cole aqui a transcrição da reunião ou suas anotações. A IA usará este conteúdo para gerar a ata formal.">{{ minutes.transcription if minutes else '' }}</textarea>
                             <div class="form-text">
@@ -75,10 +75,10 @@
 
                     <div class="d-flex gap-2">
                         <button type="submit" class="btn btn-primary">
-                            <i class="bi bi-check-lg"></i> {{ 'Salvar Alterações' if minutes else 'Criar Ata' }}
+                            <i class="bi bi-check-lg"></i> {{ _('Salvar Alterações') if minutes else _('Criar Ata') }}
                         </button>
                         <a href="{{ url_for('meeting_minutes.list_minutes', project_id=project.id) }}" class="btn btn-outline-secondary">
-                            Cancelar
+                            {{ _('Cancelar') }}
                         </a>
                     </div>
                 </form>
@@ -89,10 +89,10 @@
     <div class="col-lg-4">
         <div class="card shadow-sm border-info">
             <div class="card-header bg-info text-white">
-                <h6 class="mb-0"><i class="bi bi-lightbulb"></i> Dicas</h6>
+                <h6 class="mb-0"><i class="bi bi-lightbulb"></i> {{ _('Dicas') }}</h6>
             </div>
             <div class="card-body">
-                <p class="small mb-2"><strong>Como usar:</strong></p>
+                <p class="small mb-2"><strong>{{ _('Como usar:') }}</strong></p>
                 <ol class="small mb-0">
                     <li class="mb-2">Preencha os dados básicos da reunião</li>
                     <li class="mb-2">Cole a transcrição ou anotações no campo correspondente</li>
@@ -105,7 +105,7 @@
 
         <div class="card shadow-sm mt-3">
             <div class="card-header bg-white">
-                <h6 class="mb-0"><i class="bi bi-file-earmark-text"></i> Formatos Aceitos</h6>
+                <h6 class="mb-0"><i class="bi bi-file-earmark-text"></i> {{ _('Formatos Aceitos') }}</h6>
             </div>
             <div class="card-body">
                 <ul class="small mb-0">

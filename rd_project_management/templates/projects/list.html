@@ -1,15 +1,15 @@
 {% extends "base.html" %}
-{% block title %}Projetos - Gestão P&D{% endblock %}
+{% block title %}{{ _('Projetos - Gestão P&D') }}{% endblock %}
 
 {% block content %}
 <div class="d-flex justify-content-between align-items-center mb-4">
-    <h4 class="fw-bold mb-0"><i class="bi bi-folder text-primary"></i> Projetos de P&D</h4>
+    <h4 class="fw-bold mb-0"><i class="bi bi-folder text-primary"></i> {{ _('Projetos de P&D') }}</h4>
     <div>
         <a href="{{ url_for('projects.export_excel') }}" class="btn btn-success me-2">
-            <i class="bi bi-file-earmark-excel"></i> Exportar Excel
+            <i class="bi bi-file-earmark-excel"></i> {{ _('Exportar Excel') }}
         </a>
         <a href="{{ url_for('projects.create_project') }}" class="btn btn-primary">
-            <i class="bi bi-plus-lg"></i> Novo Projeto
+            <i class="bi bi-plus-lg"></i> {{ _('Novo Projeto') }}
         </a>
     </div>
 </div>
@@ -21,7 +21,7 @@
             <div class="card-body">
                 <div class="d-flex justify-content-between">
                     <div>
-                        <p class="text-muted mb-1 small">Total Projetos</p>
+                        <p class="text-muted mb-1 small">{{ _('Total Projetos') }}</p>
                         <h3 class="fw-bold mb-0">{{ total }}</h3>
                     </div>
                     <div class="text-primary opacity-50"><i class="bi bi-folder" style="font-size:2rem"></i></div>
@@ -34,7 +34,7 @@
             <div class="card-body">
                 <div class="d-flex justify-content-between">
                     <div>
-                        <p class="text-muted mb-1 small">Em Andamento</p>
+                        <p class="text-muted mb-1 small">{{ _('Em Andamento') }}</p>
                         <h3 class="fw-bold mb-0">{{ in_progress }}</h3>
                     </div>
                     <div class="text-warning opacity-50"><i class="bi bi-arrow-repeat" style="font-size:2rem"></i></div>
@@ -47,7 +47,7 @@
             <div class="card-body">
                 <div class="d-flex justify-content-between">
                     <div>
-                        <p class="text-muted mb-1 small">Concluídos</p>
+                        <p class="text-muted mb-1 small">{{ _('Concluídos') }}</p>
                         <h3 class="fw-bold mb-0">{{ completed }}</h3>
                     </div>
                     <div class="text-success opacity-50"><i class="bi bi-check-circle" style="font-size:2rem"></i></div>
@@ -60,7 +60,7 @@
             <div class="card-body">
                 <div class="d-flex justify-content-between">
                     <div>
-                        <p class="text-muted mb-1 small">Orçamento Total</p>
+                        <p class="text-muted mb-1 small">{{ _('Orçamento Total') }}</p>
                         <h5 class="fw-bold mb-0">R$ {{ "{:,.2f}".format(total_budget).replace(",", "X").replace(".", ",").replace("X", ".") }}</h5>
                     </div>
                     <div class="text-info opacity-50"><i class="bi bi-cash-stack" style="font-size:2rem"></i></div>
@@ -77,21 +77,21 @@
             <div class="col-md-5">
                 <div class="search-box">
                     <i class="bi bi-search"></i>
-                    <input type="text" class="form-control" name="search" placeholder="Buscar projetos..." value="{{ search }}">
+                    <input type="text" class="form-control" name="search" placeholder="{{ _('Buscar projetos...') }}" value="{{ search }}">
                 </div>
             </div>
             <div class="col-md-4">
                 <select name="status" class="form-select">
-                    <option value="">Todos os Status</option>
-                    <option value="Planejamento" {{ 'selected' if status_filter == 'Planejamento' }}>Planejamento</option>
-                    <option value="Em Andamento" {{ 'selected' if status_filter == 'Em Andamento' }}>Em Andamento</option>
-                    <option value="Concluído" {{ 'selected' if status_filter == 'Concluído' }}>Concluído</option>
-                    <option value="Cancelado" {{ 'selected' if status_filter == 'Cancelado' }}>Cancelado</option>
+                    <option value="">{{ _('Todos os Status') }}</option>
+                    <option value="Planejamento" {{ 'selected' if status_filter == 'Planejamento' }}>{{ _('Planejamento') }}</option>
+                    <option value="Em Andamento" {{ 'selected' if status_filter == 'Em Andamento' }}>{{ _('Em Andamento') }}</option>
+                    <option value="Concluído" {{ 'selected' if status_filter == 'Concluído' }}>{{ _('Concluído') }}</option>
+                    <option value="Cancelado" {{ 'selected' if status_filter == 'Cancelado' }}>{{ _('Cancelado') }}</option>
                 </select>
             </div>
             <div class="col-md-3 text-end">
-                <button type="submit" class="btn btn-outline-primary btn-sm"><i class="bi bi-filter"></i> Filtrar</button>
-                <a href="{{ url_for('projects.list_projects') }}" class="btn btn-outline-secondary btn-sm"><i class="bi bi-x"></i> Limpar</a>
+                <button type="submit" class="btn btn-outline-primary btn-sm"><i class="bi bi-filter"></i> {{ _('Filtrar') }}</button>
+                <a href="{{ url_for('projects.list_projects') }}" class="btn btn-outline-secondary btn-sm"><i class="bi bi-x"></i> {{ _('Limpar') }}</a>
             </div>
         </form>
     </div>
@@ -104,13 +104,13 @@
         <table class="table table-hover mb-0">
             <thead>
                 <tr>
-                    <th>Código</th>
-                    <th>Título</th>
-                    <th>Categoria</th>
-                    <th>Status</th>
-                    <th>Orçamento</th>
-                    <th>Período</th>
-                    <th class="text-end">Ações</th>
+                    <th>{{ _('Código') }}</th>
+                    <th>{{ _('Título') }}</th>
+                    <th>{{ _('Categoria') }}</th>
+                    <th>{{ _('Status') }}</th>
+                    <th>{{ _('Orçamento') }}</th>
+                    <th>{{ _('Período') }}</th>
+                    <th class="text-end">{{ _('Ações') }}</th>
                 </tr>
             </thead>
             <tbody>
@@ -125,13 +125,13 @@
                     <td><span class="text-muted">{{ project.category or '-' }}</span></td>
                     <td>
                         {% if project.status == 'Em Andamento' %}
-                            <span class="badge bg-warning text-dark badge-status">{{ project.status }}</span>
+                            <span class="badge bg-warning text-dark badge-status">{{ _('Em Andamento') }}</span>
                         {% elif project.status == 'Concluído' %}
-                            <span class="badge bg-success badge-status">{{ project.status }}</span>
+                            <span class="badge bg-success badge-status">{{ _('Concluído') }}</span>
                         {% elif project.status == 'Cancelado' %}
-                            <span class="badge bg-danger badge-status">{{ project.status }}</span>
+                            <span class="badge bg-danger badge-status">{{ _('Cancelado') }}</span>
                         {% else %}
-                            <span class="badge bg-info badge-status">{{ project.status }}</span>
+                            <span class="badge bg-info badge-status">{{ _('Planejamento') }}</span>
                         {% endif %}
                     </td>
                     <td>R$ {{ "{:,.2f}".format(project.budget).replace(",", "X").replace(".", ",").replace("X", ".") }}</td>
@@ -144,13 +144,13 @@
                         {% endif %}
                     </td>
                     <td class="text-end">
-                        <a href="{{ url_for('status_report.view_report', project_id=project.id) }}" class="btn btn-sm btn-outline-success" title="Status Report">
+                        <a href="{{ url_for('status_report.view_report', project_id=project.id) }}" class="btn btn-sm btn-outline-success" title="{{ _('Status Report') }}">
                             <i class="bi bi-clipboard-data"></i>
                         </a>
-                        <a href="{{ url_for('projects.view_project', project_id=project.id) }}" class="btn btn-sm btn-outline-primary" title="Ver">
+                        <a href="{{ url_for('projects.view_project', project_id=project.id) }}" class="btn btn-sm btn-outline-primary" title="{{ _('Ver') }}">
                             <i class="bi bi-eye"></i>
                         </a>
-                        <a href="{{ url_for('projects.edit_project', project_id=project.id) }}" class="btn btn-sm btn-outline-secondary" title="Editar">
+                        <a href="{{ url_for('projects.edit_project', project_id=project.id) }}" class="btn btn-sm btn-outline-secondary" title="{{ _('Editar') }}">
                             <i class="bi bi-pencil"></i>
                         </a>
                     </td>
@@ -164,10 +164,10 @@
 <div class="card shadow-sm">
     <div class="empty-state">
         <i class="bi bi-folder-plus"></i>
-        <h5>Nenhum projeto encontrado</h5>
-        <p>Comece criando seu primeiro projeto de P&D</p>
+        <h5>{{ _('Nenhum projeto encontrado') }}</h5>
+        <p>{{ _('Comece criando seu primeiro projeto de P&D') }}</p>
         <a href="{{ url_for('projects.create_project') }}" class="btn btn-primary">
-            <i class="bi bi-plus-lg"></i> Criar Projeto
+            <i class="bi bi-plus-lg"></i> {{ _('Criar Projeto') }}
         </a>
     </div>
 </div>

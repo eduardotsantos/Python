@@ -4,10 +4,10 @@
 {% block content %}
 <div class="d-flex justify-content-between align-items-center mb-4">
     <h4 class="fw-bold mb-0">
-        <i class="bi bi-file-earmark-text text-secondary"></i> Leitor de Atas IA
+        <i class="bi bi-file-earmark-text text-secondary"></i> {{ _('Leitor de Atas IA') }}
     </h4>
     <a href="{{ url_for('pmo_agents.dashboard') }}" class="btn btn-outline-secondary">
-        <i class="bi bi-arrow-left"></i> Voltar
+        <i class="bi bi-arrow-left"></i> {{ _('Voltar') }}
     </a>
 </div>
 
@@ -16,21 +16,21 @@
     <div class="col-lg-6">
         <div class="card shadow-sm">
             <div class="card-header">
-                <h5 class="mb-0"><i class="bi bi-upload"></i> Cole a Ata da Reunião</h5>
+                <h5 class="mb-0"><i class="bi bi-upload"></i> {{ _('Cole a Ata da Reunião') }}</h5>
             </div>
             <div class="card-body">
                 <form method="POST">
                     <div class="mb-3">
-                        <label class="form-label">Projeto (opcional)</label>
+                        <label class="form-label">{{ _('Projeto (opcional)') }}</label>
                         <select name="project_id" class="form-select">
-                            <option value="">-- Selecione --</option>
+                            <option value="">-- {{ _('Selecione') }} --</option>
                             {% for project in projects %}
                             <option value="{{ project.id }}">{{ project.title }}</option>
                             {% endfor %}
                         </select>
                     </div>
                     <div class="mb-3">
-                        <label class="form-label">Conteúdo da Ata *</label>
+                        <label class="form-label">{{ _('Conteúdo da Ata') }} *</label>
                         <textarea name="minutes_text" class="form-control" rows="15" required
                             placeholder="Cole aqui o conteúdo da ata de reunião...
 
@@ -42,7 +42,7 @@ Exemplo de padrões que serão detectados:
 - Ação: implementar validação no sistema"></textarea>
                     </div>
                     <button type="submit" class="btn btn-primary w-100">
-                        <i class="bi bi-magic"></i> Analisar Ata
+                        <i class="bi bi-magic"></i> {{ _('Analisar Ata') }}
                     </button>
                 </form>
             </div>
@@ -51,31 +51,31 @@ Exemplo de padrões que serão detectados:
         <!-- Examples -->
         <div class="card mt-4 shadow-sm">
             <div class="card-header">
-                <h6 class="mb-0"><i class="bi bi-lightbulb"></i> Padrões Detectados</h6>
+                <h6 class="mb-0"><i class="bi bi-lightbulb"></i> {{ _('Padrões Detectados') }}</h6>
             </div>
             <div class="card-body">
-                <h6 class="text-success">Pendências</h6>
+                <h6 class="text-success">{{ _('Pendências') }}</h6>
                 <ul class="small">
                     <li>"[Nome] deverá [tarefa] até [data]"</li>
                     <li>"Ficou definido que [nome] [tarefa]"</li>
                     <li>"Necessário [tarefa]"</li>
                 </ul>
 
-                <h6 class="text-danger">Riscos</h6>
+                <h6 class="text-danger">{{ _('Riscos') }}</h6>
                 <ul class="small">
                     <li>"Existe risco de [descrição]"</li>
                     <li>"Pode atrasar [item]"</li>
                     <li>"Preocupação com [tema]"</li>
                 </ul>
 
-                <h6 class="text-warning">Não Conformidades</h6>
+                <h6 class="text-warning">{{ _('Não Conformidades') }}</h6>
                 <ul class="small">
                     <li>"Não foi apresentado [item]"</li>
                     <li>"Faltou [evidência/documento]"</li>
                     <li>"Problema identificado [descrição]"</li>
                 </ul>
 
-                <h6 class="text-info">Ações</h6>
+                <h6 class="text-info">{{ _('Ações') }}</h6>
                 <ul class="small mb-0">
                     <li>"Ação: [descrição]"</li>
                     <li>"Será implementado [item]"</li>
@@ -90,27 +90,27 @@ Exemplo de padrões que serão detectados:
         {% if extractions %}
         <div class="card shadow-sm mb-4">
             <div class="card-header bg-success text-white">
-                <h5 class="mb-0"><i class="bi bi-check-circle"></i> Itens Extraídos</h5>
+                <h5 class="mb-0"><i class="bi bi-check-circle"></i> {{ _('Itens Extraídos') }}</h5>
             </div>
             <div class="card-body">
                 <!-- Pending Items -->
                 {% if extractions.pending %}
                 <div class="mb-4">
-                    <h6 class="text-warning"><i class="bi bi-clock"></i> Pendências ({{ extractions.pending | length }})</h6>
+                    <h6 class="text-warning"><i class="bi bi-clock"></i> {{ _('Pendências') }} ({{ extractions.pending | length }})</h6>
                     <div class="list-group list-group-flush">
                         {% for item in extractions.pending %}
                         <div class="list-group-item d-flex justify-content-between align-items-start">
                             <div>
                                 <strong>{{ item.title[:100] }}</strong>
                                 {% if item.responsible %}
-                                <br><small class="text-muted">Responsável: {{ item.responsible }}</small>
+                                <br><small class="text-muted">{{ _('Responsável:') }} {{ item.responsible }}</small>
                                 {% endif %}
                                 {% if item.due_date %}
-                                <br><small class="text-muted">Prazo: {{ item.due_date }}</small>
+                                <br><small class="text-muted">{{ _('Prazo:') }} {{ item.due_date }}</small>
                                 {% endif %}
                             </div>
                             <button class="btn btn-success btn-sm create-item" data-type="pending" data-item='{{ item | tojson }}'>
-                                <i class="bi bi-plus"></i> Criar
+                                <i class="bi bi-plus"></i> {{ _('Criar') }}
                             </button>
                         </div>
                         {% endfor %}
@@ -121,7 +121,7 @@ Exemplo de padrões que serão detectados:
                 <!-- Risks -->
                 {% if extractions.risks %}
                 <div class="mb-4">
-                    <h6 class="text-danger"><i class="bi bi-exclamation-triangle"></i> Riscos ({{ extractions.risks | length }})</h6>
+                    <h6 class="text-danger"><i class="bi bi-exclamation-triangle"></i> {{ _('Riscos') }} ({{ extractions.risks | length }})</h6>
                     <div class="list-group list-group-flush">
                         {% for item in extractions.risks %}
                         <div class="list-group-item d-flex justify-content-between align-items-start">
@@ -129,7 +129,7 @@ Exemplo de padrões que serão detectados:
                                 <strong>{{ item.title[:100] }}</strong>
                             </div>
                             <button class="btn btn-danger btn-sm create-item" data-type="risk" data-item='{{ item | tojson }}'>
-                                <i class="bi bi-plus"></i> Criar
+                                <i class="bi bi-plus"></i> {{ _('Criar') }}
                             </button>
                         </div>
                         {% endfor %}
@@ -140,7 +140,7 @@ Exemplo de padrões que serão detectados:
                 <!-- Non-Conformities -->
                 {% if extractions.nc %}
                 <div class="mb-4">
-                    <h6 class="text-info"><i class="bi bi-x-octagon"></i> Não Conformidades ({{ extractions.nc | length }})</h6>
+                    <h6 class="text-info"><i class="bi bi-x-octagon"></i> {{ _('Não Conformidades') }} ({{ extractions.nc | length }})</h6>
                     <div class="list-group list-group-flush">
                         {% for item in extractions.nc %}
                         <div class="list-group-item d-flex justify-content-between align-items-start">
@@ -148,7 +148,7 @@ Exemplo de padrões que serão detectados:
                                 <strong>{{ item.title[:100] }}</strong>
                             </div>
                             <button class="btn btn-info btn-sm create-item" data-type="nc" data-item='{{ item | tojson }}'>
-                                <i class="bi bi-plus"></i> Criar
+                                <i class="bi bi-plus"></i> {{ _('Criar') }}
                             </button>
                         </div>
                         {% endfor %}
@@ -159,7 +159,7 @@ Exemplo de padrões que serão detectados:
                 <!-- Actions -->
                 {% if extractions.actions %}
                 <div>
-                    <h6 class="text-primary"><i class="bi bi-lightning"></i> Ações ({{ extractions.actions | length }})</h6>
+                    <h6 class="text-primary"><i class="bi bi-lightning"></i> {{ _('Ações') }} ({{ extractions.actions | length }})</h6>
                     <div class="list-group list-group-flush">
                         {% for item in extractions.actions %}
                         <div class="list-group-item d-flex justify-content-between align-items-start">
@@ -167,7 +167,7 @@ Exemplo de padrões que serão detectados:
                                 <strong>{{ item.title[:100] }}</strong>
                             </div>
                             <button class="btn btn-primary btn-sm create-item" data-type="action" data-item='{{ item | tojson }}'>
-                                <i class="bi bi-plus"></i> Criar
+                                <i class="bi bi-plus"></i> {{ _('Criar') }}
                             </button>
                         </div>
                         {% endfor %}
@@ -178,7 +178,7 @@ Exemplo de padrões que serão detectados:
                 {% if not extractions.pending and not extractions.risks and not extractions.nc and not extractions.actions %}
                 <div class="text-center py-4 text-muted">
                     <i class="bi bi-search" style="font-size: 3rem;"></i>
-                    <p class="mt-2">Nenhum item identificado automaticamente.</p>
+                    <p class="mt-2">{{ _('Nenhum item identificado automaticamente.') }}</p>
                     <small>Verifique se o texto segue os padrões esperados.</small>
                 </div>
                 {% endif %}
@@ -188,7 +188,7 @@ Exemplo de padrões que serão detectados:
         <div class="card shadow-sm">
             <div class="card-body text-center py-5">
                 <i class="bi bi-file-earmark-arrow-up text-muted" style="font-size: 4rem;"></i>
-                <h5 class="mt-3">Cole uma ata para análise</h5>
+                <h5 class="mt-3">{{ _('Cole uma ata para análise') }}</h5>
                 <p class="text-muted">O agente de IA irá identificar automaticamente pendências, riscos, não conformidades e ações.</p>
             </div>
         </div>

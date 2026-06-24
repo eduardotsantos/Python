@@ -1,14 +1,14 @@
 {% extends "base.html" %}
-{% block title %}Usuários - Gestão P&D{% endblock %}
+{% block title %}{{ _('Usuários') }} - Gestão P&D{% endblock %}
 
 {% block content %}
 <div class="d-flex align-items-center mb-4">
     <div class="flex-grow-1">
-        <h4 class="fw-bold mb-0"><i class="bi bi-people text-primary"></i> Usuários do Sistema</h4>
-        <span class="text-muted">Gerenciamento de contas e permissões</span>
+        <h4 class="fw-bold mb-0"><i class="bi bi-people text-primary"></i> {{ _('Usuários do Sistema') }}</h4>
+        <span class="text-muted">{{ _('Gerenciamento de contas e permissões') }}</span>
     </div>
     <a href="{{ url_for('users.create_user') }}" class="btn btn-primary">
-        <i class="bi bi-plus-lg"></i> Novo Usuário
+        <i class="bi bi-plus-lg"></i> {{ _('Novo Usuário') }}
     </a>
 </div>
 
@@ -19,7 +19,7 @@
             <div class="card-body">
                 <div class="d-flex justify-content-between">
                     <div>
-                        <p class="text-muted mb-1 small">Total de Usuários</p>
+                        <p class="text-muted mb-1 small">{{ _('Total de Usuários') }}</p>
                         <h3 class="fw-bold mb-0">{{ total_users }}</h3>
                     </div>
                     <div class="text-primary opacity-50"><i class="bi bi-people" style="font-size:2rem"></i></div>
@@ -32,7 +32,7 @@
             <div class="card-body">
                 <div class="d-flex justify-content-between">
                     <div>
-                        <p class="text-muted mb-1 small">Administradores</p>
+                        <p class="text-muted mb-1 small">{{ _('Administradores') }}</p>
                         <h3 class="fw-bold mb-0">{{ total_admins }}</h3>
                     </div>
                     <div class="text-danger opacity-50"><i class="bi bi-shield-lock" style="font-size:2rem"></i></div>
@@ -45,7 +45,7 @@
             <div class="card-body">
                 <div class="d-flex justify-content-between">
                     <div>
-                        <p class="text-muted mb-1 small">Ativos</p>
+                        <p class="text-muted mb-1 small">{{ _('Ativos') }}</p>
                         <h3 class="fw-bold mb-0">{{ total_active }}</h3>
                     </div>
                     <div class="text-success opacity-50"><i class="bi bi-person-check" style="font-size:2rem"></i></div>
@@ -62,19 +62,19 @@
             <div class="col-md-5">
                 <div class="search-box">
                     <i class="bi bi-search"></i>
-                    <input type="text" class="form-control" name="search" placeholder="Buscar por nome, usuário ou email..." value="{{ search }}">
+                    <input type="text" class="form-control" name="search" placeholder="{{ _('Buscar por nome, usuário ou email...') }}" value="{{ search }}">
                 </div>
             </div>
             <div class="col-md-4">
                 <select name="role" class="form-select">
-                    <option value="">Todos os Papéis</option>
-                    <option value="admin" {{ 'selected' if role_filter == 'admin' }}>Administrador</option>
-                    <option value="manager" {{ 'selected' if role_filter == 'manager' }}>Gerente</option>
-                    <option value="user" {{ 'selected' if role_filter == 'user' }}>Usuário</option>
+                    <option value="">{{ _('Todos os Papéis') }}</option>
+                    <option value="admin" {{ 'selected' if role_filter == 'admin' }}>{{ _('Administrador') }}</option>
+                    <option value="manager" {{ 'selected' if role_filter == 'manager' }}>{{ _('Gerente') }}</option>
+                    <option value="user" {{ 'selected' if role_filter == 'user' }}>{{ _('Usuário') }}</option>
                 </select>
             </div>
             <div class="col-md-3 text-end">
-                <button type="submit" class="btn btn-outline-primary btn-sm"><i class="bi bi-filter"></i> Filtrar</button>
+                <button type="submit" class="btn btn-outline-primary btn-sm"><i class="bi bi-filter"></i> {{ _('Filtrar') }}</button>
                 <a href="{{ url_for('users.list_users') }}" class="btn btn-outline-secondary btn-sm"><i class="bi bi-x"></i></a>
             </div>
         </form>
@@ -87,12 +87,12 @@
         <table class="table table-hover mb-0">
             <thead>
                 <tr>
-                    <th>Usuário</th>
-                    <th>Email</th>
-                    <th>Papel</th>
-                    <th>Status</th>
-                    <th>Criado em</th>
-                    <th class="text-end">Ações</th>
+                    <th>{{ _('Usuário') }}</th>
+                    <th>{{ _('Email') }}</th>
+                    <th>{{ _('Papel') }}</th>
+                    <th>{{ _('Status') }}</th>
+                    <th>{{ _('Criado em') }}</th>
+                    <th class="text-end">{{ _('Ações') }}</th>
                 </tr>
             </thead>
             <tbody>
@@ -112,36 +112,36 @@
                     <td>{{ user.email }}</td>
                     <td>
                         {% if user.role == 'admin' %}
-                            <span class="badge bg-danger"><i class="bi bi-shield-lock"></i> Administrador</span>
+                            <span class="badge bg-danger"><i class="bi bi-shield-lock"></i> {{ _('Administrador') }}</span>
                         {% elif user.role == 'manager' %}
-                            <span class="badge bg-warning text-dark"><i class="bi bi-briefcase"></i> Gerente</span>
+                            <span class="badge bg-warning text-dark"><i class="bi bi-briefcase"></i> {{ _('Gerente') }}</span>
                         {% else %}
-                            <span class="badge bg-secondary"><i class="bi bi-person"></i> Usuário</span>
+                            <span class="badge bg-secondary"><i class="bi bi-person"></i> {{ _('Usuário') }}</span>
                         {% endif %}
                     </td>
                     <td>
                         {% if user.active %}
-                            <span class="badge bg-success"><i class="bi bi-check-circle"></i> Ativo</span>
+                            <span class="badge bg-success"><i class="bi bi-check-circle"></i> {{ _('Ativo') }}</span>
                         {% else %}
-                            <span class="badge bg-secondary"><i class="bi bi-pause-circle"></i> Inativo</span>
+                            <span class="badge bg-secondary"><i class="bi bi-pause-circle"></i> {{ _('Inativo') }}</span>
                         {% endif %}
                     </td>
                     <td class="text-muted small">{{ user.created_at.strftime('%d/%m/%Y') if user.created_at else '-' }}</td>
                     <td class="text-end">
-                        <a href="{{ url_for('users.view_user', user_id=user.id) }}" class="btn btn-sm btn-outline-info" title="Ver detalhes">
+                        <a href="{{ url_for('users.view_user', user_id=user.id) }}" class="btn btn-sm btn-outline-info" title="{{ _('Ver detalhes') }}">
                             <i class="bi bi-eye"></i>
                         </a>
-                        <a href="{{ url_for('users.edit_user', user_id=user.id) }}" class="btn btn-sm btn-outline-primary" title="Editar">
+                        <a href="{{ url_for('users.edit_user', user_id=user.id) }}" class="btn btn-sm btn-outline-primary" title="{{ _('Editar') }}">
                             <i class="bi bi-pencil"></i>
                         </a>
                         {% if user.id != current_user.id %}
                         <form method="POST" action="{{ url_for('users.toggle_active', user_id=user.id) }}" class="d-inline">
-                            <button type="submit" class="btn btn-sm btn-outline-{{ 'warning' if user.active else 'success' }}" title="{{ 'Desativar' if user.active else 'Ativar' }}">
+                            <button type="submit" class="btn btn-sm btn-outline-{{ 'warning' if user.active else 'success' }}" title="{{ _('Desativar') if user.active else _('Ativar') }}">
                                 <i class="bi bi-{{ 'pause' if user.active else 'play' }}"></i>
                             </button>
                         </form>
                         <form method="POST" action="{{ url_for('users.delete_user', user_id=user.id) }}" class="d-inline">
-                            <button type="submit" class="btn btn-sm btn-outline-danger" data-confirm="Excluir usuário '{{ user.full_name }}'?" title="Excluir">
+                            <button type="submit" class="btn btn-sm btn-outline-danger" data-confirm="{{ _('Excluir usuário') }} '{{ user.full_name }}'?" title="{{ _('Excluir') }}">
                                 <i class="bi bi-trash"></i>
                             </button>
                         </form>
@@ -157,10 +157,10 @@
 <div class="card shadow-sm">
     <div class="empty-state">
         <i class="bi bi-people"></i>
-        <h5>Nenhum usuário encontrado</h5>
-        <p>Cadastre o primeiro usuário do sistema</p>
+        <h5>{{ _('Nenhum usuário encontrado') }}</h5>
+        <p>{{ _('Cadastre o primeiro usuário do sistema') }}</p>
         <a href="{{ url_for('users.create_user') }}" class="btn btn-primary">
-            <i class="bi bi-plus-lg"></i> Novo Usuário
+            <i class="bi bi-plus-lg"></i> {{ _('Novo Usuário') }}
         </a>
     </div>
 </div>

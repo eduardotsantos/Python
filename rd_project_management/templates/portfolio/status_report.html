@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% block title %}Status Report - Portfolio{% endblock %}
+{% block title %}{{ _('Status Report') }} - {{ _('Portfolio') }}{% endblock %}
 
 {% block extra_css %}
 <style>
@@ -30,11 +30,11 @@
         <i class="bi bi-arrow-left"></i>
     </a>
     <div class="flex-grow-1">
-        <h4 class="fw-bold mb-0"><i class="bi bi-clipboard-data text-primary"></i> Status Report - Portfolio</h4>
-        <span class="text-muted">Visao consolidada de todos os projetos</span>
+        <h4 class="fw-bold mb-0"><i class="bi bi-clipboard-data text-primary"></i> {{ _('Status Report - Portfolio') }}</h4>
+        <span class="text-muted">{{ _('Visao consolidada de todos os projetos') }}</span>
     </div>
     <button onclick="window.print()" class="btn btn-success">
-        <i class="bi bi-file-earmark-pdf"></i> Exportar PDF
+        <i class="bi bi-file-earmark-pdf"></i> {{ _('Exportar PDF') }}
     </button>
 </div>
 
@@ -43,17 +43,17 @@
     <div class="card-body">
         <div class="row align-items-center">
             <div class="col-md-5">
-                <h5 class="fw-bold mb-1"><i class="bi bi-building"></i> {{ tenant.name if tenant else 'Portfolio' }}</h5>
+                <h5 class="fw-bold mb-1"><i class="bi bi-building"></i> {{ tenant.name if tenant else _('Portfolio') }}</h5>
                 <p class="text-muted mb-0">
-                    <i class="bi bi-folder"></i> {{ total_projects }} projetos ({{ active_projects }} ativos)
+                    <i class="bi bi-folder"></i> {{ total_projects }} {{ _('projetos') }} ({{ active_projects }} {{ _('ativos') }})
                 </p>
             </div>
             <div class="col-md-4 text-center">
-                <small class="text-muted d-block">Data do Relatório</small>
+                <small class="text-muted d-block">{{ _('Data do Relatorio') }}</small>
                 <strong>{{ report_date.strftime('%d/%m/%Y %H:%M') }}</strong>
             </div>
             <div class="col-md-3 text-center">
-                <small class="text-muted d-block">Status Geral</small>
+                <small class="text-muted d-block">{{ _('Status Geral') }}</small>
                 <span class="status-badge {{ overall_health }}">
                     <span class="status-indicator {{ overall_health }} me-1"></span>
                     {{ overall_label }}
@@ -70,8 +70,8 @@
             <div class="card-body metric-card">
                 <div class="status-indicator {{ schedule_status.status }} mb-2"></div>
                 <div class="metric-value">{{ schedule_status.progress }}%</div>
-                <div class="metric-label">Progresso Geral</div>
-                <small class="text-muted">{{ schedule_status.completed }}/{{ schedule_status.total }} marcos</small>
+                <div class="metric-label">{{ _('Progresso Geral') }}</div>
+                <small class="text-muted">{{ schedule_status.completed }}/{{ schedule_status.total }} {{ _('marcos') }}</small>
             </div>
         </div>
     </div>
@@ -80,7 +80,7 @@
             <div class="card-body metric-card">
                 <div class="status-indicator {{ cost_status.status }} mb-2"></div>
                 <div class="metric-value">{{ cost_status.percent_used }}%</div>
-                <div class="metric-label">Orçamento</div>
+                <div class="metric-label">{{ _('Orcamento') }}</div>
                 <small class="text-muted">R$ {{ "{:,.0f}".format(cost_status.spent) }} / {{ "{:,.0f}".format(cost_status.budget) }}</small>
             </div>
         </div>
@@ -89,7 +89,7 @@
         <div class="card shadow-sm h-100">
             <div class="card-body metric-card">
                 <div class="metric-value text-primary">{{ total_hours|round(0)|int }}</div>
-                <div class="metric-label">Horas Trabalhadas</div>
+                <div class="metric-label">{{ _('Horas Trabalhadas') }}</div>
             </div>
         </div>
     </div>
@@ -97,7 +97,7 @@
         <div class="card shadow-sm h-100">
             <div class="card-body metric-card">
                 <div class="metric-value text-info">{{ team|length }}</div>
-                <div class="metric-label">Equipe Total</div>
+                <div class="metric-label">{{ _('Equipe Total') }}</div>
             </div>
         </div>
     </div>
@@ -108,7 +108,7 @@
         <!-- Schedule -->
         <div class="card shadow-sm mb-4">
             <div class="card-header bg-white">
-                <h6 class="mb-0 fw-bold"><i class="bi bi-calendar-check text-primary"></i> Cronograma</h6>
+                <h6 class="mb-0 fw-bold"><i class="bi bi-calendar-check text-primary"></i> {{ _('Cronograma') }}</h6>
             </div>
             <div class="card-body">
                 <div class="progress mb-3" style="height: 12px;">
@@ -118,15 +118,15 @@
                 <div class="row text-center">
                     <div class="col-4">
                         <div class="fw-bold text-success">{{ schedule_status.completed }}</div>
-                        <small class="text-muted">Concluidos</small>
+                        <small class="text-muted">{{ _('Concluidos') }}</small>
                     </div>
                     <div class="col-4">
                         <div class="fw-bold text-primary">{{ schedule_status.on_track }}</div>
-                        <small class="text-muted">No prazo</small>
+                        <small class="text-muted">{{ _('No prazo') }}</small>
                     </div>
                     <div class="col-4">
                         <div class="fw-bold text-danger">{{ schedule_status.delayed }}</div>
-                        <small class="text-muted">Atrasados</small>
+                        <small class="text-muted">{{ _('Atrasados') }}</small>
                     </div>
                 </div>
             </div>
@@ -135,7 +135,7 @@
         <!-- Budget -->
         <div class="card shadow-sm mb-4">
             <div class="card-header bg-white">
-                <h6 class="mb-0 fw-bold"><i class="bi bi-cash-stack text-success"></i> Orçamento</h6>
+                <h6 class="mb-0 fw-bold"><i class="bi bi-cash-stack text-success"></i> {{ _('Orcamento') }}</h6>
             </div>
             <div class="card-body">
                 <div class="progress mb-3" style="height: 12px;">
@@ -145,17 +145,17 @@
                 <div class="row text-center">
                     <div class="col-4">
                         <div class="fw-bold">R$ {{ "{:,.0f}".format(cost_status.budget) }}</div>
-                        <small class="text-muted">Total</small>
+                        <small class="text-muted">{{ _('Total') }}</small>
                     </div>
                     <div class="col-4">
                         <div class="fw-bold text-primary">R$ {{ "{:,.0f}".format(cost_status.spent) }}</div>
-                        <small class="text-muted">Gasto</small>
+                        <small class="text-muted">{{ _('Gasto') }}</small>
                     </div>
                     <div class="col-4">
                         <div class="fw-bold text-{{ 'danger' if cost_status.remaining < 0 else 'success' }}">
                             R$ {{ "{:,.0f}".format(cost_status.remaining) }}
                         </div>
-                        <small class="text-muted">Saldo</small>
+                        <small class="text-muted">{{ _('Saldo') }}</small>
                     </div>
                 </div>
             </div>
@@ -165,9 +165,9 @@
         {% if value_status and value_status.total_expected > 0 %}
         <div class="card shadow-sm border-start border-4 border-info">
             <div class="card-header bg-white d-flex justify-content-between align-items-center">
-                <h6 class="mb-0 fw-bold"><i class="bi bi-award text-info"></i> Entrega de Valor (PMBOK 8)</h6>
+                <h6 class="mb-0 fw-bold"><i class="bi bi-award text-info"></i> {{ _('Entrega de Valor (PMBOK 8)') }}</h6>
                 <span class="badge bg-{{ 'success' if value_status.capture_percent >= 80 else 'warning' if value_status.capture_percent >= 50 else 'secondary' }}">
-                    {{ value_status.capture_percent|round(0)|int }}% capturado
+                    {{ value_status.capture_percent|round(0)|int }}% {{ _('capturado') }}
                 </span>
             </div>
             <div class="card-body">
@@ -178,15 +178,15 @@
                 <div class="row text-center">
                     <div class="col-4">
                         <div class="fw-bold text-primary">R$ {{ "{:,.0f}".format(value_status.total_expected) }}</div>
-                        <small class="text-muted">Valor Esperado</small>
+                        <small class="text-muted">{{ _('Valor Esperado') }}</small>
                     </div>
                     <div class="col-4">
                         <div class="fw-bold text-success">R$ {{ "{:,.0f}".format(value_status.total_realized) }}</div>
-                        <small class="text-muted">Valor Realizado</small>
+                        <small class="text-muted">{{ _('Valor Realizado') }}</small>
                     </div>
                     <div class="col-4">
                         <div class="fw-bold">{{ value_status.projects_with_value }}</div>
-                        <small class="text-muted">Projetos c/ Valor</small>
+                        <small class="text-muted">{{ _('Projetos c/ Valor') }}</small>
                     </div>
                 </div>
             </div>
@@ -198,7 +198,7 @@
         <!-- Risks -->
         <div class="card shadow-sm mb-4">
             <div class="card-header bg-white">
-                <h6 class="mb-0 fw-bold"><i class="bi bi-exclamation-triangle text-warning"></i> Riscos</h6>
+                <h6 class="mb-0 fw-bold"><i class="bi bi-exclamation-triangle text-warning"></i> {{ _('Riscos') }}</h6>
             </div>
             <div class="card-body">
                 {% if risks %}
@@ -214,7 +214,7 @@
                 {% else %}
                 <div class="text-center py-3 text-success">
                     <i class="bi bi-shield-check fs-3"></i>
-                    <p class="mb-0 mt-2">Nenhum risco critico</p>
+                    <p class="mb-0 mt-2">{{ _('Nenhum risco critico') }}</p>
                 </div>
                 {% endif %}
             </div>
@@ -224,7 +224,7 @@
         {% if compliance_status %}
         <div class="card shadow-sm mb-4">
             <div class="card-header bg-white d-flex justify-content-between align-items-center">
-                <h6 class="mb-0 fw-bold"><i class="bi bi-shield-check text-primary"></i> Conformidade</h6>
+                <h6 class="mb-0 fw-bold"><i class="bi bi-shield-check text-primary"></i> {{ _('Conformidade') }}</h6>
                 <span class="badge bg-{{ 'danger' if compliance_status.status == 'red' else 'warning' if compliance_status.status == 'yellow' else 'success' }}">
                     {{ compliance_status.label }}
                 </span>
@@ -233,25 +233,25 @@
                 <div class="row text-center mb-3">
                     <div class="col-3">
                         <div class="fw-bold fs-5 {% if compliance_status.open_risks > 0 %}text-danger{% endif %}">{{ compliance_status.open_risks }}</div>
-                        <small class="text-muted">Riscos</small>
+                        <small class="text-muted">{{ _('Riscos') }}</small>
                     </div>
                     <div class="col-3">
                         <div class="fw-bold fs-5 {% if compliance_status.open_pending > 0 %}text-warning{% endif %}">{{ compliance_status.open_pending }}</div>
-                        <small class="text-muted">Pendencias</small>
+                        <small class="text-muted">{{ _('Pendencias') }}</small>
                     </div>
                     <div class="col-3">
                         <div class="fw-bold fs-5 {% if compliance_status.open_bugs > 0 %}text-danger{% endif %}">{{ compliance_status.open_bugs }}</div>
-                        <small class="text-muted">Bugs</small>
+                        <small class="text-muted">{{ _('Bugs') }}</small>
                     </div>
                     <div class="col-3">
                         <div class="fw-bold fs-5 {% if compliance_status.open_ncs > 0 %}text-warning{% endif %}">{{ compliance_status.open_ncs }}</div>
-                        <small class="text-muted">NCs</small>
+                        <small class="text-muted">{{ _('NCs') }}</small>
                     </div>
                 </div>
 
                 {% if compliance_status.overdue_items %}
                 <hr>
-                <h6 class="small fw-bold text-danger"><i class="bi bi-clock-history"></i> Pendencias Atrasadas</h6>
+                <h6 class="small fw-bold text-danger"><i class="bi bi-clock-history"></i> {{ _('Pendencias Atrasadas') }}</h6>
                 <div class="list-group list-group-flush small">
                     {% for item in compliance_status.overdue_items[:5] %}
                     <div class="list-group-item px-0 py-1 d-flex justify-content-between">
@@ -268,7 +268,7 @@
         <!-- Milestones -->
         <div class="card shadow-sm">
             <div class="card-header bg-white">
-                <h6 class="mb-0 fw-bold"><i class="bi bi-flag text-info"></i> Proximos Marcos</h6>
+                <h6 class="mb-0 fw-bold"><i class="bi bi-flag text-info"></i> {{ _('Proximos Marcos') }}</h6>
             </div>
             <div class="card-body p-0">
                 {% if upcoming_milestones %}
@@ -289,7 +289,7 @@
                     {% endfor %}
                 </div>
                 {% else %}
-                <p class="text-center py-3 text-muted mb-0">Nenhum marco pendente</p>
+                <p class="text-center py-3 text-muted mb-0">{{ _('Nenhum marco pendente') }}</p>
                 {% endif %}
             </div>
         </div>
@@ -299,18 +299,18 @@
 <!-- Projects Summary -->
 <div class="card shadow-sm mt-4">
     <div class="card-header bg-white">
-        <h6 class="mb-0 fw-bold"><i class="bi bi-folder"></i> Projetos Principais</h6>
+        <h6 class="mb-0 fw-bold"><i class="bi bi-folder"></i> {{ _('Projetos Principais') }}</h6>
     </div>
     <div class="card-body p-0">
         <div class="table-responsive">
             <table class="table table-sm mb-0">
                 <thead class="table-light">
                     <tr>
-                        <th>Codigo</th>
-                        <th>Titulo</th>
-                        <th class="text-center">Progresso</th>
-                        <th class="text-center">Orçamento</th>
-                        <th class="text-end">Gasto</th>
+                        <th>{{ _('Codigo') }}</th>
+                        <th>{{ _('Titulo') }}</th>
+                        <th class="text-center">{{ _('Progresso') }}</th>
+                        <th class="text-center">{{ _('Orcamento') }}</th>
+                        <th class="text-end">{{ _('Gasto') }}</th>
                     </tr>
                 </thead>
                 <tbody>

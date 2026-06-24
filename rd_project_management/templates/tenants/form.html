@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% block title %}{{ 'Editar' if tenant else 'Nova' }} Empresa - Super Admin{% endblock %}
+{% block title %}{{ _('Editar') if tenant else _('Nova') }} {{ _('Empresa') }} - Super Admin{% endblock %}
 
 {% block content %}
 <div class="row justify-content-center">
@@ -8,60 +8,60 @@
             <a href="{{ url_for('tenants.list_tenants') }}" class="btn btn-outline-secondary btn-sm me-3">
                 <i class="bi bi-arrow-left"></i>
             </a>
-            <h4 class="fw-bold mb-0">{{ 'Editar Empresa' if tenant else 'Nova Empresa' }}</h4>
+            <h4 class="fw-bold mb-0">{{ _('Editar Empresa') if tenant else _('Nova Empresa') }}</h4>
         </div>
 
         <form method="POST">
             <div class="card shadow-sm mb-4">
                 <div class="card-header bg-white">
-                    <h6 class="mb-0 fw-bold"><i class="bi bi-building"></i> Dados da Empresa</h6>
+                    <h6 class="mb-0 fw-bold"><i class="bi bi-building"></i> {{ _('Dados da Empresa') }}</h6>
                 </div>
                 <div class="card-body">
                     <div class="row g-3">
                         <div class="col-md-8">
-                            <label class="form-label">Nome da Empresa *</label>
+                            <label class="form-label">{{ _('Nome da Empresa') }} *</label>
                             <input type="text" class="form-control" name="name" required
-                                   value="{{ tenant.name if tenant else '' }}" placeholder="Nome completo da empresa">
+                                   value="{{ tenant.name if tenant else '' }}" placeholder="{{ _('Nome completo da empresa') }}">
                         </div>
                         <div class="col-md-4">
-                            <label class="form-label">Identificador (slug)</label>
+                            <label class="form-label">{{ _('Identificador (slug)') }}</label>
                             <input type="text" class="form-control" name="slug"
-                                   value="{{ tenant.slug if tenant else '' }}" placeholder="Ex: empresa-abc">
-                            <small class="text-muted">URL amigável. Deixe em branco para gerar automaticamente.</small>
+                                   value="{{ tenant.slug if tenant else '' }}" placeholder="{{ _('Ex: empresa-abc') }}">
+                            <small class="text-muted">{{ _('URL amigável. Deixe em branco para gerar automaticamente.') }}</small>
                         </div>
                         <div class="col-md-6">
-                            <label class="form-label">CNPJ</label>
+                            <label class="form-label">{{ _('CNPJ') }}</label>
                             <input type="text" class="form-control" name="cnpj"
                                    value="{{ tenant.cnpj if tenant else '' }}" placeholder="00.000.000/0000-00">
                         </div>
                         <div class="col-md-6">
-                            <label class="form-label">E-mail</label>
+                            <label class="form-label">{{ _('E-mail') }}</label>
                             <input type="email" class="form-control" name="email"
                                    value="{{ tenant.email if tenant else '' }}" placeholder="contato@empresa.com.br">
                         </div>
                         <div class="col-md-6">
-                            <label class="form-label">Telefone</label>
+                            <label class="form-label">{{ _('Telefone') }}</label>
                             <input type="text" class="form-control" name="phone"
                                    value="{{ tenant.phone if tenant else '' }}" placeholder="(00) 00000-0000">
                         </div>
                         <div class="col-md-4">
-                            <label class="form-label">Estado (UF)</label>
+                            <label class="form-label">{{ _('Estado (UF)') }}</label>
                             <select class="form-select" name="state">
-                                <option value="">Selecione...</option>
+                                <option value="">{{ _('Selecione...') }}</option>
                                 {% for uf, nome in [('AC','Acre'),('AL','Alagoas'),('AP','Amapá'),('AM','Amazonas'),('BA','Bahia'),('CE','Ceará'),('DF','Distrito Federal'),('ES','Espírito Santo'),('GO','Goiás'),('MA','Maranhão'),('MT','Mato Grosso'),('MS','Mato Grosso do Sul'),('MG','Minas Gerais'),('PA','Pará'),('PB','Paraíba'),('PR','Paraná'),('PE','Pernambuco'),('PI','Piauí'),('RJ','Rio de Janeiro'),('RN','Rio Grande do Norte'),('RS','Rio Grande do Sul'),('RO','Rondônia'),('RR','Roraima'),('SC','Santa Catarina'),('SP','São Paulo'),('SE','Sergipe'),('TO','Tocantins')] %}
                                 <option value="{{ uf }}" {{ 'selected' if tenant and tenant.state == uf }}>{{ uf }} - {{ nome }}</option>
                                 {% endfor %}
                             </select>
                         </div>
                         <div class="col-md-8">
-                            <label class="form-label">Município</label>
+                            <label class="form-label">{{ _('Município') }}</label>
                             <input type="text" class="form-control" name="municipality"
-                                   value="{{ tenant.municipality if tenant else '' }}" placeholder="Nome do município">
+                                   value="{{ tenant.municipality if tenant else '' }}" placeholder="{{ _('Nome do município') }}">
                         </div>
                         <div class="col-12">
-                            <label class="form-label">Endereço</label>
+                            <label class="form-label">{{ _('Endereço') }}</label>
                             <textarea class="form-control" name="address" rows="2"
-                                      placeholder="Endereço completo">{{ tenant.address if tenant else '' }}</textarea>
+                                      placeholder="{{ _('Endereço completo') }}">{{ tenant.address if tenant else '' }}</textarea>
                         </div>
                     </div>
                 </div>
@@ -69,12 +69,12 @@
 
             <div class="card shadow-sm mb-4">
                 <div class="card-header bg-white">
-                    <h6 class="mb-0 fw-bold"><i class="bi bi-credit-card"></i> Plano e Limites</h6>
+                    <h6 class="mb-0 fw-bold"><i class="bi bi-credit-card"></i> {{ _('Plano e Limites') }}</h6>
                 </div>
                 <div class="card-body">
                     <div class="row g-3">
                         <div class="col-md-4">
-                            <label class="form-label">Plano</label>
+                            <label class="form-label">{{ _('Plano') }}</label>
                             <select class="form-select" name="plan">
                                 <option value="basic" {{ 'selected' if tenant and tenant.plan == 'basic' }}>Basic</option>
                                 <option value="professional" {{ 'selected' if tenant and tenant.plan == 'professional' }}>Professional</option>
@@ -82,28 +82,28 @@
                             </select>
                         </div>
                         <div class="col-md-4">
-                            <label class="form-label">Máximo de Usuários</label>
+                            <label class="form-label">{{ _('Máximo de Usuários') }}</label>
                             <input type="number" class="form-control" name="max_users" min="1"
                                    value="{{ tenant.max_users if tenant else 5 }}">
                         </div>
                         <div class="col-md-4">
-                            <label class="form-label">Máximo de Projetos</label>
+                            <label class="form-label">{{ _('Máximo de Projetos') }}</label>
                             <input type="number" class="form-control" name="max_projects" min="1"
                                    value="{{ tenant.max_projects if tenant else 10 }}">
                         </div>
                         <div class="col-md-6">
-                            <label class="form-label">Data de Expiração</label>
+                            <label class="form-label">{{ _('Data de Expiração') }}</label>
                             <input type="date" class="form-control" name="expires_at"
                                    value="{{ tenant.expires_at.strftime('%Y-%m-%d') if tenant and tenant.expires_at else '' }}">
-                            <small class="text-muted">Deixe em branco para sem limite.</small>
+                            <small class="text-muted">{{ _('Deixe em branco para sem limite.') }}</small>
                         </div>
                         {% if tenant %}
                         <div class="col-md-6">
-                            <label class="form-label">Status</label>
+                            <label class="form-label">{{ _('Status') }}</label>
                             <div class="form-check form-switch mt-2">
                                 <input class="form-check-input" type="checkbox" name="active" id="active"
                                        {{ 'checked' if tenant.active }}>
-                                <label class="form-check-label" for="active">Empresa Ativa</label>
+                                <label class="form-check-label" for="active">{{ _('Empresa Ativa') }}</label>
                             </div>
                         </div>
                         {% endif %}
@@ -114,7 +114,7 @@
             <!-- Email Configuration -->
             <div class="card shadow-sm mb-4">
                 <div class="card-header bg-white">
-                    <h6 class="mb-0 fw-bold"><i class="bi bi-envelope"></i> Configuração de Email</h6>
+                    <h6 class="mb-0 fw-bold"><i class="bi bi-envelope"></i> {{ _('Configuração de Email') }}</h6>
                 </div>
                 <div class="card-body">
                     <div class="row g-3">
@@ -123,50 +123,50 @@
                                 <input class="form-check-input" type="checkbox" name="email_enabled" id="email_enabled"
                                        {{ 'checked' if tenant and tenant.email_enabled }}>
                                 <label class="form-check-label" for="email_enabled">
-                                    <strong>Habilitar envio de emails</strong>
-                                    <small class="text-muted d-block">Ativa o envio de briefings e notificações por email</small>
+                                    <strong>{{ _('Habilitar envio de emails') }}</strong>
+                                    <small class="text-muted d-block">{{ _('Ativa o envio de briefings e notificações por email') }}</small>
                                 </label>
                             </div>
                         </div>
                         <div class="col-md-6">
-                            <label class="form-label">Servidor SMTP</label>
+                            <label class="form-label">{{ _('Servidor SMTP') }}</label>
                             <input type="text" class="form-control" name="mail_server"
                                    value="{{ tenant.mail_server if tenant and tenant.mail_server else '' }}"
                                    placeholder="smtp.gmail.com">
                         </div>
                         <div class="col-md-3">
-                            <label class="form-label">Porta</label>
+                            <label class="form-label">{{ _('Porta') }}</label>
                             <input type="number" class="form-control" name="mail_port"
                                    value="{{ tenant.mail_port if tenant and tenant.mail_port else 587 }}"
                                    placeholder="587">
                         </div>
                         <div class="col-md-3">
-                            <label class="form-label">Segurança</label>
+                            <label class="form-label">{{ _('Segurança') }}</label>
                             <select class="form-select" name="mail_security">
-                                <option value="tls" {{ 'selected' if not tenant or (tenant.mail_use_tls) }}>TLS (porta 587)</option>
-                                <option value="ssl" {{ 'selected' if tenant and tenant.mail_use_ssl }}>SSL (porta 465)</option>
-                                <option value="none" {{ 'selected' if tenant and not tenant.mail_use_tls and not tenant.mail_use_ssl }}>Nenhum</option>
+                                <option value="tls" {{ 'selected' if not tenant or (tenant.mail_use_tls) }}>TLS ({{ _('porta') }} 587)</option>
+                                <option value="ssl" {{ 'selected' if tenant and tenant.mail_use_ssl }}>SSL ({{ _('porta') }} 465)</option>
+                                <option value="none" {{ 'selected' if tenant and not tenant.mail_use_tls and not tenant.mail_use_ssl }}>{{ _('Nenhum') }}</option>
                             </select>
                         </div>
                         <div class="col-md-6">
-                            <label class="form-label">Usuário SMTP (Email)</label>
+                            <label class="form-label">{{ _('Usuário SMTP (Email)') }}</label>
                             <input type="email" class="form-control" name="mail_username"
                                    value="{{ tenant.mail_username if tenant and tenant.mail_username else '' }}"
                                    placeholder="noreply@empresa.com">
                         </div>
                         <div class="col-md-6">
-                            <label class="form-label">Senha SMTP</label>
+                            <label class="form-label">{{ _('Senha SMTP') }}</label>
                             <input type="password" class="form-control" name="mail_password"
                                    value="{{ tenant.mail_password if tenant and tenant.mail_password else '' }}"
-                                   placeholder="{% if tenant and tenant.mail_password %}••••••••{% else %}Senha ou App Password{% endif %}">
-                            <small class="text-muted">Para Gmail, use uma <a href="https://myaccount.google.com/apppasswords" target="_blank">Senha de App</a></small>
+                                   placeholder="{% if tenant and tenant.mail_password %}••••••••{% else %}{{ _('Senha ou App Password') }}{% endif %}">
+                            <small class="text-muted">{{ _('Para Gmail, use uma') }} <a href="https://myaccount.google.com/apppasswords" target="_blank">{{ _('Senha de App') }}</a></small>
                         </div>
                         <div class="col-12">
-                            <label class="form-label">Remetente Padrão</label>
+                            <label class="form-label">{{ _('Remetente Padrão') }}</label>
                             <input type="text" class="form-control" name="mail_default_sender"
                                    value="{{ tenant.mail_default_sender if tenant and tenant.mail_default_sender else '' }}"
                                    placeholder="Orion PMO <noreply@empresa.com>">
-                            <small class="text-muted">Formato: Nome &lt;email@empresa.com&gt;</small>
+                            <small class="text-muted">{{ _('Formato: Nome <email@empresa.com>') }}</small>
                         </div>
                     </div>
                 </div>
@@ -175,35 +175,35 @@
             {% if not tenant %}
             <div class="card shadow-sm mb-4">
                 <div class="card-header bg-white">
-                    <h6 class="mb-0 fw-bold"><i class="bi bi-person-badge"></i> Administrador da Empresa</h6>
+                    <h6 class="mb-0 fw-bold"><i class="bi bi-person-badge"></i> {{ _('Administrador da Empresa') }}</h6>
                 </div>
                 <div class="card-body">
                     <div class="row g-3">
                         <div class="col-md-6">
-                            <label class="form-label">Nome Completo</label>
+                            <label class="form-label">{{ _('Nome Completo') }}</label>
                             <input type="text" class="form-control" name="admin_name"
-                                   placeholder="Nome do administrador">
+                                   placeholder="{{ _('Nome do administrador') }}">
                         </div>
                         <div class="col-md-6">
-                            <label class="form-label">E-mail</label>
+                            <label class="form-label">{{ _('E-mail') }}</label>
                             <input type="email" class="form-control" name="admin_email"
                                    placeholder="admin@empresa.com.br">
                         </div>
                         <div class="col-md-6">
-                            <label class="form-label">Senha</label>
+                            <label class="form-label">{{ _('Senha') }}</label>
                             <input type="password" class="form-control" name="admin_password"
-                                   placeholder="Senha inicial">
+                                   placeholder="{{ _('Senha inicial') }}">
                         </div>
                     </div>
-                    <small class="text-muted">Opcional: Cria automaticamente o primeiro usuário administrador da empresa.</small>
+                    <small class="text-muted">{{ _('Opcional: Cria automaticamente o primeiro usuário administrador da empresa.') }}</small>
                 </div>
             </div>
             {% endif %}
 
             <div class="d-flex justify-content-end gap-2">
-                <a href="{{ url_for('tenants.list_tenants') }}" class="btn btn-outline-secondary">Cancelar</a>
+                <a href="{{ url_for('tenants.list_tenants') }}" class="btn btn-outline-secondary">{{ _('Cancelar') }}</a>
                 <button type="submit" class="btn btn-primary">
-                    <i class="bi bi-check-lg"></i> {{ 'Salvar' if tenant else 'Criar Empresa' }}
+                    <i class="bi bi-check-lg"></i> {{ _('Salvar') if tenant else _('Criar Empresa') }}
                 </button>
             </div>
         </form>

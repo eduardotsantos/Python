@@ -1,11 +1,11 @@
 {% extends "base.html" %}
-{% block title %}Auditoria - Orion P&D{% endblock %}
+{% block title %}{{ _('Auditoria') }} - Orion P&D{% endblock %}
 
 {% block content %}
 <div class="d-flex align-items-center mb-4">
     <div class="flex-grow-1">
-        <h4 class="fw-bold mb-0"><i class="bi bi-shield-check text-primary"></i> Logs de Auditoria</h4>
-        <span class="text-muted">Registro de acessos e alteracoes no sistema</span>
+        <h4 class="fw-bold mb-0"><i class="bi bi-shield-check text-primary"></i> {{ _('Logs de Auditoria') }}</h4>
+        <span class="text-muted">{{ _('Registro de acessos e alterações no sistema') }}</span>
     </div>
 </div>
 
@@ -14,7 +14,7 @@
     <div class="col-6 col-md-3">
         <div class="card card-stats border-primary shadow-sm">
             <div class="card-body py-2">
-                <p class="text-muted mb-0 small">Total de Registros</p>
+                <p class="text-muted mb-0 small">{{ _('Total de Registros') }}</p>
                 <h4 class="fw-bold mb-0">{{ stats.total }}</h4>
             </div>
         </div>
@@ -22,7 +22,7 @@
     <div class="col-6 col-md-3">
         <div class="card card-stats border-success shadow-sm">
             <div class="card-body py-2">
-                <p class="text-muted mb-0 small">Hoje</p>
+                <p class="text-muted mb-0 small">{{ _('Hoje') }}</p>
                 <h4 class="fw-bold mb-0">{{ stats.today }}</h4>
             </div>
         </div>
@@ -30,7 +30,7 @@
     <div class="col-6 col-md-3">
         <div class="card card-stats border-info shadow-sm">
             <div class="card-body py-2">
-                <p class="text-muted mb-0 small">Logins</p>
+                <p class="text-muted mb-0 small">{{ _('Logins') }}</p>
                 <h4 class="fw-bold mb-0">{{ stats.logins }}</h4>
             </div>
         </div>
@@ -38,7 +38,7 @@
     <div class="col-6 col-md-3">
         <div class="card card-stats border-warning shadow-sm">
             <div class="card-body py-2">
-                <p class="text-muted mb-0 small">Alteracoes</p>
+                <p class="text-muted mb-0 small">{{ _('Alterações') }}</p>
                 <h4 class="fw-bold mb-0">{{ stats.changes }}</h4>
             </div>
         </div>
@@ -50,44 +50,44 @@
     <div class="card-body py-2">
         <form method="GET" class="row g-2 align-items-end">
             <div class="col-md-2">
-                <label class="form-label small">Acao</label>
+                <label class="form-label small">{{ _('Ação') }}</label>
                 <select name="action" class="form-select form-select-sm">
-                    <option value="">Todas</option>
-                    <option value="login" {{ 'selected' if action_filter == 'login' }}>Login</option>
-                    <option value="logout" {{ 'selected' if action_filter == 'logout' }}>Logout</option>
-                    <option value="create" {{ 'selected' if action_filter == 'create' }}>Criar</option>
-                    <option value="update" {{ 'selected' if action_filter == 'update' }}>Atualizar</option>
-                    <option value="delete" {{ 'selected' if action_filter == 'delete' }}>Excluir</option>
+                    <option value="">{{ _('Todas') }}</option>
+                    <option value="login" {{ 'selected' if action_filter == 'login' }}>{{ _('Login') }}</option>
+                    <option value="logout" {{ 'selected' if action_filter == 'logout' }}>{{ _('Logout') }}</option>
+                    <option value="create" {{ 'selected' if action_filter == 'create' }}>{{ _('Criar') }}</option>
+                    <option value="update" {{ 'selected' if action_filter == 'update' }}>{{ _('Atualizar') }}</option>
+                    <option value="delete" {{ 'selected' if action_filter == 'delete' }}>{{ _('Excluir') }}</option>
                 </select>
             </div>
             <div class="col-md-2">
-                <label class="form-label small">Entidade</label>
+                <label class="form-label small">{{ _('Entidade') }}</label>
                 <select name="entity" class="form-select form-select-sm">
-                    <option value="">Todas</option>
+                    <option value="">{{ _('Todas') }}</option>
                     {% for entity in entities %}
                     <option value="{{ entity }}" {{ 'selected' if entity_filter == entity }}>{{ entity }}</option>
                     {% endfor %}
                 </select>
             </div>
             <div class="col-md-2">
-                <label class="form-label small">Usuario</label>
+                <label class="form-label small">{{ _('Usuário') }}</label>
                 <select name="user_id" class="form-select form-select-sm">
-                    <option value="">Todos</option>
+                    <option value="">{{ _('Todos') }}</option>
                     {% for user in users %}
                     <option value="{{ user.id }}" {{ 'selected' if user_filter == user.id|string }}>{{ user.full_name }}</option>
                     {% endfor %}
                 </select>
             </div>
             <div class="col-md-2">
-                <label class="form-label small">Data Inicial</label>
+                <label class="form-label small">{{ _('Data Inicial') }}</label>
                 <input type="date" name="date_from" class="form-control form-control-sm" value="{{ date_from }}">
             </div>
             <div class="col-md-2">
-                <label class="form-label small">Data Final</label>
+                <label class="form-label small">{{ _('Data Final') }}</label>
                 <input type="date" name="date_to" class="form-control form-control-sm" value="{{ date_to }}">
             </div>
             <div class="col-md-2">
-                <button type="submit" class="btn btn-primary btn-sm"><i class="bi bi-filter"></i> Filtrar</button>
+                <button type="submit" class="btn btn-primary btn-sm"><i class="bi bi-filter"></i> {{ _('Filtrar') }}</button>
                 <a href="{{ url_for('audit.audit_logs') }}" class="btn btn-outline-secondary btn-sm"><i class="bi bi-x"></i></a>
             </div>
         </form>
@@ -101,11 +101,11 @@
         <table class="table table-hover mb-0">
             <thead class="table-light">
                 <tr>
-                    <th>Data/Hora</th>
-                    <th>Usuario</th>
-                    <th>Acao</th>
-                    <th>Entidade</th>
-                    <th>Detalhes</th>
+                    <th>{{ _('Data/Hora') }}</th>
+                    <th>{{ _('Usuário') }}</th>
+                    <th>{{ _('Ação') }}</th>
+                    <th>{{ _('Entidade') }}</th>
+                    <th>{{ _('Detalhes') }}</th>
                     <th>IP</th>
                 </tr>
             </thead>
@@ -121,20 +121,20 @@
                         <strong>{{ log.user.full_name }}</strong>
                         <br><small class="text-muted">{{ log.user.email }}</small>
                         {% else %}
-                        <span class="text-muted">Sistema</span>
+                        <span class="text-muted">{{ _('Sistema') }}</span>
                         {% endif %}
                     </td>
                     <td>
                         {% if log.action == 'login' %}
-                            <span class="badge bg-success"><i class="bi bi-box-arrow-in-right"></i> Login</span>
+                            <span class="badge bg-success"><i class="bi bi-box-arrow-in-right"></i> {{ _('Login') }}</span>
                         {% elif log.action == 'logout' %}
-                            <span class="badge bg-secondary"><i class="bi bi-box-arrow-right"></i> Logout</span>
+                            <span class="badge bg-secondary"><i class="bi bi-box-arrow-right"></i> {{ _('Logout') }}</span>
                         {% elif log.action == 'create' %}
-                            <span class="badge bg-primary"><i class="bi bi-plus-circle"></i> Criar</span>
+                            <span class="badge bg-primary"><i class="bi bi-plus-circle"></i> {{ _('Criar') }}</span>
                         {% elif log.action == 'update' %}
-                            <span class="badge bg-warning text-dark"><i class="bi bi-pencil"></i> Atualizar</span>
+                            <span class="badge bg-warning text-dark"><i class="bi bi-pencil"></i> {{ _('Atualizar') }}</span>
                         {% elif log.action == 'delete' %}
-                            <span class="badge bg-danger"><i class="bi bi-trash"></i> Excluir</span>
+                            <span class="badge bg-danger"><i class="bi bi-trash"></i> {{ _('Excluir') }}</span>
                         {% else %}
                             <span class="badge bg-info">{{ log.action }}</span>
                         {% endif %}
@@ -166,14 +166,14 @@
     </div>
 </div>
 <div class="text-muted small mt-2">
-    <i class="bi bi-info-circle"></i> Exibindo os ultimos 500 registros. Use os filtros para refinar a busca.
+    <i class="bi bi-info-circle"></i> {{ _('Exibindo os últimos 500 registros. Use os filtros para refinar a busca.') }}
 </div>
 {% else %}
 <div class="card shadow-sm">
     <div class="card-body text-center py-5">
         <i class="bi bi-shield-check fs-1 text-muted"></i>
-        <h5 class="mt-3">Nenhum registro encontrado</h5>
-        <p class="text-muted">Nao ha logs de auditoria com os filtros selecionados.</p>
+        <h5 class="mt-3">{{ _('Nenhum registro encontrado') }}</h5>
+        <p class="text-muted">{{ _('Não há logs de auditoria com os filtros selecionados.') }}</p>
     </div>
 </div>
 {% endif %}

@@ -12,13 +12,13 @@
     </div>
     <div class="d-flex gap-2">
         <a href="{{ url_for('programs.program_status_report', program_id=program.id) }}" class="btn btn-success">
-            <i class="bi bi-clipboard-data"></i> Status Report
+            <i class="bi bi-clipboard-data"></i> {{ _('Status Report') }}
         </a>
         <a href="{{ url_for('programs.export_program_to_project', program_id=program.id) }}" class="btn btn-outline-info">
-            <i class="bi bi-download"></i> Exportar MS Project
+            <i class="bi bi-download"></i> {{ _('Exportar MS Project') }}
         </a>
         <a href="{{ url_for('programs.edit_program', program_id=program.id) }}" class="btn btn-outline-secondary">
-            <i class="bi bi-pencil"></i> Editar
+            <i class="bi bi-pencil"></i> {{ _('Editar') }}
         </a>
     </div>
 </div>
@@ -29,7 +29,7 @@
         <div class="card shadow-sm bg-primary text-white">
             <div class="card-body text-center">
                 <h3 class="fw-bold mb-0">{{ projects|length }}</h3>
-                <small>Projetos</small>
+                <small>{{ _('Projetos') }}</small>
             </div>
         </div>
     </div>
@@ -37,7 +37,7 @@
         <div class="card shadow-sm">
             <div class="card-body text-center">
                 <h3 class="fw-bold mb-0 text-success">{{ progress }}%</h3>
-                <small class="text-muted">Progresso Geral</small>
+                <small class="text-muted">{{ _('Progresso Geral') }}</small>
             </div>
         </div>
     </div>
@@ -45,7 +45,7 @@
         <div class="card shadow-sm">
             <div class="card-body text-center">
                 <h3 class="fw-bold mb-0">R$ {{ "{:,.0f}".format(total_budget) }}</h3>
-                <small class="text-muted">Orçamento Total</small>
+                <small class="text-muted">{{ _('Orcamento Total') }}</small>
             </div>
         </div>
     </div>
@@ -56,7 +56,7 @@
                 <h3 class="fw-bold mb-0 text-{{ 'danger' if percent > 100 else 'warning' if percent > 85 else 'success' }}">
                     {{ percent|round(1) }}%
                 </h3>
-                <small class="text-muted">Orçamento Utilizado</small>
+                <small class="text-muted">{{ _('Orcamento Utilizado') }}</small>
             </div>
         </div>
     </div>
@@ -67,10 +67,10 @@
     <div class="col-lg-8">
         <div class="card shadow-sm">
             <div class="card-header bg-white d-flex justify-content-between align-items-center">
-                <h6 class="mb-0 fw-bold"><i class="bi bi-folder text-primary"></i> Projetos do Programa</h6>
+                <h6 class="mb-0 fw-bold"><i class="bi bi-folder text-primary"></i> {{ _('Projetos do Programa') }}</h6>
                 {% if unlinked_projects %}
                 <button type="button" class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#addProjectModal">
-                    <i class="bi bi-plus-lg"></i> Adicionar Projeto
+                    <i class="bi bi-plus-lg"></i> {{ _('Adicionar Projeto') }}
                 </button>
                 {% endif %}
             </div>
@@ -80,11 +80,11 @@
                     <table class="table table-hover mb-0">
                         <thead class="table-light">
                             <tr>
-                                <th>Codigo</th>
-                                <th>Titulo</th>
-                                <th class="text-center">Status</th>
-                                <th class="text-center">Progresso</th>
-                                <th class="text-end">Orçamento</th>
+                                <th>{{ _('Codigo') }}</th>
+                                <th>{{ _('Titulo') }}</th>
+                                <th class="text-center">{{ _('Status') }}</th>
+                                <th class="text-center">{{ _('Progresso') }}</th>
+                                <th class="text-end">{{ _('Orcamento') }}</th>
                                 <th></th>
                             </tr>
                         </thead>
@@ -106,11 +106,11 @@
                                 <td class="text-end">R$ {{ "{:,.0f}".format(p.budget or 0) }}</td>
                                 <td>
                                     <div class="btn-group btn-group-sm">
-                                        <a href="{{ url_for('projects.view_project', project_id=p.id) }}" class="btn btn-outline-primary" title="Ver">
+                                        <a href="{{ url_for('projects.view_project', project_id=p.id) }}" class="btn btn-outline-primary" title="{{ _('Ver') }}">
                                             <i class="bi bi-eye"></i>
                                         </a>
                                         <form action="{{ url_for('programs.remove_project_from_program', program_id=program.id, project_id=p.id) }}" method="POST" class="d-inline">
-                                            <button type="submit" class="btn btn-outline-danger" title="Remover" onclick="return confirm('Remover projeto do programa?')">
+                                            <button type="submit" class="btn btn-outline-danger" title="{{ _('Remover') }}" onclick="return confirm('{{ _('Remover projeto do programa?') }}')">
                                                 <i class="bi bi-x-lg"></i>
                                             </button>
                                         </form>
@@ -124,7 +124,7 @@
                 {% else %}
                 <div class="text-center py-5">
                     <i class="bi bi-folder-x text-muted" style="font-size: 2rem;"></i>
-                    <p class="mt-2 text-muted">Nenhum projeto vinculado</p>
+                    <p class="mt-2 text-muted">{{ _('Nenhum projeto vinculado') }}</p>
                 </div>
                 {% endif %}
             </div>
@@ -136,27 +136,27 @@
         <!-- Info -->
         <div class="card shadow-sm mb-4">
             <div class="card-header bg-white">
-                <h6 class="mb-0 fw-bold"><i class="bi bi-info-circle"></i> Informacoes</h6>
+                <h6 class="mb-0 fw-bold"><i class="bi bi-info-circle"></i> {{ _('Informacoes') }}</h6>
             </div>
             <div class="card-body">
                 {% if program.description %}
                 <p class="small">{{ program.description }}</p>
                 {% endif %}
                 {% if program.objective %}
-                <p class="small"><strong>Objetivo:</strong> {{ program.objective }}</p>
+                <p class="small"><strong>{{ _('Objetivo') }}:</strong> {{ program.objective }}</p>
                 {% endif %}
                 <div class="row g-2 small">
                     <div class="col-6">
-                        <strong>Inicio:</strong><br>
+                        <strong>{{ _('Inicio') }}:</strong><br>
                         {{ program.start_date.strftime('%d/%m/%Y') if program.start_date else '-' }}
                     </div>
                     <div class="col-6">
-                        <strong>Termino:</strong><br>
+                        <strong>{{ _('Termino') }}:</strong><br>
                         {{ program.end_date.strftime('%d/%m/%Y') if program.end_date else '-' }}
                     </div>
                     {% if program.manager %}
                     <div class="col-12 mt-2">
-                        <strong>Gestor:</strong> {{ program.manager.full_name }}
+                        <strong>{{ _('Gestor') }}:</strong> {{ program.manager.full_name }}
                     </div>
                     {% endif %}
                 </div>
@@ -166,7 +166,7 @@
         <!-- Upcoming Milestones -->
         <div class="card shadow-sm">
             <div class="card-header bg-white">
-                <h6 class="mb-0 fw-bold"><i class="bi bi-flag text-warning"></i> Proximos Marcos</h6>
+                <h6 class="mb-0 fw-bold"><i class="bi bi-flag text-warning"></i> {{ _('Proximos Marcos') }}</h6>
             </div>
             <div class="card-body p-0">
                 {% set upcoming = milestones|selectattr('status', 'ne', 'Concluido')|list %}
@@ -185,7 +185,7 @@
                     {% endfor %}
                 </ul>
                 {% else %}
-                <p class="text-center py-3 text-muted mb-0">Nenhum marco pendente</p>
+                <p class="text-center py-3 text-muted mb-0">{{ _('Nenhum marco pendente') }}</p>
                 {% endif %}
             </div>
         </div>
@@ -197,15 +197,15 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title">Adicionar Projeto ao Programa</h5>
+                <h5 class="modal-title">{{ _('Adicionar Projeto ao Programa') }}</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
             <form action="{{ url_for('programs.add_project_to_program', program_id=program.id) }}" method="POST">
                 <div class="modal-body">
                     <div class="mb-3">
-                        <label class="form-label">Selecione o Projeto</label>
+                        <label class="form-label">{{ _('Selecione o Projeto') }}</label>
                         <select class="form-select" name="project_id" required>
-                            <option value="">Escolha um projeto...</option>
+                            <option value="">{{ _('Escolha um projeto...') }}</option>
                             {% for p in unlinked_projects %}
                             <option value="{{ p.id }}">{{ p.code }} - {{ p.title }}</option>
                             {% endfor %}
@@ -213,8 +213,8 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                    <button type="submit" class="btn btn-primary">Adicionar</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{ _('Cancelar') }}</button>
+                    <button type="submit" class="btn btn-primary">{{ _('Adicionar') }}</button>
                 </div>
             </form>
         </div>

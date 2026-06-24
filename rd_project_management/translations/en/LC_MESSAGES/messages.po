@@ -542,3 +542,159 @@ msgstr "Print"
 
 msgid "Gerar PDF"
 msgstr "Generate PDF"
+
+# Status Report labels
+msgid "Sem marcos"
+msgstr "No milestones"
+
+msgid "No prazo"
+msgstr "On time"
+
+msgid "Sem orcamento"
+msgstr "No budget"
+
+msgid "Estourado"
+msgstr "Over budget"
+
+msgid "Saudavel"
+msgstr "Healthy"
+
+msgid "Acima do planejado"
+msgstr "Above planned"
+
+msgid "Dentro do planejado"
+msgstr "Within planned"
+
+msgid "Sem planejamento"
+msgstr "No planning"
+
+msgid "Critico"
+msgstr "Critical"
+
+msgid "Conforme"
+msgstr "Compliant"
+
+msgid "Sem dados"
+msgstr "No data"
+
+msgid "Existem marcos com data de entrega ultrapassada"
+msgstr "There are milestones past their delivery date"
+
+msgid "Revisar cronograma e realocar recursos"
+msgstr "Review schedule and reallocate resources"
+
+msgid "Projeto expirado"
+msgstr "Project expired"
+
+msgid "Solicitar prorrogacao ou encerrar projeto"
+msgstr "Request extension or close project"
+
+msgid "Prazo de encerramento proximo"
+msgstr "Closing deadline approaching"
+
+msgid "Acelerar entregas finais"
+msgstr "Speed up final deliveries"
+
+msgid "Orcamento estourado"
+msgstr "Budget exceeded"
+
+msgid "Solicitar remanejamento ou aditivo"
+msgstr "Request reallocation or amendment"
+
+msgid "Orcamento critico"
+msgstr "Critical budget"
+
+msgid "Controlar gastos e priorizar despesas essenciais"
+msgstr "Control expenses and prioritize essential costs"
+
+msgid "Progresso abaixo do esperado"
+msgstr "Progress below expected"
+
+msgid "Revisar escopo ou aumentar equipe"
+msgstr "Review scope or increase team"
+
+msgid "Sem recursos alocados"
+msgstr "No resources allocated"
+
+msgid "Nenhum recurso ativo no projeto"
+msgstr "No active resources in project"
+
+msgid "Alocar equipe para execucao"
+msgstr "Allocate team for execution"
+
+# Profile and User form
+msgid "Informacoes da Conta"
+msgstr "Account Information"
+
+msgid "Editar Perfil"
+msgstr "Edit Profile"
+
+msgid "Nome Completo"
+msgstr "Full Name"
+
+msgid "Alterar Senha"
+msgstr "Change Password"
+
+msgid "Senha Atual"
+msgstr "Current Password"
+
+msgid "Nova Senha"
+msgstr "New Password"
+
+msgid "Confirmar Nova Senha"
+msgstr "Confirm New Password"
+
+msgid "Preferencias de Email"
+msgstr "Email Preferences"
+
+msgid "Receber notificacoes por email"
+msgstr "Receive email notifications"
+
+msgid "Briefing diario"
+msgstr "Daily briefing"
+
+msgid "Alertas criticos"
+msgstr "Critical alerts"
+
+msgid "Salvar Alteracoes"
+msgstr "Save Changes"
+
+msgid "Membro desde"
+msgstr "Member since"
+
+msgid "Administrador"
+msgstr "Administrator"
+
+msgid "Gerente"
+msgstr "Manager"
+
+msgid "Usuario"
+msgstr "User"
+
+msgid "Visualizador"
+msgstr "Viewer"
+
+# Common form labels
+msgid "Entrar"
+msgstr "Login"
+
+msgid "Email"
+msgstr "Email"
+
+msgid "Senha"
+msgstr "Password"
+
+msgid "Lembrar-me"
+msgstr "Remember me"
+
+msgid "Criar conta"
+msgstr "Create account"
+
+msgid "Cadastrar"
+msgstr "Register"
+
+msgid "Outros"
+msgstr "Others"
+
+msgid "Atencao"
+msgstr "Attention"

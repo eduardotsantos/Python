@@ -8,13 +8,13 @@
     </h4>
     <div>
         <a href="{{ url_for('pmo_agents.daily_briefing') }}" class="btn btn-primary">
-            <i class="bi bi-sun"></i> Briefing Diário
+            <i class="bi bi-sun"></i> {{ _('Briefing Diário') }}
         </a>
         <a href="{{ url_for('pmo_agents.compliance_analysis') }}" class="btn btn-info">
-            <i class="bi bi-shield-check"></i> Análise Conformidade
+            <i class="bi bi-shield-check"></i> {{ _('Análise Conformidade') }}
         </a>
         <a href="{{ url_for('pmo_agents.action_center') }}" class="btn btn-success">
-            <i class="bi bi-lightning"></i> Central de Ações
+            <i class="bi bi-lightning"></i> {{ _('Central de Ações') }}
         </a>
     </div>
 </div>
@@ -25,9 +25,9 @@
         <div class="card bg-primary text-white shadow">
             <div class="card-body">
                 <h5><i class="bi bi-sun"></i> Daily Executive AI</h5>
-                <p class="small mb-2">Análise automática todas as manhãs com recomendações priorizadas.</p>
+                <p class="small mb-2">{{ _('Análise automática todas as manhãs com recomendações priorizadas.') }}</p>
                 <a href="{{ url_for('pmo_agents.daily_briefing') }}" class="btn btn-light btn-sm">
-                    <i class="bi bi-play-fill"></i> Executar Agora
+                    <i class="bi bi-play-fill"></i> {{ _('Executar Agora') }}
                 </a>
             </div>
         </div>
@@ -35,10 +35,10 @@
     <div class="col-md-3">
         <div class="card bg-info text-white shadow">
             <div class="card-body">
-                <h5><i class="bi bi-shield-check"></i> Análise Conformidade</h5>
+                <h5><i class="bi bi-shield-check"></i> {{ _('Análise Conformidade') }}</h5>
                 <p class="small mb-2">Analisa pendências, bugs e NCs com correlação e sugestões.</p>
                 <a href="{{ url_for('pmo_agents.compliance_analysis') }}" class="btn btn-light btn-sm">
-                    <i class="bi bi-play-fill"></i> Analisar
+                    <i class="bi bi-play-fill"></i> {{ _('Analisar') }}
                 </a>
             </div>
         </div>
@@ -49,7 +49,7 @@
                 <h5><i class="bi bi-file-earmark-text"></i> Leitor de Atas</h5>
                 <p class="small mb-2">Extraia pendências, riscos e ações automaticamente de atas.</p>
                 <a href="{{ url_for('pmo_agents.minutes_parser') }}" class="btn btn-light btn-sm">
-                    <i class="bi bi-upload"></i> Analisar Ata
+                    <i class="bi bi-upload"></i> {{ _('Analisar Ata') }}
                 </a>
             </div>
         </div>
@@ -60,7 +60,7 @@
                 <h5><i class="bi bi-lightning"></i> Execução Autônoma</h5>
                 <p class="small mb-2">O Orion não apenas recomenda - ele executa ações aprovadas.</p>
                 <a href="{{ url_for('pmo_agents.action_center') }}" class="btn btn-dark btn-sm">
-                    <i class="bi bi-check2-all"></i> Ver Ações
+                    <i class="bi bi-check2-all"></i> {{ _('Ver Ações') }}
                 </a>
             </div>
         </div>
@@ -68,7 +68,7 @@
 </div>
 
 <!-- Agents Grid -->
-<h5 class="fw-bold mb-3"><i class="bi bi-grid-3x3-gap"></i> Equipe de Agentes IA</h5>
+<h5 class="fw-bold mb-3"><i class="bi bi-grid-3x3-gap"></i> {{ _('Equipe de Agentes IA') }}</h5>
 
 <div class="row g-3">
     {% for agent in agents %}
@@ -83,7 +83,7 @@
                 </div>
                 <p class="text-muted small mb-3">{{ agent.description }}</p>
                 <a href="{{ url_for('pmo_agents.run_agent', agent_name=agent.name) }}" class="btn btn-outline-{{ agent.color }} btn-sm w-100">
-                    <i class="bi bi-play-fill"></i> Executar
+                    <i class="bi bi-play-fill"></i> {{ _('Executar') }}
                 </a>
             </div>
         </div>
@@ -94,7 +94,7 @@
 <!-- How it Works -->
 <div class="card mt-4 shadow-sm">
     <div class="card-header">
-        <h6 class="mb-0"><i class="bi bi-info-circle"></i> Como Funciona o PMO Autônomo</h6>
+        <h6 class="mb-0"><i class="bi bi-info-circle"></i> {{ _('Como Funciona o PMO Autônomo') }}</h6>
     </div>
     <div class="card-body">
         <div class="row">
@@ -102,28 +102,28 @@
                 <div class="rounded-circle bg-primary bg-opacity-10 p-3 d-inline-block mb-2">
                     <i class="bi bi-clock text-primary" style="font-size: 2rem;"></i>
                 </div>
-                <h6>1. Análise Diária</h6>
+                <h6>1. {{ _('Análise Diária') }}</h6>
                 <p class="small text-muted">Todos os dias às 7h, os agentes analisam todo o portfolio automaticamente.</p>
             </div>
             <div class="col-md-3 text-center mb-3">
                 <div class="rounded-circle bg-success bg-opacity-10 p-3 d-inline-block mb-2">
                     <i class="bi bi-search text-success" style="font-size: 2rem;"></i>
                 </div>
-                <h6>2. Identificação</h6>
+                <h6>2. {{ _('Identificação') }}</h6>
                 <p class="small text-muted">Identificam problemas, riscos, atrasos e oportunidades de melhoria.</p>
             </div>
             <div class="col-md-3 text-center mb-3">
                 <div class="rounded-circle bg-warning bg-opacity-10 p-3 d-inline-block mb-2">
                     <i class="bi bi-lightbulb text-warning" style="font-size: 2rem;"></i>
                 </div>
-                <h6>3. Recomendação</h6>
+                <h6>3. {{ _('Recomendação') }}</h6>
                 <p class="small text-muted">Geram recomendações inteligentes baseadas em análise histórica.</p>
             </div>
             <div class="col-md-3 text-center mb-3">
                 <div class="rounded-circle bg-info bg-opacity-10 p-3 d-inline-block mb-2">
                     <i class="bi bi-lightning text-info" style="font-size: 2rem;"></i>
                 </div>
-                <h6>4. Execução</h6>
+                <h6>4. {{ _('Execução') }}</h6>
                 <p class="small text-muted">Com sua aprovação, executam ações automaticamente.</p>
             </div>
         </div>

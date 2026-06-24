@@ -4,6 +4,7 @@ Provides one-page status report with schedule, costs, and risks.
 """
 from flask import Blueprint, render_template, request, make_response
 from flask_login import login_required, current_user
+from flask_babel import _
 from datetime import datetime, date, timedelta
 from sqlalchemy import func
 
@@ -20,7 +21,7 @@ def calculate_schedule_status(project):
     if not milestones:
         return {
             'status': 'gray',
-            'label': 'Sem marcos',
+            'label': _('Sem marcos'),
             'total': 0,
             'completed': 0,
             'delayed': 0,
@@ -47,13 +48,13 @@ def calculate_schedule_status(project):
 
     if delayed > 0:
         status = 'red'
-        label = 'Atrasado'
+        label = _('Atrasado')
     elif completed == len(milestones):
         status = 'green'
-        label = 'Concluído'
+        label = _('Concluido')
     else:
         status = 'green'
-        label = 'No prazo'
+        label = _('No prazo')
 
     return {
         'status': status,
@@ -75,7 +76,7 @@ def calculate_cost_status(project):
     if budget == 0:
         return {
             'status': 'gray',
-            'label': 'Sem orçamento',
+            'label': _('Sem orcamento'),
             'budget': 0,
             'spent': total_spent,
             'remaining': 0,
@@ -89,18 +90,18 @@ def calculate_cost_status(project):
     # Group by category
     by_category = {}
     for e in expenses:
-        cat = e.category or 'Outros'
+        cat = e.category or _('Outros')
         by_category[cat] = by_category.get(cat, 0) + (e.amount or 0)
 
     if percent_used > 100:
         status = 'red'
-        label = 'Estourado'
+        label = _('Estourado')
     elif percent_used > 85:
         status = 'yellow'
-        label = 'Atenção'
+        label = _('Atencao')
     else:
         status = 'green'
-        label = 'Saudável'
+        label = _('Saudavel')
 
     return {
         'status': status,
@@ -157,17 +158,17 @@ def calculate_resource_cost_status(project):
         cost_percent = (realized_cost / planned_cost) * 100
         if cost_percent > 100:
             status = 'red'
-            label = 'Acima do planejado'
+            label = _('Acima do planejado')
         elif cost_percent > 85:
             status = 'yellow'
-            label = 'Atenção'
+            label = _('Atencao')
         else:
             status = 'green'
-            label = 'Dentro do planejado'
+            label = _('Dentro do planejado')
     else:
         cost_percent = 0
         status = 'gray'
-        label = 'Sem planejamento'
+        label = _('Sem planejamento')
 
     return {
         'status': status,
@@ -286,9 +287,9 @@ def identify_risks(project, schedule_status, cost_status):
         risks.append({
             'type': 'schedule',
             'severity': 'high',
-            'title': f"{schedule_status['delayed']} marco(s) atrasado(s)",
-            'description': 'Existem marcos com data de entrega ultrapassada',
-            'action': 'Revisar cronograma e realocar recursos'
+            'title': _('%(count)d marco(s) atrasado(s)', count=schedule_status['delayed']),
+            'description': _('Existem marcos com data de entrega ultrapassada'),
+            'action': _('Revisar cronograma e realocar recursos')
         })
 
     # Check if project is ending soon
@@ -298,17 +299,17 @@ def identify_risks(project, schedule_status, cost_status):
             risks.append({
                 'type': 'schedule',
                 'severity': 'high',
-                'title': 'Projeto expirado',
-                'description': f'Data de término foi há {abs(days_remaining)} dias',
-                'action': 'Solicitar prorrogação ou encerrar projeto'
+                'title': _('Projeto expirado'),
+                'description': _('Data de termino foi ha %(days)d dias', days=abs(days_remaining)),
+                'action': _('Solicitar prorrogacao ou encerrar projeto')
             })
         elif days_remaining <= 30:
             risks.append({
                 'type': 'schedule',
                 'severity': 'medium',
-                'title': f'Projeto termina em {days_remaining} dias',
-                'description': 'Prazo de encerramento próximo',
-                'action': 'Acelerar entregas finais'
+                'title': _('Projeto termina em %(days)d dias', days=days_remaining),
+                'description': _('Prazo de encerramento proximo'),
+                'action': _('Acelerar entregas finais')
             })
 
     # Budget risks
@@ -317,17 +318,17 @@ def identify_risks(project, schedule_status, cost_status):
         risks.append({
             'type': 'cost',
             'severity': 'high',
-            'title': 'Orçamento estourado',
-            'description': f'Gasto excede orçamento em R$ {overspent:,.2f}',
-            'action': 'Solicitar remanejamento ou aditivo'
+            'title': _('Orcamento estourado'),
+            'description': _('Gasto excede orcamento em R$ %(value).2f', value=overspent),
+            'action': _('Solicitar remanejamento ou aditivo')
         })
     elif cost_status['percent_used'] > 85:
         risks.append({
             'type': 'cost',
             'severity': 'medium',
-            'title': 'Orçamento crítico',
-            'description': f'{cost_status["percent_used"]:.1f}% do orçamento já utilizado',
-            'action': 'Controlar gastos e priorizar despesas essenciais'
+            'title': _('Orcamento critico'),
+            'description': _('%(percent).1f%% do orcamento ja utilizado', percent=cost_status["percent_used"]),
+            'action': _('Controlar gastos e priorizar despesas essenciais')
         })
 
     # Progress risk
@@ -341,9 +342,9 @@ def identify_risks(project, schedule_status, cost_status):
                     risks.append({
                         'type': 'execution',
                         'severity': 'high',
-                        'title': 'Progresso abaixo do esperado',
-                        'description': f'{time_elapsed_pct:.0f}% do tempo decorrido, apenas {schedule_status["progress"]:.0f}% concluído',
-                        'action': 'Revisar escopo ou aumentar equipe'
+                        'title': _('Progresso abaixo do esperado'),
+                        'description': _('%(time).0f%% do tempo decorrido, apenas %(progress).0f%% concluido', time=time_elapsed_pct, progress=schedule_status["progress"]),
+                        'action': _('Revisar escopo ou aumentar equipe')
                     })
 
     # Resource risk - check if has resources allocated
@@ -352,9 +353,9 @@ def identify_risks(project, schedule_status, cost_status):
         risks.append({
             'type': 'resource',
             'severity': 'medium',
-            'title': 'Sem recursos alocados',
-            'description': 'Nenhum recurso ativo no projeto',
-            'action': 'Alocar equipe para execução'
+            'title': _('Sem recursos alocados'),
+            'description': _('Nenhum recurso ativo no projeto'),
+            'action': _('Alocar equipe para execucao')
         })
 
     # Sort by severity
@@ -420,13 +421,13 @@ def get_compliance_status(project):
     # Determine overall compliance status
     if critical_risks or critical_bugs or len(overdue_pending) > 3:
         status = 'red'
-        label = 'Crítico'
+        label = _('Critico')
     elif open_risks or overdue_pending or open_ncs:
         status = 'yellow'
-        label = 'Atenção'
+        label = _('Atencao')
     else:
         status = 'green'
-        label = 'Conforme'
+        label = _('Conforme')
 
     return {
         'status': status,
@@ -485,16 +486,16 @@ def view_report(project_id):
     # Calculate overall health (include compliance status)
     if any(r['severity'] == 'high' for r in risks) or compliance_status['status'] == 'red':
         overall_health = 'red'
-        overall_label = 'Crítico'
+        overall_label = _('Critico')
     elif any(r['severity'] == 'medium' for r in risks) or compliance_status['status'] == 'yellow':
         overall_health = 'yellow'
-        overall_label = 'Atenção'
+        overall_label = _('Atencao')
     elif schedule_status['status'] == 'gray' and cost_status['status'] == 'gray':
         overall_health = 'gray'
-        overall_label = 'Sem dados'
+        overall_label = _('Sem dados')
     else:
         overall_health = 'green'
-        overall_label = 'Saudável'
+        overall_label = _('Saudavel')
 
     # Get team
     team = Resource.query.filter_by(project_id=project_id, type='Pessoa', status='Ativo').all()
@@ -547,13 +548,13 @@ def print_report(project_id):
     # Calculate overall health
     if any(r['severity'] == 'high' for r in risks) or compliance_status['status'] == 'red':
         overall_health = 'red'
-        overall_label = 'Crítico'
+        overall_label = _('Critico')
     elif any(r['severity'] == 'medium' for r in risks) or compliance_status['status'] == 'yellow':
         overall_health = 'yellow'
-        overall_label = 'Atenção'
+        overall_label = _('Atencao')
     else:
         overall_health = 'green'
-        overall_label = 'Saudável'
+        overall_label = _('Saudavel')
 
     team = Resource.query.filter_by(project_id=project_id, type='Pessoa', status='Ativo').all()
     total_hours = db.session.query(func.sum(Timesheet.hours))\

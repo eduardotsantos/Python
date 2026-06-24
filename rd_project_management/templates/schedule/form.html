@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% block title %}{{ 'Editar' if milestone else 'Novo' }} Marco - Gestão P&D{% endblock %}
+{% block title %}{{ _('Editar') if milestone else _('Novo') }} {{ _('Marco') }} - {{ _('Gestao P&D') }}{% endblock %}
 
 {% block content %}
 <div class="row justify-content-center">
@@ -8,7 +8,7 @@
             <a href="{{ url_for('schedule.view_schedule', project_id=project.id) }}" class="btn btn-outline-secondary btn-sm me-3">
                 <i class="bi bi-arrow-left"></i>
             </a>
-            <h4 class="fw-bold mb-0">{{ 'Editar' if milestone else 'Novo' }} Marco</h4>
+            <h4 class="fw-bold mb-0">{{ _('Editar') if milestone else _('Novo') }} {{ _('Marco') }}</h4>
         </div>
 
         <div class="card shadow-sm">
@@ -16,50 +16,50 @@
                 <form method="POST">
                     <div class="row g-3">
                         <div class="col-md-9">
-                            <label for="title" class="form-label">Título *</label>
+                            <label for="title" class="form-label">{{ _('Titulo') }} *</label>
                             <input type="text" class="form-control" id="title" name="title"
                                    value="{{ milestone.title if milestone else '' }}" required>
                         </div>
                         <div class="col-md-3">
-                            <label for="order" class="form-label">Ordem</label>
+                            <label for="order" class="form-label">{{ _('Ordem') }}</label>
                             <input type="number" class="form-control" id="order" name="order"
                                    value="{{ milestone.order if milestone else '0' }}">
                         </div>
                         <div class="col-12">
-                            <label for="description" class="form-label">Descrição</label>
+                            <label for="description" class="form-label">{{ _('Descricao') }}</label>
                             <textarea class="form-control" id="description" name="description" rows="3">{{ milestone.description if milestone else '' }}</textarea>
                         </div>
                         <div class="col-md-6">
-                            <label for="start_date" class="form-label">Data Início *</label>
+                            <label for="start_date" class="form-label">{{ _('Data Inicio') }} *</label>
                             <input type="date" class="form-control" id="start_date" name="start_date"
                                    value="{{ milestone.start_date.strftime('%Y-%m-%d') if milestone and milestone.start_date else '' }}" required>
                         </div>
                         <div class="col-md-6">
-                            <label for="end_date" class="form-label">Data Término *</label>
+                            <label for="end_date" class="form-label">{{ _('Data Termino') }} *</label>
                             <input type="date" class="form-control" id="end_date" name="end_date"
                                    value="{{ milestone.end_date.strftime('%Y-%m-%d') if milestone and milestone.end_date else '' }}" required>
                         </div>
                         <div class="col-md-6">
-                            <label for="progress" class="form-label">Progresso (%)</label>
+                            <label for="progress" class="form-label">{{ _('Progresso') }} (%)</label>
                             <input type="range" class="form-range" id="progress" name="progress" min="0" max="100" step="5"
                                    value="{{ milestone.progress if milestone else 0 }}"
                                    oninput="document.getElementById('progressValue').textContent = this.value + '%'">
                             <span id="progressValue" class="fw-bold">{{ milestone.progress if milestone else 0 }}%</span>
                         </div>
                         <div class="col-md-6">
-                            <label for="status" class="form-label">Status</label>
+                            <label for="status" class="form-label">{{ _('Status') }}</label>
                             <select class="form-select" id="status" name="status">
-                                {% for s in ['Pendente', 'Em Andamento', 'Concluído', 'Atrasado'] %}
-                                <option value="{{ s }}" {{ 'selected' if milestone and milestone.status == s }}>{{ s }}</option>
+                                {% for s in ['Pendente', 'Em Andamento', 'Concluido', 'Atrasado'] %}
+                                <option value="{{ s }}" {{ 'selected' if milestone and milestone.status == s }}>{{ _(s) }}</option>
                                 {% endfor %}
                             </select>
                         </div>
 
                         <!-- Predecessor -->
                         <div class="col-md-12">
-                            <label for="predecessor_id" class="form-label">Predecessora <small class="text-muted">(Finish-to-Start)</small></label>
+                            <label for="predecessor_id" class="form-label">{{ _('Predecessora') }} <small class="text-muted">(Finish-to-Start)</small></label>
                             <select class="form-select" id="predecessor_id" name="predecessor_id">
-                                <option value="">-- Nenhuma --</option>
+                                <option value="">-- {{ _('Nenhuma') }} --</option>
                                 {% for m in all_milestones %}
                                     {% if not milestone or m.id != milestone.id %}
                                     <option value="{{ m.id }}" {{ 'selected' if milestone and milestone.predecessor_id == m.id }}>
@@ -68,21 +68,21 @@
                                     {% endif %}
                                 {% endfor %}
                             </select>
-                            <small class="text-muted">A atividade selecionada deve terminar antes desta iniciar</small>
+                            <small class="text-muted">{{ _('A atividade selecionada deve terminar antes desta iniciar') }}</small>
                         </div>
 
-                        <!-- Responsáveis (múltiplos com % alocação) -->
+                        <!-- Responsaveis (multiplos com % alocacao) -->
                         <div class="col-12">
-                            <label class="form-label">Responsáveis <small class="text-muted">(opcional)</small></label>
+                            <label class="form-label">{{ _('Responsaveis') }} <small class="text-muted">({{ _('opcional') }})</small></label>
                             <div id="responsibles-container">
                                 {% if milestone and milestone.resource_assignments %}
                                     {% for ra in milestone.resource_assignments %}
                                     <div class="row g-2 mb-2 responsible-row">
                                         <div class="col-md-7">
                                             <select class="form-select" name="resource_ids">
-                                                <option value="">-- Selecione --</option>
+                                                <option value="">-- {{ _('Selecione') }} --</option>
                                                 {% for r in resources %}
-                                                <option value="{{ r.id }}" {{ 'selected' if ra.resource_id == r.id }}>{{ r.name }} ({{ r.role or 'Equipe' }})</option>
+                                                <option value="{{ r.id }}" {{ 'selected' if ra.resource_id == r.id }}>{{ r.name }} ({{ r.role or _('Equipe') }})</option>
                                                 {% endfor %}
                                             </select>
                                         </div>
@@ -103,9 +103,9 @@
                                     <div class="row g-2 mb-2 responsible-row">
                                         <div class="col-md-7">
                                             <select class="form-select" name="resource_ids">
-                                                <option value="">-- Selecione --</option>
+                                                <option value="">-- {{ _('Selecione') }} --</option>
                                                 {% for r in resources %}
-                                                <option value="{{ r.id }}">{{ r.name }} ({{ r.role or 'Equipe' }})</option>
+                                                <option value="{{ r.id }}">{{ r.name }} ({{ r.role or _('Equipe') }})</option>
                                                 {% endfor %}
                                             </select>
                                         </div>
@@ -124,21 +124,21 @@
                                 {% endif %}
                             </div>
                             <button type="button" class="btn btn-outline-secondary btn-sm mt-2" onclick="addResponsible()">
-                                <i class="bi bi-plus-lg"></i> Adicionar Responsável
+                                <i class="bi bi-plus-lg"></i> {{ _('Adicionar Responsavel') }}
                             </button>
                             <div id="allocation-warning" class="text-danger small mt-2 d-none">
-                                <i class="bi bi-exclamation-triangle"></i> A soma das alocações não pode ultrapassar 100%
+                                <i class="bi bi-exclamation-triangle"></i> {{ _('A soma das alocacoes nao pode ultrapassar 100%') }}
                             </div>
                             <div id="allocation-total" class="text-muted small mt-1">
-                                Total alocado: <strong id="allocation-sum">0</strong>%
+                                {{ _('Total alocado:') }} <strong id="allocation-sum">0</strong>%
                             </div>
                         </div>
                     </div>
                     <hr class="my-4">
                     <div class="d-flex justify-content-end gap-2">
-                        <a href="{{ url_for('schedule.view_schedule', project_id=project.id) }}" class="btn btn-outline-secondary">Cancelar</a>
+                        <a href="{{ url_for('schedule.view_schedule', project_id=project.id) }}" class="btn btn-outline-secondary">{{ _('Cancelar') }}</a>
                         <button type="submit" class="btn btn-primary">
-                            <i class="bi bi-check-lg"></i> {{ 'Salvar' if milestone else 'Criar Marco' }}
+                            <i class="bi bi-check-lg"></i> {{ _('Salvar') if milestone else _('Criar Marco') }}
                         </button>
                     </div>
                 </form>
@@ -157,9 +157,9 @@ function addResponsible() {
     row.innerHTML = `
         <div class="col-md-7">
             <select class="form-select" name="resource_ids">
-                <option value="">-- Selecione --</option>
+                <option value="">-- {{ _('Selecione') }} --</option>
                 {% for r in resources %}
-                <option value="{{ r.id }}">{{ r.name }} ({{ r.role or 'Equipe' }})</option>
+                <option value="{{ r.id }}">{{ r.name }} ({{ r.role or _('Equipe') }})</option>
                 {% endfor %}
             </select>
         </div>

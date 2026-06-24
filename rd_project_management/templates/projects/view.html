@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% block title %}{{ project.title }} - Gestão P&D{% endblock %}
+{% block title %}{{ project.title }} - {{ _('Gestão P&D') }}{% endblock %}
 
 {% block content %}
 <div class="d-flex align-items-center mb-4">
@@ -12,24 +12,24 @@
     </div>
     <div class="btn-group">
         <a href="{{ url_for('status_report.view_report', project_id=project.id) }}" class="btn btn-outline-success btn-sm">
-            <i class="bi bi-clipboard-data"></i> Status Report
+            <i class="bi bi-clipboard-data"></i> {{ _('Status Report') }}
         </a>
         {% if project.call_links %}
-        <a href="{{ url_for('ai.audit_page', project_id=project.id) }}" class="btn btn-outline-warning btn-sm" title="Auditoria de Conformidade">
-            <i class="bi bi-shield-check"></i> Auditoria
+        <a href="{{ url_for('ai.audit_page', project_id=project.id) }}" class="btn btn-outline-warning btn-sm" title="{{ _('Auditoria de Conformidade') }}">
+            <i class="bi bi-shield-check"></i> {{ _('Auditoria') }}
         </a>
         {% endif %}
-        <a href="{{ url_for('projects.export_to_msproject', project_id=project.id) }}" class="btn btn-outline-secondary btn-sm" title="Exportar MS Project">
-            <i class="bi bi-download"></i> MS Project
+        <a href="{{ url_for('projects.export_to_msproject', project_id=project.id) }}" class="btn btn-outline-secondary btn-sm" title="{{ _('Exportar MS Project') }}">
+            <i class="bi bi-download"></i> {{ _('MS Project') }}
         </a>
         <a href="{{ url_for('ai.project_ai_actions', project_id=project.id) }}" class="btn btn-outline-info btn-sm">
-            <i class="bi bi-robot"></i> IA
+            <i class="bi bi-robot"></i> {{ _('IA') }}
         </a>
         <a href="{{ url_for('projects.edit_project', project_id=project.id) }}" class="btn btn-outline-primary btn-sm">
-            <i class="bi bi-pencil"></i> Editar
+            <i class="bi bi-pencil"></i> {{ _('Editar') }}
         </a>
         <form method="POST" action="{{ url_for('projects.delete_project', project_id=project.id) }}" class="d-inline">
-            <button type="submit" class="btn btn-outline-danger btn-sm" data-confirm="Tem certeza que deseja excluir este projeto e todos os dados associados?">
+            <button type="submit" class="btn btn-outline-danger btn-sm" data-confirm="{{ _('Tem certeza que deseja excluir este projeto e todos os dados associados?') }}">
                 <i class="bi bi-trash"></i>
             </button>
         </form>
@@ -41,7 +41,7 @@
     <div class="col-md-3 col-6">
         <div class="card card-stats border-primary shadow-sm">
             <div class="card-body">
-                <p class="text-muted mb-1 small">Orçamento</p>
+                <p class="text-muted mb-1 small">{{ _('Orçamento') }}</p>
                 <h5 class="fw-bold mb-0">R$ {{ "{:,.2f}".format(project.budget).replace(",", "X").replace(".", ",").replace("X", ".") }}</h5>
             </div>
         </div>
@@ -49,7 +49,7 @@
     <div class="col-md-3 col-6">
         <div class="card card-stats border-danger shadow-sm">
             <div class="card-body">
-                <p class="text-muted mb-1 small">Despesas</p>
+                <p class="text-muted mb-1 small">{{ _('Despesas') }}</p>
                 <h5 class="fw-bold mb-0">R$ {{ "{:,.2f}".format(total_expenses).replace(",", "X").replace(".", ",").replace("X", ".") }}</h5>
             </div>
         </div>
@@ -57,7 +57,7 @@
     <div class="col-md-3 col-6">
         <div class="card card-stats border-info shadow-sm">
             <div class="card-body">
-                <p class="text-muted mb-1 small">Horas Registradas</p>
+                <p class="text-muted mb-1 small">{{ _('Horas Registradas') }}</p>
                 <h5 class="fw-bold mb-0">{{ "%.1f"|format(total_hours) }}h</h5>
             </div>
         </div>
@@ -65,7 +65,7 @@
     <div class="col-md-3 col-6">
         <div class="card card-stats border-success shadow-sm">
             <div class="card-body">
-                <p class="text-muted mb-1 small">Progresso</p>
+                <p class="text-muted mb-1 small">{{ _('Progresso') }}</p>
                 <h5 class="fw-bold mb-0">{{ milestone_progress }}%</h5>
                 <div class="progress mt-1">
                     <div class="progress-bar bg-success" style="width: {{ milestone_progress }}%"></div>
@@ -80,32 +80,32 @@
 <div class="card shadow-sm mb-4 border-start border-4 border-info">
     <div class="card-body">
         <div class="d-flex justify-content-between align-items-center mb-3">
-            <h6 class="mb-0 fw-bold"><i class="bi bi-award text-info"></i> Entrega de Valor (PMBOK 8)</h6>
+            <h6 class="mb-0 fw-bold"><i class="bi bi-award text-info"></i> {{ _('Entrega de Valor (PMBOK 8)') }}</h6>
             {% if project.value_status == 'Realizado' %}
-            <span class="badge bg-success">{{ project.value_status }}</span>
+            <span class="badge bg-success">{{ _('Realizado') }}</span>
             {% elif project.value_status == 'Parcial' %}
-            <span class="badge bg-warning text-dark">{{ project.value_status }}</span>
+            <span class="badge bg-warning text-dark">{{ _('Parcial') }}</span>
             {% elif project.value_status == 'Em captura' %}
-            <span class="badge bg-info">{{ project.value_status }}</span>
+            <span class="badge bg-info">{{ _('Em captura') }}</span>
             {% else %}
-            <span class="badge bg-secondary">{{ project.value_status }}</span>
+            <span class="badge bg-secondary">{{ _('Não iniciado') }}</span>
             {% endif %}
         </div>
         <div class="row g-3">
             <div class="col-md-3">
-                <small class="text-muted d-block">Tipo de Valor</small>
+                <small class="text-muted d-block">{{ _('Tipo de Valor') }}</small>
                 <strong>{{ project.value_type or '-' }}</strong>
             </div>
             <div class="col-md-3">
-                <small class="text-muted d-block">Valor Esperado</small>
+                <small class="text-muted d-block">{{ _('Valor Esperado') }}</small>
                 <strong class="text-primary">R$ {{ "{:,.2f}".format(project.expected_value).replace(",", "X").replace(".", ",").replace("X", ".") }}</strong>
             </div>
             <div class="col-md-3">
-                <small class="text-muted d-block">Valor Realizado</small>
+                <small class="text-muted d-block">{{ _('Valor Realizado') }}</small>
                 <strong class="text-success">R$ {{ "{:,.2f}".format(project.realized_value or 0).replace(",", "X").replace(".", ",").replace("X", ".") }}</strong>
             </div>
             <div class="col-md-3">
-                <small class="text-muted d-block">Captura de Valor</small>
+                <small class="text-muted d-block">{{ _('Captura de Valor') }}</small>
                 {% set value_percent = ((project.realized_value or 0) / project.expected_value * 100) if project.expected_value > 0 else 0 %}
                 <div class="d-flex align-items-center">
                     <strong class="{{ 'text-success' if value_percent >= 80 else 'text-warning' if value_percent >= 50 else 'text-danger' }}">{{ "%.0f"|format(value_percent) }}%</strong>
@@ -126,7 +126,7 @@
         <div class="card shadow-sm h-100 border-start border-4 border-success">
             <div class="card-body">
                 <div class="d-flex justify-content-between align-items-center mb-2">
-                    <h6 class="mb-0 fw-bold"><i class="bi bi-graph-up-arrow text-success"></i> TRL</h6>
+                    <h6 class="mb-0 fw-bold"><i class="bi bi-graph-up-arrow text-success"></i> {{ _('TRL') }}</h6>
                     <a href="{{ url_for('projects.trl_history', project_id=project.id) }}" class="btn btn-sm btn-outline-success">
                         <i class="bi bi-clock-history"></i>
                     </a>
@@ -135,15 +135,15 @@
                     <div class="display-4 text-success fw-bold">{{ project.trl or 1 }}</div>
                     <small class="text-muted">
                         {% set trl_desc = {
-                            1: 'Principios basicos',
-                            2: 'Conceito formulado',
-                            3: 'Prova de conceito',
-                            4: 'Lab validado',
-                            5: 'Ambiente relevante',
-                            6: 'Demonstrado relevante',
-                            7: 'Demonstrado operacional',
-                            8: 'Sistema qualificado',
-                            9: 'Operacao comprovada'
+                            1: _('Princípios básicos'),
+                            2: _('Conceito formulado'),
+                            3: _('Prova de conceito'),
+                            4: _('Lab validado'),
+                            5: _('Ambiente relevante'),
+                            6: _('Demonstrado relevante'),
+                            7: _('Demonstrado operacional'),
+                            8: _('Sistema qualificado'),
+                            9: _('Operação comprovada')
                         } %}
                         {{ trl_desc.get(project.trl or 1, '') }}
                     </small>
@@ -156,28 +156,28 @@
     <div class="col-md-4">
         <div class="card shadow-sm h-100 border-start border-4 border-warning">
             <div class="card-body">
-                <h6 class="mb-3 fw-bold"><i class="bi bi-lightbulb text-warning"></i> Inovacao</h6>
+                <h6 class="mb-3 fw-bold"><i class="bi bi-lightbulb text-warning"></i> {{ _('Inovação') }}</h6>
                 <div class="row g-2">
                     <div class="col-6">
-                        <small class="text-muted d-block">Tipo</small>
+                        <small class="text-muted d-block">{{ _('Tipo') }}</small>
                         <strong>{{ project.innovation_type or '-' }}</strong>
                     </div>
                     <div class="col-6">
-                        <small class="text-muted d-block">Escopo</small>
+                        <small class="text-muted d-block">{{ _('Escopo') }}</small>
                         <strong>{{ project.innovation_scope or '-' }}</strong>
                     </div>
                     <div class="col-6">
-                        <small class="text-muted d-block">PI</small>
+                        <small class="text-muted d-block">{{ _('PI') }}</small>
                         <strong>{{ project.ip_strategy or '-' }}</strong>
                     </div>
                     <div class="col-6">
-                        <small class="text-muted d-block">Risco</small>
+                        <small class="text-muted d-block">{{ _('Risco') }}</small>
                         {% if project.innovation_risk_level == 'Muito Alto' %}
-                        <span class="badge bg-danger">{{ project.innovation_risk_level }}</span>
+                        <span class="badge bg-danger">{{ _('Muito Alto') }}</span>
                         {% elif project.innovation_risk_level == 'Alto' %}
-                        <span class="badge bg-warning text-dark">{{ project.innovation_risk_level }}</span>
+                        <span class="badge bg-warning text-dark">{{ _('Alto') }}</span>
                         {% elif project.innovation_risk_level %}
-                        <span class="badge bg-info">{{ project.innovation_risk_level }}</span>
+                        <span class="badge bg-info">{{ _(project.innovation_risk_level) }}</span>
                         {% else %}
                         <strong>-</strong>
                         {% endif %}
@@ -192,7 +192,7 @@
         <div class="card shadow-sm h-100 border-start border-4 border-primary">
             <div class="card-body">
                 <div class="d-flex justify-content-between align-items-center mb-2">
-                    <h6 class="mb-0 fw-bold"><i class="bi bi-people text-primary"></i> Stakeholders</h6>
+                    <h6 class="mb-0 fw-bold"><i class="bi bi-people text-primary"></i> {{ _('Stakeholders') }}</h6>
                     <a href="{{ url_for('projects.list_stakeholders', project_id=project.id) }}" class="btn btn-sm btn-outline-primary">
                         <i class="bi bi-gear"></i>
                     </a>
@@ -200,7 +200,7 @@
                 {% if project.stakeholders %}
                 <div class="text-center mb-2">
                     <div class="display-5 text-primary fw-bold">{{ project.stakeholders|length }}</div>
-                    <small class="text-muted">cadastrados</small>
+                    <small class="text-muted">{{ _('cadastrados') }}</small>
                 </div>
                 <div class="d-flex justify-content-center gap-1 flex-wrap">
                     {% for s in project.stakeholders[:5] %}
@@ -215,9 +215,9 @@
                 {% else %}
                 <div class="text-center py-3 text-muted">
                     <i class="bi bi-people fs-3"></i>
-                    <p class="small mb-0">Nenhum stakeholder</p>
+                    <p class="small mb-0">{{ _('Nenhum stakeholder') }}</p>
                     <a href="{{ url_for('projects.add_stakeholder', project_id=project.id) }}" class="btn btn-sm btn-primary mt-2">
-                        <i class="bi bi-plus"></i> Adicionar
+                        <i class="bi bi-plus"></i> {{ _('Adicionar') }}
                     </a>
                 </div>
                 {% endif %}
@@ -231,7 +231,7 @@
     <div class="col-lg-8">
         <div class="card shadow-sm mb-4">
             <div class="card-header bg-white">
-                <h6 class="mb-0 fw-bold">Informações do Projeto</h6>
+                <h6 class="mb-0 fw-bold">{{ _('Informações do Projeto') }}</h6>
             </div>
             <div class="card-body">
                 {% if project.description %}
@@ -239,38 +239,38 @@
                 {% endif %}
                 <div class="row g-3">
                     <div class="col-md-6">
-                        <small class="text-muted d-block">Status</small>
+                        <small class="text-muted d-block">{{ _('Status') }}</small>
                         {% if project.status == 'Em Andamento' %}
-                            <span class="badge bg-warning text-dark">{{ project.status }}</span>
+                            <span class="badge bg-warning text-dark">{{ _('Em Andamento') }}</span>
                         {% elif project.status == 'Concluído' %}
-                            <span class="badge bg-success">{{ project.status }}</span>
+                            <span class="badge bg-success">{{ _('Concluído') }}</span>
                         {% elif project.status == 'Cancelado' %}
-                            <span class="badge bg-danger">{{ project.status }}</span>
+                            <span class="badge bg-danger">{{ _('Cancelado') }}</span>
                         {% else %}
-                            <span class="badge bg-info">{{ project.status }}</span>
+                            <span class="badge bg-info">{{ _('Planejamento') }}</span>
                         {% endif %}
                     </div>
                     <div class="col-md-6">
-                        <small class="text-muted d-block">Categoria</small>
+                        <small class="text-muted d-block">{{ _('Categoria') }}</small>
                         <strong>{{ project.category or '-' }}</strong>
                     </div>
                     <div class="col-md-6">
-                        <small class="text-muted d-block">Período</small>
+                        <small class="text-muted d-block">{{ _('Período') }}</small>
                         <strong>
                             {% if project.start_date %}
                                 {{ project.start_date.strftime('%d/%m/%Y') }}
-                                {% if project.end_date %} a {{ project.end_date.strftime('%d/%m/%Y') }}{% endif %}
+                                {% if project.end_date %} {{ _('a') }} {{ project.end_date.strftime('%d/%m/%Y') }}{% endif %}
                             {% else %}
-                                Não definido
+                                {{ _('Não definido') }}
                             {% endif %}
                         </strong>
                     </div>
                     <div class="col-md-6">
-                        <small class="text-muted d-block">Fonte de Recursos</small>
+                        <small class="text-muted d-block">{{ _('Fonte de Recursos') }}</small>
                         <strong>{{ project.funding_source or '-' }}</strong>
                     </div>
                     <div class="col-md-6">
-                        <small class="text-muted d-block">Responsável</small>
+                        <small class="text-muted d-block">{{ _('Responsável') }}</small>
                         <strong>{{ project.responsible.full_name if project.responsible else '-' }}</strong>
                     </div>
                 </div>
@@ -281,32 +281,32 @@
     <div class="col-lg-4">
         <div class="card shadow-sm">
             <div class="card-header bg-white">
-                <h6 class="mb-0 fw-bold">Acesso Rápido</h6>
+                <h6 class="mb-0 fw-bold">{{ _('Acesso Rápido') }}</h6>
             </div>
             <div class="list-group list-group-flush">
                 <a href="{{ url_for('expenses.list_expenses', project_id=project.id) }}" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
-                    <span><i class="bi bi-cash-coin text-danger"></i> Despesas</span>
+                    <span><i class="bi bi-cash-coin text-danger"></i> {{ _('Despesas') }}</span>
                     <span class="badge bg-danger rounded-pill">{{ project.expenses|length }}</span>
                 </a>
                 <a href="{{ url_for('resources.list_resources', project_id=project.id) }}" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
-                    <span><i class="bi bi-people text-info"></i> Recursos</span>
+                    <span><i class="bi bi-people text-info"></i> {{ _('Recursos') }}</span>
                     <span class="badge bg-info rounded-pill">{{ resource_count }}</span>
                 </a>
                 <a href="{{ url_for('schedule.view_schedule', project_id=project.id) }}" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
-                    <span><i class="bi bi-calendar3 text-warning"></i> Cronograma</span>
+                    <span><i class="bi bi-calendar3 text-warning"></i> {{ _('Cronograma') }}</span>
                     <span class="badge bg-warning text-dark rounded-pill">{{ project.milestones|length }}</span>
                 </a>
                 <a href="{{ url_for('timesheet.list_timesheet', project_id=project.id) }}" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
-                    <span><i class="bi bi-clock text-success"></i> Timesheet</span>
+                    <span><i class="bi bi-clock text-success"></i> {{ _('Timesheet') }}</span>
                     <span class="badge bg-success rounded-pill">{{ project.timesheets|length }}</span>
                 </a>
                 <a href="{{ url_for('meeting_minutes.list_minutes', project_id=project.id) }}" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
-                    <span><i class="bi bi-journal-text text-primary"></i> Atas de Reunião</span>
+                    <span><i class="bi bi-journal-text text-primary"></i> {{ _('Atas de Reunião') }}</span>
                     <span class="badge bg-primary rounded-pill">{{ project.meeting_minutes|length }}</span>
                 </a>
                 {% if has_agile_module %}
                 <a href="{{ url_for('agile.kanban_board', project_id=project.id) }}" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
-                    <span><i class="bi bi-kanban text-purple"></i> Ágil / Kanban</span>
+                    <span><i class="bi bi-kanban text-purple"></i> {{ _('Ágil / Kanban') }}</span>
                     <span class="badge bg-secondary rounded-pill"><i class="bi bi-lightning"></i></span>
                 </a>
                 {% endif %}
@@ -318,7 +318,7 @@
 <!-- Documents Section -->
 <div class="card shadow-sm mt-4">
     <div class="card-header bg-white d-flex justify-content-between align-items-center">
-        <h6 class="mb-0 fw-bold"><i class="bi bi-file-earmark-text text-primary"></i> Documentos do Projeto</h6>
+        <h6 class="mb-0 fw-bold"><i class="bi bi-file-earmark-text text-primary"></i> {{ _('Documentos do Projeto') }}</h6>
         <span class="badge bg-secondary">{{ project.documents|length }}/3</span>
     </div>
     <div class="card-body">
@@ -352,15 +352,15 @@
                     </div>
                     <div class="card-footer bg-transparent d-flex gap-2">
                         <a href="{{ url_for('projects.download_document', project_id=project.id, doc_id=doc.id) }}" class="btn btn-sm btn-primary flex-grow-1">
-                            <i class="bi bi-download"></i> Baixar
+                            <i class="bi bi-download"></i> {{ _('Baixar') }}
                         </a>
                         {% if doc.file_type == 'pdf' %}
-                        <a href="{{ url_for('ai.analyze_document_page', doc_id=doc.id) }}" class="btn btn-sm btn-outline-info" title="Analisar com IA">
+                        <a href="{{ url_for('ai.analyze_document_page', doc_id=doc.id) }}" class="btn btn-sm btn-outline-info" title="{{ _('Analisar com IA') }}">
                             <i class="bi bi-robot"></i>
                         </a>
                         {% endif %}
                         <form method="POST" action="{{ url_for('projects.delete_document', project_id=project.id, doc_id=doc.id) }}" class="d-inline">
-                            <button type="submit" class="btn btn-sm btn-outline-danger" data-confirm="Tem certeza que deseja excluir este documento?">
+                            <button type="submit" class="btn btn-sm btn-outline-danger" data-confirm="{{ _('Tem certeza que deseja excluir este documento?') }}">
                                 <i class="bi bi-trash"></i>
                             </button>
                         </form>
@@ -375,26 +375,26 @@
         <form method="POST" action="{{ url_for('projects.upload_document', project_id=project.id) }}" enctype="multipart/form-data">
             <div class="row g-3 align-items-end">
                 <div class="col-md-5">
-                    <label for="document" class="form-label">Adicionar Documento</label>
+                    <label for="document" class="form-label">{{ _('Adicionar Documento') }}</label>
                     <input type="file" class="form-control" id="document" name="document"
                            accept=".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx" required>
-                    <small class="text-muted">PDF, Word, Excel ou PowerPoint (máx. 16 MB)</small>
+                    <small class="text-muted">{{ _('PDF, Word, Excel ou PowerPoint (máx. 16 MB)') }}</small>
                 </div>
                 <div class="col-md-5">
-                    <label for="doc_description" class="form-label">Descrição (opcional)</label>
+                    <label for="doc_description" class="form-label">{{ _('Descrição (opcional)') }}</label>
                     <input type="text" class="form-control" id="doc_description" name="description"
-                           placeholder="Ex: Proposta técnica, Relatório parcial..." maxlength="300">
+                           placeholder="{{ _('Ex: Proposta técnica, Relatório parcial...') }}" maxlength="300">
                 </div>
                 <div class="col-md-2">
                     <button type="submit" class="btn btn-primary w-100">
-                        <i class="bi bi-upload"></i> Enviar
+                        <i class="bi bi-upload"></i> {{ _('Enviar') }}
                     </button>
                 </div>
             </div>
         </form>
         {% else %}
         <div class="alert alert-info mb-0">
-            <i class="bi bi-info-circle"></i> Limite de 3 documentos atingido. Exclua um documento para adicionar outro.
+            <i class="bi bi-info-circle"></i> {{ _('Limite de 3 documentos atingido. Exclua um documento para adicionar outro.') }}
         </div>
         {% endif %}
     </div>

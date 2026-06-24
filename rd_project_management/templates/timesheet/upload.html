@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% block title %}Importar Timesheet - {{ project.title }}{% endblock %}
+{% block title %}{{ _('Importar Timesheet') }} - {{ project.title }}{% endblock %}
 
 {% block content %}
 <div class="d-flex align-items-center mb-4">
@@ -7,7 +7,7 @@
         <i class="bi bi-arrow-left"></i>
     </a>
     <div class="flex-grow-1">
-        <h4 class="fw-bold mb-0"><i class="bi bi-file-earmark-excel text-success"></i> Importar Timesheet</h4>
+        <h4 class="fw-bold mb-0"><i class="bi bi-file-earmark-excel text-success"></i> {{ _('Importar Timesheet') }}</h4>
         <span class="text-muted">{{ project.title }}</span>
     </div>
 </div>
@@ -16,21 +16,21 @@
     <div class="col-lg-6">
         <div class="card shadow-sm">
             <div class="card-header bg-white">
-                <h6 class="mb-0 fw-bold"><i class="bi bi-upload"></i> Upload de Arquivo</h6>
+                <h6 class="mb-0 fw-bold"><i class="bi bi-upload"></i> {{ _('Upload de Arquivo') }}</h6>
             </div>
             <div class="card-body">
                 <form method="POST" enctype="multipart/form-data">
                     <div class="mb-4">
-                        <label class="form-label">Arquivo Excel (.xlsx)</label>
+                        <label class="form-label">{{ _('Arquivo Excel') }} (.xlsx)</label>
                         <input type="file" name="file" class="form-control" accept=".xlsx,.xls" required>
-                        <div class="form-text">Selecione um arquivo Excel com os registros de horas</div>
+                        <div class="form-text">{{ _('Selecione um arquivo Excel com os registros de horas') }}</div>
                     </div>
                     <div class="d-grid gap-2">
                         <button type="submit" class="btn btn-primary">
-                            <i class="bi bi-upload"></i> Importar Registros
+                            <i class="bi bi-upload"></i> {{ _('Importar Registros') }}
                         </button>
                         <a href="{{ url_for('timesheet.list_timesheet', project_id=project.id) }}" class="btn btn-outline-secondary">
-                            Cancelar
+                            {{ _('Cancelar') }}
                         </a>
                     </div>
                 </form>
@@ -40,32 +40,32 @@
     <div class="col-lg-6">
         <div class="card shadow-sm border-info">
             <div class="card-header bg-info text-white">
-                <h6 class="mb-0 fw-bold"><i class="bi bi-info-circle"></i> Instrucoes</h6>
+                <h6 class="mb-0 fw-bold"><i class="bi bi-info-circle"></i> {{ _('Instrucoes') }}</h6>
             </div>
             <div class="card-body">
                 <ol class="mb-4">
-                    <li class="mb-2">Baixe o template clicando no botao abaixo</li>
-                    <li class="mb-2">Preencha os dados seguindo o formato do template</li>
-                    <li class="mb-2">Salve o arquivo e faca o upload</li>
+                    <li class="mb-2">{{ _('Baixe o template clicando no botao abaixo') }}</li>
+                    <li class="mb-2">{{ _('Preencha os dados seguindo o formato do template') }}</li>
+                    <li class="mb-2">{{ _('Salve o arquivo e faca o upload') }}</li>
                 </ol>
 
-                <h6 class="fw-bold">Campos obrigatorios:</h6>
+                <h6 class="fw-bold">{{ _('Campos obrigatorios:') }}</h6>
                 <ul class="mb-4">
-                    <li><strong>Data:</strong> Formato DD/MM/AAAA</li>
-                    <li><strong>Horas:</strong> Numero (ex: 8 ou 2.5)</li>
-                    <li><strong>Atividade:</strong> Descricao da tarefa</li>
+                    <li><strong>{{ _('Data:') }}</strong> {{ _('Formato DD/MM/AAAA') }}</li>
+                    <li><strong>{{ _('Horas:') }}</strong> {{ _('Numero (ex: 8 ou 2.5)') }}</li>
+                    <li><strong>{{ _('Atividade:') }}</strong> {{ _('Descricao da tarefa') }}</li>
                 </ul>
 
-                <h6 class="fw-bold">Campos opcionais:</h6>
+                <h6 class="fw-bold">{{ _('Campos opcionais:') }}</h6>
                 <ul class="mb-4">
-                    <li><strong>Marco:</strong> Selecione da lista no template</li>
-                    <li><strong>Recurso:</strong> Selecione da lista no template</li>
-                    <li><strong>Observacoes:</strong> Texto livre</li>
+                    <li><strong>{{ _('Marco:') }}</strong> {{ _('Selecione da lista no template') }}</li>
+                    <li><strong>{{ _('Recurso:') }}</strong> {{ _('Selecione da lista no template') }}</li>
+                    <li><strong>{{ _('Observacoes:') }}</strong> {{ _('Texto livre') }}</li>
                 </ul>
 
                 <div class="d-grid">
                     <a href="{{ url_for('timesheet.download_template', project_id=project.id) }}" class="btn btn-success">
-                        <i class="bi bi-download"></i> Baixar Template Excel
+                        <i class="bi bi-download"></i> {{ _('Baixar Template Excel') }}
                     </a>
                 </div>
             </div>

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Orion P&D - Portal de Inovação Aberta</title>
+    <title>Orion P&D - {{ _('Portal de Inovação Aberta') }}</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.2/font/bootstrap-icons.min.css" rel="stylesheet">
     <style>
@@ -417,7 +417,7 @@
                     </div>
                     <div>
                         <div class="logo-text">Orion P&D</div>
-                        <div class="logo-subtitle">Portal de Inovação Aberta</div>
+                        <div class="logo-subtitle">{{ _('Portal de Inovação Aberta') }}</div>
                     </div>
                 </div>
                 <div class="d-flex align-items-center">
@@ -445,11 +445,10 @@
             <div class="row align-items-center">
                 <div class="col-lg-6 hero-content">
                     <h1 class="hero-title">
-                        Transforme suas idéias em <span>projetos de inovação</span>
+                        {{ _('Transforme suas idéias em') }} <span>{{ _('projetos de inovação') }}</span>
                     </h1>
                     <p class="hero-subtitle">
-                        Plataforma inteligente para gestão de projetos de P&D com monitoramento
-                        automático de editais, análise com IA e geração de propostas.
+                        {{ _('Plataforma inteligente para gestão de projetos de P&D com monitoramento automático de editais, análise com IA e geração de propostas.') }}
                     </p>
 
                     <!-- Stats -->
@@ -458,19 +457,19 @@
                             <div class="col-4">
                                 <div class="stat-item">
                                     <div class="stat-value">R$50bi+</div>
-                                    <div class="stat-label">Recursos Disponíveis</div>
+                                    <div class="stat-label">{{ _('Recursos Disponíveis') }}</div>
                                 </div>
                             </div>
                             <div class="col-4">
                                 <div class="stat-item">
                                     <div class="stat-value">500+</div>
-                                    <div class="stat-label">Editais por Ano</div>
+                                    <div class="stat-label">{{ _('Editais por Ano') }}</div>
                                 </div>
                             </div>
                             <div class="col-4">
                                 <div class="stat-item">
                                     <div class="stat-value">24/7</div>
-                                    <div class="stat-label">Monitoramento</div>
+                                    <div class="stat-label">{{ _('Monitoramento') }}</div>
                                 </div>
                             </div>
                         </div>
@@ -490,11 +489,11 @@
                             {% endif %}
                         {% endwith %}
 
-                        <h4><i class="bi bi-shield-lock me-2"></i>Acesso ao Sistema</h4>
+                        <h4><i class="bi bi-shield-lock me-2"></i>{{ _('Acesso ao Sistema') }}</h4>
 
                         <form method="POST">
                             <div class="mb-3">
-                                <label for="username" class="form-label">Email ou Usuário</label>
+                                <label for="username" class="form-label">{{ _('Email ou Usuário') }}</label>
                                 <div class="input-group">
                                     <span class="input-group-text"><i class="bi bi-person"></i></span>
                                     <input type="text" class="form-control" id="username" name="username"
@@ -503,7 +502,7 @@
                             </div>
 
                             <div class="mb-3">
-                                <label for="password" class="form-label">Senha</label>
+                                <label for="password" class="form-label">{{ _('Senha') }}</label>
                                 <div class="input-group">
                                     <span class="input-group-text"><i class="bi bi-lock"></i></span>
                                     <input type="password" class="form-control" id="password" name="password"
@@ -512,25 +511,25 @@
                             </div>
 
                             <button type="submit" class="btn btn-login">
-                                <i class="bi bi-box-arrow-in-right me-2"></i>Entrar na Plataforma
+                                <i class="bi bi-box-arrow-in-right me-2"></i>{{ _('Entrar na Plataforma') }}
                             </button>
                         </form>
 
                         <div class="text-center mt-3">
                             <small style="color: rgba(255,255,255,0.4);">
-                                <i class="bi bi-shield-check me-1"></i>Conexão segura e criptografada
+                                <i class="bi bi-shield-check me-1"></i>{{ _('Conexão segura e criptografada') }}
                             </small>
                         </div>
 
                         <div class="text-center mt-3" style="padding-top: 12px; border-top: 1px solid rgba(255,255,255,0.1);">
                             <small style="color: rgba(0,212,170,0.8);">
-                                <i class="bi bi-award me-1"></i>Metodologia alinhada ao PMBOK 8 - Entrega de Valor
+                                <i class="bi bi-award me-1"></i>{{ _('Metodologia alinhada ao PMBOK 8 - Entrega de Valor') }}
                             </small>
                         </div>
 
                         <!-- Language Selector in Login Card -->
                         <div class="text-center mt-4 pt-3" style="border-top: 1px solid rgba(255,255,255,0.1);">
-                            <small style="color: rgba(255,255,255,0.5); display: block; margin-bottom: 8px;">Idioma / Language</small>
+                            <small style="color: rgba(255,255,255,0.5); display: block; margin-bottom: 8px;">{{ _('Idioma / Language') }}</small>
                             <div style="display: inline-flex; gap: 15px;">
                                 <span class="lang-flag" data-lang="pt-BR" title="Português (Brasil)" style="cursor:pointer; transition:all 0.2s;">
                                     <img src="https://flagcdn.com/w40/br.png" alt="Português" style="width:32px; height:22px; border-radius:3px; box-shadow:0 2px 4px rgba(0,0,0,0.3); border: 2px solid transparent; pointer-events:none;">
@@ -549,34 +548,34 @@
     <!-- Features Section -->
     <section class="features-section">
         <div class="container">
-            <h2 class="section-title">Recursos da Plataforma</h2>
+            <h2 class="section-title">{{ _('Recursos da Plataforma') }}</h2>
             <div class="row g-4">
                 <div class="col-md-6 col-lg-3">
                     <div class="feature-card">
                         <div class="feature-icon blue"><i class="bi bi-cpu"></i></div>
-                        <h5>Inteligência Artificial</h5>
-                        <p>Análise automática de editais e geração de propostas com IA avançada</p>
+                        <h5>{{ _('Inteligência Artificial') }}</h5>
+                        <p>{{ _('Análise automática de editais e geração de propostas com IA avançada') }}</p>
                     </div>
                 </div>
                 <div class="col-md-6 col-lg-3">
                     <div class="feature-card">
                         <div class="feature-icon green"><i class="bi bi-megaphone"></i></div>
-                        <h5>Monitoramento</h5>
-                        <p>Acompanhamento automático de chamadas FINEP, BNDES e FAPESC</p>
+                        <h5>{{ _('Monitoramento') }}</h5>
+                        <p>{{ _('Acompanhamento automático de chamadas FINEP, BNDES e FAPESC') }}</p>
                     </div>
                 </div>
                 <div class="col-md-6 col-lg-3">
                     <div class="feature-card">
                         <div class="feature-icon purple"><i class="bi bi-graph-up-arrow"></i></div>
-                        <h5>Gestão Financeira</h5>
-                        <p>Controle de despesas com anexos de boletos, NFs e comprovantes</p>
+                        <h5>{{ _('Gestão Financeira') }}</h5>
+                        <p>{{ _('Controle de despesas com anexos de boletos, NFs e comprovantes') }}</p>
                     </div>
                 </div>
                 <div class="col-md-6 col-lg-3">
                     <div class="feature-card">
                         <div class="feature-icon orange"><i class="bi bi-file-earmark-text"></i></div>
-                        <h5>Propostas</h5>
-                        <p>Geração automática de propostas alinhadas com requisitos do edital</p>
+                        <h5>{{ _('Propostas') }}</h5>
+                        <p>{{ _('Geração automática de propostas alinhadas com requisitos do edital') }}</p>
                     </div>
                 </div>
             </div>
@@ -586,7 +585,7 @@
     <!-- News Section -->
     <section class="news-section">
         <div class="container">
-            <h2 class="section-title">Notícias de Inovação</h2>
+            <h2 class="section-title">{{ _('Notícias de Inovação') }}</h2>
 
             <div class="news-tabs">
                 <a href="https://www.finep.gov.br/notícias" target="_blank" class="news-tab">
@@ -621,7 +620,7 @@
                                 {% endif %}
                                 {% if item.link %}
                                 <a href="{{ item.link }}" target="_blank" class="news-link">
-                                    Leia mais <i class="bi bi-arrow-right"></i>
+                                    {{ _('Leia mais') }} <i class="bi bi-arrow-right"></i>
                                 </a>
                                 {% endif %}
                             </div>
@@ -637,10 +636,10 @@
                                 <span class="news-source finep">FINEP</span>
                             </div>
                             <div class="news-body">
-                                <h6>Programas de apoio a inovação tecnológica</h6>
-                                <p>FINEP disponibiliza recursos para projetos de pesquisa e desenvolvimento</p>
+                                <h6>{{ _('Programas de apoio a inovação tecnológica') }}</h6>
+                                <p>{{ _('FINEP disponibiliza recursos para projetos de pesquisa e desenvolvimento') }}</p>
                                 <a href="https://www.finep.gov.br/notícias" target="_blank" class="news-link">
-                                    Leia mais <i class="bi bi-arrow-right"></i>
+                                    {{ _('Leia mais') }} <i class="bi bi-arrow-right"></i>
                                 </a>
                             </div>
                         </div>
@@ -652,10 +651,10 @@
                                 <span class="news-source fapesc">FAPESC</span>
                             </div>
                             <div class="news-body">
-                                <h6>Chamadas públicas para pesquisadores catarinenses</h6>
-                                <p>Oportunidades de financiamento para projetos de inovação em SC</p>
+                                <h6>{{ _('Chamadas públicas para pesquisadores catarinenses') }}</h6>
+                                <p>{{ _('Oportunidades de financiamento para projetos de inovação em SC') }}</p>
                                 <a href="https://fapesc.sc.gov.br/chamadas-abertas/" target="_blank" class="news-link">
-                                    Leia mais <i class="bi bi-arrow-right"></i>
+                                    {{ _('Leia mais') }} <i class="bi bi-arrow-right"></i>
                                 </a>
                             </div>
                         </div>
@@ -667,10 +666,10 @@
                                 <span class="news-source finep">BNDES</span>
                             </div>
                             <div class="news-body">
-                                <h6>Linhas de crédito para inovação empresarial</h6>
-                                <p>Recursos disponíveis para empresas investirem em P&D</p>
+                                <h6>{{ _('Linhas de crédito para inovação empresarial') }}</h6>
+                                <p>{{ _('Recursos disponíveis para empresas investirem em P&D') }}</p>
                                 <a href="https://www.bndes.gov.br" target="_blank" class="news-link">
-                                    Leia mais <i class="bi bi-arrow-right"></i>
+                                    {{ _('Leia mais') }} <i class="bi bi-arrow-right"></i>
                                 </a>
                             </div>
                         </div>
@@ -680,10 +679,10 @@
 
             <div class="text-center mt-4">
                 <a href="https://www.finep.gov.br/notícias" target="_blank" class="btn btn-outline-light me-2">
-                    <i class="bi bi-box-arrow-up-right me-1"></i>Ver mais notícias FINEP
+                    <i class="bi bi-box-arrow-up-right me-1"></i>{{ _('Ver mais notícias FINEP') }}
                 </a>
                 <a href="https://fapesc.sc.gov.br/category/notícias/" target="_blank" class="btn btn-outline-light">
-                    <i class="bi bi-box-arrow-up-right me-1"></i>Ver mais notícias FAPESC
+                    <i class="bi bi-box-arrow-up-right me-1"></i>{{ _('Ver mais notícias FAPESC') }}
                 </a>
             </div>
         </div>
@@ -694,7 +693,7 @@
         <div class="container">
             <div class="row align-items-center justify-content-center text-center">
                 <div class="col-auto">
-                    <small class="text-muted">Fontes de Fomento:</small>
+                    <small class="text-muted">{{ _('Fontes de Fomento:') }}</small>
                 </div>
                 <div class="col-auto">
                     <a href="https://www.finep.gov.br" target="_blank">
@@ -731,7 +730,7 @@
         <div class="container">
             <div class="d-flex justify-content-between align-items-center flex-wrap">
                 <div class="footer-text">
-                    <i class="bi bi-stars me-1"></i> Orion P&D - Plataforma de Gestão de Inovação
+                    <i class="bi bi-stars me-1"></i> Orion P&D - {{ _('Plataforma de Gestão de Inovação') }}
                 </div>
                 <div class="footer-links">
                     <a href="https://www.gov.br/mcti" target="_blank">MCTI</a>

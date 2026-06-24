@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% block title %}Gerar Relatório - {{ project.title }}{% endblock %}
+{% block title %}{{ _('Gerar Relatorio') }} - {{ project.title }}{% endblock %}
 
 {% block extra_css %}
 <style>
@@ -30,9 +30,9 @@
     <div class="d-flex justify-content-between align-items-center mb-4 no-print">
         <div>
             <a href="{{ url_for('projects.view_project', project_id=project.id) }}" class="btn btn-outline-secondary btn-sm">
-                <i class="bi bi-arrow-left"></i> Voltar ao Projeto
+                <i class="bi bi-arrow-left"></i> {{ _('Voltar ao Projeto') }}
             </a>
-            <h4 class="mt-2"><i class="bi bi-file-earmark-text text-success"></i> Geração de Relatório</h4>
+            <h4 class="mt-2"><i class="bi bi-file-earmark-text text-success"></i> {{ _('Geracao de Relatorio') }}</h4>
             <p class="text-muted mb-0">{{ project.code }} - {{ project.title }}</p>
         </div>
     </div>
@@ -40,22 +40,22 @@
     {% if not ai_configured %}
     <div class="alert alert-warning no-print">
         <i class="bi bi-exclamation-triangle"></i>
-        <strong>API de IA nao configurada.</strong>
-        Configure a variavel de ambiente <code>ANTHROPIC_API_KEY</code>.
+        <strong>{{ _('API de IA nao configurada.') }}</strong>
+        {{ _('Configure a variavel de ambiente') }} <code>ANTHROPIC_API_KEY</code>.
     </div>
     {% else %}
     <div class="card mb-4 no-print" id="generateSection">
         <div class="card-body">
-            <h5>Selecione o tipo de relatório:</h5>
+            <h5>{{ _('Selecione o tipo de relatorio:') }}</h5>
             <div class="row">
                 <div class="col-md-6">
                     <div class="card border-primary h-100">
                         <div class="card-body text-center">
                             <i class="bi bi-file-earmark-text fs-1 text-primary"></i>
-                            <h5 class="mt-2">Relatório Parcial</h5>
-                            <p class="text-muted small">Para prestacao de contas intermediaria com foco em progresso e proximas etapas.</p>
+                            <h5 class="mt-2">{{ _('Relatorio Parcial') }}</h5>
+                            <p class="text-muted small">{{ _('Para prestacao de contas intermediaria com foco em progresso e proximas etapas.') }}</p>
                             <button class="btn btn-primary" onclick="generateReport('parcial')">
-                                <i class="bi bi-file-earmark-plus"></i> Gerar Parcial
+                                <i class="bi bi-file-earmark-plus"></i> {{ _('Gerar Parcial') }}
                             </button>
                         </div>
                     </div>
@@ -64,10 +64,10 @@
                     <div class="card border-success h-100">
                         <div class="card-body text-center">
                             <i class="bi bi-file-earmark-check fs-1 text-success"></i>
-                            <h5 class="mt-2">Relatório Final</h5>
-                            <p class="text-muted small">Para conclusao do projeto com foco em resultados e impactos.</p>
+                            <h5 class="mt-2">{{ _('Relatorio Final') }}</h5>
+                            <p class="text-muted small">{{ _('Para conclusao do projeto com foco em resultados e impactos.') }}</p>
                             <button class="btn btn-success" onclick="generateReport('final')">
-                                <i class="bi bi-file-earmark-check"></i> Gerar Final
+                                <i class="bi bi-file-earmark-check"></i> {{ _('Gerar Final') }}
                             </button>
                         </div>
                     </div>
@@ -78,7 +78,7 @@
 
     <div class="text-center d-none" id="loadingSection">
         <div class="spinner-border text-success" role="status"></div>
-        <p class="mt-2">Gerando relatório com IA... Isso pode levar alguns segundos.</p>
+        <p class="mt-2">{{ _('Gerando relatorio com IA... Isso pode levar alguns segundos.') }}</p>
     </div>
 
     <div class="d-none" id="reportSection">
@@ -86,23 +86,23 @@
         <div id="documentSavedSection" class="d-none mb-3 no-print">
             <div class="alert alert-success">
                 <i class="bi bi-file-earmark-check"></i>
-                <strong>Documento salvo!</strong> O relatório foi salvo em <a href="{{ url_for('projects.view_project', project_id=project.id) }}#documents" class="alert-link">Documentos do Projeto</a>.
+                <strong>{{ _('Documento salvo!') }}</strong> {{ _('O relatorio foi salvo em') }} <a href="{{ url_for('projects.view_project', project_id=project.id) }}#documents" class="alert-link">{{ _('Documentos do Projeto') }}</a>.
                 <span id="documentName"></span>
             </div>
         </div>
 
         <div class="mb-3 no-print">
             <button class="btn btn-outline-primary" onclick="window.print()">
-                <i class="bi bi-printer"></i> Imprimir
+                <i class="bi bi-printer"></i> {{ _('Imprimir') }}
             </button>
             <button class="btn btn-outline-secondary" onclick="copyReport()">
-                <i class="bi bi-clipboard"></i> Copiar Texto
+                <i class="bi bi-clipboard"></i> {{ _('Copiar Texto') }}
             </button>
             <button class="btn btn-outline-success" onclick="downloadReport()">
-                <i class="bi bi-download"></i> Download TXT
+                <i class="bi bi-download"></i> {{ _('Download TXT') }}
             </button>
             <button class="btn btn-secondary" onclick="resetReport()">
-                <i class="bi bi-arrow-counterclockwise"></i> Gerar Outro
+                <i class="bi bi-arrow-counterclockwise"></i> {{ _('Gerar Outro') }}
             </button>
         </div>
 
@@ -116,6 +116,7 @@
 <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 <script>
 let currentReport = '';
+const copiedMsg = '{{ _("Relatorio copiado para a area de transferencia!") }}';
 
 async function generateReport(type) {
     document.getElementById('generateSection').classList.add('d-none');
@@ -131,7 +132,7 @@ async function generateReport(type) {
         const data = await response.json();
 
         if (data.error) {
-            alert('Erro: ' + data.error);
+            alert('{{ _("Erro:") }} ' + data.error);
             document.getElementById('generateSection').classList.remove('d-none');
             document.getElementById('loadingSection').classList.add('d-none');
             return;
@@ -150,7 +151,7 @@ async function generateReport(type) {
         }
 
     } catch (error) {
-        alert('Erro de conexao: ' + error.message);
+        alert('{{ _("Erro de conexao:") }} ' + error.message);
         document.getElementById('generateSection').classList.remove('d-none');
     } finally {
         document.getElementById('loadingSection').classList.add('d-none');
@@ -164,7 +165,7 @@ function resetReport() {
 
 function copyReport() {
     navigator.clipboard.writeText(currentReport).then(() => {
-        alert('Relatório copiado para a area de transferencia!');
+        alert(copiedMsg);
     });
 }
 
