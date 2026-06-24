@@ -37,7 +37,7 @@ def login():
         if user and user.active and user.check_password(password):
             if user.tenant_id and user.tenant:
                 if not user.tenant.is_active():
-                    flash('Sua empresa está com a licença expirada ou inativa. Entre em contato com o suporte.', 'danger')
+                    flash(_('Sua empresa está com a licença expirada ou inativa. Entre em contato com o suporte.'), 'danger')
                     return render_template('auth/login.html', news=news)
 
             login_user(user)
@@ -50,12 +50,12 @@ def login():
                 pass
 
             next_page = request.args.get('next')
-            flash('Login realizado com sucesso!', 'success')
+            flash(_('Login realizado com sucesso!'), 'success')
             return redirect(next_page or url_for('home.dashboard'))
         elif user and not user.active:
-            flash('Sua conta está desativada. Entre em contato com o administrador.', 'danger')
+            flash(_('Sua conta está desativada. Entre em contato com o administrador.'), 'danger')
         else:
-            flash('Email/usuário ou senha incorretos.', 'danger')
+            flash(_('Email/usuário ou senha incorretos.'), 'danger')
 
     return render_template('auth/login.html', news=news)
 
@@ -73,23 +73,23 @@ def register():
         confirm_password = request.form.get('confirm_password', '')
 
         if not all([username, email, full_name, password]):
-            flash('Todos os campos são obrigatórios.', 'danger')
+            flash(_('Todos os campos são obrigatórios.'), 'danger')
             return render_template('auth/register.html')
 
         if password != confirm_password:
-            flash('As senhas não coincidem.', 'danger')
+            flash(_('As senhas não coincidem.'), 'danger')
             return render_template('auth/register.html')
 
         if len(password) < 6:
-            flash('A senha deve ter pelo menos 6 caracteres.', 'danger')
+            flash(_('A senha deve ter pelo menos 6 caracteres.'), 'danger')
             return render_template('auth/register.html')
 
         if User.query.filter_by(username=username).first():
-            flash('Nome de usuário já existe.', 'danger')
+            flash(_('Nome de usuário já existe.'), 'danger')
             return render_template('auth/register.html')
 
         if User.query.filter_by(email=email).first():
-            flash('Email já cadastrado.', 'danger')
+            flash(_('Email já cadastrado.'), 'danger')
             return render_template('auth/register.html')
 
         user = User(username=username, email=email, full_name=full_name)
@@ -102,7 +102,7 @@ def register():
         db.session.add(user)
         db.session.commit()
 
-        flash('Cadastro realizado com sucesso! Faça login.', 'success')
+        flash(_('Cadastro realizado com sucesso! Faça login.'), 'success')
         return redirect(url_for('auth.login'))
 
     return render_template('auth/register.html')
@@ -119,7 +119,7 @@ def logout():
         pass
 
     logout_user()
-    flash('Logout realizado com sucesso.', 'info')
+    flash(_('Logout realizado com sucesso.'), 'info')
     return redirect(url_for('auth.login'))
 
 

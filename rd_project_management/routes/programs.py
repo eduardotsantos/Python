@@ -3,6 +3,7 @@ Programs routes - manage groups of related projects.
 """
 from flask import Blueprint, render_template, request, redirect, url_for, flash, jsonify
 from flask_login import login_required, current_user
+from flask_babel import _
 from datetime import datetime, date
 from sqlalchemy import func
 
@@ -57,7 +58,7 @@ def create_program():
     tenant_id = get_current_tenant_id()
 
     if not tenant_id:
-        flash('Superadmins devem acessar via contexto de uma empresa para criar programas.', 'warning')
+        flash(_('Superadmins devem acessar via contexto de uma empresa para criar programas.'), 'warning')
         return redirect(url_for('programs.list_programs'))
 
     if request.method == 'POST':
@@ -75,7 +76,7 @@ def create_program():
         )
         db.session.add(program)
         db.session.commit()
-        flash('Programa criado com sucesso!', 'success')
+        flash(_('Programa criado com sucesso!'), 'success')
         return redirect(url_for('programs.view_program', program_id=program.id))
 
     from models import User
@@ -143,7 +144,7 @@ def edit_program(program_id):
         program.status = request.form.get('status', 'Ativo')
 
         db.session.commit()
-        flash('Programa atualizado com sucesso!', 'success')
+        flash(_('Programa atualizado com sucesso!'), 'success')
         return redirect(url_for('programs.view_program', program_id=program.id))
 
     from models import User
@@ -164,7 +165,7 @@ def delete_program(program_id):
 
     db.session.delete(program)
     db.session.commit()
-    flash('Programa excluido com sucesso!', 'success')
+    flash(_('Programa excluido com sucesso!'), 'success')
     return redirect(url_for('programs.list_programs'))
 
 
@@ -182,7 +183,7 @@ def add_project_to_program(program_id):
         if project and project.tenant_id == get_current_tenant_id():
             project.program_id = program_id
             db.session.commit()
-            flash(f'Projeto {project.code} adicionado ao programa!', 'success')
+            flash(_('Projeto %(code)s adicionado ao programa!', code=project.code), 'success')
 
     return redirect(url_for('programs.view_program', program_id=program_id))
 
@@ -199,7 +200,7 @@ def remove_project_from_program(program_id, project_id):
     if project and project.program_id == program_id:
         project.program_id = None
         db.session.commit()
-        flash(f'Projeto {project.code} removido do programa!', 'success')
+        flash(_('Projeto %(code)s removido do programa!', code=project.code), 'success')
 
     return redirect(url_for('programs.view_program', program_id=program_id))
 

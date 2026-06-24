@@ -258,12 +258,12 @@ def edit_user(user_id):
         # Update password only if provided
         if password:
             if len(password) < 6:
-                flash('A senha deve ter pelo menos 6 caracteres.', 'danger')
+                flash(_('A senha deve ter pelo menos 6 caracteres.'), 'danger')
                 return render_template('users/form.html', user=user)
             user.set_password(password)
 
         db.session.commit()
-        flash(f'Usuário "{full_name}" atualizado com sucesso!', 'success')
+        flash(_('Usuário "%(name)s" atualizado com sucesso!', name=full_name), 'success')
         return redirect(url_for('users.list_users'))
 
     return render_template('users/form.html', user=user)
@@ -280,19 +280,19 @@ def delete_user(user_id):
     # Check tenant access
     tenant_id = get_current_tenant_id()
     if tenant_id and user.tenant_id != tenant_id:
-        flash('Usuário não encontrado.', 'danger')
+        flash(_('Usuário não encontrado.'), 'danger')
         return redirect(url_for('users.list_users'))
 
     # Prevent deleting self
     if user.id == current_user.id:
-        flash('Você não pode excluir sua própria conta.', 'danger')
+        flash(_('Você não pode excluir sua própria conta.'), 'danger')
         return redirect(url_for('users.list_users'))
 
     # Prevent deleting the last admin
     if user.role == 'admin':
         admin_count = User.query.filter_by(tenant_id=tenant_id, role='admin').count() if tenant_id else User.query.filter_by(role='admin').count()
         if admin_count <= 1:
-            flash('Não é possível excluir o último administrador.', 'danger')
+            flash(_('Não é possível excluir o último administrador.'), 'danger')
             return redirect(url_for('users.list_users'))
 
     # Check if user has related data
@@ -303,13 +303,12 @@ def delete_user(user_id):
     )
 
     if has_data:
-        flash('Este usuário possui dados vinculados (timesheets, despesas ou projetos). '
-              'Desative o usuário ao invés de excluir.', 'warning')
+        flash(_('Este usuário possui dados vinculados (timesheets, despesas ou projetos). Desative o usuário ao invés de excluir.'), 'warning')
         return redirect(url_for('users.list_users'))
 
     db.session.delete(user)
     db.session.commit()
-    flash(f'Usuário "{user.full_name}" excluído com sucesso!', 'success')
+    flash(_('Usuário "%(name)s" excluído com sucesso!', name=user.full_name), 'success')
     return redirect(url_for('users.list_users'))
 
 
@@ -324,19 +323,19 @@ def toggle_active(user_id):
     # Check tenant access
     tenant_id = get_current_tenant_id()
     if tenant_id and user.tenant_id != tenant_id:
-        flash('Usuário não encontrado.', 'danger')
+        flash(_('Usuário não encontrado.'), 'danger')
         return redirect(url_for('users.list_users'))
 
     # Prevent deactivating self
     if user.id == current_user.id:
-        flash('Você não pode desativar sua própria conta.', 'danger')
+        flash(_('Você não pode desativar sua própria conta.'), 'danger')
         return redirect(url_for('users.list_users'))
 
     user.active = not user.active
     db.session.commit()
 
     status = 'ativado' if user.active else 'desativado'
-    flash(f'Usuário "{user.full_name}" {status} com sucesso!', 'success')
+    flash(_('Usuário "%(name)s" %(status)s com sucesso!', name=user.full_name, status=status), 'success')
     return redirect(url_for('users.list_users'))
 
 
@@ -352,7 +351,7 @@ def profile():
         confirm_password = request.form.get('confirm_password', '')
 
         if not full_name or not email:
-            flash('Nome e email são obrigatórios.', 'danger')
+            flash(_('Nome e email são obrigatórios.'), 'danger')
             return render_template('users/profile.html')
 
         # Check if email exists (excluding current user, within tenant)
@@ -362,7 +361,7 @@ def profile():
         else:
             existing = User.query.filter_by(email=email).first()
         if existing and existing.id != current_user.id:
-            flash('Este email já está cadastrado.', 'danger')
+            flash(_('Este email já está cadastrado.'), 'danger')
             return render_template('users/profile.html')
 
         current_user.full_name = full_name
@@ -383,19 +382,19 @@ def profile():
         # Change password if provided
         if new_password:
             if not current_user.check_password(current_password):
-                flash('Senha atual incorreta.', 'danger')
+                flash(_('Senha atual incorreta.'), 'danger')
                 return render_template('users/profile.html')
             if len(new_password) < 6:
-                flash('A nova senha deve ter pelo menos 6 caracteres.', 'danger')
+                flash(_('A nova senha deve ter pelo menos 6 caracteres.'), 'danger')
                 return render_template('users/profile.html')
             if new_password != confirm_password:
-                flash('A confirmação da nova senha não confere.', 'danger')
+                flash(_('A confirmação da nova senha não confere.'), 'danger')
                 return render_template('users/profile.html')
             current_user.set_password(new_password)
-            flash('Senha alterada com sucesso!', 'success')
+            flash(_('Senha alterada com sucesso!'), 'success')
 
         db.session.commit()
-        flash('Perfil atualizado com sucesso!', 'success')
+        flash(_('Perfil atualizado com sucesso!'), 'success')
         return redirect(url_for('users.profile'))
 
     return render_template('users/profile.html')

@@ -698,3 +698,1751 @@ msgstr "Others"
 
 msgid "Atencao"
 msgstr "Attention"
+
+# Flash messages and new i18n strings
+
+msgid "Login realizado com sucesso!"
+msgstr "Login successful!"
+
+
+msgid "Logout realizado com sucesso."
+msgstr "Logout successful."
+
+
+msgid "Sua empresa está com a licença expirada ou inativa. Entre em contato com o suporte."
+msgstr "Your company's license is expired or inactive. Please contact support."
+
+
+msgid "Sua conta está desativada. Entre em contato com o administrador."
+msgstr "Your account is deactivated. Please contact the administrator."
+
+
+msgid "Email/usuário ou senha incorretos."
+msgstr "Incorrect email/username or password."
+
+
+msgid "Todos os campos são obrigatórios."
+msgstr "All fields are required."
+
+
+msgid "As senhas não coincidem."
+msgstr "Passwords do not match."
+
+
+msgid "A senha deve ter pelo menos 6 caracteres."
+msgstr "Password must be at least 6 characters."
+
+
+msgid "Nome de usuário já existe."
+msgstr "Username already exists."
+
+
+msgid "Email já cadastrado."
+msgstr "Email already registered."
+
+
+msgid "Cadastro realizado com sucesso! Faça login."
+msgstr "Registration successful! Please log in."
+
+
+msgid "Acesso restrito a administradores."
+msgstr "Access restricted to administrators."
+
+
+msgid "Limite de usuários atingido (%(max)s). Entre em contato com o suporte."
+msgstr "User limit reached (%(max)s). Please contact support."
+
+
+msgid "Todos os campos obrigatórios devem ser preenchidos."
+msgstr "All required fields must be filled."
+
+
+msgid "Este nome de usuário já está em uso."
+msgstr "This username is already in use."
+
+
+msgid "Este email já está cadastrado."
+msgstr "This email is already registered."
+
+
+msgid "Usuário \"%(name)s\" criado com sucesso!"
+msgstr "User \"%(name)s\" created successfully!"
+
+
+msgid "Usuário não encontrado."
+msgstr "User not found."
+
+
+msgid "Usuário \"%(name)s\" atualizado com sucesso!"
+msgstr "User \"%(name)s\" updated successfully!"
+
+
+msgid "Não é possível remover o papel de administrador do último admin."
+msgstr "Cannot remove the admin role from the last administrator."
+
+
+msgid "Você não pode desativar sua própria conta."
+msgstr "You cannot deactivate your own account."
+
+
+msgid "Usuário \"%(name)s\" excluído com sucesso!"
+msgstr "User \"%(name)s\" deleted successfully!"
+
+
+msgid "Você não pode excluir sua própria conta."
+msgstr "You cannot delete your own account."
+
+
+msgid "Não é possível excluir o último administrador."
+msgstr "Cannot delete the last administrator."
+
+
+msgid "Este usuário possui dados vinculados (timesheets, despesas ou projetos). Desative o usuário ao invés de excluir."
+msgstr "This user has linked data (timesheets, expenses or projects). Deactivate the user instead of deleting."
+
+
+msgid "Usuário \"%(name)s\" %(status)s com sucesso!"
+msgstr "User \"%(name)s\" %(status)s successfully!"
+
+
+msgid "Nome e email são obrigatórios."
+msgstr "Name and email are required."
+
+
+msgid "Senha atual incorreta."
+msgstr "Current password is incorrect."
+
+
+msgid "A nova senha deve ter pelo menos 6 caracteres."
+msgstr "New password must be at least 6 characters."
+
+
+msgid "A confirmação da nova senha não confere."
+msgstr "New password confirmation does not match."
+
+
+msgid "Senha alterada com sucesso!"
+msgstr "Password changed successfully!"
+
+
+msgid "Perfil atualizado com sucesso!"
+msgstr "Profile updated successfully!"
+
+
+msgid "Recurso adicionado com sucesso!"
+msgstr "Resource added successfully!"
+
+
+msgid "Recurso atualizado com sucesso!"
+msgstr "Resource updated successfully!"
+
+
+msgid "Recurso excluído com sucesso!"
+msgstr "Resource deleted successfully!"
+
+
+msgid "Risco registrado com sucesso!"
+msgstr "Risk recorded successfully!"
+
+
+msgid "Risco atualizado com sucesso!"
+msgstr "Risk updated successfully!"
+
+
+msgid "Risco excluído com sucesso!"
+msgstr "Risk deleted successfully!"
+
+
+msgid "Pendência registrada com sucesso!"
+msgstr "Pending item recorded successfully!"
+
+
+msgid "Pendência atualizada com sucesso!"
+msgstr "Pending item updated successfully!"
+
+
+msgid "Pendência excluída com sucesso!"
+msgstr "Pending item deleted successfully!"
+
+
+msgid "Não conformidade registrada com sucesso!"
+msgstr "Non-conformity recorded successfully!"
+
+
+msgid "Não conformidade atualizada com sucesso!"
+msgstr "Non-conformity updated successfully!"
+
+
+msgid "Não conformidade excluída com sucesso!"
+msgstr "Non-conformity deleted successfully!"
+
+
+msgid "Bug registrado com sucesso!"
+msgstr "Bug recorded successfully!"
+
+
+msgid "Bug atualizado com sucesso!"
+msgstr "Bug updated successfully!"
+
+
+msgid "Bug excluído com sucesso!"
+msgstr "Bug deleted successfully!"
+
+
+msgid "Ação corretiva registrada com sucesso!"
+msgstr "Corrective action recorded successfully!"
+
+
+msgid "Ação corretiva atualizada com sucesso!"
+msgstr "Corrective action updated successfully!"
+
+
+msgid "Ação corretiva excluída com sucesso!"
+msgstr "Corrective action deleted successfully!"
+
+
+msgid "Limite de projetos atingido (%(max)s). Entre em contato com o suporte."
+msgstr "Project limit reached (%(max)s). Please contact support."
+
+
+msgid "Selecione uma empresa para criar o projeto."
+msgstr "Select a company to create the project."
+
+
+msgid "Código e título são obrigatórios."
+msgstr "Code and title are required."
+
+
+msgid "Código do projeto já existe nesta empresa."
+msgstr "Project code already exists in this company."
+
+
+msgid "Projeto criado com sucesso!"
+msgstr "Project created successfully!"
+
+
+msgid "Código do projeto já existe."
+msgstr "Project code already exists."
+
+
+msgid "Projeto atualizado com sucesso!"
+msgstr "Project updated successfully!"
+
+
+msgid "Projeto excluído com sucesso!"
+msgstr "Project deleted successfully!"
+
+
+msgid "Nenhum arquivo selecionado."
+msgstr "No file selected."
+
+
+msgid "Arquivo deve ser XML do MS Project."
+msgstr "File must be XML from MS Project."
+
+
+msgid "Funcionalidade de exportação Excel não disponível. Instale openpyxl."
+msgstr "Excel export feature not available. Install openpyxl."
+
+
+msgid "Limite de %(max)s documentos por projeto atingido."
+msgstr "Limit of %(max)s documents per project reached."
+
+
+msgid "Tipo de arquivo não permitido. Use PDF, Word, Excel ou PowerPoint."
+msgstr "File type not allowed. Use PDF, Word, Excel or PowerPoint."
+
+
+msgid "Documento \"%(name)s\" enviado com sucesso!"
+msgstr "Document \"%(name)s\" uploaded successfully!"
+
+
+msgid "Documento não encontrado."
+msgstr "Document not found."
+
+
+msgid "Arquivo não encontrado no servidor."
+msgstr "File not found on server."
+
+
+msgid "Documento \"%(name)s\" excluído com sucesso!"
+msgstr "Document \"%(name)s\" deleted successfully!"
+
+
+msgid "Stakeholder \"%(name)s\" adicionado com sucesso!"
+msgstr "Stakeholder \"%(name)s\" added successfully!"
+
+
+msgid "Stakeholder não encontrado."
+msgstr "Stakeholder not found."
+
+
+msgid "Stakeholder \"%(name)s\" atualizado com sucesso!"
+msgstr "Stakeholder \"%(name)s\" updated successfully!"
+
+
+msgid "Stakeholder \"%(name)s\" excluído com sucesso!"
+msgstr "Stakeholder \"%(name)s\" deleted successfully!"
+
+
+msgid "TRL atualizado de %(from_trl)s para %(to_trl)s!"
+msgstr "TRL updated from %(from_trl)s to %(to_trl)s!"
+
+
+msgid "TRL não foi alterado."
+msgstr "TRL was not changed."
+
+
+msgid "Superadmins devem acessar via contexto de uma empresa para criar programas."
+msgstr "Super admins must access via a company context to create programs."
+
+
+msgid "Programa criado com sucesso!"
+msgstr "Program created successfully!"
+
+
+msgid "Programa atualizado com sucesso!"
+msgstr "Program updated successfully!"
+
+
+msgid "Programa excluido com sucesso!"
+msgstr "Program deleted successfully!"
+
+
+msgid "Projeto %(code)s adicionado ao programa!"
+msgstr "Project %(code)s added to program!"
+
+
+msgid "Projeto %(code)s removido do programa!"
+msgstr "Project %(code)s removed from program!"
+
+
+msgid "Despesa adicionada com sucesso!"
+msgstr "Expense added successfully!"
+
+
+msgid "Despesa atualizada com sucesso!"
+msgstr "Expense updated successfully!"
+
+
+msgid "Despesa excluída com sucesso!"
+msgstr "Expense deleted successfully!"
+
+
+msgid "Limite de %(max)s anexos por despesa atingido."
+msgstr "Limit of %(max)s attachments per expense reached."
+
+
+msgid "%(type)s enviado com sucesso!"
+msgstr "%(type)s uploaded successfully!"
+
+
+msgid "Tipo de arquivo não permitido. Use PDF, JPG, PNG ou Word."
+msgstr "File type not allowed. Use PDF, JPG, PNG or Word."
+
+
+msgid "Anexo não encontrado."
+msgstr "Attachment not found."
+
+
+msgid "Anexo excluído com sucesso!"
+msgstr "Attachment deleted successfully!"
+
+
+msgid "A soma das alocações não pode ultrapassar 100%!"
+msgstr "The sum of allocations cannot exceed 100%!"
+
+
+msgid "Marco adicionado com sucesso!"
+msgstr "Milestone added successfully!"
+
+
+msgid "Marco atualizado com sucesso!"
+msgstr "Milestone updated successfully!"
+
+
+msgid "Marco excluído com sucesso!"
+msgstr "Milestone deleted successfully!"
+
+
+msgid "%(count)s marcos importados com sucesso!"
+msgstr "%(count)s milestones imported successfully!"
+
+
+msgid "Erro ao processar XML: %(error)s"
+msgstr "Error processing XML: %(error)s"
+
+
+msgid "Erro ao importar: %(error)s"
+msgstr "Error importing: %(error)s"
+
+
+msgid "Formato invalido. Use arquivo XML do MS Project."
+msgstr "Invalid format. Use MS Project XML file."
+
+
+msgid "Registro de horas adicionado com sucesso!"
+msgstr "Time entry added successfully!"
+
+
+msgid "Registro atualizado com sucesso!"
+msgstr "Record updated successfully!"
+
+
+msgid "Registro excluído com sucesso!"
+msgstr "Record deleted successfully!"
+
+
+msgid "%(count)s registros importados com sucesso!"
+msgstr "%(count)s records imported successfully!"
+
+
+msgid "%(count)s registros importados com sucesso! %(errors)s linhas com erro foram ignoradas."
+msgstr "%(count)s records imported successfully! %(errors)s error lines were ignored."
+
+
+msgid "... e mais %(count)s erros"
+msgstr "... and %(count)s more errors"
+
+
+msgid "Erro ao processar arquivo: %(error)s"
+msgstr "Error processing file: %(error)s"
+
+
+msgid "Formato inválido. Use arquivos Excel (.xlsx ou .xls)."
+msgstr "Invalid format. Use Excel files (.xlsx or .xls)."
+
+
+msgid "Título é obrigatório."
+msgstr "Title is required."
+
+
+msgid "Ata criada com sucesso!"
+msgstr "Meeting minutes created successfully!"
+
+
+msgid "Ata atualizada com sucesso!"
+msgstr "Meeting minutes updated successfully!"
+
+
+msgid "Ata excluída com sucesso!"
+msgstr "Meeting minutes deleted successfully!"
+
+
+msgid "Agente não encontrado."
+msgstr "Agent not found."
+
+
+msgid "Módulo de PDF não instalado. Execute: pip install reportlab"
+msgstr "PDF module not installed. Run: pip install reportlab"
+
+
+msgid "Erro ao gerar PDF: %(error)s"
+msgstr "Error generating PDF: %(error)s"
+
+
+msgid "Envio de email não está habilitado para este tenant. Configure em Configurações."
+msgstr "Email sending is not enabled for this tenant. Configure in Settings."
+
+
+msgid "Nenhum destinatário encontrado. Adicione emails manualmente."
+msgstr "No recipients found. Add emails manually."
+
+
+msgid "Briefing enviado para %(count)s destinatário(s)."
+msgstr "Briefing sent to %(count)s recipient(s)."
+
+
+msgid "Erro ao enviar email: %(error)s"
+msgstr "Error sending email: %(error)s"
+
+
+msgid "Sincronização parcial. FINEP: %(finep)s, BNDES: %(bndes)s, FAPESC: %(fapesc)s chamadas. Erros: %(errors)s"
+msgstr "Partial sync. FINEP: %(finep)s, BNDES: %(bndes)s, FAPESC: %(fapesc)s calls. Errors: %(errors)s"
+
+
+msgid "Sincronização concluída! FINEP: %(finep)s, BNDES: %(bndes)s, FAPESC: %(fapesc)s chamadas."
+msgstr "Sync complete! FINEP: %(finep)s, BNDES: %(bndes)s, FAPESC: %(fapesc)s calls."
+
+
+msgid "Chamada pública cadastrada com sucesso!"
+msgstr "Public call registered successfully!"
+
+
+msgid "Você não tem permissão para editar esta chamada."
+msgstr "You do not have permission to edit this call."
+
+
+msgid "Chamada atualizada com sucesso!"
+msgstr "Call updated successfully!"
+
+
+msgid "Você não tem permissão para excluir esta chamada."
+msgstr "You do not have permission to delete this call."
+
+
+msgid "Apenas administradores do sistema podem excluir chamadas globais."
+msgstr "Only system administrators can delete global calls."
+
+
+msgid "Chamada removida com sucesso!"
+msgstr "Call removed successfully!"
+
+
+msgid "Selecione um projeto para vincular."
+msgstr "Select a project to link."
+
+
+msgid "Projeto não encontrado."
+msgstr "Project not found."
+
+
+msgid "Este projeto já está vinculado a esta chamada."
+msgstr "This project is already linked to this call."
+
+
+msgid "Projeto vinculado com sucesso!"
+msgstr "Project linked successfully!"
+
+
+msgid "Vínculo não encontrado."
+msgstr "Link not found."
+
+
+msgid "Vínculo removido com sucesso!"
+msgstr "Link removed successfully!"
+
+
+msgid "Sprint \"%(name)s\" criado com sucesso!"
+msgstr "Sprint \"%(name)s\" created successfully!"
+
+
+msgid "Sprint atualizado com sucesso!"
+msgstr "Sprint updated successfully!"
+
+
+msgid "Sprint excluído com sucesso!"
+msgstr "Sprint deleted successfully!"
+
+
+msgid "Sprint \"%(name)s\" ativado!"
+msgstr "Sprint \"%(name)s\" activated!"
+
+
+msgid "Empresa \"%(name)s\" e usuário administrador criados com sucesso!"
+msgstr "Company \"%(name)s\" and admin user created successfully!"
+
+
+msgid "Empresa \"%(name)s\" criada com sucesso!"
+msgstr "Company \"%(name)s\" created successfully!"
+
+
+msgid "Nome da empresa é obrigatório."
+msgstr "Company name is required."
+
+
+msgid "Já existe uma empresa com este identificador."
+msgstr "A company with this identifier already exists."
+
+
+msgid "Empresa atualizada com sucesso!"
+msgstr "Company updated successfully!"
+
+
+msgid "Não é possível excluir a empresa \"%(name)s\". Ela possui %(users)s usuários e %(projects)s projetos. Remova os dados primeiro."
+msgstr "Cannot delete company \"%(name)s\". It has %(users)s users and %(projects)s projects. Remove the data first."
+
+
+msgid "Empresa \"%(name)s\" excluída com sucesso!"
+msgstr "Company \"%(name)s\" deleted successfully!"
+
+
+msgid "Empresa \"%(name)s\" %(status)s com sucesso!"
+msgstr "Company \"%(name)s\" %(status)s successfully!"
+
+
+msgid "Licença renovada até %(date)s!"
+msgstr "License renewed until %(date)s!"
+
+
+msgid "Limite de %(max)s usuários atingido para esta empresa."
+msgstr "Limit of %(max)s users reached for this company."
+
+
+msgid "Já existe um usuário com este e-mail nesta empresa."
+msgstr "A user with this email already exists in this company."
+
+
+msgid "Acesso negado. Apenas administradores podem visualizar logs de auditoria."
+msgstr "Access denied. Only administrators can view audit logs."
+
+
+msgid "Geração de propostas disponivel apenas nos planos Profissional e Enterprise."
+msgstr "Proposal generation available only in Professional and Enterprise plans."
+
+
+msgid "Auditoria disponivel apenas para projetos vinculados a chamadas publicas."
+msgstr "Audit available only for projects linked to public calls."
+
+
+msgid "Kanban Board"
+msgstr "Kanban Board"
+
+
+msgid "Métricas Ágeis"
+msgstr "Agile Metrics"
+
+
+msgid "Não Iniciado"
+msgstr "Not Started"
+
+
+msgid "Concluído"
+msgstr "Completed"
+
+
+msgid "Backlog"
+msgstr "Backlog"
+
+
+msgid "Solte aqui"
+msgstr "Drop here"
+
+
+msgid "Velocity Médio"
+msgstr "Average Velocity"
+
+
+msgid "Nenhum Sprint Criado"
+msgstr "No Sprint Created"
+
+
+msgid "Crie seu primeiro sprint para organizar as tarefas do projeto."
+msgstr "Create your first sprint to organize project tasks."
+
+
+msgid "Criar Primeiro Sprint"
+msgstr "Create First Sprint"
+
+
+msgid "Tarefas"
+msgstr "Tasks"
+
+
+msgid "concluído"
+msgstr "completed"
+
+
+msgid "Iniciar"
+msgstr "Start"
+
+
+msgid "Nome do Sprint"
+msgstr "Sprint Name"
+
+
+msgid "Objetivo do Sprint"
+msgstr "Sprint Goal"
+
+
+msgid "O que esperamos alcançar neste sprint?"
+msgstr "What do we expect to achieve in this sprint?"
+
+
+msgid "Ex: Sprint 1"
+msgstr "E.g.: Sprint 1"
+
+
+msgid "Data Início"
+msgstr "Start Date"
+
+
+msgid "Data Fim"
+msgstr "End Date"
+
+
+msgid "Planejado"
+msgstr "Planned"
+
+
+msgid "Dica"
+msgstr "Tip"
+
+
+msgid "Sprints típicos duram 1 a 4 semanas. Recomendamos sprints de 2 semanas para maior previsibilidade."
+msgstr "Typical sprints last 1 to 4 weeks. We recommend 2-week sprints for better predictability."
+
+
+msgid "Criar Sprint"
+msgstr "Create Sprint"
+
+
+msgid "Todos os Marcos"
+msgstr "All Milestones"
+
+
+msgid "Gráficos"
+msgstr "Charts"
+
+
+msgid "Nova Tarefa"
+msgstr "New Task"
+
+
+msgid "Sprint Ativo"
+msgstr "Active Sprint"
+
+
+msgid "Não atribuído"
+msgstr "Unassigned"
+
+
+msgid "Selecione um Sprint"
+msgstr "Select a Sprint"
+
+
+msgid "Tarefas Concluídas"
+msgstr "Completed Tasks"
+
+
+msgid "Selecione um sprint para ver o burndown"
+msgstr "Select a sprint to view burndown"
+
+
+msgid "Complete sprints para ver o velocity"
+msgstr "Complete sprints to see the velocity"
+
+
+msgid "Distribuição por Status"
+msgstr "Status Distribution"
+
+
+msgid "Distribuição por Prioridade"
+msgstr "Priority Distribution"
+
+
+msgid "Carga por Membro"
+msgstr "Workload by Member"
+
+
+msgid "concluídas"
+msgstr "completed"
+
+
+msgid "Atribua tarefas aos membros"
+msgstr "Assign tasks to members"
+
+
+msgid "Planos e Preços"
+msgstr "Plans and Pricing"
+
+
+msgid "Gestão de P&D"
+msgstr "R&D Management"
+
+
+msgid "Escolha o plano ideal para sua empresa inovar com recursos públicos"
+msgstr "Choose the ideal plan for your company to innovate with public resources"
+
+
+msgid "Básico"
+msgstr "Basic"
+
+
+msgid "Para empresas iniciando em P&D"
+msgstr "For companies starting in R&D"
+
+
+msgid "mês"
+msgstr "month"
+
+
+msgid "Até"
+msgstr "Up to"
+
+
+msgid "projetos"
+msgstr "projects"
+
+
+msgid "ativos"
+msgstr "active"
+
+
+msgid "usuários"
+msgstr "users"
+
+
+msgid "Gestão de despesas e orçamento"
+msgstr "Expense and budget management"
+
+
+msgid "Controle de timesheet"
+msgstr "Timesheet control"
+
+
+msgid "Monitoramento de chamadas públicas"
+msgstr "Public call monitoring"
+
+
+msgid "Importação Excel de timesheet"
+msgstr "Excel timesheet import"
+
+
+msgid "Chat com IA para dúvidas"
+msgstr "AI chat for questions"
+
+
+msgid "Geração de propostas com IA"
+msgstr "AI proposal generation"
+
+
+msgid "Análise avançada de riscos"
+msgstr "Advanced risk analysis"
+
+
+msgid "Suporte prioritário"
+msgstr "Priority support"
+
+
+msgid "Começar Agora"
+msgstr "Get Started"
+
+
+msgid "MAIS POPULAR"
+msgstr "MOST POPULAR"
+
+
+msgid "Profissional"
+msgstr "Professional"
+
+
+msgid "Para empresas com projetos ativos"
+msgstr "For companies with active projects"
+
+
+msgid "Tudo do plano Básico"
+msgstr "Everything in the Basic plan"
+
+
+msgid "Análise de riscos com IA"
+msgstr "AI risk analysis"
+
+
+msgid "Relatórios automatizados"
+msgstr "Automated reports"
+
+
+msgid "Matching projeto-edital"
+msgstr "Project-call matching"
+
+
+msgid "Anexos em despesas"
+msgstr "Expense attachments"
+
+
+msgid "Logs de auditoria"
+msgstr "Audit logs"
+
+
+msgid "API de integração"
+msgstr "Integration API"
+
+
+msgid "Assinar Profissional"
+msgstr "Subscribe Professional"
+
+
+msgid "Enterprise"
+msgstr "Enterprise"
+
+
+msgid "Para grandes operações de P&D"
+msgstr "For large R&D operations"
+
+
+msgid "Projetos ilimitados"
+msgstr "Unlimited projects"
+
+
+msgid "Usuários ilimitados"
+msgstr "Unlimited users"
+
+
+msgid "Tudo do plano Profissional"
+msgstr "Everything in the Professional plan"
+
+
+msgid "Suporte prioritário 24/7"
+msgstr "Priority support 24/7"
+
+
+msgid "Treinamento personalizado"
+msgstr "Personalized training"
+
+
+msgid "Consultoria em editais"
+msgstr "Call for proposals consulting"
+
+
+msgid "Backup dedicado"
+msgstr "Dedicated backup"
+
+
+msgid "SLA garantido 99.9%"
+msgstr "Guaranteed SLA 99.9%"
+
+
+msgid "Falar com Vendas"
+msgstr "Talk to Sales"
+
+
+msgid "Licença Institucional"
+msgstr "Institutional License"
+
+
+msgid "Para governos estaduais, fundações de amparo e agências de fomento"
+msgstr "For state governments, support foundations and development agencies"
+
+
+msgid "Licença para todas as empresas beneficiadas do estado"
+msgstr "License for all state-benefited companies"
+
+
+msgid "Dashboard consolidado para acompanhamento de projetos"
+msgstr "Consolidated dashboard for project tracking"
+
+
+msgid "Relatórios de impacto e prestação de contas"
+msgstr "Impact reports and accountability"
+
+
+msgid "Integração com sistemas governamentais"
+msgstr "Integration with government systems"
+
+
+msgid "Treinamento para equipes e empresas"
+msgstr "Training for teams and companies"
+
+
+msgid "Suporte dedicado e evolução contínua"
+msgstr "Dedicated support and continuous evolution"
+
+
+msgid "A partir de"
+msgstr "Starting from"
+
+
+msgid "Solicitar Proposta"
+msgstr "Request Proposal"
+
+
+msgid "Perguntas Frequentes"
+msgstr "Frequently Asked Questions"
+
+
+msgid "Como funciona a geração de propostas com IA?"
+msgstr "How does AI proposal generation work?"
+
+
+msgid "Posso mudar de plano a qualquer momento?"
+msgstr "Can I change plans at any time?"
+
+
+msgid "Os dados dos meus projetos estão seguros?"
+msgstr "Is my project data secure?"
+
+
+msgid "Como funciona a licença institucional para o governo?"
+msgstr "How does the institutional license for government work?"
+
+
+msgid "Pronto para transformar a gestão dos seus projetos de P&D?"
+msgstr "Ready to transform the management of your R&D projects?"
+
+
+msgid "Comece gratuitamente por 14 dias. Sem cartão de crédito."
+msgstr "Start for free for 14 days. No credit card required."
+
+
+msgid "Começar Teste Gratuito"
+msgstr "Start Free Trial"
+
+
+msgid "Status"
+msgstr "Status"
+
+# New strings from agile templates
+msgid "Kanban Board"
+msgstr "Kanban Board"
+
+msgid "Não Iniciado"
+msgstr "Not Started"
+
+msgid "Concluído"
+msgstr "Completed"
+
+msgid "Solte aqui"
+msgstr "Drop here"
+
+msgid "Não atribuído"
+msgstr "Unassigned"
+
+msgid "Sprint Ativo"
+msgstr "Active Sprint"
+
+msgid "Métricas Ágeis"
+msgstr "Agile Metrics"
+
+msgid "Selecione um Sprint"
+msgstr "Select a Sprint"
+
+msgid "Velocity Médio"
+msgstr "Average Velocity"
+
+msgid "Tarefas Concluídas"
+msgstr "Completed Tasks"
+
+msgid "Burndown Chart"
+msgstr "Burndown Chart"
+
+msgid "Velocity"
+msgstr "Velocity"
+
+msgid "Distribuição por Status"
+msgstr "Status Distribution"
+
+msgid "Distribuição por Prioridade"
+msgstr "Priority Distribution"
+
+msgid "Carga por Membro"
+msgstr "Member Workload"
+
+msgid "concluídas"
+msgstr "completed"
+
+msgid "Atribua tarefas aos membros"
+msgstr "Assign tasks to team members"
+
+msgid "Complete sprints para ver o velocity"
+msgstr "Complete sprints to see velocity"
+
+msgid "Selecione um sprint para ver o burndown"
+msgstr "Select a sprint to see the burndown"
+
+# Sprint form and list strings
+msgid "Editar"
+msgstr "Edit"
+
+msgid "Novo Sprint"
+msgstr "New Sprint"
+
+msgid "Nome do Sprint"
+msgstr "Sprint Name"
+
+msgid "Objetivo do Sprint"
+msgstr "Sprint Goal"
+
+msgid "O que esperamos alcançar neste sprint?"
+msgstr "What do we expect to achieve in this sprint?"
+
+msgid "Data Início"
+msgstr "Start Date"
+
+msgid "Data Fim"
+msgstr "End Date"
+
+msgid "Status"
+msgstr "Status"
+
+msgid "Planejado"
+msgstr "Planned"
+
+msgid "Ativo"
+msgstr "Active"
+
+msgid "Dica"
+msgstr "Tip"
+
+msgid "Sprints típicos duram 1 a 4 semanas. Recomendamos sprints de 2 semanas para maior previsibilidade."
+msgstr "Typical sprints last 1 to 4 weeks. We recommend 2-week sprints for greater predictability."
+
+msgid "Cancelar"
+msgstr "Cancel"
+
+msgid "Salvar"
+msgstr "Save"
+
+msgid "Criar Sprint"
+msgstr "Create Sprint"
+
+msgid "Nenhum Sprint Criado"
+msgstr "No Sprints Created"
+
+msgid "Crie seu primeiro sprint para organizar as tarefas do projeto."
+msgstr "Create your first sprint to organize project tasks."
+
+msgid "Criar Primeiro Sprint"
+msgstr "Create First Sprint"
+
+msgid "Tarefas"
+msgstr "Tasks"
+
+msgid "concluído"
+msgstr "completed"
+
+msgid "Iniciar"
+msgstr "Start"
+
+msgid "Excluir sprint"
+msgstr "Delete sprint"
+
+# New flash messages from auth.py
+msgid "Login realizado com sucesso!"
+msgstr "Login successful!"
+
+msgid "Logout realizado com sucesso."
+msgstr "Logout successful."
+
+msgid "Email/usuário ou senha incorretos."
+msgstr "Email/username or password incorrect."
+
+msgid "Cadastro realizado com sucesso! Faça login."
+msgstr "Registration successful! Please log in."
+
+msgid "Sua conta está desativada. Entre em contato com o administrador."
+msgstr "Your account is disabled. Please contact your administrator."
+
+msgid "Sua empresa está com a licença expirada ou inativa. Entre em contato com o suporte."
+msgstr "Your company's license has expired or is inactive. Please contact support."
+
+# New flash messages from users.py
+msgid "Acesso restrito a administradores."
+msgstr "Access restricted to administrators."
+
+msgid "Limite de usuários atingido (%(max)s). Entre em contato com o suporte."
+msgstr "User limit reached (%(max)s). Please contact support."
+
+msgid "Usuário \"%(name)s\" criado com sucesso!"
+msgstr "User \"%(name)s\" created successfully!"
+
+msgid "Usuário \"%(name)s\" atualizado com sucesso!"
+msgstr "User \"%(name)s\" updated successfully!"
+
+msgid "Usuário \"%(name)s\" excluído com sucesso!"
+msgstr "User \"%(name)s\" deleted successfully!"
+
+msgid "Usuário \"%(name)s\" %(status)s com sucesso!"
+msgstr "User \"%(name)s\" %(status)s successfully!"
+
+msgid "Nome e email são obrigatórios."
+msgstr "Name and email are required."
+
+msgid "Email já cadastrado."
+msgstr "Email already registered."
+
+msgid "Nome de usuário já existe."
+msgstr "Username already exists."
+
+msgid "Este nome de usuário já está em uso."
+msgstr "This username is already in use."
+
+msgid "Este email já está cadastrado."
+msgstr "This email is already registered."
+
+msgid "A senha deve ter pelo menos 6 caracteres."
+msgstr "Password must be at least 6 characters."
+
+msgid "Usuário não encontrado."
+msgstr "User not found."
+
+msgid "Não é possível excluir o último administrador."
+msgstr "Cannot delete the last administrator."
+
+msgid "Este usuário possui dados vinculados (timesheets, despesas ou projetos). Desative o usuário ao invés de excluir."
+msgstr "This user has linked data (timesheets, expenses or projects). Deactivate the user instead of deleting."
+
+msgid "Você não pode excluir sua própria conta."
+msgstr "You cannot delete your own account."
+
+msgid "Você não pode desativar sua própria conta."
+msgstr "You cannot deactivate your own account."
+
+msgid "Não é possível remover o papel de administrador do último admin."
+msgstr "Cannot remove the administrator role from the last admin."
+
+msgid "Senha atual incorreta."
+msgstr "Current password incorrect."
+
+msgid "A nova senha deve ter pelo menos 6 caracteres."
+msgstr "New password must be at least 6 characters."
+
+msgid "A confirmação da nova senha não confere."
+msgstr "New password confirmation does not match."
+
+msgid "Senha alterada com sucesso!"
+msgstr "Password changed successfully!"
+
+msgid "Perfil atualizado com sucesso!"
+msgstr "Profile updated successfully!"
+
+# New flash messages from resources.py
+msgid "Recurso adicionado com sucesso!"
+msgstr "Resource added successfully!"
+
+msgid "Recurso atualizado com sucesso!"
+msgstr "Resource updated successfully!"
+
+msgid "Recurso excluído com sucesso!"
+msgstr "Resource deleted successfully!"
+
+# New flash messages from compliance.py
+msgid "Risco registrado com sucesso!"
+msgstr "Risk registered successfully!"
+
+msgid "Risco atualizado com sucesso!"
+msgstr "Risk updated successfully!"
+
+msgid "Risco excluído com sucesso!"
+msgstr "Risk deleted successfully!"
+
+msgid "Pendência registrada com sucesso!"
+msgstr "Pending item registered successfully!"
+
+msgid "Pendência atualizada com sucesso!"
+msgstr "Pending item updated successfully!"
+
+msgid "Pendência excluída com sucesso!"
+msgstr "Pending item deleted successfully!"
+
+msgid "Não conformidade registrada com sucesso!"
+msgstr "Non-conformity registered successfully!"
+
+msgid "Não conformidade atualizada com sucesso!"
+msgstr "Non-conformity updated successfully!"
+
+msgid "Não conformidade excluída com sucesso!"
+msgstr "Non-conformity deleted successfully!"
+
+msgid "Bug registrado com sucesso!"
+msgstr "Bug registered successfully!"
+
+msgid "Bug atualizado com sucesso!"
+msgstr "Bug updated successfully!"
+
+msgid "Bug excluído com sucesso!"
+msgstr "Bug deleted successfully!"
+
+msgid "Ação corretiva registrada com sucesso!"
+msgstr "Corrective action registered successfully!"
+
+msgid "Ação corretiva atualizada com sucesso!"
+msgstr "Corrective action updated successfully!"
+
+msgid "Ação corretiva excluída com sucesso!"
+msgstr "Corrective action deleted successfully!"
+
+# New flash messages from projects.py
+msgid "Projeto criado com sucesso!"
+msgstr "Project created successfully!"
+
+msgid "Projeto atualizado com sucesso!"
+msgstr "Project updated successfully!"
+
+msgid "Projeto excluído com sucesso!"
+msgstr "Project deleted successfully!"
+
+msgid "Código do projeto já existe."
+msgstr "Project code already exists."
+
+msgid "Código do projeto já existe nesta empresa."
+msgstr "Project code already exists in this company."
+
+msgid "Código e título são obrigatórios."
+msgstr "Code and title are required."
+
+msgid "Selecione uma empresa para criar o projeto."
+msgstr "Select a company to create the project."
+
+msgid "Limite de projetos atingido (%(max)s). Entre em contato com o suporte."
+msgstr "Project limit reached (%(max)s). Please contact support."
+
+msgid "Tipo de arquivo não permitido. Use PDF, Word, Excel ou PowerPoint."
+msgstr "File type not allowed. Use PDF, Word, Excel or PowerPoint."
+
+msgid "Limite de %(max)s documentos por projeto atingido."
+msgstr "Limit of %(max)s documents per project reached."
+
+msgid "Documento \"%(name)s\" enviado com sucesso!"
+msgstr "Document \"%(name)s\" uploaded successfully!"
+
+msgid "Documento não encontrado."
+msgstr "Document not found."
+
+msgid "Documento \"%(name)s\" excluído com sucesso!"
+msgstr "Document \"%(name)s\" deleted successfully!"
+
+msgid "Stakeholder \"%(name)s\" adicionado com sucesso!"
+msgstr "Stakeholder \"%(name)s\" added successfully!"
+
+msgid "Stakeholder \"%(name)s\" atualizado com sucesso!"
+msgstr "Stakeholder \"%(name)s\" updated successfully!"
+
+msgid "Stakeholder \"%(name)s\" excluído com sucesso!"
+msgstr "Stakeholder \"%(name)s\" deleted successfully!"
+
+msgid "Stakeholder não encontrado."
+msgstr "Stakeholder not found."
+
+msgid "TRL atualizado de %(from_trl)s para %(to_trl)s!"
+msgstr "TRL updated from %(from_trl)s to %(to_trl)s!"
+
+msgid "TRL não foi alterado."
+msgstr "TRL was not changed."
+
+msgid "Arquivo deve ser XML do MS Project."
+msgstr "File must be an MS Project XML file."
+
+msgid "Arquivo não encontrado no servidor."
+msgstr "File not found on the server."
+
+msgid "Erro ao importar arquivo: %(err)s"
+msgstr "Error importing file: %(err)s"
+
+msgid "Nenhum arquivo selecionado."
+msgstr "No file selected."
+
+msgid "Tipo de arquivo não permitido. Use PDF, JPG, PNG ou Word."
+msgstr "File type not allowed. Use PDF, JPG, PNG or Word."
+
+msgid "Anexo não encontrado."
+msgstr "Attachment not found."
+
+msgid "Anexo excluído com sucesso!"
+msgstr "Attachment deleted successfully!"
+
+msgid "Funcionalidade de exportação Excel não disponível. Instale openpyxl."
+msgstr "Excel export functionality not available. Install openpyxl."
+
+# New flash messages from programs.py
+msgid "Programa criado com sucesso!"
+msgstr "Program created successfully!"
+
+msgid "Programa atualizado com sucesso!"
+msgstr "Program updated successfully!"
+
+msgid "Programa excluido com sucesso!"
+msgstr "Program deleted successfully!"
+
+msgid "Superadmins devem acessar via contexto de uma empresa para criar programas."
+msgstr "Superadmins must access via a company context to create programs."
+
+msgid "Projeto %(code)s adicionado ao programa!"
+msgstr "Project %(code)s added to the program!"
+
+msgid "Projeto %(code)s removido do programa!"
+msgstr "Project %(code)s removed from the program!"
+
+# New flash messages from expenses.py
+msgid "Despesa adicionada com sucesso!"
+msgstr "Expense added successfully!"
+
+msgid "Despesa atualizada com sucesso!"
+msgstr "Expense updated successfully!"
+
+msgid "Despesa excluída com sucesso!"
+msgstr "Expense deleted successfully!"
+
+msgid "Limite de %(max)s anexos por despesa atingido."
+msgstr "Limit of %(max)s attachments per expense reached."
+
+msgid "%(type)s enviado com sucesso!"
+msgstr "%(type)s uploaded successfully!"
+
+# New flash messages from agile.py
+msgid "Sprint \"%(name)s\" criado com sucesso!"
+msgstr "Sprint \"%(name)s\" created successfully!"
+
+msgid "Sprint atualizado com sucesso!"
+msgstr "Sprint updated successfully!"
+
+msgid "Sprint excluído com sucesso!"
+msgstr "Sprint deleted successfully!"
+
+msgid "Sprint \"%(name)s\" ativado!"
+msgstr "Sprint \"%(name)s\" activated!"
+
+# New flash messages from schedule.py
+msgid "Marco adicionado com sucesso!"
+msgstr "Milestone added successfully!"
+
+msgid "Marco atualizado com sucesso!"
+msgstr "Milestone updated successfully!"
+
+msgid "Marco excluído com sucesso!"
+msgstr "Milestone deleted successfully!"
+
+msgid "A soma das alocações não pode ultrapassar 100%!"
+msgstr "The sum of allocations cannot exceed 100%!"
+
+msgid "%(count)s marcos importados com sucesso!"
+msgstr "%(count)s milestones imported successfully!"
+
+msgid "Formato invalido. Use arquivo XML do MS Project."
+msgstr "Invalid format. Use an MS Project XML file."
+
+# New flash messages from timesheet.py
+msgid "Registro de horas adicionado com sucesso!"
+msgstr "Time entry added successfully!"
+
+msgid "Registro atualizado com sucesso!"
+msgstr "Record updated successfully!"
+
+msgid "Registro excluído com sucesso!"
+msgstr "Record deleted successfully!"
+
+msgid "%(count)s registros importados com sucesso!"
+msgstr "%(count)s records imported successfully!"
+
+msgid "%(count)s registros importados com sucesso! %(errors)s linhas com erro foram ignoradas."
+msgstr "%(count)s records imported successfully! %(errors)s error lines were ignored."
+
+msgid "... e mais %(count)s erros"
+msgstr "... and %(count)s more errors"
+
+msgid "Formato inválido. Use arquivos Excel (.xlsx ou .xls)."
+msgstr "Invalid format. Use Excel files (.xlsx or .xls)."
+
+msgid "Erro ao importar: %(error)s"
+msgstr "Error importing: %(error)s"
+
+# New flash messages from meeting_minutes.py
+msgid "Ata criada com sucesso!"
+msgstr "Meeting minutes created successfully!"
+
+msgid "Ata atualizada com sucesso!"
+msgstr "Meeting minutes updated successfully!"
+
+msgid "Ata excluída com sucesso!"
+msgstr "Meeting minutes deleted successfully!"
+
+msgid "Briefing enviado para %(count)s destinatário(s)."
+msgstr "Briefing sent to %(count)s recipient(s)."
+
+msgid "Nenhum destinatário encontrado. Adicione emails manualmente."
+msgstr "No recipients found. Add emails manually."
+
+msgid "Envio de email não está habilitado para este tenant. Configure em Configurações."
+msgstr "Email sending is not enabled for this tenant. Configure in Settings."
+
+msgid "Erro ao enviar email: %(error)s"
+msgstr "Error sending email: %(error)s"
+
+msgid "Erro ao gerar PDF: %(error)s"
+msgstr "Error generating PDF: %(error)s"
+
+msgid "Módulo de PDF não instalado. Execute: pip install reportlab"
+msgstr "PDF module not installed. Run: pip install reportlab"
+
+msgid "Título é obrigatório."
+msgstr "Title is required."
+
+# New flash messages from public_calls.py
+msgid "Chamada pública cadastrada com sucesso!"
+msgstr "Public call registered successfully!"
+
+msgid "Chamada atualizada com sucesso!"
+msgstr "Call updated successfully!"
+
+msgid "Chamada removida com sucesso!"
+msgstr "Call removed successfully!"
+
+msgid "Projeto vinculado com sucesso!"
+msgstr "Project linked successfully!"
+
+msgid "Este projeto já está vinculado a esta chamada."
+msgstr "This project is already linked to this call."
+
+msgid "Selecione um projeto para vincular."
+msgstr "Select a project to link."
+
+msgid "Projeto não encontrado."
+msgstr "Project not found."
+
+msgid "Vínculo não encontrado."
+msgstr "Link not found."
+
+msgid "Vínculo removido com sucesso!"
+msgstr "Link removed successfully!"
+
+msgid "Você não tem permissão para editar esta chamada."
+msgstr "You do not have permission to edit this call."
+
+msgid "Você não tem permissão para excluir esta chamada."
+msgstr "You do not have permission to delete this call."
+
+msgid "Apenas administradores do sistema podem excluir chamadas globais."
+msgstr "Only system administrators can delete global calls."
+
+msgid "Sincronização concluída! FINEP: %(finep)s, BNDES: %(bndes)s, FAPESC: %(fapesc)s chamadas."
+msgstr "Sync complete! FINEP: %(finep)s, BNDES: %(bndes)s, FAPESC: %(fapesc)s calls."
+
+msgid "Sincronização parcial. FINEP: %(finep)s, BNDES: %(bndes)s, FAPESC: %(fapesc)s chamadas. Erros: %(errors)s"
+msgstr "Partial sync. FINEP: %(finep)s, BNDES: %(bndes)s, FAPESC: %(fapesc)s calls. Errors: %(errors)s"
+
+msgid "Auditoria disponivel apenas para projetos vinculados a chamadas publicas."
+msgstr "Audit available only for projects linked to public calls."
+
+# New flash messages from tenants.py
+msgid "Empresa \"%(name)s\" criada com sucesso!"
+msgstr "Company \"%(name)s\" created successfully!"
+
+msgid "Empresa \"%(name)s\" e usuário administrador criados com sucesso!"
+msgstr "Company \"%(name)s\" and administrator user created successfully!"
+
+msgid "Empresa \"%(name)s\" atualizado com sucesso!"
+msgstr "Company \"%(name)s\" updated successfully!"
+
+msgid "Empresa \"%(name)s\" excluída com sucesso!"
+msgstr "Company \"%(name)s\" deleted successfully!"
+
+msgid "Empresa \"%(name)s\" %(status)s com sucesso!"
+msgstr "Company \"%(name)s\" %(status)s successfully!"
+
+msgid "Empresa atualizada com sucesso!"
+msgstr "Company updated successfully!"
+
+msgid "Já existe uma empresa com este identificador."
+msgstr "A company with this identifier already exists."
+
+msgid "Nome da empresa é obrigatório."
+msgstr "Company name is required."
+
+msgid "Já existe um usuário com este e-mail nesta empresa."
+msgstr "A user with this email already exists in this company."
+
+msgid "Limite de %(max)s usuários atingido para esta empresa."
+msgstr "Limit of %(max)s users reached for this company."
+
+msgid "Não é possível excluir a empresa \"%(name)s\". Ela possui %(users)s usuários e %(projects)s projetos. Remova os dados primeiro."
+msgstr "Cannot delete the company \"%(name)s\". It has %(users)s users and %(projects)s projects. Remove the data first."
+
+msgid "Licença renovada até %(date)s!"
+msgstr "License renewed until %(date)s!"
+
+# New flash messages from audit.py
+msgid "Acesso negado. Apenas administradores podem visualizar logs de auditoria."
+msgstr "Access denied. Only administrators can view audit logs."
+
+# New flash messages from pmo_agents.py
+msgid "Agente não encontrado."
+msgstr "Agent not found."
+
+msgid "Geracao de propostas disponivel apenas nos planos Profissional e Enterprise."
+msgstr "Proposal generation available only in Professional and Enterprise plans."
+
+# New flash messages from ai.py / general
+msgid "Erro ao processar arquivo: %(error)s"
+msgstr "Error processing file: %(error)s"
+
+msgid "Erro ao processar XML: %(error)s"
+msgstr "Error processing XML: %(error)s"
+
+msgid "Todos os campos obrigatórios devem ser preenchidos."
+msgstr "All required fields must be filled."
+
+msgid "Todos os campos são obrigatórios."
+msgstr "All fields are required."
+
+msgid "As senhas não coincidem."
+msgstr "Passwords do not match."
+
+# Pricing page strings
+msgid "Planos e Preços"
+msgstr "Plans and Pricing"
+
+msgid "Gestão de P&D"
+msgstr "R&D Management"
+
+msgid "Escolha o plano ideal para sua empresa inovar com recursos públicos"
+msgstr "Choose the ideal plan for your company to innovate with public resources"
+
+msgid "Básico"
+msgstr "Basic"
+
+msgid "Para empresas iniciando em P&D"
+msgstr "For companies starting in R&D"
+
+msgid "mês"
+msgstr "month"
+
+msgid "Até"
+msgstr "Up to"
+
+msgid "projetos"
+msgstr "projects"
+
+msgid "ativos"
+msgstr "active"
+
+msgid "usuários"
+msgstr "users"
+
+msgid "Gestão de despesas e orçamento"
+msgstr "Expense and budget management"
+
+msgid "Controle de timesheet"
+msgstr "Timesheet control"
+
+msgid "Monitoramento de chamadas públicas"
+msgstr "Monitoring of public calls"
+
+msgid "Importação Excel de timesheet"
+msgstr "Excel timesheet import"
+
+msgid "Chat com IA para dúvidas"
+msgstr "AI chat for questions"
+
+msgid "Geração de propostas com IA"
+msgstr "AI proposal generation"
+
+msgid "Análise avançada de riscos"
+msgstr "Advanced risk analysis"
+
+msgid "Suporte prioritário"
+msgstr "Priority support"
+
+msgid "Começar Agora"
+msgstr "Get Started"
+
+msgid "MAIS POPULAR"
+msgstr "MOST POPULAR"
+
+msgid "Profissional"
+msgstr "Professional"
+
+msgid "Para empresas com projetos ativos"
+msgstr "For companies with active projects"
+
+msgid "Tudo do plano Básico"
+msgstr "Everything in the Basic plan"
+
+msgid "Análise de riscos com IA"
+msgstr "AI risk analysis"
+
+msgid "Relatórios automatizados"
+msgstr "Automated reports"
+
+msgid "Matching projeto-edital"
+msgstr "Project-call matching"
+
+msgid "Anexos em despesas"
+msgstr "Attachments in expenses"
+
+msgid "Logs de auditoria"
+msgstr "Audit logs"
+
+msgid "API de integração"
+msgstr "Integration API"
+
+msgid "Assinar Profissional"
+msgstr "Subscribe Professional"
+
+msgid "Enterprise"
+msgstr "Enterprise"
+
+msgid "Para grandes operações de P&D"
+msgstr "For large R&D operations"
+
+msgid "Projetos ilimitados"
+msgstr "Unlimited projects"
+
+msgid "Usuários ilimitados"
+msgstr "Unlimited users"
+
+msgid "Tudo do plano Profissional"
+msgstr "Everything in the Professional plan"
+
+msgid "Suporte prioritário 24/7"
+msgstr "24/7 Priority support"
+
+msgid "Treinamento personalizado"
+msgstr "Personalized training"
+
+msgid "Consultoria em editais"
+msgstr "Call consulting"
+
+msgid "Backup dedicado"
+msgstr "Dedicated backup"
+
+msgid "SLA garantido 99.9%"
+msgstr "99.9% SLA guaranteed"
+
+msgid "Falar com Vendas"
+msgstr "Talk to Sales"
+
+msgid "Licença Institucional"
+msgstr "Institutional License"
+
+msgid "Para governos estaduais, fundações de amparo e agências de fomento"
+msgstr "For state governments, support foundations and development agencies"
+
+msgid "Licença para todas as empresas beneficiadas do estado"
+msgstr "License for all companies benefiting from state resources"
+
+msgid "Dashboard consolidado para acompanhamento de projetos"
+msgstr "Consolidated dashboard for project monitoring"
+
+msgid "Relatórios de impacto e prestação de contas"
+msgstr "Impact reports and accountability"
+
+msgid "Integração com sistemas governamentais"
+msgstr "Integration with government systems"
+
+msgid "Treinamento para equipes e empresas"
+msgstr "Training for teams and companies"
+
+msgid "Suporte dedicado e evolução contínua"
+msgstr "Dedicated support and continuous evolution"
+
+msgid "A partir de"
+msgstr "Starting from"
+
+msgid "Solicitar Proposta"
+msgstr "Request Proposal"
+
+msgid "Perguntas Frequentes"
+msgstr "Frequently Asked Questions"
+
+msgid "Como funciona a geração de propostas com IA?"
+msgstr "How does AI proposal generation work?"
+
+msgid "A IA analisa os dados do seu projeto e os requisitos da chamada pública para gerar uma proposta estruturada com todas as seções exigidas (resumo executivo, objetivos, metodologia, cronograma, orçamento, riscos). Você pode editar e personalizar antes de submeter."
+msgstr "The AI analyzes your project data and public call requirements to generate a structured proposal with all required sections (executive summary, objectives, methodology, schedule, budget, risks). You can edit and customize before submitting."
+
+msgid "Posso mudar de plano a qualquer momento?"
+msgstr "Can I change my plan at any time?"
+
+msgid "Sim! Você pode fazer upgrade ou downgrade a qualquer momento. O valor será ajustado proporcionalmente no próximo ciclo de cobrança."
+msgstr "Yes! You can upgrade or downgrade at any time. The amount will be adjusted proportionally in the next billing cycle."
+
+msgid "Os dados dos meus projetos estão seguros?"
+msgstr "Is my project data secure?"
+
+msgid "Sim. Utilizamos criptografia de ponta a ponta, backups diários e infraestrutura em nuvem com certificações ISO 27001. Cada empresa tem seus dados completamente isolados (multi-tenancy)."
+msgstr "Yes. We use end-to-end encryption, daily backups and cloud infrastructure with ISO 27001 certifications. Each company has its data completely isolated (multi-tenancy)."
+
+msgid "Como funciona a licença institucional para o governo?"
+msgstr "How does the institutional license for government work?"
+
+msgid "O governo ou fundação de amparo contrata a licença institucional e disponibiliza o acesso gratuito para todas as empresas beneficiadas com recursos de fomento. Isso fortalece o ecossistema de inovação e facilita a prestação de contas."
+msgstr "The government or support foundation contracts the institutional license and provides free access to all companies benefiting from development resources. This strengthens the innovation ecosystem and facilitates accountability."
+
+msgid "Pronto para transformar a gestão dos seus projetos de P&D?"
+msgstr "Ready to transform the management of your R&D projects?"
+
+msgid "Comece gratuitamente por 14 dias. Sem cartão de crédito."
+msgstr "Start free for 14 days. No credit card required."
+
+msgid "Começar Teste Gratuito"
+msgstr "Start Free Trial"

@@ -36,12 +36,12 @@
         <i class="bi bi-arrow-left"></i>
     </a>
     <div class="flex-grow-1">
-        <h4 class="fw-bold mb-0"><i class="bi bi-kanban text-primary"></i> Kanban Board</h4>
+        <h4 class="fw-bold mb-0"><i class="bi bi-kanban text-primary"></i> {{ _('Kanban Board') }}</h4>
         <span class="text-muted">{{ project.title }}</span>
     </div>
     <div class="btn-group">
         <select class="form-select form-select-sm" id="sprintFilter" style="width: 200px;">
-            <option value="">Todos os Marcos</option>
+            <option value="">{{ _('Todos os Marcos') }}</option>
             {% for sprint in sprints %}
             <option value="{{ sprint.id }}" {{ 'selected' if selected_sprint_id == sprint.id }}>
                 {{ sprint.name }} {% if sprint.status == 'Ativo' %}(Ativo){% endif %}
@@ -52,10 +52,10 @@
             <i class="bi bi-speedometer2"></i> Sprints
         </a>
         <a href="{{ url_for('agile.agile_charts', project_id=project.id) }}" class="btn btn-outline-success btn-sm">
-            <i class="bi bi-graph-up"></i> Gráficos
+            <i class="bi bi-graph-up"></i> {{ _('Gráficos') }}
         </a>
         <a href="{{ url_for('schedule.create_milestone', project_id=project.id) }}" class="btn btn-primary btn-sm">
-            <i class="bi bi-plus-lg"></i> Nova Tarefa
+            <i class="bi bi-plus-lg"></i> {{ _('Nova Tarefa') }}
         </a>
     </div>
 </div>
@@ -63,7 +63,7 @@
 {% if current_sprint %}
 <div class="alert alert-info py-2 mb-4">
     <div class="d-flex justify-content-between align-items-center">
-        <span><i class="bi bi-lightning-charge"></i> <strong>Sprint Ativo:</strong> {{ current_sprint.name }}</span>
+        <span><i class="bi bi-lightning-charge"></i> <strong>{{ _('Sprint Ativo') }}:</strong> {{ current_sprint.name }}</span>
         <span class="text-muted">{{ current_sprint.start_date.strftime('%d/%m') }} - {{ current_sprint.end_date.strftime('%d/%m/%Y') }}</span>
     </div>
 </div>
@@ -73,7 +73,7 @@
     <!-- Backlog / Pendente -->
     <div class="kanban-column backlog" data-status="Pendente">
         <div class="kanban-header">
-            <h6><i class="bi bi-inbox text-secondary"></i> Não Iniciado</h6>
+            <h6><i class="bi bi-inbox text-secondary"></i> {{ _('Não Iniciado') }}</h6>
             <span class="kanban-count">{{ backlog|length }}</span>
         </div>
         <div class="kanban-cards" id="backlog">
@@ -101,7 +101,7 @@
                             <span class="kanban-avatar bg-secondary" style="margin-left: -8px;">+{{ m.resource_assignments|length - 3 }}</span>
                             {% endif %}
                         {% else %}
-                        <span class="kanban-avatar bg-secondary" title="Não atribuído">?</span>
+                        <span class="kanban-avatar bg-secondary" title="{{ _('Não atribuído') }}">?</span>
                         {% endif %}
                     </div>
                     <div class="d-flex gap-2">
@@ -116,13 +116,13 @@
             </div>
             {% endfor %}
         </div>
-        <div class="drop-zone">Solte aqui</div>
+        <div class="drop-zone">{{ _('Solte aqui') }}</div>
     </div>
 
     <!-- Em Andamento -->
     <div class="kanban-column in-progress" data-status="Em Andamento">
         <div class="kanban-header">
-            <h6><i class="bi bi-play-circle text-primary"></i> Em Andamento</h6>
+            <h6><i class="bi bi-play-circle text-primary"></i> {{ _('Em Andamento') }}</h6>
             <span class="kanban-count">{{ in_progress|length }}</span>
         </div>
         <div class="kanban-cards" id="inprogress">
@@ -151,7 +151,7 @@
                             <span class="kanban-avatar bg-secondary" style="margin-left: -8px;">+{{ m.resource_assignments|length - 3 }}</span>
                             {% endif %}
                         {% else %}
-                        <span class="kanban-avatar bg-secondary" title="Não atribuído">?</span>
+                        <span class="kanban-avatar bg-secondary" title="{{ _('Não atribuído') }}">?</span>
                         {% endif %}
                     </div>
                     <div class="d-flex gap-2">
@@ -166,13 +166,13 @@
             </div>
             {% endfor %}
         </div>
-        <div class="drop-zone">Solte aqui</div>
+        <div class="drop-zone">{{ _('Solte aqui') }}</div>
     </div>
 
     <!-- Concluído -->
     <div class="kanban-column done" data-status="Concluído">
         <div class="kanban-header">
-            <h6><i class="bi bi-check-circle text-success"></i> Concluído</h6>
+            <h6><i class="bi bi-check-circle text-success"></i> {{ _('Concluído') }}</h6>
             <span class="kanban-count">{{ completed|length }}</span>
         </div>
         <div class="kanban-cards" id="completed">
@@ -205,7 +205,7 @@
             </div>
             {% endfor %}
         </div>
-        <div class="drop-zone">Solte aqui</div>
+        <div class="drop-zone">{{ _('Solte aqui') }}</div>
     </div>
 </div>
 {% endblock %}

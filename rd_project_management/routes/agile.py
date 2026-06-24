@@ -3,6 +3,7 @@ Agile module routes - Kanban board, sprints, and agile charts.
 """
 from flask import Blueprint, render_template, request, redirect, url_for, flash, jsonify
 from flask_login import login_required, current_user
+from flask_babel import _
 from datetime import datetime, date, timedelta
 from sqlalchemy import func
 
@@ -143,7 +144,7 @@ def create_sprint(project_id):
         db.session.add(sprint)
         db.session.commit()
 
-        flash(f'Sprint "{sprint.name}" criado com sucesso!', 'success')
+        flash(_('Sprint "%(name)s" criado com sucesso!', name=sprint.name), 'success')
         return redirect(url_for('agile.list_sprints', project_id=project_id))
 
     # Default dates: 2 weeks from today
@@ -182,7 +183,7 @@ def edit_sprint(project_id, sprint_id):
             sprint.velocity = sum(m.story_points or 0 for m in milestones if m.status in ['Concluído', 'Concluido'])
 
         db.session.commit()
-        flash('Sprint atualizado com sucesso!', 'success')
+        flash(_('Sprint atualizado com sucesso!'), 'success')
         return redirect(url_for('agile.list_sprints', project_id=project_id))
 
     return render_template('agile/sprint_form.html',
@@ -209,7 +210,7 @@ def delete_sprint(project_id, sprint_id):
 
     db.session.delete(sprint)
     db.session.commit()
-    flash('Sprint excluído com sucesso!', 'success')
+    flash(_('Sprint excluído com sucesso!'), 'success')
     return redirect(url_for('agile.list_sprints', project_id=project_id))
 
 
@@ -229,7 +230,7 @@ def activate_sprint(project_id, sprint_id):
     sprint.status = 'Ativo'
     db.session.commit()
 
-    flash(f'Sprint "{sprint.name}" ativado!', 'success')
+    flash(_('Sprint "%(name)s" ativado!', name=sprint.name), 'success')
     return redirect(url_for('agile.list_sprints', project_id=project_id))
 
 

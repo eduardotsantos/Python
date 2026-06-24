@@ -1,5 +1,6 @@
 from flask import Blueprint, render_template, redirect, url_for, flash, request, send_file, current_app
 from flask_login import login_required, current_user
+from flask_babel import _
 from models import db, Project, User, Expense, Resource, Milestone, Timesheet, ProjectCall, ProjectDocument, Tenant, ProjectStakeholder, ProjectTRLHistory
 from services.tenant_utils import tenant_required, ensure_tenant_access, get_current_tenant_id
 from datetime import datetime
@@ -120,7 +121,7 @@ def create_project():
 
     # Check tenant project limit
     if tenant_id and current_user.tenant and not current_user.tenant.can_add_project():
-        flash(f'Limite de projetos atingido ({current_user.tenant.max_projects}). Entre em contato com o suporte.', 'warning')
+        flash(_('Limite de projetos atingido (%(max)s). Entre em contato com o suporte.', max=current_user.tenant.max_projects), 'warning')
         return redirect(url_for('projects.list_projects'))
 
     if request.method == 'POST':
@@ -128,7 +129,7 @@ def create_project():
         if is_superadmin:
             selected_tenant_id = request.form.get('tenant_id')
             if not selected_tenant_id:
-                flash('Selecione uma empresa para criar o projeto.', 'danger')
+                flash(_('Selecione uma empresa para criar o projeto.'), 'danger')
                 users = User.query.all()
                 return render_template('projects/form.html', project=None, users=users, tenants=tenants, is_superadmin=is_superadmin)
             tenant_id = int(selected_tenant_id)
@@ -146,13 +147,13 @@ def create_project():
         users = User.query.filter_by(tenant_id=tenant_id).all() if tenant_id else User.query.all()
 
         if not all([code, title]):
-            flash('Código e título são obrigatórios.', 'danger')
+            flash(_('Código e título são obrigatórios.'), 'danger')
             return render_template('projects/form.html', project=None, users=users, tenants=tenants, is_superadmin=is_superadmin)
 
         # Check code uniqueness within tenant
         existing = Project.query.filter_by(tenant_id=tenant_id, code=code).first()
         if existing:
-            flash('Código do projeto já existe nesta empresa.', 'danger')
+            flash(_('Código do projeto já existe nesta empresa.'), 'danger')
             return render_template('projects/form.html', project=None, users=users, tenants=tenants, is_superadmin=is_superadmin)
 
         # PMBOK 8 - Value fields
@@ -184,7 +185,7 @@ def create_project():
 
         db.session.add(project)
         db.session.commit()
-        flash('Projeto criado com sucesso!', 'success')
+        flash(_('Projeto criado com sucesso!'), 'success')
         return redirect(url_for('projects.view_project', project_id=project.id))
 
     users = User.query.filter_by(tenant_id=tenant_id).all() if tenant_id else User.query.all()
@@ -230,7 +231,7 @@ def edit_project(project_id):
         if new_code != project.code:
             existing = Project.query.filter_by(tenant_id=project.tenant_id, code=new_code).first()
             if existing:
-                flash('Código do projeto já existe.', 'danger')
+                flash(_('Código do projeto já existe.'), 'danger')
                 users = User.query.filter_by(tenant_id=tenant_id).all() if tenant_id else User.query.all()
                 return render_template('projects/form.html', project=project, users=users, tenants=[], is_superadmin=is_superadmin)
 
@@ -282,7 +283,7 @@ def edit_project(project_id):
             project.end_date = datetime.strptime(end_date_str, '%Y-%m-%d').date()
 
         db.session.commit()
-        flash('Projeto atualizado com sucesso!', 'success')
+        flash(_('Projeto atualizado com sucesso!'), 'success')
         return redirect(url_for('projects.view_project', project_id=project.id))
 
     users = User.query.filter_by(tenant_id=tenant_id).all() if tenant_id else User.query.all()
@@ -298,7 +299,7 @@ def delete_project(project_id):
 
     db.session.delete(project)
     db.session.commit()
-    flash('Projeto excluído com sucesso!', 'success')
+    flash(_('Projeto excluído com sucesso!'), 'success')
     return redirect(url_for('projects.list_projects'))
 
 
@@ -331,16 +332,16 @@ def import_from_msproject(project_id):
     ensure_tenant_access(project)
 
     if 'file' not in request.files:
-        flash('Nenhum arquivo selecionado.', 'danger')
+        flash(_('Nenhum arquivo selecionado.'), 'danger')
         return redirect(url_for('schedule.schedule_view', project_id=project_id))
 
     file = request.files['file']
     if file.filename == '':
-        flash('Nenhum arquivo selecionado.', 'danger')
+        flash(_('Nenhum arquivo selecionado.'), 'danger')
         return redirect(url_for('schedule.schedule_view', project_id=project_id))
 
     if not file.filename.lower().endswith('.xml'):
-        flash('Arquivo deve ser XML do MS Project.', 'danger')
+        flash(_('Arquivo deve ser XML do MS Project.'), 'danger')
         return redirect(url_for('schedule.schedule_view', project_id=project_id))
 
     try:
@@ -349,7 +350,7 @@ def import_from_msproject(project_id):
         count, message = import_project_from_xml(xml_content, project)
         flash(message, 'success' if count > 0 else 'warning')
     except Exception as e:
-        flash(f'Erro ao importar arquivo: {str(e)}', 'danger')
+        flash(_('Erro ao importar arquivo: %(err)s', err=str(e)), 'danger')
 
     return redirect(url_for('schedule.schedule_view', project_id=project_id))
 
@@ -360,7 +361,7 @@ def import_from_msproject(project_id):
 def export_excel():
     """Export all projects to Excel with multiple sheets."""
     if not EXCEL_AVAILABLE:
-        flash('Funcionalidade de exportação Excel não disponível. Instale openpyxl.', 'danger')
+        flash(_('Funcionalidade de exportação Excel não disponível. Instale openpyxl.'), 'danger')
         return redirect(url_for('projects.list_projects'))
 
     tenant_id = get_current_tenant_id()
@@ -591,21 +592,21 @@ def upload_document(project_id):
     # Check document limit
     current_docs = len(project.documents)
     if current_docs >= MAX_DOCUMENTS_PER_PROJECT:
-        flash(f'Limite de {MAX_DOCUMENTS_PER_PROJECT} documentos por projeto atingido.', 'warning')
+        flash(_('Limite de %(max)s documentos por projeto atingido.', max=MAX_DOCUMENTS_PER_PROJECT), 'warning')
         return redirect(url_for('projects.view_project', project_id=project_id))
 
     if 'document' not in request.files:
-        flash('Nenhum arquivo selecionado.', 'danger')
+        flash(_('Nenhum arquivo selecionado.'), 'danger')
         return redirect(url_for('projects.view_project', project_id=project_id))
 
     file = request.files['document']
 
     if file.filename == '':
-        flash('Nenhum arquivo selecionado.', 'danger')
+        flash(_('Nenhum arquivo selecionado.'), 'danger')
         return redirect(url_for('projects.view_project', project_id=project_id))
 
     if not allowed_file(file.filename):
-        flash('Tipo de arquivo não permitido. Use PDF, Word, Excel ou PowerPoint.', 'danger')
+        flash(_('Tipo de arquivo não permitido. Use PDF, Word, Excel ou PowerPoint.'), 'danger')
         return redirect(url_for('projects.view_project', project_id=project_id))
 
     # Secure the filename and generate unique stored filename
@@ -641,7 +642,7 @@ def upload_document(project_id):
     db.session.add(doc)
     db.session.commit()
 
-    flash(f'Documento "{original_filename}" enviado com sucesso!', 'success')
+    flash(_('Documento "%(name)s" enviado com sucesso!', name=original_filename), 'success')
     return redirect(url_for('projects.view_project', project_id=project_id))
 
 
@@ -657,7 +658,7 @@ def download_document(project_id, doc_id):
 
     # Verify document belongs to project
     if doc.project_id != project_id:
-        flash('Documento não encontrado.', 'danger')
+        flash(_('Documento não encontrado.'), 'danger')
         return redirect(url_for('projects.view_project', project_id=project_id))
 
     # Use document's tenant_id for file path (supports superadmin access)
@@ -665,7 +666,7 @@ def download_document(project_id, doc_id):
     file_path = os.path.join(tenant_folder, doc.stored_filename)
 
     if not os.path.exists(file_path):
-        flash('Arquivo não encontrado no servidor.', 'danger')
+        flash(_('Arquivo não encontrado no servidor.'), 'danger')
         return redirect(url_for('projects.view_project', project_id=project_id))
 
     return send_file(
@@ -687,7 +688,7 @@ def delete_document(project_id, doc_id):
 
     # Verify document belongs to project
     if doc.project_id != project_id:
-        flash('Documento não encontrado.', 'danger')
+        flash(_('Documento não encontrado.'), 'danger')
         return redirect(url_for('projects.view_project', project_id=project_id))
 
     # Delete file from disk - use document's tenant_id for file path
@@ -702,7 +703,7 @@ def delete_document(project_id, doc_id):
     db.session.delete(doc)
     db.session.commit()
 
-    flash(f'Documento "{filename}" excluído com sucesso!', 'success')
+    flash(_('Documento "%(name)s" excluído com sucesso!', name=filename), 'success')
     return redirect(url_for('projects.view_project', project_id=project_id))
 
 
@@ -761,7 +762,7 @@ def add_stakeholder(project_id):
         db.session.add(stakeholder)
         db.session.commit()
 
-        flash(f'Stakeholder "{stakeholder.name}" adicionado com sucesso!', 'success')
+        flash(_('Stakeholder "%(name)s" adicionado com sucesso!', name=stakeholder.name), 'success')
         return redirect(url_for('projects.list_stakeholders', project_id=project_id))
 
     return render_template('projects/stakeholders/form.html',
@@ -779,7 +780,7 @@ def edit_stakeholder(project_id, stakeholder_id):
 
     stakeholder = ProjectStakeholder.query.get_or_404(stakeholder_id)
     if stakeholder.project_id != project_id:
-        flash('Stakeholder não encontrado.', 'danger')
+        flash(_('Stakeholder não encontrado.'), 'danger')
         return redirect(url_for('projects.list_stakeholders', project_id=project_id))
 
     if request.method == 'POST':
@@ -802,7 +803,7 @@ def edit_stakeholder(project_id, stakeholder_id):
         stakeholder.notes = request.form.get('notes', '').strip() or None
 
         db.session.commit()
-        flash(f'Stakeholder "{stakeholder.name}" atualizado com sucesso!', 'success')
+        flash(_('Stakeholder "%(name)s" atualizado com sucesso!', name=stakeholder.name), 'success')
         return redirect(url_for('projects.list_stakeholders', project_id=project_id))
 
     return render_template('projects/stakeholders/form.html',
@@ -820,14 +821,14 @@ def delete_stakeholder(project_id, stakeholder_id):
 
     stakeholder = ProjectStakeholder.query.get_or_404(stakeholder_id)
     if stakeholder.project_id != project_id:
-        flash('Stakeholder não encontrado.', 'danger')
+        flash(_('Stakeholder não encontrado.'), 'danger')
         return redirect(url_for('projects.list_stakeholders', project_id=project_id))
 
     name = stakeholder.name
     db.session.delete(stakeholder)
     db.session.commit()
 
-    flash(f'Stakeholder "{name}" excluído com sucesso!', 'success')
+    flash(_('Stakeholder "%(name)s" excluído com sucesso!', name=name), 'success')
     return redirect(url_for('projects.list_stakeholders', project_id=project_id))
 
 
@@ -878,9 +879,9 @@ def update_trl(project_id):
         project.trl = new_trl
         db.session.commit()
 
-        flash(f'TRL atualizado de {trl_history.trl_from} para {new_trl}!', 'success')
+        flash(_('TRL atualizado de %(from_trl)s para %(to_trl)s!', from_trl=trl_history.trl_from, to_trl=new_trl), 'success')
     else:
-        flash('TRL não foi alterado.', 'info')
+        flash(_('TRL não foi alterado.'), 'info')
 
     return redirect(url_for('projects.view_project', project_id=project_id))
 

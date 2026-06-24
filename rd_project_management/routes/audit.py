@@ -1,6 +1,7 @@
 """Audit routes for viewing system audit logs."""
 from flask import Blueprint, render_template, request
 from flask_login import login_required, current_user
+from flask_babel import _
 from models import db, AuditLog, User
 
 audit_bp = Blueprint('audit', __name__)
@@ -12,7 +13,7 @@ def audit_logs():
     """View audit logs."""
     if current_user.role not in ['admin'] and not current_user.is_superadmin():
         from flask import flash, redirect, url_for
-        flash('Acesso negado. Apenas administradores podem visualizar logs de auditoria.', 'danger')
+        flash(_('Acesso negado. Apenas administradores podem visualizar logs de auditoria.'), 'danger')
         return redirect(url_for('home.dashboard'))
 
     page = request.args.get('page', 1, type=int)

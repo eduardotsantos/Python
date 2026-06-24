@@ -6,6 +6,7 @@ import os
 import logging
 from flask import Blueprint, render_template, request, jsonify, flash, redirect, url_for, current_app, session
 from flask_login import login_required, current_user
+from flask_babel import _
 
 logger = logging.getLogger(__name__)
 
@@ -437,7 +438,7 @@ def project_ai_actions(project_id):
 def proposal_page(project_id, call_id):
     """Page to generate proposal for a public call."""
     if not can_generate_proposals():
-        flash('Geracao de propostas disponivel apenas nos planos Profissional e Enterprise.', 'warning')
+        flash(_('Geracao de propostas disponivel apenas nos planos Profissional e Enterprise.'), 'warning')
         return redirect(url_for('ai.ai_dashboard'))
 
     project = Project.query.get_or_404(project_id)
@@ -694,7 +695,7 @@ def audit_page(project_id):
     call_links = ProjectCall.query.filter_by(project_id=project_id).all()
 
     if not call_links:
-        flash('Auditoria disponivel apenas para projetos vinculados a chamadas publicas.', 'warning')
+        flash(_('Auditoria disponivel apenas para projetos vinculados a chamadas publicas.'), 'warning')
         return redirect(url_for('projects.view_project', project_id=project_id))
 
     linked_calls = [link.public_call for link in call_links]

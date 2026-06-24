@@ -1,5 +1,6 @@
 from flask import Blueprint, render_template, redirect, url_for, flash, request, jsonify, send_file, Response
 from flask_login import login_required
+from flask_babel import _
 from models import db, Milestone, MilestoneResource, Project, User, Resource
 from services.tenant_utils import tenant_required, ensure_tenant_access, get_current_tenant_id
 from datetime import datetime
@@ -53,7 +54,7 @@ def create_milestone(project_id):
                 total_allocation += alloc
 
         if total_allocation > 100:
-            flash('A soma das alocações não pode ultrapassar 100%!', 'danger')
+            flash(_('A soma das alocações não pode ultrapassar 100%!'), 'danger')
             resources = Resource.query.filter_by(project_id=project_id, type='Pessoa', status='Ativo').order_by(Resource.name).all()
             all_milestones = Milestone.query.filter_by(project_id=project_id).order_by(Milestone.order, Milestone.start_date).all()
             return render_template('schedule/form.html', project=project, milestone=None, resources=resources, all_milestones=all_milestones)
@@ -73,7 +74,7 @@ def create_milestone(project_id):
                 db.session.add(mr)
 
         db.session.commit()
-        flash('Marco adicionado com sucesso!', 'success')
+        flash(_('Marco adicionado com sucesso!'), 'success')
         return redirect(url_for('schedule.view_schedule', project_id=project_id))
 
     resources = Resource.query.filter_by(project_id=project_id, type='Pessoa', status='Ativo').order_by(Resource.name).all()
@@ -112,7 +113,7 @@ def edit_milestone(project_id, milestone_id):
                 total_allocation += alloc
 
         if total_allocation > 100:
-            flash('A soma das alocações não pode ultrapassar 100%!', 'danger')
+            flash(_('A soma das alocações não pode ultrapassar 100%!'), 'danger')
             resources = Resource.query.filter_by(project_id=project_id, type='Pessoa', status='Ativo').order_by(Resource.name).all()
             all_milestones = Milestone.query.filter_by(project_id=project_id).order_by(Milestone.order, Milestone.start_date).all()
             return render_template('schedule/form.html', project=project, milestone=milestone, resources=resources, all_milestones=all_milestones)
@@ -130,7 +131,7 @@ def edit_milestone(project_id, milestone_id):
                 db.session.add(mr)
 
         db.session.commit()
-        flash('Marco atualizado com sucesso!', 'success')
+        flash(_('Marco atualizado com sucesso!'), 'success')
         return redirect(url_for('schedule.view_schedule', project_id=project_id))
 
     resources = Resource.query.filter_by(project_id=project_id, type='Pessoa', status='Ativo').order_by(Resource.name).all()
@@ -150,7 +151,7 @@ def delete_milestone(project_id, milestone_id):
 
     db.session.delete(milestone)
     db.session.commit()
-    flash('Marco excluído com sucesso!', 'success')
+    flash(_('Marco excluído com sucesso!'), 'success')
     return redirect(url_for('schedule.view_schedule', project_id=project_id))
 
 
@@ -270,16 +271,16 @@ def import_schedule(project_id):
 
     if request.method == 'POST':
         if 'file' not in request.files:
-            flash('Nenhum arquivo selecionado.', 'danger')
+            flash(_('Nenhum arquivo selecionado.'), 'danger')
             return redirect(request.url)
 
         file = request.files['file']
         if file.filename == '':
-            flash('Nenhum arquivo selecionado.', 'danger')
+            flash(_('Nenhum arquivo selecionado.'), 'danger')
             return redirect(request.url)
 
         if not file.filename.endswith('.xml'):
-            flash('Formato invalido. Use arquivo XML do MS Project.', 'danger')
+            flash(_('Formato invalido. Use arquivo XML do MS Project.'), 'danger')
             return redirect(request.url)
 
         try:
@@ -411,15 +412,15 @@ def import_schedule(project_id):
                         milestone.predecessor_id = task_uid_to_milestone_id[pred_uid]
 
             db.session.commit()
-            flash(f'{imported} marcos importados com sucesso!', 'success')
+            flash(_('%(count)s marcos importados com sucesso!', count=imported), 'success')
             return redirect(url_for('schedule.view_schedule', project_id=project_id))
 
         except ET.ParseError as e:
-            flash(f'Erro ao processar XML: {str(e)}', 'danger')
+            flash(_('Erro ao processar XML: %(error)s', error=str(e)), 'danger')
             return redirect(request.url)
         except Exception as e:
             db.session.rollback()
-            flash(f'Erro ao importar: {str(e)}', 'danger')
+            flash(_('Erro ao importar: %(error)s', error=str(e)), 'danger')
             return redirect(request.url)
 
     return render_template('schedule/import.html', project=project)

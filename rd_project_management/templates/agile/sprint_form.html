@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% block title %}{{ 'Editar' if sprint else 'Novo' }} Sprint - {{ project.title }}{% endblock %}
+{% block title %}{{ _('Editar') if sprint else _('Novo') }} Sprint - {{ project.title }}{% endblock %}
 
 {% block content %}
 <div class="row justify-content-center">
@@ -8,32 +8,32 @@
             <a href="{{ url_for('agile.list_sprints', project_id=project.id) }}" class="btn btn-outline-secondary btn-sm me-3">
                 <i class="bi bi-arrow-left"></i>
             </a>
-            <h4 class="fw-bold mb-0">{{ 'Editar' if sprint else 'Novo' }} Sprint</h4>
+            <h4 class="fw-bold mb-0">{{ _('Editar') if sprint else _('Novo Sprint') }}</h4>
         </div>
 
         <div class="card shadow-sm">
             <div class="card-body p-4">
                 <form method="POST">
                     <div class="mb-3">
-                        <label for="name" class="form-label">Nome do Sprint *</label>
+                        <label for="name" class="form-label">{{ _('Nome do Sprint') }} *</label>
                         <input type="text" class="form-control" id="name" name="name" required
-                               value="{{ sprint.name if sprint else '' }}" placeholder="Ex: Sprint 1">
+                               value="{{ sprint.name if sprint else '' }}" placeholder="{{ _('Ex: Sprint 1') }}">
                     </div>
 
                     <div class="mb-3">
-                        <label for="goal" class="form-label">Objetivo do Sprint</label>
+                        <label for="goal" class="form-label">{{ _('Objetivo do Sprint') }}</label>
                         <textarea class="form-control" id="goal" name="goal" rows="3"
-                                  placeholder="O que esperamos alcançar neste sprint?">{{ sprint.goal if sprint else '' }}</textarea>
+                                  placeholder="{{ _('O que esperamos alcançar neste sprint?') }}">{{ sprint.goal if sprint else '' }}</textarea>
                     </div>
 
                     <div class="row mb-3">
                         <div class="col-md-6">
-                            <label for="start_date" class="form-label">Data Início *</label>
+                            <label for="start_date" class="form-label">{{ _('Data Início') }} *</label>
                             <input type="date" class="form-control" id="start_date" name="start_date" required
                                    value="{{ sprint.start_date.strftime('%Y-%m-%d') if sprint else default_start }}">
                         </div>
                         <div class="col-md-6">
-                            <label for="end_date" class="form-label">Data Fim *</label>
+                            <label for="end_date" class="form-label">{{ _('Data Fim') }} *</label>
                             <input type="date" class="form-control" id="end_date" name="end_date" required
                                    value="{{ sprint.end_date.strftime('%Y-%m-%d') if sprint else default_end }}">
                         </div>
@@ -41,28 +41,27 @@
 
                     {% if sprint %}
                     <div class="mb-3">
-                        <label for="status" class="form-label">Status</label>
+                        <label for="status" class="form-label">{{ _('Status') }}</label>
                         <select class="form-select" id="status" name="status">
-                            <option value="Planejado" {{ 'selected' if sprint.status == 'Planejado' }}>Planejado</option>
-                            <option value="Ativo" {{ 'selected' if sprint.status == 'Ativo' }}>Ativo</option>
-                            <option value="Concluído" {{ 'selected' if sprint.status == 'Concluído' }}>Concluído</option>
+                            <option value="Planejado" {{ 'selected' if sprint.status == 'Planejado' }}>{{ _('Planejado') }}</option>
+                            <option value="Ativo" {{ 'selected' if sprint.status == 'Ativo' }}>{{ _('Ativo') }}</option>
+                            <option value="Concluído" {{ 'selected' if sprint.status == 'Concluído' }}>{{ _('Concluído') }}</option>
                         </select>
                     </div>
                     {% endif %}
 
                     <div class="alert alert-info small">
                         <i class="bi bi-info-circle"></i>
-                        <strong>Dica:</strong> Sprints típicos duram 1 a 4 semanas. 
-                        Recomendamos sprints de 2 semanas para maior previsibilidade.
+                        <strong>{{ _('Dica') }}:</strong> {{ _('Sprints típicos duram 1 a 4 semanas. Recomendamos sprints de 2 semanas para maior previsibilidade.') }}
                     </div>
 
                     <hr>
                     <div class="d-flex justify-content-end gap-2">
                         <a href="{{ url_for('agile.list_sprints', project_id=project.id) }}" class="btn btn-outline-secondary">
-                            Cancelar
+                            {{ _('Cancelar') }}
                         </a>
                         <button type="submit" class="btn btn-primary">
-                            <i class="bi bi-check-lg"></i> {{ 'Salvar' if sprint else 'Criar Sprint' }}
+                            <i class="bi bi-check-lg"></i> {{ _('Salvar') if sprint else _('Criar Sprint') }}
                         </button>
                     </div>
                 </form>

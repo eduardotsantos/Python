@@ -3,6 +3,7 @@ Tenant management routes for super admins.
 """
 from flask import Blueprint, render_template, redirect, url_for, flash, request
 from flask_login import login_required
+from flask_babel import _
 from models import db, Tenant, User, Project
 from services.tenant_utils import superadmin_required
 from datetime import datetime, date, timedelta
@@ -68,13 +69,13 @@ def create_tenant():
 
         # Validate
         if not name:
-            flash('Nome da empresa é obrigatório.', 'danger')
+            flash(_('Nome da empresa é obrigatório.'), 'danger')
             return render_template('tenants/form.html', tenant=None)
 
         # Check if slug is unique
         existing = Tenant.query.filter_by(slug=slug).first()
         if existing:
-            flash('Já existe uma empresa com este identificador.', 'danger')
+            flash(_('Já existe uma empresa com este identificador.'), 'danger')
             return render_template('tenants/form.html', tenant=None)
 
         # Parse expiration date
@@ -143,9 +144,9 @@ def create_tenant():
             admin_user.set_password(admin_password)
             db.session.add(admin_user)
             db.session.commit()
-            flash(f'Empresa "{name}" e usuário administrador criados com sucesso!', 'success')
+            flash(_('Empresa "%(name)s" e usuário administrador criados com sucesso!', name=name), 'success')
         else:
-            flash(f'Empresa "{name}" criada com sucesso!', 'success')
+            flash(_('Empresa "%(name)s" criada com sucesso!', name=name), 'success')
 
         return redirect(url_for('tenants.list_tenants'))
 
@@ -182,7 +183,7 @@ def edit_tenant(tenant_id):
         if new_slug and new_slug != tenant.slug:
             existing = Tenant.query.filter_by(slug=new_slug).first()
             if existing:
-                flash('Já existe uma empresa com este identificador.', 'danger')
+                flash(_('Já existe uma empresa com este identificador.'), 'danger')
                 return render_template('tenants/form.html', tenant=tenant)
             tenant.slug = new_slug
 
@@ -223,7 +224,7 @@ def edit_tenant(tenant_id):
         tenant.mail_default_sender = request.form.get('mail_default_sender', '').strip()
 
         db.session.commit()
-        flash('Empresa atualizada com sucesso!', 'success')
+        flash(_('Empresa atualizada com sucesso!'), 'success')
         return redirect(url_for('tenants.view_tenant', tenant_id=tenant_id))
 
     return render_template('tenants/form.html', tenant=tenant)
@@ -241,14 +242,12 @@ def delete_tenant(tenant_id):
     project_count = Project.query.filter_by(tenant_id=tenant_id).count()
 
     if user_count > 0 or project_count > 0:
-        flash(f'Não é possível excluir a empresa "{tenant.name}". '
-              f'Ela possui {user_count} usuários e {project_count} projetos. '
-              f'Remova os dados primeiro.', 'danger')
+        flash(_('Não é possível excluir a empresa "%(name)s". Ela possui %(users)s usuários e %(projects)s projetos. Remova os dados primeiro.', name=tenant.name, users=user_count, projects=project_count), 'danger')
         return redirect(url_for('tenants.view_tenant', tenant_id=tenant_id))
 
     db.session.delete(tenant)
     db.session.commit()
-    flash(f'Empresa "{tenant.name}" excluída com sucesso!', 'success')
+    flash(_('Empresa "%(name)s" excluída com sucesso!', name=tenant.name), 'success')
     return redirect(url_for('tenants.list_tenants'))
 
 
@@ -262,7 +261,7 @@ def toggle_tenant_status(tenant_id):
     db.session.commit()
 
     status = 'ativada' if tenant.active else 'desativada'
-    flash(f'Empresa "{tenant.name}" {status} com sucesso!', 'success')
+    flash(_('Empresa "%(name)s" %(status)s com sucesso!', name=tenant.name, status=status), 'success')
     return redirect(url_for('tenants.view_tenant', tenant_id=tenant_id))
 
 
@@ -284,7 +283,7 @@ def renew_tenant(tenant_id):
     tenant.active = True
     db.session.commit()
 
-    flash(f'Licença renovada até {new_date.strftime("%d/%m/%Y")}!', 'success')
+    flash(_('Licença renovada até %(date)s!', date=new_date.strftime('%d/%m/%Y')), 'success')
     return redirect(url_for('tenants.view_tenant', tenant_id=tenant_id))
 
 
@@ -296,7 +295,7 @@ def add_tenant_user(tenant_id):
     tenant = Tenant.query.get_or_404(tenant_id)
 
     if not tenant.can_add_user():
-        flash(f'Limite de {tenant.max_users} usuários atingido para esta empresa.', 'danger')
+        flash(_('Limite de %(max)s usuários atingido para esta empresa.', max=tenant.max_users), 'danger')
         return redirect(url_for('tenants.view_tenant', tenant_id=tenant_id))
 
     email = request.form.get('email', '').strip()
@@ -305,13 +304,13 @@ def add_tenant_user(tenant_id):
     role = request.form.get('role', 'user')
 
     if not email or not full_name or not password:
-        flash('Todos os campos são obrigatórios.', 'danger')
+        flash(_('Todos os campos são obrigatórios.'), 'danger')
         return redirect(url_for('tenants.view_tenant', tenant_id=tenant_id))
 
     # Check if email exists in this tenant
     existing = User.query.filter_by(tenant_id=tenant_id, email=email).first()
     if existing:
-        flash('Já existe um usuário com este e-mail nesta empresa.', 'danger')
+        flash(_('Já existe um usuário com este e-mail nesta empresa.'), 'danger')
         return redirect(url_for('tenants.view_tenant', tenant_id=tenant_id))
 
     user = User(
@@ -326,5 +325,5 @@ def add_tenant_user(tenant_id):
     db.session.add(user)
     db.session.commit()
 
-    flash(f'Usuário "{full_name}" criado com sucesso!', 'success')
+    flash(_('Usuário "%(name)s" criado com sucesso!', name=full_name), 'success')
     return redirect(url_for('tenants.view_tenant', tenant_id=tenant_id))

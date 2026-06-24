@@ -88,7 +88,7 @@ def create_resource(project_id):
 
         db.session.add(resource)
         db.session.commit()
-        flash('Recurso adicionado com sucesso!', 'success')
+        flash(_('Recurso adicionado com sucesso!'), 'success')
         return redirect(url_for('resources.list_resources', project_id=project_id))
 
     return render_template('resources/form.html', project=project, resource=None)
@@ -121,7 +121,7 @@ def edit_resource(project_id, resource_id):
             resource.end_date = datetime.strptime(end_date_str, '%Y-%m-%d').date()
 
         db.session.commit()
-        flash('Recurso atualizado com sucesso!', 'success')
+        flash(_('Recurso atualizado com sucesso!'), 'success')
         return redirect(url_for('resources.list_resources', project_id=project_id))
 
     return render_template('resources/form.html', project=project, resource=resource)
@@ -139,5 +139,5 @@ def delete_resource(project_id, resource_id):
 
     db.session.delete(resource)
     db.session.commit()
-    flash('Recurso excluído com sucesso!', 'success')
+    flash(_('Recurso excluído com sucesso!'), 'success')
     return redirect(url_for('resources.list_resources', project_id=project_id))

@@ -4,6 +4,7 @@ Supports global dashboard and lists with project filtering.
 """
 from flask import Blueprint, render_template, request, redirect, url_for, flash
 from flask_login import login_required, current_user
+from flask_babel import _
 from datetime import datetime, date
 from sqlalchemy import or_
 
@@ -186,7 +187,7 @@ def risk_create():
         db.session.add(risk)
         db.session.commit()
 
-        flash('Risco registrado com sucesso!', 'success')
+        flash(_('Risco registrado com sucesso!'), 'success')
         return redirect(url_for('compliance.risks_list'))
 
     projects = get_tenant_projects()
@@ -223,7 +224,7 @@ def risk_edit(risk_id):
         risk.identified_date = datetime.strptime(identified_date, '%Y-%m-%d').date() if identified_date else None
 
         db.session.commit()
-        flash('Risco atualizado com sucesso!', 'success')
+        flash(_('Risco atualizado com sucesso!'), 'success')
         return redirect(url_for('compliance.risks_list'))
 
     projects = get_tenant_projects()
@@ -241,7 +242,7 @@ def risk_delete(risk_id):
 
     db.session.delete(risk)
     db.session.commit()
-    flash('Risco excluído com sucesso!', 'success')
+    flash(_('Risco excluído com sucesso!'), 'success')
     return redirect(url_for('compliance.risks_list'))
 
 
@@ -316,7 +317,7 @@ def pending_create():
         db.session.add(item)
         db.session.commit()
 
-        flash('Pendência registrada com sucesso!', 'success')
+        flash(_('Pendência registrada com sucesso!'), 'success')
         return redirect(url_for('compliance.pending_list'))
 
     projects = get_tenant_projects()
@@ -349,7 +350,7 @@ def pending_edit(item_id):
         item.resolution_notes = request.form.get('resolution_notes', '').strip()
 
         db.session.commit()
-        flash('Pendência atualizada com sucesso!', 'success')
+        flash(_('Pendência atualizada com sucesso!'), 'success')
         return redirect(url_for('compliance.pending_list'))
 
     projects = get_tenant_projects()
@@ -367,7 +368,7 @@ def pending_delete(item_id):
 
     db.session.delete(item)
     db.session.commit()
-    flash('Pendência excluída com sucesso!', 'success')
+    flash(_('Pendência excluída com sucesso!'), 'success')
     return redirect(url_for('compliance.pending_list'))
 
 
@@ -444,7 +445,7 @@ def nc_create():
         db.session.add(nc)
         db.session.commit()
 
-        flash('Não conformidade registrada com sucesso!', 'success')
+        flash(_('Não conformidade registrada com sucesso!'), 'success')
         return redirect(url_for('compliance.nc_list'))
 
     projects = get_tenant_projects()
@@ -480,7 +481,7 @@ def nc_edit(nc_id):
         item.closure_date = datetime.strptime(closure_date, '%Y-%m-%d').date() if closure_date else None
 
         db.session.commit()
-        flash('Não conformidade atualizada com sucesso!', 'success')
+        flash(_('Não conformidade atualizada com sucesso!'), 'success')
         return redirect(url_for('compliance.nc_list'))
 
     projects = get_tenant_projects()
@@ -498,7 +499,7 @@ def nc_delete(nc_id):
 
     db.session.delete(item)
     db.session.commit()
-    flash('Não conformidade excluída com sucesso!', 'success')
+    flash(_('Não conformidade excluída com sucesso!'), 'success')
     return redirect(url_for('compliance.nc_list'))
 
 
@@ -577,7 +578,7 @@ def bug_create():
         db.session.add(bug)
         db.session.commit()
 
-        flash('Bug registrado com sucesso!', 'success')
+        flash(_('Bug registrado com sucesso!'), 'success')
         return redirect(url_for('compliance.bugs_list'))
 
     projects = get_tenant_projects()
@@ -615,7 +616,7 @@ def bug_edit(bug_id):
         bug.resolution_notes = request.form.get('resolution_notes', '').strip()
 
         db.session.commit()
-        flash('Bug atualizado com sucesso!', 'success')
+        flash(_('Bug atualizado com sucesso!'), 'success')
         return redirect(url_for('compliance.bugs_list'))
 
     projects = get_tenant_projects()
@@ -633,7 +634,7 @@ def bug_delete(bug_id):
 
     db.session.delete(bug)
     db.session.commit()
-    flash('Bug excluído com sucesso!', 'success')
+    flash(_('Bug excluído com sucesso!'), 'success')
     return redirect(url_for('compliance.bugs_list'))
 
 
@@ -716,7 +717,7 @@ def action_create():
         db.session.add(action)
         db.session.commit()
 
-        flash('Ação corretiva registrada com sucesso!', 'success')
+        flash(_('Ação corretiva registrada com sucesso!'), 'success')
         return redirect(url_for('compliance.actions_list'))
 
     projects = get_tenant_projects()
@@ -783,7 +784,7 @@ def action_edit(action_id):
         action.risk_id = int(risk_id) if risk_id else None
 
         db.session.commit()
-        flash('Ação corretiva atualizada com sucesso!', 'success')
+        flash(_('Ação corretiva atualizada com sucesso!'), 'success')
         return redirect(url_for('compliance.actions_list'))
 
     projects = get_tenant_projects()
@@ -821,5 +822,5 @@ def action_delete(action_id):
 
     db.session.delete(action)
     db.session.commit()
-    flash('Ação corretiva excluída com sucesso!', 'success')
+    flash(_('Ação corretiva excluída com sucesso!'), 'success')
     return redirect(url_for('compliance.actions_list'))

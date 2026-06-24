@@ -1,5 +1,6 @@
 from flask import Blueprint, render_template, redirect, url_for, flash, request, send_file
 from flask_login import login_required, current_user
+from flask_babel import _
 from models import db, Timesheet, Project, Milestone, Resource, AuditLog
 from services.tenant_utils import tenant_required, ensure_tenant_access, get_current_tenant_id
 from services.excel_timesheet import create_timesheet_template, parse_timesheet_excel
@@ -76,7 +77,7 @@ def create_entry(project_id):
 
         db.session.add(entry)
         db.session.commit()
-        flash('Registro de horas adicionado com sucesso!', 'success')
+        flash(_('Registro de horas adicionado com sucesso!'), 'success')
         return redirect(url_for('timesheet.list_timesheet', project_id=project_id))
 
     milestones = Milestone.query.filter_by(project_id=project_id).all()
@@ -105,7 +106,7 @@ def edit_entry(project_id, entry_id):
         entry.resource_id = int(resource_id) if resource_id else None
 
         db.session.commit()
-        flash('Registro atualizado com sucesso!', 'success')
+        flash(_('Registro atualizado com sucesso!'), 'success')
         return redirect(url_for('timesheet.list_timesheet', project_id=project_id))
 
     milestones = Milestone.query.filter_by(project_id=project_id).all()
@@ -125,7 +126,7 @@ def delete_entry(project_id, entry_id):
 
     db.session.delete(entry)
     db.session.commit()
-    flash('Registro excluído com sucesso!', 'success')
+    flash(_('Registro excluído com sucesso!'), 'success')
     return redirect(url_for('timesheet.list_timesheet', project_id=project_id))
 
 
@@ -163,16 +164,16 @@ def upload_excel(project_id):
 
     if request.method == 'POST':
         if 'file' not in request.files:
-            flash('Nenhum arquivo selecionado.', 'danger')
+            flash(_('Nenhum arquivo selecionado.'), 'danger')
             return redirect(request.url)
 
         file = request.files['file']
         if file.filename == '':
-            flash('Nenhum arquivo selecionado.', 'danger')
+            flash(_('Nenhum arquivo selecionado.'), 'danger')
             return redirect(request.url)
 
         if not file.filename.endswith(('.xlsx', '.xls')):
-            flash('Formato inválido. Use arquivos Excel (.xlsx ou .xls).', 'danger')
+            flash(_('Formato inválido. Use arquivos Excel (.xlsx ou .xls).'), 'danger')
             return redirect(request.url)
 
         try:
@@ -192,7 +193,7 @@ def upload_excel(project_id):
                 for error in errors[:5]:
                     flash(error, 'danger')
                 if len(errors) > 5:
-                    flash(f'... e mais {len(errors) - 5} erros', 'danger')
+                    flash(_('... e mais %(count)s erros', count=len(errors) - 5), 'danger')
                 return redirect(request.url)
 
             imported_count = 0
@@ -216,15 +217,15 @@ def upload_excel(project_id):
                 pass
 
             if errors:
-                flash(f'{imported_count} registros importados com sucesso! {len(errors)} linhas com erro foram ignoradas.', 'warning')
+                flash(_('%(count)s registros importados com sucesso! %(errors)s linhas com erro foram ignoradas.', count=imported_count, errors=len(errors)), 'warning')
             else:
-                flash(f'{imported_count} registros importados com sucesso!', 'success')
+                flash(_('%(count)s registros importados com sucesso!', count=imported_count), 'success')
 
             return redirect(url_for('timesheet.list_timesheet', project_id=project_id))
 
         except Exception as e:
             db.session.rollback()
-            flash(f'Erro ao processar arquivo: {str(e)}', 'danger')
+            flash(_('Erro ao processar arquivo: %(error)s', error=str(e)), 'danger')
             return redirect(request.url)
 
     return render_template('timesheet/upload.html', project=project)

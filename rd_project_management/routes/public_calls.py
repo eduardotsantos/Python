@@ -1,5 +1,6 @@
 from flask import Blueprint, render_template, redirect, url_for, flash, request, jsonify
 from flask_login import login_required, current_user
+from flask_babel import _
 from models import db, PublicCall, Project, ProjectCall
 from services.finep_scraper import scrape_finep_calls
 from services.bndes_scraper import scrape_bndes_calls
@@ -99,12 +100,11 @@ def refresh_calls():
     db.session.commit()
 
     if results['errors']:
-        flash(f'Sincronização parcial. FINEP: {results["finep"]}, '
-              f'BNDES: {results["bndes"]}, FAPESC: {results["fapesc"]} chamadas. '
-              f'Erros: {"; ".join(results["errors"])}', 'warning')
+        flash(_('Sincronização parcial. FINEP: %(finep)s, BNDES: %(bndes)s, FAPESC: %(fapesc)s chamadas. Erros: %(errors)s',
+              finep=results['finep'], bndes=results['bndes'], fapesc=results['fapesc'], errors='; '.join(results['errors'])), 'warning')
     else:
-        flash(f'Sincronização concluída! FINEP: {results["finep"]}, '
-              f'BNDES: {results["bndes"]}, FAPESC: {results["fapesc"]} chamadas.', 'success')
+        flash(_('Sincronização concluída! FINEP: %(finep)s, BNDES: %(bndes)s, FAPESC: %(fapesc)s chamadas.',
+              finep=results['finep'], bndes=results['bndes'], fapesc=results['fapesc']), 'success')
 
     return redirect(url_for('public_calls.list_calls'))
 
@@ -167,7 +167,7 @@ def create_call():
         )
         db.session.add(call)
         db.session.commit()
-        flash('Chamada pública cadastrada com sucesso!', 'success')
+        flash(_('Chamada pública cadastrada com sucesso!'), 'success')
         return redirect(url_for('public_calls.list_calls'))
 
     return render_template('public_calls/form.html', call=None)
@@ -183,7 +183,7 @@ def edit_call(call_id):
     # Only tenant-specific calls can be edited by tenant
     tenant_id = get_current_tenant_id()
     if call.tenant_id is not None and call.tenant_id != tenant_id:
-        flash('Você não tem permissão para editar esta chamada.', 'danger')
+        flash(_('Você não tem permissão para editar esta chamada.'), 'danger')
         return redirect(url_for('public_calls.list_calls'))
 
     if request.method == 'POST':
@@ -199,7 +199,7 @@ def edit_call(call_id):
         call.status = request.form.get('status', call.status)
 
         db.session.commit()
-        flash('Chamada atualizada com sucesso!', 'success')
+        flash(_('Chamada atualizada com sucesso!'), 'success')
         return redirect(url_for('public_calls.view_call', call_id=call_id))
 
     return render_template('public_calls/form.html', call=call)
@@ -237,17 +237,17 @@ def delete_call(call_id):
     # Only tenant-specific calls can be deleted by tenant
     tenant_id = get_current_tenant_id()
     if call.tenant_id is not None and call.tenant_id != tenant_id:
-        flash('Você não tem permissão para excluir esta chamada.', 'danger')
+        flash(_('Você não tem permissão para excluir esta chamada.'), 'danger')
         return redirect(url_for('public_calls.list_calls'))
 
     # Global calls (tenant_id=None) can only be deleted by superadmin
     if call.tenant_id is None and not current_user.is_superadmin():
-        flash('Apenas administradores do sistema podem excluir chamadas globais.', 'danger')
+        flash(_('Apenas administradores do sistema podem excluir chamadas globais.'), 'danger')
         return redirect(url_for('public_calls.list_calls'))
 
     db.session.delete(call)
     db.session.commit()
-    flash('Chamada removida com sucesso!', 'success')
+    flash(_('Chamada removida com sucesso!'), 'success')
     return redirect(url_for('public_calls.list_calls'))
 
 
@@ -265,13 +265,13 @@ def link_to_project(call_id):
     tenant_id = get_current_tenant_id()
 
     if not project_id:
-        flash('Selecione um projeto para vincular.', 'warning')
+        flash(_('Selecione um projeto para vincular.'), 'warning')
         return redirect(url_for('public_calls.view_call', call_id=call_id))
 
     # Verify project belongs to tenant
     project = Project.query.get(int(project_id))
     if not project or (tenant_id and project.tenant_id != tenant_id):
-        flash('Projeto não encontrado.', 'danger')
+        flash(_('Projeto não encontrado.'), 'danger')
         return redirect(url_for('public_calls.view_call', call_id=call_id))
 
     # Check if link already exists
@@ -281,7 +281,7 @@ def link_to_project(call_id):
     ).first()
 
     if existing:
-        flash('Este projeto já está vinculado a esta chamada.', 'warning')
+        flash(_('Este projeto já está vinculado a esta chamada.'), 'warning')
         return redirect(url_for('public_calls.view_call', call_id=call_id))
 
     link = ProjectCall(
@@ -294,7 +294,7 @@ def link_to_project(call_id):
     )
     db.session.add(link)
     db.session.commit()
-    flash('Projeto vinculado com sucesso!', 'success')
+    flash(_('Projeto vinculado com sucesso!'), 'success')
     return redirect(url_for('public_calls.view_call', call_id=call_id))
 
 
@@ -308,12 +308,12 @@ def unlink_project(call_id, link_id):
     # Verify link belongs to tenant
     tenant_id = get_current_tenant_id()
     if tenant_id and link.tenant_id != tenant_id:
-        flash('Vínculo não encontrado.', 'danger')
+        flash(_('Vínculo não encontrado.'), 'danger')
         return redirect(url_for('public_calls.view_call', call_id=call_id))
 
     db.session.delete(link)
     db.session.commit()
-    flash('Vínculo removido com sucesso!', 'success')
+    flash(_('Vínculo removido com sucesso!'), 'success')
     return redirect(url_for('public_calls.view_call', call_id=call_id))
 
 

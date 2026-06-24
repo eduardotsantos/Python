@@ -3,6 +3,7 @@ Routes for Orion Autonomous PMO - AI Agent Dashboard and API.
 """
 from flask import Blueprint, render_template, request, redirect, url_for, flash, jsonify, make_response
 from flask_login import login_required, current_user
+from flask_babel import _
 from datetime import datetime, date
 from io import BytesIO
 import logging
@@ -59,7 +60,7 @@ def run_agent(agent_name):
     agent = orchestrator.get_agent(agent_name)
 
     if not agent:
-        flash('Agente não encontrado.', 'danger')
+        flash(_('Agente não encontrado.'), 'danger')
         return redirect(url_for('pmo_agents.dashboard'))
 
     result = orchestrator.run_agent(agent_name, project_id)
@@ -329,11 +330,11 @@ def briefing_pdf():
         response.headers['Content-Disposition'] = f'attachment; filename=briefing_{briefing.date.strftime("%Y%m%d")}.pdf'
         return response
     except ImportError:
-        flash('Módulo de PDF não instalado. Execute: pip install reportlab', 'warning')
+        flash(_('Módulo de PDF não instalado. Execute: pip install reportlab'), 'warning')
         return redirect(url_for('pmo_agents.daily_briefing'))
     except Exception as e:
         logger.error(f"Error generating PDF: {e}")
-        flash(f'Erro ao gerar PDF: {str(e)}', 'danger')
+        flash(_('Erro ao gerar PDF: %(error)s', error=str(e)), 'danger')
         return redirect(url_for('pmo_agents.daily_briefing'))
 
 
@@ -349,7 +350,7 @@ def briefing_email():
 
     # Check if email is enabled for this tenant
     if not tenant or not tenant.email_enabled:
-        flash('Envio de email não está habilitado para este tenant. Configure em Configurações.', 'warning')
+        flash(_('Envio de email não está habilitado para este tenant. Configure em Configurações.'), 'warning')
         return redirect(url_for('pmo_agents.daily_briefing'))
 
     project_ids = request.form.getlist('project_ids', type=int)
@@ -434,7 +435,7 @@ def briefing_email():
         logger.info(f"Users with notifications disabled: {skipped_users}")
 
     if not recipients:
-        flash('Nenhum destinatário encontrado. Adicione emails manualmente.', 'warning')
+        flash(_('Nenhum destinatário encontrado. Adicione emails manualmente.'), 'warning')
         return redirect(url_for('pmo_agents.daily_briefing'))
 
     # Log recipients for debugging
@@ -443,10 +444,10 @@ def briefing_email():
     # Try to send email
     try:
         sent_count = send_briefing_email(briefing, list(recipients), tenant)
-        flash(f'Briefing enviado para {sent_count} destinatário(s).', 'success')
+        flash(_('Briefing enviado para %(count)s destinatário(s).', count=sent_count), 'success')
     except Exception as e:
         logger.error(f"Error sending email: {e}")
-        flash(f'Erro ao enviar email: {str(e)}', 'danger')
+        flash(_('Erro ao enviar email: %(error)s', error=str(e)), 'danger')
 
     return redirect(url_for('pmo_agents.daily_briefing'))
 

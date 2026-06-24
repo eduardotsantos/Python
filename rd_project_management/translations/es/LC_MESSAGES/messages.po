@@ -696,3 +696,976 @@ msgstr "Otros"
 msgid "Atencao"
 msgstr "Atención"
 
+
+# Flash messages and new i18n strings
+
+msgid "Login realizado com sucesso!"
+msgstr "¡Inicio de sesión exitoso!"
+
+
+msgid "Logout realizado com sucesso."
+msgstr "Cierre de sesión exitoso."
+
+
+msgid "Sua empresa está com a licença expirada ou inativa. Entre em contato com o suporte."
+msgstr "La licencia de su empresa está vencida o inactiva. Póngase en contacto con el soporte."
+
+
+msgid "Sua conta está desativada. Entre em contato com o administrador."
+msgstr "Su cuenta está desactivada. Póngase en contacto con el administrador."
+
+
+msgid "Email/usuário ou senha incorretos."
+msgstr "Email/usuario o contraseña incorrectos."
+
+
+msgid "Todos os campos são obrigatórios."
+msgstr "Todos los campos son obligatorios."
+
+
+msgid "As senhas não coincidem."
+msgstr "Las contraseñas no coinciden."
+
+
+msgid "A senha deve ter pelo menos 6 caracteres."
+msgstr "La contraseña debe tener al menos 6 caracteres."
+
+
+msgid "Nome de usuário já existe."
+msgstr "El nombre de usuario ya existe."
+
+
+msgid "Email já cadastrado."
+msgstr "Email ya registrado."
+
+
+msgid "Cadastro realizado com sucesso! Faça login."
+msgstr "¡Registro realizado con éxito! Por favor inicie sesión."
+
+
+msgid "Acesso restrito a administradores."
+msgstr "Acceso restringido a administradores."
+
+
+msgid "Limite de usuários atingido (%(max)s). Entre em contato com o suporte."
+msgstr "Límite de usuarios alcanzado (%(max)s). Póngase en contacto con el soporte."
+
+
+msgid "Todos os campos obrigatórios devem ser preenchidos."
+msgstr "Todos los campos obligatorios deben completarse."
+
+
+msgid "Este nome de usuário já está em uso."
+msgstr "Este nombre de usuario ya está en uso."
+
+
+msgid "Este email já está cadastrado."
+msgstr "Este correo electrónico ya está registrado."
+
+
+msgid "Usuário \"%(name)s\" criado com sucesso!"
+msgstr "¡Usuario \"%(name)s\" creado con éxito!"
+
+
+msgid "Usuário não encontrado."
+msgstr "Usuario no encontrado."
+
+
+msgid "Usuário \"%(name)s\" atualizado com sucesso!"
+msgstr "¡Usuario \"%(name)s\" actualizado con éxito!"
+
+
+msgid "Não é possível remover o papel de administrador do último admin."
+msgstr "No se puede eliminar el rol de administrador del último administrador."
+
+
+msgid "Você não pode desativar sua própria conta."
+msgstr "No puede desactivar su propia cuenta."
+
+
+msgid "Usuário \"%(name)s\" excluído com sucesso!"
+msgstr "¡Usuario \"%(name)s\" eliminado con éxito!"
+
+
+msgid "Você não pode excluir sua própria conta."
+msgstr "No puede eliminar su propia cuenta."
+
+
+msgid "Não é possível excluir o último administrador."
+msgstr "No se puede eliminar el último administrador."
+
+
+msgid "Este usuário possui dados vinculados (timesheets, despesas ou projetos). Desative o usuário ao invés de excluir."
+msgstr "Este usuario tiene datos vinculados (hojas de tiempo, gastos o proyectos). Desactive el usuario en lugar de eliminarlo."
+
+
+msgid "Usuário \"%(name)s\" %(status)s com sucesso!"
+msgstr "¡Usuario \"%(name)s\" %(status)s con éxito!"
+
+
+msgid "Nome e email são obrigatórios."
+msgstr "El nombre y el correo electrónico son obligatorios."
+
+
+msgid "Senha atual incorreta."
+msgstr "La contraseña actual es incorrecta."
+
+
+msgid "A nova senha deve ter pelo menos 6 caracteres."
+msgstr "La nueva contraseña debe tener al menos 6 caracteres."
+
+
+msgid "A confirmação da nova senha não confere."
+msgstr "La confirmación de la nueva contraseña no coincide."
+
+
+msgid "Senha alterada com sucesso!"
+msgstr "¡Contraseña cambiada con éxito!"
+
+
+msgid "Perfil atualizado com sucesso!"
+msgstr "¡Perfil actualizado con éxito!"
+
+
+msgid "Recurso adicionado com sucesso!"
+msgstr "¡Recurso agregado con éxito!"
+
+
+msgid "Recurso atualizado com sucesso!"
+msgstr "¡Recurso actualizado con éxito!"
+
+
+msgid "Recurso excluído com sucesso!"
+msgstr "¡Recurso eliminado con éxito!"
+
+
+msgid "Risco registrado com sucesso!"
+msgstr "¡Riesgo registrado con éxito!"
+
+
+msgid "Risco atualizado com sucesso!"
+msgstr "¡Riesgo actualizado con éxito!"
+
+
+msgid "Risco excluído com sucesso!"
+msgstr "¡Riesgo eliminado con éxito!"
+
+
+msgid "Pendência registrada com sucesso!"
+msgstr "¡Elemento pendiente registrado con éxito!"
+
+
+msgid "Pendência atualizada com sucesso!"
+msgstr "¡Elemento pendiente actualizado con éxito!"
+
+
+msgid "Pendência excluída com sucesso!"
+msgstr "¡Elemento pendiente eliminado con éxito!"
+
+
+msgid "Não conformidade registrada com sucesso!"
+msgstr "¡No conformidad registrada con éxito!"
+
+
+msgid "Não conformidade atualizada com sucesso!"
+msgstr "¡No conformidad actualizada con éxito!"
+
+
+msgid "Não conformidade excluída com sucesso!"
+msgstr "¡No conformidad eliminada con éxito!"
+
+
+msgid "Bug registrado com sucesso!"
+msgstr "¡Bug registrado con éxito!"
+
+
+msgid "Bug atualizado com sucesso!"
+msgstr "¡Bug actualizado con éxito!"
+
+
+msgid "Bug excluído com sucesso!"
+msgstr "¡Bug eliminado con éxito!"
+
+
+msgid "Ação corretiva registrada com sucesso!"
+msgstr "¡Acción correctiva registrada con éxito!"
+
+
+msgid "Ação corretiva atualizada com sucesso!"
+msgstr "¡Acción correctiva actualizada con éxito!"
+
+
+msgid "Ação corretiva excluída com sucesso!"
+msgstr "¡Acción correctiva eliminada con éxito!"
+
+
+msgid "Limite de projetos atingido (%(max)s). Entre em contato com o suporte."
+msgstr "Límite de proyectos alcanzado (%(max)s). Póngase en contacto con el soporte."
+
+
+msgid "Selecione uma empresa para criar o projeto."
+msgstr "Seleccione una empresa para crear el proyecto."
+
+
+msgid "Código e título são obrigatórios."
+msgstr "El código y el título son obligatorios."
+
+
+msgid "Código do projeto já existe nesta empresa."
+msgstr "El código del proyecto ya existe en esta empresa."
+
+
+msgid "Projeto criado com sucesso!"
+msgstr "¡Proyecto creado con éxito!"
+
+
+msgid "Código do projeto já existe."
+msgstr "El código del proyecto ya existe."
+
+
+msgid "Projeto atualizado com sucesso!"
+msgstr "¡Proyecto actualizado con éxito!"
+
+
+msgid "Projeto excluído com sucesso!"
+msgstr "¡Proyecto eliminado con éxito!"
+
+
+msgid "Nenhum arquivo selecionado."
+msgstr "Ningún archivo seleccionado."
+
+
+msgid "Arquivo deve ser XML do MS Project."
+msgstr "El archivo debe ser XML de MS Project."
+
+
+msgid "Funcionalidade de exportação Excel não disponível. Instale openpyxl."
+msgstr "Función de exportación a Excel no disponible. Instale openpyxl."
+
+
+msgid "Limite de %(max)s documentos por projeto atingido."
+msgstr "Límite de %(max)s documentos por proyecto alcanzado."
+
+
+msgid "Tipo de arquivo não permitido. Use PDF, Word, Excel ou PowerPoint."
+msgstr "Tipo de archivo no permitido. Use PDF, Word, Excel o PowerPoint."
+
+
+msgid "Documento \"%(name)s\" enviado com sucesso!"
+msgstr "¡Documento \"%(name)s\" enviado con éxito!"
+
+
+msgid "Documento não encontrado."
+msgstr "Documento no encontrado."
+
+
+msgid "Arquivo não encontrado no servidor."
+msgstr "Archivo no encontrado en el servidor."
+
+
+msgid "Documento \"%(name)s\" excluído com sucesso!"
+msgstr "¡Documento \"%(name)s\" eliminado con éxito!"
+
+
+msgid "Stakeholder \"%(name)s\" adicionado com sucesso!"
+msgstr "¡Stakeholder \"%(name)s\" agregado con éxito!"
+
+
+msgid "Stakeholder não encontrado."
+msgstr "Stakeholder no encontrado."
+
+
+msgid "Stakeholder \"%(name)s\" atualizado com sucesso!"
+msgstr "¡Stakeholder \"%(name)s\" actualizado con éxito!"
+
+
+msgid "Stakeholder \"%(name)s\" excluído com sucesso!"
+msgstr "¡Stakeholder \"%(name)s\" eliminado con éxito!"
+
+
+msgid "TRL atualizado de %(from_trl)s para %(to_trl)s!"
+msgstr "¡TRL actualizado de %(from_trl)s a %(to_trl)s!"
+
+
+msgid "TRL não foi alterado."
+msgstr "TRL no fue modificado."
+
+
+msgid "Superadmins devem acessar via contexto de uma empresa para criar programas."
+msgstr "Los superadministradores deben acceder a través del contexto de una empresa para crear programas."
+
+
+msgid "Programa criado com sucesso!"
+msgstr "¡Programa creado con éxito!"
+
+
+msgid "Programa atualizado com sucesso!"
+msgstr "¡Programa actualizado con éxito!"
+
+
+msgid "Programa excluido com sucesso!"
+msgstr "¡Programa eliminado con éxito!"
+
+
+msgid "Projeto %(code)s adicionado ao programa!"
+msgstr "¡Proyecto %(code)s agregado al programa!"
+
+
+msgid "Projeto %(code)s removido do programa!"
+msgstr "¡Proyecto %(code)s eliminado del programa!"
+
+
+msgid "Despesa adicionada com sucesso!"
+msgstr "¡Gasto agregado con éxito!"
+
+
+msgid "Despesa atualizada com sucesso!"
+msgstr "¡Gasto actualizado con éxito!"
+
+
+msgid "Despesa excluída com sucesso!"
+msgstr "¡Gasto eliminado con éxito!"
+
+
+msgid "Limite de %(max)s anexos por despesa atingido."
+msgstr "Límite de %(max)s adjuntos por gasto alcanzado."
+
+
+msgid "%(type)s enviado com sucesso!"
+msgstr "%(type)s enviado con éxito!"
+
+
+msgid "Tipo de arquivo não permitido. Use PDF, JPG, PNG ou Word."
+msgstr "Tipo de archivo no permitido. Use PDF, JPG, PNG o Word."
+
+
+msgid "Anexo não encontrado."
+msgstr "Adjunto no encontrado."
+
+
+msgid "Anexo excluído com sucesso!"
+msgstr "¡Adjunto eliminado con éxito!"
+
+
+msgid "A soma das alocações não pode ultrapassar 100%!"
+msgstr "¡La suma de asignaciones no puede superar el 100%!"
+
+
+msgid "Marco adicionado com sucesso!"
+msgstr "¡Hito agregado con éxito!"
+
+
+msgid "Marco atualizado com sucesso!"
+msgstr "¡Hito actualizado con éxito!"
+
+
+msgid "Marco excluído com sucesso!"
+msgstr "¡Hito eliminado con éxito!"
+
+
+msgid "%(count)s marcos importados com sucesso!"
+msgstr "¡%(count)s hitos importados con éxito!"
+
+
+msgid "Erro ao processar XML: %(error)s"
+msgstr "Error al procesar XML: %(error)s"
+
+
+msgid "Erro ao importar: %(error)s"
+msgstr "Error al importar: %(error)s"
+
+
+msgid "Formato invalido. Use arquivo XML do MS Project."
+msgstr "Formato inválido. Use archivo XML de MS Project."
+
+
+msgid "Registro de horas adicionado com sucesso!"
+msgstr "¡Registro de horas agregado con éxito!"
+
+
+msgid "Registro atualizado com sucesso!"
+msgstr "¡Registro actualizado con éxito!"
+
+
+msgid "Registro excluído com sucesso!"
+msgstr "¡Registro eliminado con éxito!"
+
+
+msgid "%(count)s registros importados com sucesso!"
+msgstr "¡%(count)s registros importados con éxito!"
+
+
+msgid "%(count)s registros importados com sucesso! %(errors)s linhas com erro foram ignoradas."
+msgstr "¡%(count)s registros importados con éxito! %(errors)s líneas con error fueron ignoradas."
+
+
+msgid "... e mais %(count)s erros"
+msgstr "... y %(count)s errores más"
+
+
+msgid "Erro ao processar arquivo: %(error)s"
+msgstr "Error al procesar archivo: %(error)s"
+
+
+msgid "Formato inválido. Use arquivos Excel (.xlsx ou .xls)."
+msgstr "Formato inválido. Use archivos Excel (.xlsx o .xls)."
+
+
+msgid "Título é obrigatório."
+msgstr "El título es obligatorio."
+
+
+msgid "Ata criada com sucesso!"
+msgstr "¡Acta de reunión creada con éxito!"
+
+
+msgid "Ata atualizada com sucesso!"
+msgstr "¡Acta de reunión actualizada con éxito!"
+
+
+msgid "Ata excluída com sucesso!"
+msgstr "¡Acta de reunión eliminada con éxito!"
+
+
+msgid "Agente não encontrado."
+msgstr "Agente no encontrado."
+
+
+msgid "Módulo de PDF não instalado. Execute: pip install reportlab"
+msgstr "Módulo PDF no instalado. Ejecute: pip install reportlab"
+
+
+msgid "Erro ao gerar PDF: %(error)s"
+msgstr "Error al generar PDF: %(error)s"
+
+
+msgid "Envio de email não está habilitado para este tenant. Configure em Configurações."
+msgstr "El envío de correo electrónico no está habilitado para este tenant. Configure en Configuración."
+
+
+msgid "Nenhum destinatário encontrado. Adicione emails manualmente."
+msgstr "No se encontraron destinatarios. Agregue correos electrónicos manualmente."
+
+
+msgid "Briefing enviado para %(count)s destinatário(s)."
+msgstr "Briefing enviado a %(count)s destinatario(s)."
+
+
+msgid "Erro ao enviar email: %(error)s"
+msgstr "Error al enviar correo: %(error)s"
+
+
+msgid "Sincronização parcial. FINEP: %(finep)s, BNDES: %(bndes)s, FAPESC: %(fapesc)s chamadas. Erros: %(errors)s"
+msgstr "Sincronización parcial. FINEP: %(finep)s, BNDES: %(bndes)s, FAPESC: %(fapesc)s llamadas. Errores: %(errors)s"
+
+
+msgid "Sincronização concluída! FINEP: %(finep)s, BNDES: %(bndes)s, FAPESC: %(fapesc)s chamadas."
+msgstr "¡Sincronización completa! FINEP: %(finep)s, BNDES: %(bndes)s, FAPESC: %(fapesc)s llamadas."
+
+
+msgid "Chamada pública cadastrada com sucesso!"
+msgstr "¡Convocatoria pública registrada con éxito!"
+
+
+msgid "Você não tem permissão para editar esta chamada."
+msgstr "No tiene permiso para editar esta convocatoria."
+
+
+msgid "Chamada atualizada com sucesso!"
+msgstr "¡Convocatoria actualizada con éxito!"
+
+
+msgid "Você não tem permissão para excluir esta chamada."
+msgstr "No tiene permiso para eliminar esta convocatoria."
+
+
+msgid "Apenas administradores do sistema podem excluir chamadas globais."
+msgstr "Solo los administradores del sistema pueden eliminar convocatorias globales."
+
+
+msgid "Chamada removida com sucesso!"
+msgstr "¡Convocatoria eliminada con éxito!"
+
+
+msgid "Selecione um projeto para vincular."
+msgstr "Seleccione un proyecto para vincular."
+
+
+msgid "Projeto não encontrado."
+msgstr "Proyecto no encontrado."
+
+
+msgid "Este projeto já está vinculado a esta chamada."
+msgstr "Este proyecto ya está vinculado a esta convocatoria."
+
+
+msgid "Projeto vinculado com sucesso!"
+msgstr "¡Proyecto vinculado con éxito!"
+
+
+msgid "Vínculo não encontrado."
+msgstr "Vínculo no encontrado."
+
+
+msgid "Vínculo removido com sucesso!"
+msgstr "¡Vínculo eliminado con éxito!"
+
+
+msgid "Sprint \"%(name)s\" criado com sucesso!"
+msgstr "¡Sprint \"%(name)s\" creado con éxito!"
+
+
+msgid "Sprint atualizado com sucesso!"
+msgstr "¡Sprint actualizado con éxito!"
+
+
+msgid "Sprint excluído com sucesso!"
+msgstr "¡Sprint eliminado con éxito!"
+
+
+msgid "Sprint \"%(name)s\" ativado!"
+msgstr "¡Sprint \"%(name)s\" activado!"
+
+
+msgid "Empresa \"%(name)s\" e usuário administrador criados com sucesso!"
+msgstr "¡Empresa \"%(name)s\" y usuario administrador creados con éxito!"
+
+
+msgid "Empresa \"%(name)s\" criada com sucesso!"
+msgstr "¡Empresa \"%(name)s\" creada con éxito!"
+
+
+msgid "Nome da empresa é obrigatório."
+msgstr "El nombre de la empresa es obligatorio."
+
+
+msgid "Já existe uma empresa com este identificador."
+msgstr "Ya existe una empresa con este identificador."
+
+
+msgid "Empresa atualizada com sucesso!"
+msgstr "¡Empresa actualizada con éxito!"
+
+
+msgid "Não é possível excluir a empresa \"%(name)s\". Ela possui %(users)s usuários e %(projects)s projetos. Remova os dados primeiro."
+msgstr "No se puede eliminar la empresa \"%(name)s\". Tiene %(users)s usuarios y %(projects)s proyectos. Elimine los datos primero."
+
+
+msgid "Empresa \"%(name)s\" excluída com sucesso!"
+msgstr "¡Empresa \"%(name)s\" eliminada con éxito!"
+
+
+msgid "Empresa \"%(name)s\" %(status)s com sucesso!"
+msgstr "¡Empresa \"%(name)s\" %(status)s con éxito!"
+
+
+msgid "Licença renovada até %(date)s!"
+msgstr "¡Licencia renovada hasta %(date)s!"
+
+
+msgid "Limite de %(max)s usuários atingido para esta empresa."
+msgstr "Límite de %(max)s usuarios alcanzado para esta empresa."
+
+
+msgid "Já existe um usuário com este e-mail nesta empresa."
+msgstr "Ya existe un usuario con este correo electrónico en esta empresa."
+
+
+msgid "Acesso negado. Apenas administradores podem visualizar logs de auditoria."
+msgstr "Acceso denegado. Solo los administradores pueden ver los registros de auditoría."
+
+
+msgid "Geração de propostas disponivel apenas nos planos Profissional e Enterprise."
+msgstr "Generación de propuestas disponible solo en los planes Professional y Enterprise."
+
+
+msgid "Auditoria disponivel apenas para projetos vinculados a chamadas publicas."
+msgstr "Auditoría disponible solo para proyectos vinculados a convocatorias públicas."
+
+
+msgid "Kanban Board"
+msgstr "Tablero Kanban"
+
+
+msgid "Métricas Ágeis"
+msgstr "Métricas Ágiles"
+
+
+msgid "Não Iniciado"
+msgstr "No Iniciado"
+
+
+msgid "Concluído"
+msgstr "Completado"
+
+
+msgid "Backlog"
+msgstr "Backlog"
+
+
+msgid "Solte aqui"
+msgstr "Suelta aquí"
+
+
+msgid "Velocity Médio"
+msgstr "Velocidad Promedio"
+
+
+msgid "Nenhum Sprint Criado"
+msgstr "Ningún Sprint Creado"
+
+
+msgid "Crie seu primeiro sprint para organizar as tarefas do projeto."
+msgstr "Cree su primer sprint para organizar las tareas del proyecto."
+
+
+msgid "Criar Primeiro Sprint"
+msgstr "Crear Primer Sprint"
+
+
+msgid "Tarefas"
+msgstr "Tareas"
+
+
+msgid "concluído"
+msgstr "completado"
+
+
+msgid "Iniciar"
+msgstr "Iniciar"
+
+
+msgid "Nome do Sprint"
+msgstr "Nombre del Sprint"
+
+
+msgid "Objetivo do Sprint"
+msgstr "Objetivo del Sprint"
+
+
+msgid "O que esperamos alcançar neste sprint?"
+msgstr "¿Qué esperamos lograr en este sprint?"
+
+
+msgid "Ex: Sprint 1"
+msgstr "Ej: Sprint 1"
+
+
+msgid "Data Início"
+msgstr "Fecha de Inicio"
+
+
+msgid "Data Fim"
+msgstr "Fecha de Fin"
+
+
+msgid "Planejado"
+msgstr "Planificado"
+
+
+msgid "Dica"
+msgstr "Consejo"
+
+
+msgid "Sprints típicos duram 1 a 4 semanas. Recomendamos sprints de 2 semanas para maior previsibilidade."
+msgstr "Los sprints típicos duran de 1 a 4 semanas. Recomendamos sprints de 2 semanas para mayor previsibilidad."
+
+
+msgid "Criar Sprint"
+msgstr "Crear Sprint"
+
+
+msgid "Todos os Marcos"
+msgstr "Todos los Hitos"
+
+
+msgid "Gráficos"
+msgstr "Gráficos"
+
+
+msgid "Nova Tarefa"
+msgstr "Nueva Tarea"
+
+
+msgid "Sprint Ativo"
+msgstr "Sprint Activo"
+
+
+msgid "Não atribuído"
+msgstr "Sin asignar"
+
+
+msgid "Selecione um Sprint"
+msgstr "Seleccione un Sprint"
+
+
+msgid "Tarefas Concluídas"
+msgstr "Tareas Completadas"
+
+
+msgid "Selecione um sprint para ver o burndown"
+msgstr "Seleccione un sprint para ver el burndown"
+
+
+msgid "Complete sprints para ver o velocity"
+msgstr "Complete sprints para ver la velocidad"
+
+
+msgid "Distribuição por Status"
+msgstr "Distribución por Estado"
+
+
+msgid "Distribuição por Prioridade"
+msgstr "Distribución por Prioridad"
+
+
+msgid "Carga por Membro"
+msgstr "Carga por Miembro"
+
+
+msgid "concluídas"
+msgstr "completadas"
+
+
+msgid "Atribua tarefas aos membros"
+msgstr "Asigne tareas a los miembros"
+
+
+msgid "Planos e Preços"
+msgstr "Planes y Precios"
+
+
+msgid "Gestão de P&D"
+msgstr "Gestión de I+D"
+
+
+msgid "Escolha o plano ideal para sua empresa inovar com recursos públicos"
+msgstr "Elija el plan ideal para que su empresa innove con recursos públicos"
+
+
+msgid "Básico"
+msgstr "Básico"
+
+
+msgid "Para empresas iniciando em P&D"
+msgstr "Para empresas que inician en I+D"
+
+
+msgid "mês"
+msgstr "mes"
+
+
+msgid "Até"
+msgstr "Hasta"
+
+
+msgid "projetos"
+msgstr "proyectos"
+
+
+msgid "ativos"
+msgstr "activos"
+
+
+msgid "usuários"
+msgstr "usuarios"
+
+
+msgid "Gestão de despesas e orçamento"
+msgstr "Gestión de gastos y presupuesto"
+
+
+msgid "Controle de timesheet"
+msgstr "Control de hojas de tiempo"
+
+
+msgid "Monitoramento de chamadas públicas"
+msgstr "Monitoreo de convocatorias públicas"
+
+
+msgid "Importação Excel de timesheet"
+msgstr "Importación de hojas de tiempo en Excel"
+
+
+msgid "Chat com IA para dúvidas"
+msgstr "Chat con IA para consultas"
+
+
+msgid "Geração de propostas com IA"
+msgstr "Generación de propuestas con IA"
+
+
+msgid "Análise avançada de riscos"
+msgstr "Análisis avanzado de riesgos"
+
+
+msgid "Suporte prioritário"
+msgstr "Soporte prioritario"
+
+
+msgid "Começar Agora"
+msgstr "Empezar Ahora"
+
+
+msgid "MAIS POPULAR"
+msgstr "MÁS POPULAR"
+
+
+msgid "Profissional"
+msgstr "Profesional"
+
+
+msgid "Para empresas com projetos ativos"
+msgstr "Para empresas con proyectos activos"
+
+
+msgid "Tudo do plano Básico"
+msgstr "Todo en el plan Básico"
+
+
+msgid "Análise de riscos com IA"
+msgstr "Análisis de riesgos con IA"
+
+
+msgid "Relatórios automatizados"
+msgstr "Informes automatizados"
+
+
+msgid "Matching projeto-edital"
+msgstr "Coincidencia proyecto-convocatoria"
+
+
+msgid "Anexos em despesas"
+msgstr "Adjuntos en gastos"
+
+
+msgid "Logs de auditoria"
+msgstr "Registros de auditoría"
+
+
+msgid "API de integração"
+msgstr "API de integración"
+
+
+msgid "Assinar Profissional"
+msgstr "Suscribirse a Profesional"
+
+
+msgid "Enterprise"
+msgstr "Enterprise"
+
+
+msgid "Para grandes operações de P&D"
+msgstr "Para grandes operaciones de I+D"
+
+
+msgid "Projetos ilimitados"
+msgstr "Proyectos ilimitados"
+
+
+msgid "Usuários ilimitados"
+msgstr "Usuarios ilimitados"
+
+
+msgid "Tudo do plano Profissional"
+msgstr "Todo en el plan Profesional"
+
+
+msgid "Suporte prioritário 24/7"
+msgstr "Soporte prioritario 24/7"
+
+
+msgid "Treinamento personalizado"
+msgstr "Entrenamiento personalizado"
+
+
+msgid "Consultoria em editais"
+msgstr "Consultoría en convocatorias"
+
+
+msgid "Backup dedicado"
+msgstr "Copia de seguridad dedicada"
+
+
+msgid "SLA garantido 99.9%"
+msgstr "SLA garantizado 99.9%"
+
+
+msgid "Falar com Vendas"
+msgstr "Hablar con Ventas"
+
+
+msgid "Licença Institucional"
+msgstr "Licencia Institucional"
+
+
+msgid "Para governos estaduais, fundações de amparo e agências de fomento"
+msgstr "Para gobiernos estatales, fundaciones de apoyo y agencias de fomento"
+
+
+msgid "Licença para todas as empresas beneficiadas do estado"
+msgstr "Licencia para todas las empresas beneficiadas del estado"
+
+
+msgid "Dashboard consolidado para acompanhamento de projetos"
+msgstr "Panel consolidado para el seguimiento de proyectos"
+
+
+msgid "Relatórios de impacto e prestação de contas"
+msgstr "Informes de impacto y rendición de cuentas"
+
+
+msgid "Integração com sistemas governamentais"
+msgstr "Integración con sistemas gubernamentales"
+
+
+msgid "Treinamento para equipes e empresas"
+msgstr "Entrenamiento para equipos y empresas"
+
+
+msgid "Suporte dedicado e evolução contínua"
+msgstr "Soporte dedicado y evolución continua"
+
+
+msgid "A partir de"
+msgstr "A partir de"
+
+
+msgid "Solicitar Proposta"
+msgstr "Solicitar Propuesta"
+
+
+msgid "Perguntas Frequentes"
+msgstr "Preguntas Frecuentes"
+
+
+msgid "Como funciona a geração de propostas com IA?"
+msgstr "¿Cómo funciona la generación de propuestas con IA?"
+
+
+msgid "Posso mudar de plano a qualquer momento?"
+msgstr "¿Puedo cambiar de plan en cualquier momento?"
+
+
+msgid "Os dados dos meus projetos estão seguros?"
+msgstr "¿Están seguros los datos de mis proyectos?"
+
+
+msgid "Como funciona a licença institucional para o governo?"
+msgstr "¿Cómo funciona la licencia institucional para el gobierno?"
+
+
+msgid "Pronto para transformar a gestão dos seus projetos de P&D?"
+msgstr "¿Listo para transformar la gestión de sus proyectos de I+D?"
+
+
+msgid "Comece gratuitamente por 14 dias. Sem cartão de crédito."
+msgstr "Comience gratis durante 14 días. Sin tarjeta de crédito."
+
+
+msgid "Começar Teste Gratuito"
+msgstr "Comenzar Prueba Gratuita"
+
+
+msgid "Status"
+msgstr "Estado"

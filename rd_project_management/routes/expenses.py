@@ -1,5 +1,6 @@
 from flask import Blueprint, render_template, redirect, url_for, flash, request, current_app, send_file
 from flask_login import login_required, current_user
+from flask_babel import _
 from models import db, Expense, Project, ExpenseAttachment
 from services.tenant_utils import tenant_required, ensure_tenant_access, get_current_tenant_id
 from werkzeug.utils import secure_filename
@@ -84,7 +85,7 @@ def create_expense(project_id):
         )
         db.session.add(expense)
         db.session.commit()
-        flash('Despesa adicionada com sucesso!', 'success')
+        flash(_('Despesa adicionada com sucesso!'), 'success')
         return redirect(url_for('expenses.list_expenses', project_id=project_id))
 
     return render_template('expenses/form.html', project=project, expense=None)
@@ -111,7 +112,7 @@ def edit_expense(project_id, expense_id):
         expense.notes = request.form.get('notes', '').strip()
 
         db.session.commit()
-        flash('Despesa atualizada com sucesso!', 'success')
+        flash(_('Despesa atualizada com sucesso!'), 'success')
         return redirect(url_for('expenses.list_expenses', project_id=project_id))
 
     return render_template('expenses/form.html', project=project, expense=expense)
@@ -129,7 +130,7 @@ def delete_expense(project_id, expense_id):
 
     db.session.delete(expense)
     db.session.commit()
-    flash('Despesa excluída com sucesso!', 'success')
+    flash(_('Despesa excluída com sucesso!'), 'success')
     return redirect(url_for('expenses.list_expenses', project_id=project_id))
 
 
@@ -148,22 +149,22 @@ def upload_attachment(project_id, expense_id):
 
     current_attachments = len(expense.attachments)
     if current_attachments >= MAX_ATTACHMENTS_PER_EXPENSE:
-        flash(f'Limite de {MAX_ATTACHMENTS_PER_EXPENSE} anexos por despesa atingido.', 'warning')
+        flash(_('Limite de %(max)s anexos por despesa atingido.', max=MAX_ATTACHMENTS_PER_EXPENSE), 'warning')
         return redirect(url_for('expenses.edit_expense', project_id=project_id, expense_id=expense_id))
 
     if 'attachment' not in request.files:
-        flash('Nenhum arquivo selecionado.', 'danger')
+        flash(_('Nenhum arquivo selecionado.'), 'danger')
         return redirect(url_for('expenses.edit_expense', project_id=project_id, expense_id=expense_id))
 
     file = request.files['attachment']
     attachment_type = request.form.get('attachment_type', 'comprovante')
 
     if file.filename == '':
-        flash('Nenhum arquivo selecionado.', 'danger')
+        flash(_('Nenhum arquivo selecionado.'), 'danger')
         return redirect(url_for('expenses.edit_expense', project_id=project_id, expense_id=expense_id))
 
     if not allowed_file(file.filename):
-        flash('Tipo de arquivo não permitido. Use PDF, JPG, PNG ou Word.', 'danger')
+        flash(_('Tipo de arquivo não permitido. Use PDF, JPG, PNG ou Word.'), 'danger')
         return redirect(url_for('expenses.edit_expense', project_id=project_id, expense_id=expense_id))
 
     original_filename = secure_filename(file.filename)
@@ -192,7 +193,7 @@ def upload_attachment(project_id, expense_id):
     db.session.commit()
 
     type_names = {'boleto': 'Boleto', 'nota_fiscal': 'Nota Fiscal', 'comprovante': 'Comprovante'}
-    flash(f'{type_names.get(attachment_type, "Anexo")} enviado com sucesso!', 'success')
+    flash(_('%(type)s enviado com sucesso!', type=type_names.get(attachment_type, 'Anexo')), 'success')
     return redirect(url_for('expenses.edit_expense', project_id=project_id, expense_id=expense_id))
 
 
@@ -210,14 +211,14 @@ def download_attachment(project_id, expense_id, attachment_id):
     attachment = ExpenseAttachment.query.get_or_404(attachment_id)
 
     if attachment.expense_id != expense_id:
-        flash('Anexo não encontrado.', 'danger')
+        flash(_('Anexo não encontrado.'), 'danger')
         return redirect(url_for('expenses.edit_expense', project_id=project_id, expense_id=expense_id))
 
     tenant_folder = os.path.join(current_app.config['UPLOAD_FOLDER'], str(attachment.tenant_id or 'global'), 'expenses')
     file_path = os.path.join(tenant_folder, attachment.stored_filename)
 
     if not os.path.exists(file_path):
-        flash('Arquivo não encontrado no servidor.', 'danger')
+        flash(_('Arquivo não encontrado no servidor.'), 'danger')
         return redirect(url_for('expenses.edit_expense', project_id=project_id, expense_id=expense_id))
 
     return send_file(file_path, download_name=attachment.filename, as_attachment=True)
@@ -237,7 +238,7 @@ def delete_attachment(project_id, expense_id, attachment_id):
     attachment = ExpenseAttachment.query.get_or_404(attachment_id)
 
     if attachment.expense_id != expense_id:
-        flash('Anexo não encontrado.', 'danger')
+        flash(_('Anexo não encontrado.'), 'danger')
         return redirect(url_for('expenses.edit_expense', project_id=project_id, expense_id=expense_id))
 
     tenant_folder = os.path.join(current_app.config['UPLOAD_FOLDER'], str(attachment.tenant_id or 'global'), 'expenses')
@@ -249,5 +250,5 @@ def delete_attachment(project_id, expense_id, attachment_id):
     db.session.delete(attachment)
     db.session.commit()
 
-    flash('Anexo excluído com sucesso!', 'success')
+    flash(_('Anexo excluído com sucesso!'), 'success')
     return redirect(url_for('expenses.edit_expense', project_id=project_id, expense_id=expense_id))

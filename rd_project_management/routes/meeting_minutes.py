@@ -6,6 +6,7 @@ import os
 import uuid
 from flask import Blueprint, render_template, request, redirect, url_for, flash, current_app, jsonify
 from flask_login import login_required, current_user
+from flask_babel import _
 from werkzeug.utils import secure_filename
 from datetime import datetime, date
 
@@ -55,7 +56,7 @@ def create_minutes(project_id):
         transcription = request.form.get('transcription', '').strip()
 
         if not title:
-            flash('Título é obrigatório.', 'danger')
+            flash(_('Título é obrigatório.'), 'danger')
             return render_template('meeting_minutes/form.html', project=project, minutes=None)
 
         try:
@@ -110,7 +111,7 @@ def create_minutes(project_id):
         except Exception:
             pass
 
-        flash('Ata criada com sucesso!', 'success')
+        flash(_('Ata criada com sucesso!'), 'success')
         return redirect(url_for('meeting_minutes.view_minutes', project_id=project_id, minutes_id=minutes.id))
 
     return render_template('meeting_minutes/form.html', project=project, minutes=None)
@@ -186,7 +187,7 @@ def edit_minutes(project_id, minutes_id):
         except Exception:
             pass
 
-        flash('Ata atualizada com sucesso!', 'success')
+        flash(_('Ata atualizada com sucesso!'), 'success')
         return redirect(url_for('meeting_minutes.view_minutes', project_id=project_id, minutes_id=minutes_id))
 
     return render_template('meeting_minutes/form.html', project=project, minutes=minutes)
@@ -218,7 +219,7 @@ def delete_minutes(project_id, minutes_id):
     db.session.delete(minutes)
     db.session.commit()
 
-    flash('Ata excluída com sucesso!', 'success')
+    flash(_('Ata excluída com sucesso!'), 'success')
     return redirect(url_for('meeting_minutes.list_minutes', project_id=project_id))
 
 

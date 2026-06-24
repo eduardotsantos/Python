@@ -1,11 +1,11 @@
 {% extends "base.html" %}
-{% block title %}Planos e Precos - Orion P&D{% endblock %}
+{% block title %}{{ _('Planos e Preços') }} - Orion P&D{% endblock %}
 
 {% block content %}
 <div class="container py-4">
     <div class="text-center mb-5">
-        <h1 class="fw-bold"><i class="bi bi-stars text-primary"></i> Orion Gestão de P&D</h1>
-        <p class="lead text-muted">Escolha o plano ideal para sua empresa inovar com recursos publicos</p>
+        <h1 class="fw-bold"><i class="bi bi-stars text-primary"></i> Orion {{ _('Gestão de P&D') }}</h1>
+        <p class="lead text-muted">{{ _('Escolha o plano ideal para sua empresa inovar com recursos públicos') }}</p>
     </div>
 
     <!-- Pricing Cards -->
@@ -14,30 +14,30 @@
         <div class="col-lg-4">
             <div class="card h-100 shadow-sm">
                 <div class="card-header bg-light text-center py-4">
-                    <h4 class="fw-bold mb-0">Basico</h4>
-                    <p class="text-muted mb-0">Para empresas iniciando em P&D</p>
+                    <h4 class="fw-bold mb-0">{{ _('Básico') }}</h4>
+                    <p class="text-muted mb-0">{{ _('Para empresas iniciando em P&D') }}</p>
                 </div>
                 <div class="card-body">
                     <div class="text-center mb-4">
                         <span class="display-4 fw-bold">R$ 297</span>
-                        <span class="text-muted">/mes</span>
+                        <span class="text-muted">/{{ _('mês') }}</span>
                     </div>
                     <ul class="list-unstyled">
-                        <li class="mb-3"><i class="bi bi-check-circle-fill text-success me-2"></i> Ate <strong>3 projetos</strong> ativos</li>
-                        <li class="mb-3"><i class="bi bi-check-circle-fill text-success me-2"></i> Ate <strong>5 usuarios</strong></li>
-                        <li class="mb-3"><i class="bi bi-check-circle-fill text-success me-2"></i> Gestão de despesas e orçamento</li>
-                        <li class="mb-3"><i class="bi bi-check-circle-fill text-success me-2"></i> Controle de timesheet</li>
-                        <li class="mb-3"><i class="bi bi-check-circle-fill text-success me-2"></i> Monitoramento de chamadas públicas</li>
-                        <li class="mb-3"><i class="bi bi-check-circle-fill text-success me-2"></i> Importacao Excel de timesheet</li>
-                        <li class="mb-3"><i class="bi bi-check-circle-fill text-success me-2"></i> Chat com IA para duvidas</li>
-                        <li class="mb-3 text-muted"><i class="bi bi-x-circle me-2"></i> Geração de propostas com IA</li>
-                        <li class="mb-3 text-muted"><i class="bi bi-x-circle me-2"></i> Análise avançada de riscos</li>
-                        <li class="mb-3 text-muted"><i class="bi bi-x-circle me-2"></i> Suporte prioritario</li>
+                        <li class="mb-3"><i class="bi bi-check-circle-fill text-success me-2"></i> {{ _('Até') }} <strong>3 {{ _('projetos') }}</strong> {{ _('ativos') }}</li>
+                        <li class="mb-3"><i class="bi bi-check-circle-fill text-success me-2"></i> {{ _('Até') }} <strong>5 {{ _('usuários') }}</strong></li>
+                        <li class="mb-3"><i class="bi bi-check-circle-fill text-success me-2"></i> {{ _('Gestão de despesas e orçamento') }}</li>
+                        <li class="mb-3"><i class="bi bi-check-circle-fill text-success me-2"></i> {{ _('Controle de timesheet') }}</li>
+                        <li class="mb-3"><i class="bi bi-check-circle-fill text-success me-2"></i> {{ _('Monitoramento de chamadas públicas') }}</li>
+                        <li class="mb-3"><i class="bi bi-check-circle-fill text-success me-2"></i> {{ _('Importação Excel de timesheet') }}</li>
+                        <li class="mb-3"><i class="bi bi-check-circle-fill text-success me-2"></i> {{ _('Chat com IA para dúvidas') }}</li>
+                        <li class="mb-3 text-muted"><i class="bi bi-x-circle me-2"></i> {{ _('Geração de propostas com IA') }}</li>
+                        <li class="mb-3 text-muted"><i class="bi bi-x-circle me-2"></i> {{ _('Análise avançada de riscos') }}</li>
+                        <li class="mb-3 text-muted"><i class="bi bi-x-circle me-2"></i> {{ _('Suporte prioritário') }}</li>
                     </ul>
                 </div>
                 <div class="card-footer bg-white border-0 pb-4">
                     <a href="{{ url_for('auth.register') }}" class="btn btn-outline-primary w-100 py-2">
-                        Comecar Agora
+                        {{ _('Começar Agora') }}
                     </a>
                 </div>
             </div>
@@ -47,31 +47,31 @@
         <div class="col-lg-4">
             <div class="card h-100 shadow border-primary" style="border-width: 2px;">
                 <div class="card-header bg-primary text-white text-center py-4">
-                    <span class="badge bg-warning text-dark mb-2">MAIS POPULAR</span>
-                    <h4 class="fw-bold mb-0">Profissional</h4>
-                    <p class="mb-0 opacity-75">Para empresas com projetos ativos</p>
+                    <span class="badge bg-warning text-dark mb-2">{{ _('MAIS POPULAR') }}</span>
+                    <h4 class="fw-bold mb-0">{{ _('Profissional') }}</h4>
+                    <p class="mb-0 opacity-75">{{ _('Para empresas com projetos ativos') }}</p>
                 </div>
                 <div class="card-body">
                     <div class="text-center mb-4">
                         <span class="display-4 fw-bold text-primary">R$ 697</span>
-                        <span class="text-muted">/mes</span>
+                        <span class="text-muted">/{{ _('mês') }}</span>
                     </div>
                     <ul class="list-unstyled">
-                        <li class="mb-3"><i class="bi bi-check-circle-fill text-success me-2"></i> Ate <strong>10 projetos</strong> ativos</li>
-                        <li class="mb-3"><i class="bi bi-check-circle-fill text-success me-2"></i> Ate <strong>15 usuarios</strong></li>
-                        <li class="mb-3"><i class="bi bi-check-circle-fill text-success me-2"></i> Tudo do plano Basico</li>
-                        <li class="mb-3"><i class="bi bi-check-circle-fill text-primary me-2"></i> <strong>Geração de propostas com IA</strong></li>
-                        <li class="mb-3"><i class="bi bi-check-circle-fill text-primary me-2"></i> <strong>Análise de riscos com IA</strong></li>
-                        <li class="mb-3"><i class="bi bi-check-circle-fill text-primary me-2"></i> <strong>Relatórios automatizados</strong></li>
-                        <li class="mb-3"><i class="bi bi-check-circle-fill text-primary me-2"></i> <strong>Matching projeto-edital</strong></li>
-                        <li class="mb-3"><i class="bi bi-check-circle-fill text-success me-2"></i> Anexos em despesas</li>
-                        <li class="mb-3"><i class="bi bi-check-circle-fill text-success me-2"></i> Logs de auditoria</li>
-                        <li class="mb-3 text-muted"><i class="bi bi-x-circle me-2"></i> API de integracao</li>
+                        <li class="mb-3"><i class="bi bi-check-circle-fill text-success me-2"></i> {{ _('Até') }} <strong>10 {{ _('projetos') }}</strong> {{ _('ativos') }}</li>
+                        <li class="mb-3"><i class="bi bi-check-circle-fill text-success me-2"></i> {{ _('Até') }} <strong>15 {{ _('usuários') }}</strong></li>
+                        <li class="mb-3"><i class="bi bi-check-circle-fill text-success me-2"></i> {{ _('Tudo do plano Básico') }}</li>
+                        <li class="mb-3"><i class="bi bi-check-circle-fill text-primary me-2"></i> <strong>{{ _('Geração de propostas com IA') }}</strong></li>
+                        <li class="mb-3"><i class="bi bi-check-circle-fill text-primary me-2"></i> <strong>{{ _('Análise de riscos com IA') }}</strong></li>
+                        <li class="mb-3"><i class="bi bi-check-circle-fill text-primary me-2"></i> <strong>{{ _('Relatórios automatizados') }}</strong></li>
+                        <li class="mb-3"><i class="bi bi-check-circle-fill text-primary me-2"></i> <strong>{{ _('Matching projeto-edital') }}</strong></li>
+                        <li class="mb-3"><i class="bi bi-check-circle-fill text-success me-2"></i> {{ _('Anexos em despesas') }}</li>
+                        <li class="mb-3"><i class="bi bi-check-circle-fill text-success me-2"></i> {{ _('Logs de auditoria') }}</li>
+                        <li class="mb-3 text-muted"><i class="bi bi-x-circle me-2"></i> {{ _('API de integração') }}</li>
                     </ul>
                 </div>
                 <div class="card-footer bg-white border-0 pb-4">
                     <a href="{{ url_for('auth.register') }}" class="btn btn-primary w-100 py-2">
-                        Assinar Profissional
+                        {{ _('Assinar Profissional') }}
                     </a>
                 </div>
             </div>
@@ -81,30 +81,30 @@
         <div class="col-lg-4">
             <div class="card h-100 shadow-sm">
                 <div class="card-header bg-dark text-white text-center py-4">
-                    <h4 class="fw-bold mb-0">Enterprise</h4>
-                    <p class="mb-0 opacity-75">Para grandes operacoes de P&D</p>
+                    <h4 class="fw-bold mb-0">{{ _('Enterprise') }}</h4>
+                    <p class="mb-0 opacity-75">{{ _('Para grandes operações de P&D') }}</p>
                 </div>
                 <div class="card-body">
                     <div class="text-center mb-4">
                         <span class="display-4 fw-bold">R$ 1.497</span>
-                        <span class="text-muted">/mes</span>
+                        <span class="text-muted">/{{ _('mês') }}</span>
                     </div>
                     <ul class="list-unstyled">
-                        <li class="mb-3"><i class="bi bi-check-circle-fill text-success me-2"></i> <strong>Projetos ilimitados</strong></li>
-                        <li class="mb-3"><i class="bi bi-check-circle-fill text-success me-2"></i> <strong>Usuarios ilimitados</strong></li>
-                        <li class="mb-3"><i class="bi bi-check-circle-fill text-success me-2"></i> Tudo do plano Profissional</li>
-                        <li class="mb-3"><i class="bi bi-check-circle-fill text-warning me-2"></i> <strong>API de integracao</strong></li>
+                        <li class="mb-3"><i class="bi bi-check-circle-fill text-success me-2"></i> <strong>{{ _('Projetos ilimitados') }}</strong></li>
+                        <li class="mb-3"><i class="bi bi-check-circle-fill text-success me-2"></i> <strong>{{ _('Usuários ilimitados') }}</strong></li>
+                        <li class="mb-3"><i class="bi bi-check-circle-fill text-success me-2"></i> {{ _('Tudo do plano Profissional') }}</li>
+                        <li class="mb-3"><i class="bi bi-check-circle-fill text-warning me-2"></i> <strong>{{ _('API de integração') }}</strong></li>
                         <li class="mb-3"><i class="bi bi-check-circle-fill text-warning me-2"></i> <strong>Single Sign-On (SSO)</strong></li>
-                        <li class="mb-3"><i class="bi bi-check-circle-fill text-warning me-2"></i> <strong>Suporte prioritario 24/7</strong></li>
-                        <li class="mb-3"><i class="bi bi-check-circle-fill text-warning me-2"></i> <strong>Treinamento personalizado</strong></li>
-                        <li class="mb-3"><i class="bi bi-check-circle-fill text-warning me-2"></i> <strong>Consultoria em editais</strong></li>
-                        <li class="mb-3"><i class="bi bi-check-circle-fill text-warning me-2"></i> <strong>Backup dedicado</strong></li>
-                        <li class="mb-3"><i class="bi bi-check-circle-fill text-warning me-2"></i> <strong>SLA garantido 99.9%</strong></li>
+                        <li class="mb-3"><i class="bi bi-check-circle-fill text-warning me-2"></i> <strong>{{ _('Suporte prioritário 24/7') }}</strong></li>
+                        <li class="mb-3"><i class="bi bi-check-circle-fill text-warning me-2"></i> <strong>{{ _('Treinamento personalizado') }}</strong></li>
+                        <li class="mb-3"><i class="bi bi-check-circle-fill text-warning me-2"></i> <strong>{{ _('Consultoria em editais') }}</strong></li>
+                        <li class="mb-3"><i class="bi bi-check-circle-fill text-warning me-2"></i> <strong>{{ _('Backup dedicado') }}</strong></li>
+                        <li class="mb-3"><i class="bi bi-check-circle-fill text-warning me-2"></i> <strong>{{ _('SLA garantido 99.9%') }}</strong></li>
                     </ul>
                 </div>
                 <div class="card-footer bg-white border-0 pb-4">
                     <a href="mailto:contato@orionpd.com.br?subject=Enterprise" class="btn btn-dark w-100 py-2">
-                        Falar com Vendas
+                        {{ _('Falar com Vendas') }}
                     </a>
                 </div>
             </div>
@@ -118,23 +118,23 @@
                 <div class="card-body p-5">
                     <div class="row align-items-center">
                         <div class="col-lg-8">
-                            <h3 class="fw-bold text-primary"><i class="bi bi-building me-2"></i> Licenca Institucional</h3>
-                            <p class="lead mb-3">Para governos estaduais, fundacoes de amparo e agencias de fomento</p>
+                            <h3 class="fw-bold text-primary"><i class="bi bi-building me-2"></i> {{ _('Licença Institucional') }}</h3>
+                            <p class="lead mb-3">{{ _('Para governos estaduais, fundações de amparo e agências de fomento') }}</p>
                             <ul class="list-unstyled mb-0">
-                                <li class="mb-2"><i class="bi bi-check2 text-primary me-2"></i> Licenca para todas as empresas beneficiadas do estado</li>
-                                <li class="mb-2"><i class="bi bi-check2 text-primary me-2"></i> Dashboard consolidado para acompanhamento de projetos</li>
-                                <li class="mb-2"><i class="bi bi-check2 text-primary me-2"></i> Relatórios de impacto e prestacao de contas</li>
-                                <li class="mb-2"><i class="bi bi-check2 text-primary me-2"></i> Integracao com sistemas governamentais</li>
-                                <li class="mb-2"><i class="bi bi-check2 text-primary me-2"></i> Treinamento para equipes e empresas</li>
-                                <li class="mb-2"><i class="bi bi-check2 text-primary me-2"></i> Suporte dedicado e evolucao continua</li>
+                                <li class="mb-2"><i class="bi bi-check2 text-primary me-2"></i> {{ _('Licença para todas as empresas beneficiadas do estado') }}</li>
+                                <li class="mb-2"><i class="bi bi-check2 text-primary me-2"></i> {{ _('Dashboard consolidado para acompanhamento de projetos') }}</li>
+                                <li class="mb-2"><i class="bi bi-check2 text-primary me-2"></i> {{ _('Relatórios de impacto e prestação de contas') }}</li>
+                                <li class="mb-2"><i class="bi bi-check2 text-primary me-2"></i> {{ _('Integração com sistemas governamentais') }}</li>
+                                <li class="mb-2"><i class="bi bi-check2 text-primary me-2"></i> {{ _('Treinamento para equipes e empresas') }}</li>
+                                <li class="mb-2"><i class="bi bi-check2 text-primary me-2"></i> {{ _('Suporte dedicado e evolução contínua') }}</li>
                             </ul>
                         </div>
                         <div class="col-lg-4 text-center mt-4 mt-lg-0">
-                            <p class="text-muted mb-2">A partir de</p>
+                            <p class="text-muted mb-2">{{ _('A partir de') }}</p>
                             <p class="display-5 fw-bold text-primary mb-1">R$ 8.500</p>
-                            <p class="text-muted">/mes</p>
+                            <p class="text-muted">/{{ _('mês') }}</p>
                             <a href="mailto:governo@orionpd.com.br?subject=Licenca Institucional SC" class="btn btn-primary btn-lg">
-                                <i class="bi bi-envelope"></i> Solicitar Proposta
+                                <i class="bi bi-envelope"></i> {{ _('Solicitar Proposta') }}
                             </a>
                         </div>
                     </div>
@@ -146,53 +146,53 @@
     <!-- FAQ Section -->
     <div class="row justify-content-center mb-5">
         <div class="col-lg-8">
-            <h3 class="text-center fw-bold mb-4">Perguntas Frequentes</h3>
+            <h3 class="text-center fw-bold mb-4">{{ _('Perguntas Frequentes') }}</h3>
             <div class="accordion" id="faqAccordion">
                 <div class="accordion-item">
                     <h2 class="accordion-header">
                         <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#faq1">
-                            Como funciona a geração de propostas com IA?
+                            {{ _('Como funciona a geração de propostas com IA?') }}
                         </button>
                     </h2>
                     <div id="faq1" class="accordion-collapse collapse show" data-bs-parent="#faqAccordion">
                         <div class="accordion-body">
-                            A IA analisa os dados do seu projeto e os requisitos da chamada publica para gerar uma proposta estruturada com todas as secoes exigidas (resumo executivo, objetivos, metodologia, cronograma, orçamento, riscos). Voce pode editar e personalizar antes de submeter.
+                            {{ _('A IA analisa os dados do seu projeto e os requisitos da chamada pública para gerar uma proposta estruturada com todas as seções exigidas (resumo executivo, objetivos, metodologia, cronograma, orçamento, riscos). Você pode editar e personalizar antes de submeter.') }}
                         </div>
                     </div>
                 </div>
                 <div class="accordion-item">
                     <h2 class="accordion-header">
                         <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq2">
-                            Posso mudar de plano a qualquer momento?
+                            {{ _('Posso mudar de plano a qualquer momento?') }}
                         </button>
                     </h2>
                     <div id="faq2" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
                         <div class="accordion-body">
-                            Sim! Voce pode fazer upgrade ou downgrade a qualquer momento. O valor sera ajustado proporcionalmente no proximo ciclo de cobranca.
+                            {{ _('Sim! Você pode fazer upgrade ou downgrade a qualquer momento. O valor será ajustado proporcionalmente no próximo ciclo de cobrança.') }}
                         </div>
                     </div>
                 </div>
                 <div class="accordion-item">
                     <h2 class="accordion-header">
                         <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq3">
-                            Os dados dos meus projetos estao seguros?
+                            {{ _('Os dados dos meus projetos estão seguros?') }}
                         </button>
                     </h2>
                     <div id="faq3" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
                         <div class="accordion-body">
-                            Sim. Utilizamos criptografia de ponta a ponta, backups diarios e infraestrutura em nuvem com certificacoes ISO 27001. Cada empresa tem seus dados completamente isolados (multi-tenancy).
+                            {{ _('Sim. Utilizamos criptografia de ponta a ponta, backups diários e infraestrutura em nuvem com certificações ISO 27001. Cada empresa tem seus dados completamente isolados (multi-tenancy).') }}
                         </div>
                     </div>
                 </div>
                 <div class="accordion-item">
                     <h2 class="accordion-header">
                         <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq4">
-                            Como funciona a licenca institucional para o governo?
+                            {{ _('Como funciona a licença institucional para o governo?') }}
                         </button>
                     </h2>
                     <div id="faq4" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
                         <div class="accordion-body">
-                            O governo ou fundacao de amparo contrata a licenca institucional e disponibiliza o acesso gratuito para todas as empresas beneficiadas com recursos de fomento. Isso fortalece o ecossistema de inovacao e facilita a prestacao de contas.
+                            {{ _('O governo ou fundação de amparo contrata a licença institucional e disponibiliza o acesso gratuito para todas as empresas beneficiadas com recursos de fomento. Isso fortalece o ecossistema de inovação e facilita a prestação de contas.') }}
                         </div>
                     </div>
                 </div>
@@ -202,10 +202,10 @@
 
     <!-- CTA Section -->
     <div class="text-center py-5 bg-primary text-white rounded-3">
-        <h3 class="fw-bold mb-3">Pronto para transformar a gestão dos seus projetos de P&D?</h3>
-        <p class="lead mb-4">Comece gratuitamente por 14 dias. Sem cartao de credito.</p>
+        <h3 class="fw-bold mb-3">{{ _('Pronto para transformar a gestão dos seus projetos de P&D?') }}</h3>
+        <p class="lead mb-4">{{ _('Comece gratuitamente por 14 dias. Sem cartão de crédito.') }}</p>
         <a href="{{ url_for('auth.register') }}" class="btn btn-light btn-lg px-5">
-            <i class="bi bi-rocket-takeoff"></i> Comecar Teste Gratuito
+            <i class="bi bi-rocket-takeoff"></i> {{ _('Começar Teste Gratuito') }}
         </a>
     </div>
 </div>
