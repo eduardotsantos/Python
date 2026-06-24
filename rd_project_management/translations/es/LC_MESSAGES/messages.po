@@ -1669,3 +1669,778 @@ msgstr "Comenzar Prueba Gratuita"
 
 msgid "Status"
 msgstr "Estado"
+
+# New strings from agile templates
+msgid "Kanban Board"
+msgstr "Tablero Kanban"
+
+msgid "Não Iniciado"
+msgstr "No Iniciado"
+
+msgid "Concluído"
+msgstr "Completado"
+
+msgid "Solte aqui"
+msgstr "Suelte aquí"
+
+msgid "Não atribuído"
+msgstr "Sin asignar"
+
+msgid "Sprint Ativo"
+msgstr "Sprint Activo"
+
+msgid "Métricas Ágeis"
+msgstr "Métricas Ágiles"
+
+msgid "Selecione um Sprint"
+msgstr "Seleccione un Sprint"
+
+msgid "Velocity Médio"
+msgstr "Velocidad Promedio"
+
+msgid "Tarefas Concluídas"
+msgstr "Tareas Completadas"
+
+msgid "Burndown Chart"
+msgstr "Gráfico Burndown"
+
+msgid "Velocity"
+msgstr "Velocidad"
+
+msgid "Distribuição por Status"
+msgstr "Distribución por Estado"
+
+msgid "Distribuição por Prioridade"
+msgstr "Distribución por Prioridad"
+
+msgid "Carga por Membro"
+msgstr "Carga por Miembro"
+
+msgid "concluídas"
+msgstr "completadas"
+
+msgid "Atribua tarefas aos membros"
+msgstr "Asigne tareas a los miembros"
+
+msgid "Complete sprints para ver o velocity"
+msgstr "Complete sprints para ver la velocidad"
+
+msgid "Selecione um sprint para ver o burndown"
+msgstr "Seleccione un sprint para ver el burndown"
+
+# Sprint form and list strings
+msgid "Editar"
+msgstr "Editar"
+
+msgid "Novo Sprint"
+msgstr "Nuevo Sprint"
+
+msgid "Nome do Sprint"
+msgstr "Nombre del Sprint"
+
+msgid "Objetivo do Sprint"
+msgstr "Objetivo del Sprint"
+
+msgid "O que esperamos alcançar neste sprint?"
+msgstr "¿Qué esperamos lograr en este sprint?"
+
+msgid "Data Início"
+msgstr "Fecha de Inicio"
+
+msgid "Data Fim"
+msgstr "Fecha de Fin"
+
+msgid "Status"
+msgstr "Estado"
+
+msgid "Planejado"
+msgstr "Planificado"
+
+msgid "Ativo"
+msgstr "Activo"
+
+msgid "Dica"
+msgstr "Consejo"
+
+msgid "Sprints típicos duram 1 a 4 semanas. Recomendamos sprints de 2 semanas para maior previsibilidade."
+msgstr "Los sprints típicos duran de 1 a 4 semanas. Recomendamos sprints de 2 semanas para mayor predictibilidad."
+
+msgid "Cancelar"
+msgstr "Cancelar"
+
+msgid "Salvar"
+msgstr "Guardar"
+
+msgid "Criar Sprint"
+msgstr "Crear Sprint"
+
+msgid "Nenhum Sprint Criado"
+msgstr "Ningún Sprint Creado"
+
+msgid "Crie seu primeiro sprint para organizar as tarefas do projeto."
+msgstr "Cree su primer sprint para organizar las tareas del proyecto."
+
+msgid "Criar Primeiro Sprint"
+msgstr "Crear Primer Sprint"
+
+msgid "Tarefas"
+msgstr "Tareas"
+
+msgid "concluído"
+msgstr "completado"
+
+msgid "Iniciar"
+msgstr "Iniciar"
+
+msgid "Excluir sprint"
+msgstr "Eliminar sprint"
+
+# New flash messages from auth.py
+msgid "Login realizado com sucesso!"
+msgstr "¡Inicio de sesión exitoso!"
+
+msgid "Logout realizado com sucesso."
+msgstr "Sesión cerrada exitosamente."
+
+msgid "Email/usuário ou senha incorretos."
+msgstr "Email/usuario o contraseña incorrectos."
+
+msgid "Cadastro realizado com sucesso! Faça login."
+msgstr "¡Registro exitoso! Inicie sesión."
+
+msgid "Sua conta está desativada. Entre em contato com o administrador."
+msgstr "Su cuenta está desactivada. Contacte al administrador."
+
+msgid "Sua empresa está com a licença expirada ou inativa. Entre em contato com o suporte."
+msgstr "La licencia de su empresa ha vencido o está inactiva. Contacte al soporte."
+
+# New flash messages from users.py
+msgid "Acesso restrito a administradores."
+msgstr "Acceso restringido a administradores."
+
+msgid "Limite de usuários atingido (%(max)s). Entre em contato com o suporte."
+msgstr "Límite de usuarios alcanzado (%(max)s). Contacte al soporte."
+
+msgid "Usuário \"%(name)s\" criado com sucesso!"
+msgstr "¡Usuario \"%(name)s\" creado con éxito!"
+
+msgid "Usuário \"%(name)s\" atualizado com sucesso!"
+msgstr "¡Usuario \"%(name)s\" actualizado con éxito!"
+
+msgid "Usuário \"%(name)s\" excluído com sucesso!"
+msgstr "¡Usuario \"%(name)s\" eliminado con éxito!"
+
+msgid "Usuário \"%(name)s\" %(status)s com sucesso!"
+msgstr "¡Usuario \"%(name)s\" %(status)s con éxito!"
+
+msgid "Nome e email são obrigatórios."
+msgstr "Nombre y email son obligatorios."
+
+msgid "Email já cadastrado."
+msgstr "Email ya registrado."
+
+msgid "Nome de usuário já existe."
+msgstr "El nombre de usuario ya existe."
+
+msgid "Este nome de usuário já está em uso."
+msgstr "Este nombre de usuario ya está en uso."
+
+msgid "Este email já está cadastrado."
+msgstr "Este email ya está registrado."
+
+msgid "A senha deve ter pelo menos 6 caracteres."
+msgstr "La contraseña debe tener al menos 6 caracteres."
+
+msgid "Usuário não encontrado."
+msgstr "Usuario no encontrado."
+
+msgid "Não é possível excluir o último administrador."
+msgstr "No es posible eliminar el último administrador."
+
+msgid "Este usuário possui dados vinculados (timesheets, despesas ou projetos). Desative o usuário ao invés de excluir."
+msgstr "Este usuario tiene datos vinculados (timesheets, gastos o proyectos). Desactive el usuario en lugar de eliminarlo."
+
+msgid "Você não pode excluir sua própria conta."
+msgstr "No puede eliminar su propia cuenta."
+
+msgid "Você não pode desativar sua própria conta."
+msgstr "No puede desactivar su propia cuenta."
+
+msgid "Não é possível remover o papel de administrador do último admin."
+msgstr "No es posible quitar el rol de administrador al último admin."
+
+msgid "Senha atual incorreta."
+msgstr "Contraseña actual incorrecta."
+
+msgid "A nova senha deve ter pelo menos 6 caracteres."
+msgstr "La nueva contraseña debe tener al menos 6 caracteres."
+
+msgid "A confirmação da nova senha não confere."
+msgstr "La confirmación de la nueva contraseña no coincide."
+
+msgid "Senha alterada com sucesso!"
+msgstr "¡Contraseña cambiada con éxito!"
+
+msgid "Perfil atualizado com sucesso!"
+msgstr "¡Perfil actualizado con éxito!"
+
+# New flash messages from resources.py
+msgid "Recurso adicionado com sucesso!"
+msgstr "¡Recurso agregado con éxito!"
+
+msgid "Recurso atualizado com sucesso!"
+msgstr "¡Recurso actualizado con éxito!"
+
+msgid "Recurso excluído com sucesso!"
+msgstr "¡Recurso eliminado con éxito!"
+
+# New flash messages from compliance.py
+msgid "Risco registrado com sucesso!"
+msgstr "¡Riesgo registrado con éxito!"
+
+msgid "Risco atualizado com sucesso!"
+msgstr "¡Riesgo actualizado con éxito!"
+
+msgid "Risco excluído com sucesso!"
+msgstr "¡Riesgo eliminado con éxito!"
+
+msgid "Pendência registrada com sucesso!"
+msgstr "¡Pendiente registrado con éxito!"
+
+msgid "Pendência atualizada com sucesso!"
+msgstr "¡Pendiente actualizado con éxito!"
+
+msgid "Pendência excluída com sucesso!"
+msgstr "¡Pendiente eliminado con éxito!"
+
+msgid "Não conformidade registrada com sucesso!"
+msgstr "¡No conformidad registrada con éxito!"
+
+msgid "Não conformidade atualizada com sucesso!"
+msgstr "¡No conformidad actualizada con éxito!"
+
+msgid "Não conformidade excluída com sucesso!"
+msgstr "¡No conformidad eliminada con éxito!"
+
+msgid "Bug registrado com sucesso!"
+msgstr "¡Bug registrado con éxito!"
+
+msgid "Bug atualizado com sucesso!"
+msgstr "¡Bug actualizado con éxito!"
+
+msgid "Bug excluído com sucesso!"
+msgstr "¡Bug eliminado con éxito!"
+
+msgid "Ação corretiva registrada com sucesso!"
+msgstr "¡Acción correctiva registrada con éxito!"
+
+msgid "Ação corretiva atualizada com sucesso!"
+msgstr "¡Acción correctiva actualizada con éxito!"
+
+msgid "Ação corretiva excluída com sucesso!"
+msgstr "¡Acción correctiva eliminada con éxito!"
+
+# New flash messages from projects.py
+msgid "Projeto criado com sucesso!"
+msgstr "¡Proyecto creado con éxito!"
+
+msgid "Projeto atualizado com sucesso!"
+msgstr "¡Proyecto actualizado con éxito!"
+
+msgid "Projeto excluído com sucesso!"
+msgstr "¡Proyecto eliminado con éxito!"
+
+msgid "Código do projeto já existe."
+msgstr "El código de proyecto ya existe."
+
+msgid "Código do projeto já existe nesta empresa."
+msgstr "El código de proyecto ya existe en esta empresa."
+
+msgid "Código e título são obrigatórios."
+msgstr "Código y título son obligatorios."
+
+msgid "Selecione uma empresa para criar o projeto."
+msgstr "Seleccione una empresa para crear el proyecto."
+
+msgid "Limite de projetos atingido (%(max)s). Entre em contato com o suporte."
+msgstr "Límite de proyectos alcanzado (%(max)s). Contacte al soporte."
+
+msgid "Tipo de arquivo não permitido. Use PDF, Word, Excel ou PowerPoint."
+msgstr "Tipo de archivo no permitido. Use PDF, Word, Excel o PowerPoint."
+
+msgid "Limite de %(max)s documentos por projeto atingido."
+msgstr "Límite de %(max)s documentos por proyecto alcanzado."
+
+msgid "Documento \"%(name)s\" enviado com sucesso!"
+msgstr "¡Documento \"%(name)s\" enviado con éxito!"
+
+msgid "Documento não encontrado."
+msgstr "Documento no encontrado."
+
+msgid "Documento \"%(name)s\" excluído com sucesso!"
+msgstr "¡Documento \"%(name)s\" eliminado con éxito!"
+
+msgid "Stakeholder \"%(name)s\" adicionado com sucesso!"
+msgstr "¡Stakeholder \"%(name)s\" agregado con éxito!"
+
+msgid "Stakeholder \"%(name)s\" atualizado com sucesso!"
+msgstr "¡Stakeholder \"%(name)s\" actualizado con éxito!"
+
+msgid "Stakeholder \"%(name)s\" excluído com sucesso!"
+msgstr "¡Stakeholder \"%(name)s\" eliminado con éxito!"
+
+msgid "Stakeholder não encontrado."
+msgstr "Stakeholder no encontrado."
+
+msgid "TRL atualizado de %(from_trl)s para %(to_trl)s!"
+msgstr "¡TRL actualizado de %(from_trl)s a %(to_trl)s!"
+
+msgid "TRL não foi alterado."
+msgstr "El TRL no fue cambiado."
+
+msgid "Arquivo deve ser XML do MS Project."
+msgstr "El archivo debe ser XML de MS Project."
+
+msgid "Arquivo não encontrado no servidor."
+msgstr "Archivo no encontrado en el servidor."
+
+msgid "Erro ao importar arquivo: %(err)s"
+msgstr "Error al importar archivo: %(err)s"
+
+msgid "Nenhum arquivo selecionado."
+msgstr "Ningún archivo seleccionado."
+
+msgid "Tipo de arquivo não permitido. Use PDF, JPG, PNG ou Word."
+msgstr "Tipo de archivo no permitido. Use PDF, JPG, PNG o Word."
+
+msgid "Anexo não encontrado."
+msgstr "Archivo adjunto no encontrado."
+
+msgid "Anexo excluído com sucesso!"
+msgstr "¡Archivo adjunto eliminado con éxito!"
+
+msgid "Funcionalidade de exportação Excel não disponível. Instale openpyxl."
+msgstr "Funcionalidad de exportación Excel no disponible. Instale openpyxl."
+
+# New flash messages from programs.py
+msgid "Programa criado com sucesso!"
+msgstr "¡Programa creado con éxito!"
+
+msgid "Programa atualizado com sucesso!"
+msgstr "¡Programa actualizado con éxito!"
+
+msgid "Programa excluido com sucesso!"
+msgstr "¡Programa eliminado con éxito!"
+
+msgid "Superadmins devem acessar via contexto de uma empresa para criar programas."
+msgstr "Los superadmins deben acceder a través del contexto de una empresa para crear programas."
+
+msgid "Projeto %(code)s adicionado ao programa!"
+msgstr "¡Proyecto %(code)s agregado al programa!"
+
+msgid "Projeto %(code)s removido do programa!"
+msgstr "¡Proyecto %(code)s removido del programa!"
+
+# New flash messages from expenses.py
+msgid "Despesa adicionada com sucesso!"
+msgstr "¡Gasto agregado con éxito!"
+
+msgid "Despesa atualizada com sucesso!"
+msgstr "¡Gasto actualizado con éxito!"
+
+msgid "Despesa excluída com sucesso!"
+msgstr "¡Gasto eliminado con éxito!"
+
+msgid "Limite de %(max)s anexos por despesa atingido."
+msgstr "Límite de %(max)s archivos adjuntos por gasto alcanzado."
+
+msgid "%(type)s enviado com sucesso!"
+msgstr "¡%(type)s enviado con éxito!"
+
+# New flash messages from agile.py
+msgid "Sprint \"%(name)s\" criado com sucesso!"
+msgstr "¡Sprint \"%(name)s\" creado con éxito!"
+
+msgid "Sprint atualizado com sucesso!"
+msgstr "¡Sprint actualizado con éxito!"
+
+msgid "Sprint excluído com sucesso!"
+msgstr "¡Sprint eliminado con éxito!"
+
+msgid "Sprint \"%(name)s\" ativado!"
+msgstr "¡Sprint \"%(name)s\" activado!"
+
+# New flash messages from schedule.py
+msgid "Marco adicionado com sucesso!"
+msgstr "¡Hito agregado con éxito!"
+
+msgid "Marco atualizado com sucesso!"
+msgstr "¡Hito actualizado con éxito!"
+
+msgid "Marco excluído com sucesso!"
+msgstr "¡Hito eliminado con éxito!"
+
+msgid "A soma das alocações não pode ultrapassar 100%!"
+msgstr "¡La suma de las asignaciones no puede superar el 100%!"
+
+msgid "%(count)s marcos importados com sucesso!"
+msgstr "¡%(count)s hitos importados con éxito!"
+
+msgid "Formato invalido. Use arquivo XML do MS Project."
+msgstr "Formato inválido. Use archivo XML de MS Project."
+
+# New flash messages from timesheet.py
+msgid "Registro de horas adicionado com sucesso!"
+msgstr "¡Registro de horas agregado con éxito!"
+
+msgid "Registro atualizado com sucesso!"
+msgstr "¡Registro actualizado con éxito!"
+
+msgid "Registro excluído com sucesso!"
+msgstr "¡Registro eliminado con éxito!"
+
+msgid "%(count)s registros importados com sucesso!"
+msgstr "¡%(count)s registros importados con éxito!"
+
+msgid "%(count)s registros importados com sucesso! %(errors)s linhas com erro foram ignoradas."
+msgstr "¡%(count)s registros importados con éxito! %(errors)s líneas con error fueron ignoradas."
+
+msgid "... e mais %(count)s erros"
+msgstr "... y %(count)s errores más"
+
+msgid "Formato inválido. Use arquivos Excel (.xlsx ou .xls)."
+msgstr "Formato inválido. Use archivos Excel (.xlsx o .xls)."
+
+msgid "Erro ao importar: %(error)s"
+msgstr "Error al importar: %(error)s"
+
+# New flash messages from meeting_minutes.py
+msgid "Ata criada com sucesso!"
+msgstr "¡Acta de reunión creada con éxito!"
+
+msgid "Ata atualizada com sucesso!"
+msgstr "¡Acta de reunión actualizada con éxito!"
+
+msgid "Ata excluída com sucesso!"
+msgstr "¡Acta de reunión eliminada con éxito!"
+
+msgid "Briefing enviado para %(count)s destinatário(s)."
+msgstr "Briefing enviado a %(count)s destinatario(s)."
+
+msgid "Nenhum destinatário encontrado. Adicione emails manualmente."
+msgstr "Ningún destinatario encontrado. Agregue emails manualmente."
+
+msgid "Envio de email não está habilitado para este tenant. Configure em Configurações."
+msgstr "El envío de email no está habilitado para este tenant. Configure en Ajustes."
+
+msgid "Erro ao enviar email: %(error)s"
+msgstr "Error al enviar email: %(error)s"
+
+msgid "Erro ao gerar PDF: %(error)s"
+msgstr "Error al generar PDF: %(error)s"
+
+msgid "Módulo de PDF não instalado. Execute: pip install reportlab"
+msgstr "Módulo PDF no instalado. Ejecute: pip install reportlab"
+
+msgid "Título é obrigatório."
+msgstr "El título es obligatorio."
+
+# New flash messages from public_calls.py
+msgid "Chamada pública cadastrada com sucesso!"
+msgstr "¡Convocatoria pública registrada con éxito!"
+
+msgid "Chamada atualizada com sucesso!"
+msgstr "¡Convocatoria actualizada con éxito!"
+
+msgid "Chamada removida com sucesso!"
+msgstr "¡Convocatoria eliminada con éxito!"
+
+msgid "Projeto vinculado com sucesso!"
+msgstr "¡Proyecto vinculado con éxito!"
+
+msgid "Este projeto já está vinculado a esta chamada."
+msgstr "Este proyecto ya está vinculado a esta convocatoria."
+
+msgid "Selecione um projeto para vincular."
+msgstr "Seleccione un proyecto para vincular."
+
+msgid "Projeto não encontrado."
+msgstr "Proyecto no encontrado."
+
+msgid "Vínculo não encontrado."
+msgstr "Vínculo no encontrado."
+
+msgid "Vínculo removido com sucesso!"
+msgstr "¡Vínculo eliminado con éxito!"
+
+msgid "Você não tem permissão para editar esta chamada."
+msgstr "No tiene permiso para editar esta convocatoria."
+
+msgid "Você não tem permissão para excluir esta chamada."
+msgstr "No tiene permiso para eliminar esta convocatoria."
+
+msgid "Apenas administradores do sistema podem excluir chamadas globais."
+msgstr "Solo los administradores del sistema pueden eliminar convocatorias globales."
+
+msgid "Sincronização concluída! FINEP: %(finep)s, BNDES: %(bndes)s, FAPESC: %(fapesc)s chamadas."
+msgstr "¡Sincronización completa! FINEP: %(finep)s, BNDES: %(bndes)s, FAPESC: %(fapesc)s convocatorias."
+
+msgid "Sincronização parcial. FINEP: %(finep)s, BNDES: %(bndes)s, FAPESC: %(fapesc)s chamadas. Erros: %(errors)s"
+msgstr "Sincronización parcial. FINEP: %(finep)s, BNDES: %(bndes)s, FAPESC: %(fapesc)s convocatorias. Errores: %(errors)s"
+
+msgid "Auditoria disponivel apenas para projetos vinculados a chamadas publicas."
+msgstr "Auditoría disponible solo para proyectos vinculados a convocatorias públicas."
+
+# New flash messages from tenants.py
+msgid "Empresa \"%(name)s\" criada com sucesso!"
+msgstr "¡Empresa \"%(name)s\" creada con éxito!"
+
+msgid "Empresa \"%(name)s\" e usuário administrador criados com sucesso!"
+msgstr "¡Empresa \"%(name)s\" y usuario administrador creados con éxito!"
+
+msgid "Empresa \"%(name)s\" atualizado com sucesso!"
+msgstr "¡Empresa \"%(name)s\" actualizada con éxito!"
+
+msgid "Empresa \"%(name)s\" excluída com sucesso!"
+msgstr "¡Empresa \"%(name)s\" eliminada con éxito!"
+
+msgid "Empresa \"%(name)s\" %(status)s com sucesso!"
+msgstr "¡Empresa \"%(name)s\" %(status)s con éxito!"
+
+msgid "Empresa atualizada com sucesso!"
+msgstr "¡Empresa actualizada con éxito!"
+
+msgid "Já existe uma empresa com este identificador."
+msgstr "Ya existe una empresa con este identificador."
+
+msgid "Nome da empresa é obrigatório."
+msgstr "El nombre de la empresa es obligatorio."
+
+msgid "Já existe um usuário com este e-mail nesta empresa."
+msgstr "Ya existe un usuario con este email en esta empresa."
+
+msgid "Limite de %(max)s usuários atingido para esta empresa."
+msgstr "Límite de %(max)s usuarios alcanzado para esta empresa."
+
+msgid "Não é possível excluir a empresa \"%(name)s\". Ela possui %(users)s usuários e %(projects)s projetos. Remova os dados primeiro."
+msgstr "No es posible eliminar la empresa \"%(name)s\". Tiene %(users)s usuarios y %(projects)s proyectos. Elimine los datos primero."
+
+msgid "Licença renovada até %(date)s!"
+msgstr "¡Licencia renovada hasta %(date)s!"
+
+# New flash messages from audit.py
+msgid "Acesso negado. Apenas administradores podem visualizar logs de auditoria."
+msgstr "Acceso denegado. Solo los administradores pueden ver los registros de auditoría."
+
+# New flash messages from pmo_agents.py
+msgid "Agente não encontrado."
+msgstr "Agente no encontrado."
+
+msgid "Geracao de propostas disponivel apenas nos planos Profissional e Enterprise."
+msgstr "Generación de propuestas disponible solo en los planes Profesional y Enterprise."
+
+# New flash messages from ai.py / general
+msgid "Erro ao processar arquivo: %(error)s"
+msgstr "Error al procesar archivo: %(error)s"
+
+msgid "Erro ao processar XML: %(error)s"
+msgstr "Error al procesar XML: %(error)s"
+
+msgid "Todos os campos obrigatórios devem ser preenchidos."
+msgstr "Todos los campos obligatorios deben ser completados."
+
+msgid "Todos os campos são obrigatórios."
+msgstr "Todos los campos son obligatorios."
+
+msgid "As senhas não coincidem."
+msgstr "Las contraseñas no coinciden."
+
+# Pricing page strings
+msgid "Planos e Preços"
+msgstr "Planes y Precios"
+
+msgid "Gestão de P&D"
+msgstr "Gestión de I+D"
+
+msgid "Escolha o plano ideal para sua empresa inovar com recursos públicos"
+msgstr "Elija el plan ideal para que su empresa innove con recursos públicos"
+
+msgid "Básico"
+msgstr "Básico"
+
+msgid "Para empresas iniciando em P&D"
+msgstr "Para empresas que comienzan en I+D"
+
+msgid "mês"
+msgstr "mes"
+
+msgid "Até"
+msgstr "Hasta"
+
+msgid "projetos"
+msgstr "proyectos"
+
+msgid "ativos"
+msgstr "activos"
+
+msgid "usuários"
+msgstr "usuarios"
+
+msgid "Gestão de despesas e orçamento"
+msgstr "Gestión de gastos y presupuesto"
+
+msgid "Controle de timesheet"
+msgstr "Control de timesheet"
+
+msgid "Monitoramento de chamadas públicas"
+msgstr "Monitoreo de convocatorias públicas"
+
+msgid "Importação Excel de timesheet"
+msgstr "Importación Excel de timesheet"
+
+msgid "Chat com IA para dúvidas"
+msgstr "Chat con IA para dudas"
+
+msgid "Geração de propostas com IA"
+msgstr "Generación de propuestas con IA"
+
+msgid "Análise avançada de riscos"
+msgstr "Análisis avanzado de riesgos"
+
+msgid "Suporte prioritário"
+msgstr "Soporte prioritario"
+
+msgid "Começar Agora"
+msgstr "Comenzar Ahora"
+
+msgid "MAIS POPULAR"
+msgstr "MÁS POPULAR"
+
+msgid "Profissional"
+msgstr "Profesional"
+
+msgid "Para empresas com projetos ativos"
+msgstr "Para empresas con proyectos activos"
+
+msgid "Tudo do plano Básico"
+msgstr "Todo del plan Básico"
+
+msgid "Análise de riscos com IA"
+msgstr "Análisis de riesgos con IA"
+
+msgid "Relatórios automatizados"
+msgstr "Informes automatizados"
+
+msgid "Matching projeto-edital"
+msgstr "Coincidencia proyecto-convocatoria"
+
+msgid "Anexos em despesas"
+msgstr "Archivos adjuntos en gastos"
+
+msgid "Logs de auditoria"
+msgstr "Registros de auditoría"
+
+msgid "API de integração"
+msgstr "API de integración"
+
+msgid "Assinar Profissional"
+msgstr "Suscribirse al Profesional"
+
+msgid "Enterprise"
+msgstr "Enterprise"
+
+msgid "Para grandes operações de P&D"
+msgstr "Para grandes operaciones de I+D"
+
+msgid "Projetos ilimitados"
+msgstr "Proyectos ilimitados"
+
+msgid "Usuários ilimitados"
+msgstr "Usuarios ilimitados"
+
+msgid "Tudo do plano Profissional"
+msgstr "Todo del plan Profesional"
+
+msgid "Suporte prioritário 24/7"
+msgstr "Soporte prioritario 24/7"
+
+msgid "Treinamento personalizado"
+msgstr "Capacitación personalizada"
+
+msgid "Consultoria em editais"
+msgstr "Consultoría en convocatorias"
+
+msgid "Backup dedicado"
+msgstr "Respaldo dedicado"
+
+msgid "SLA garantido 99.9%"
+msgstr "SLA garantizado 99.9%"
+
+msgid "Falar com Vendas"
+msgstr "Hablar con Ventas"
+
+msgid "Licença Institucional"
+msgstr "Licencia Institucional"
+
+msgid "Para governos estaduais, fundações de amparo e agências de fomento"
+msgstr "Para gobiernos estatales, fundaciones de apoyo y agencias de fomento"
+
+msgid "Licença para todas as empresas beneficiadas do estado"
+msgstr "Licencia para todas las empresas beneficiadas del estado"
+
+msgid "Dashboard consolidado para acompanhamento de projetos"
+msgstr "Panel consolidado para seguimiento de proyectos"
+
+msgid "Relatórios de impacto e prestação de contas"
+msgstr "Informes de impacto y rendición de cuentas"
+
+msgid "Integração com sistemas governamentais"
+msgstr "Integración con sistemas gubernamentales"
+
+msgid "Treinamento para equipes e empresas"
+msgstr "Capacitación para equipos y empresas"
+
+msgid "Suporte dedicado e evolução contínua"
+msgstr "Soporte dedicado y evolución continua"
+
+msgid "A partir de"
+msgstr "Desde"
+
+msgid "Solicitar Proposta"
+msgstr "Solicitar Propuesta"
+
+msgid "Perguntas Frequentes"
+msgstr "Preguntas Frecuentes"
+
+msgid "Como funciona a geração de propostas com IA?"
+msgstr "¿Cómo funciona la generación de propuestas con IA?"
+
+msgid "A IA analisa os dados do seu projeto e os requisitos da chamada pública para gerar uma proposta estruturada com todas as seções exigidas (resumo executivo, objetivos, metodologia, cronograma, orçamento, riscos). Você pode editar e personalizar antes de submeter."
+msgstr "La IA analiza los datos de su proyecto y los requisitos de la convocatoria pública para generar una propuesta estructurada con todas las secciones requeridas (resumen ejecutivo, objetivos, metodología, cronograma, presupuesto, riesgos). Puede editar y personalizar antes de enviar."
+
+msgid "Posso mudar de plano a qualquer momento?"
+msgstr "¿Puedo cambiar de plan en cualquier momento?"
+
+msgid "Sim! Você pode fazer upgrade ou downgrade a qualquer momento. O valor será ajustado proporcionalmente no próximo ciclo de cobrança."
+msgstr "¡Sí! Puede hacer upgrade o downgrade en cualquier momento. El monto se ajustará proporcionalmente en el siguiente ciclo de facturación."
+
+msgid "Os dados dos meus projetos estão seguros?"
+msgstr "¿Están seguros los datos de mis proyectos?"
+
+msgid "Sim. Utilizamos criptografia de ponta a ponta, backups diários e infraestrutura em nuvem com certificações ISO 27001. Cada empresa tem seus dados completamente isolados (multi-tenancy)."
+msgstr "Sí. Utilizamos cifrado de extremo a extremo, copias de seguridad diarias e infraestructura en la nube con certificaciones ISO 27001. Cada empresa tiene sus datos completamente aislados (multi-tenancy)."
+
+msgid "Como funciona a licença institucional para o governo?"
+msgstr "¿Cómo funciona la licencia institucional para el gobierno?"
+
+msgid "O governo ou fundação de amparo contrata a licença institucional e disponibiliza o acesso gratuito para todas as empresas beneficiadas com recursos de fomento. Isso fortalece o ecossistema de inovação e facilita a prestação de contas."
+msgstr "El gobierno o fundación de apoyo contrata la licencia institucional y proporciona acceso gratuito a todas las empresas beneficiadas con recursos de fomento. Esto fortalece el ecosistema de innovación y facilita la rendición de cuentas."
+
+msgid "Pronto para transformar a gestão dos seus projetos de P&D?"
+msgstr "¿Listo para transformar la gestión de sus proyectos de I+D?"
+
+msgid "Comece gratuitamente por 14 dias. Sem cartão de crédito."
+msgstr "Comience gratis por 14 días. Sin tarjeta de crédito."
+
+msgid "Começar Teste Gratuito"
+msgstr "Comenzar Prueba Gratuita"
