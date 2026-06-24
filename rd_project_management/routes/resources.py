@@ -1,5 +1,6 @@
 from flask import Blueprint, render_template, redirect, url_for, flash, request
 from flask_login import login_required
+from flask_babel import _
 from sqlalchemy import func
 from models import db, Resource, Project, Timesheet
 from services.tenant_utils import tenant_required, ensure_tenant_access, get_current_tenant_id

@@ -1,6 +1,6 @@
 from flask import Blueprint, render_template, redirect, url_for, flash, request, session
 from flask_login import login_required, current_user
-from flask_babel import refresh
+from flask_babel import refresh, _
 from functools import wraps
 from models import db, User
 from services.tenant_utils import tenant_required, admin_required, get_current_tenant_id
@@ -21,7 +21,7 @@ def tenant_admin_required(f):
 
         # Tenant admins can manage users
         if current_user.role not in ['admin', 'manager']:
-            flash('Acesso restrito a administradores.', 'danger')
+            flash(_('Acesso restrito a administradores.'), 'danger')
             return redirect(url_for('projects.list_projects'))
 
         return f(*args, **kwargs)
@@ -84,7 +84,7 @@ def create_user():
 
     # Check user limit for tenant
     if tenant_id and current_user.tenant and not current_user.tenant.can_add_user():
-        flash(f'Limite de usuários atingido ({current_user.tenant.max_users}). Entre em contato com o suporte.', 'warning')
+        flash(_('Limite de usuários atingido (%(max)s). Entre em contato com o suporte.', max=current_user.tenant.max_users), 'warning')
         return redirect(url_for('users.list_users'))
 
     if request.method == 'POST':
@@ -101,11 +101,11 @@ def create_user():
 
         # Validations
         if not username or not email or not full_name or not password:
-            flash('Todos os campos obrigatórios devem ser preenchidos.', 'danger')
+            flash(_('Todos os campos obrigatórios devem ser preenchidos.'), 'danger')
             return render_template('users/form.html', user=None)
 
         if len(password) < 6:
-            flash('A senha deve ter pelo menos 6 caracteres.', 'danger')
+            flash(_('A senha deve ter pelo menos 6 caracteres.'), 'danger')
             return render_template('users/form.html', user=None)
 
         # Check if username exists in tenant
@@ -114,7 +114,7 @@ def create_user():
         else:
             existing = User.query.filter_by(username=username).first()
         if existing:
-            flash('Este nome de usuário já está em uso.', 'danger')
+            flash(_('Este nome de usuário já está em uso.'), 'danger')
             return render_template('users/form.html', user=None)
 
         # Check if email exists in tenant
@@ -123,7 +123,7 @@ def create_user():
         else:
             existing = User.query.filter_by(email=email).first()
         if existing:
-            flash('Este email já está cadastrado.', 'danger')
+            flash(_('Este email já está cadastrado.'), 'danger')
             return render_template('users/form.html', user=None)
 
         language = request.form.get('language', 'pt_BR')
@@ -146,7 +146,7 @@ def create_user():
 
         db.session.add(user)
         db.session.commit()
-        flash(f'Usuário "{full_name}" criado com sucesso!', 'success')
+        flash(_('Usuário "%(name)s" criado com sucesso!', name=full_name), 'success')
         return redirect(url_for('users.list_users'))
 
     return render_template('users/form.html', user=None)
@@ -163,7 +163,7 @@ def view_user(user_id):
     # Check tenant access
     tenant_id = get_current_tenant_id()
     if tenant_id and user.tenant_id != tenant_id:
-        flash('Usuário não encontrado.', 'danger')
+        flash(_('Usuário não encontrado.'), 'danger')
         return redirect(url_for('users.list_users'))
 
     # Count user activities
@@ -189,7 +189,7 @@ def edit_user(user_id):
     # Check tenant access
     tenant_id = get_current_tenant_id()
     if tenant_id and user.tenant_id != tenant_id:
-        flash('Usuário não encontrado.', 'danger')
+        flash(_('Usuário não encontrado.'), 'danger')
         return redirect(url_for('users.list_users'))
 
     if request.method == 'POST':
@@ -206,7 +206,7 @@ def edit_user(user_id):
 
         # Validations
         if not username or not email or not full_name:
-            flash('Todos os campos obrigatórios devem ser preenchidos.', 'danger')
+            flash(_('Todos os campos obrigatórios devem ser preenchidos.'), 'danger')
             return render_template('users/form.html', user=user)
 
         # Check if username exists (excluding current user)
@@ -215,7 +215,7 @@ def edit_user(user_id):
         else:
             existing = User.query.filter_by(username=username).first()
         if existing and existing.id != user.id:
-            flash('Este nome de usuário já está em uso.', 'danger')
+            flash(_('Este nome de usuário já está em uso.'), 'danger')
             return render_template('users/form.html', user=user)
 
         # Check if email exists (excluding current user)
@@ -224,19 +224,19 @@ def edit_user(user_id):
         else:
             existing = User.query.filter_by(email=email).first()
         if existing and existing.id != user.id:
-            flash('Este email já está cadastrado.', 'danger')
+            flash(_('Este email já está cadastrado.'), 'danger')
             return render_template('users/form.html', user=user)
 
         # Prevent removing the last admin in tenant
         if user.role == 'admin' and role != 'admin':
             admin_count = User.query.filter_by(tenant_id=tenant_id, role='admin').count() if tenant_id else User.query.filter_by(role='admin').count()
             if admin_count <= 1:
-                flash('Não é possível remover o papel de administrador do último admin.', 'danger')
+                flash(_('Não é possível remover o papel de administrador do último admin.'), 'danger')
                 return render_template('users/form.html', user=user)
 
         # Prevent deactivating self
         if user.id == current_user.id and not active:
-            flash('Você não pode desativar sua própria conta.', 'danger')
+            flash(_('Você não pode desativar sua própria conta.'), 'danger')
             return render_template('users/form.html', user=user)
 
         user.username = username
