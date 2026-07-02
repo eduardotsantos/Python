@@ -6,6 +6,8 @@ import ssl
 import logging
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
+from email.header import Header
+from email.utils import formataddr, parseaddr
 
 logger = logging.getLogger(__name__)
 
@@ -54,9 +56,19 @@ def send_email_via_tenant(tenant, to_email, subject, html_body, text_body=None):
 
     sender = tenant.mail_default_sender or tenant.mail_username
 
+    # Headers must be RFC 2047-encoded when they contain non-ASCII characters
+    # (e.g. "Redefinição de Senha"), otherwise smtplib fails with
+    # "'ascii' codec can't encode characters"
+    sender_name, sender_addr = parseaddr(sender)
+    if not sender_addr:
+        sender_addr = tenant.mail_username
+
     msg = MIMEMultipart('alternative')
-    msg['Subject'] = subject
-    msg['From'] = sender
+    msg['Subject'] = Header(subject, 'utf-8')
+    if sender_name:
+        msg['From'] = formataddr((str(Header(sender_name, 'utf-8')), sender_addr))
+    else:
+        msg['From'] = sender_addr
     msg['To'] = to_email
 
     if text_body:
@@ -79,7 +91,7 @@ def send_email_via_tenant(tenant, to_email, subject, html_body, text_body=None):
         try:
             server = _open_smtp(host, port, ssl_mode, tls_mode)
             server.login(tenant.mail_username, tenant.mail_password)
-            server.sendmail(sender, [to_email], msg.as_string())
+            server.sendmail(sender_addr, [to_email], msg.as_string())
             server.quit()
             mode = 'SSL' if ssl_mode else ('STARTTLS' if tls_mode else 'plain')
             logger.info(f"Email sent to {to_email} via tenant {tenant.name} ({host}:{port} {mode})")
