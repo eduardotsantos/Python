@@ -1,3 +1,5 @@
+import secrets
+from datetime import datetime, timedelta
 from flask import Blueprint, render_template, redirect, url_for, flash, request, session
 from flask_login import login_user, logout_user, login_required, current_user
 from flask_babel import refresh
@@ -121,6 +123,70 @@ def logout():
     logout_user()
     flash('Logout realizado com sucesso.', 'info')
     return redirect(url_for('auth.login'))
+
+
+@auth_bp.route('/forgot-password', methods=['GET', 'POST'])
+def forgot_password():
+    if current_user.is_authenticated:
+        return redirect(url_for('home.dashboard'))
+
+    if request.method == 'POST':
+        email_input = request.form.get('email', '').strip()
+        user = User.query.filter_by(email=email_input, active=True).first()
+
+        if user:
+            token = secrets.token_urlsafe(32)
+            user.password_reset_token = token
+            user.password_reset_expires = datetime.utcnow() + timedelta(hours=1)
+            db.session.commit()
+
+            reset_url = url_for('auth.reset_password', token=token, _external=True)
+            from services.email_service import send_password_reset_email
+            success, error = send_password_reset_email(user, reset_url)
+            if not success:
+                flash(f'Erro ao enviar email: {error}. Contate o administrador.', 'warning')
+            else:
+                flash('Se este email estiver cadastrado, você receberá um link para redefinir sua senha.', 'info')
+        else:
+            # Always show the same message to prevent email enumeration
+            flash('Se este email estiver cadastrado, você receberá um link para redefinir sua senha.', 'info')
+
+        return redirect(url_for('auth.login'))
+
+    return render_template('auth/forgot_password.html')
+
+
+@auth_bp.route('/reset-password/<token>', methods=['GET', 'POST'])
+def reset_password(token):
+    if current_user.is_authenticated:
+        return redirect(url_for('home.dashboard'))
+
+    user = User.query.filter_by(password_reset_token=token, active=True).first()
+    if not user or not user.password_reset_expires or user.password_reset_expires < datetime.utcnow():
+        flash('Link de redefinição inválido ou expirado. Solicite um novo.', 'danger')
+        return redirect(url_for('auth.forgot_password'))
+
+    if request.method == 'POST':
+        password = request.form.get('password', '')
+        confirm = request.form.get('confirm_password', '')
+
+        if len(password) < 6:
+            flash('A senha deve ter pelo menos 6 caracteres.', 'danger')
+            return render_template('auth/reset_password.html', token=token)
+
+        if password != confirm:
+            flash('As senhas não coincidem.', 'danger')
+            return render_template('auth/reset_password.html', token=token)
+
+        user.set_password(password)
+        user.password_reset_token = None
+        user.password_reset_expires = None
+        db.session.commit()
+
+        flash('Senha redefinida com sucesso! Faça login com sua nova senha.', 'success')
+        return redirect(url_for('auth.login'))
+
+    return render_template('auth/reset_password.html', token=token)
 
 
 @auth_bp.route('/set-language/<lang>')

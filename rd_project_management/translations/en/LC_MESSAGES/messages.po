@@ -5728,6 +5728,33 @@ msgstr "Hour Records"
 msgid "Despesas Cadastradas"
 msgstr "Registered Expenses"
 
+msgid "Esqueci Minha Senha"
+msgstr "Forgot My Password"
+
+msgid "Esqueci minha senha"
+msgstr "Forgot my password"
+
+msgid "Digite seu email e enviaremos um link para redefinir sua senha."
+msgstr "Enter your email and we will send you a link to reset your password."
+
+msgid "Enviar Link de Redefinição"
+msgstr "Send Reset Link"
+
+msgid "Voltar ao Login"
+msgstr "Back to Login"
+
+msgid "Redefinir Senha"
+msgstr "Reset Password"
+
+msgid "Digite e confirme sua nova senha."
+msgstr "Enter and confirm your new password."
+
+msgid "Salvar Nova Senha"
+msgstr "Save New Password"
+
+msgid "Repita a senha"
+msgstr "Repeat password"
+
 #~ msgid "Buscar"
 #~ msgstr "Search"
 

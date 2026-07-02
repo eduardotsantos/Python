@@ -5755,6 +5755,34 @@ msgstr "Registros de Horas"
 msgid "Despesas Cadastradas"
 msgstr "Gastos Registrados"
 
+msgid "Esqueci Minha Senha"
+msgstr "Olvidé Mi Contraseña"
+
+msgid "Esqueci minha senha"
+msgstr "Olvidé mi contraseña"
+
+msgid "Digite seu email e enviaremos um link para redefinir sua senha."
+msgstr ""
+"Ingrese su email y le enviaremos un enlace para restablecer su contraseña."
+
+msgid "Enviar Link de Redefinição"
+msgstr "Enviar Enlace de Restablecimiento"
+
+msgid "Voltar ao Login"
+msgstr "Volver al Inicio de Sesión"
+
+msgid "Redefinir Senha"
+msgstr "Restablecer Contraseña"
+
+msgid "Digite e confirme sua nova senha."
+msgstr "Ingrese y confirme su nueva contraseña."
+
+msgid "Salvar Nova Senha"
+msgstr "Guardar Nueva Contraseña"
+
+msgid "Repita a senha"
+msgstr "Repita la contraseña"
+
 #~ msgid "Buscar"
 #~ msgstr "Buscar"
 

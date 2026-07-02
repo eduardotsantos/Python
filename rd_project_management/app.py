@@ -197,6 +197,21 @@ def create_app():
     with app.app_context():
         db.create_all()
 
+        # Add new columns if they don't exist (safe ALTER TABLE)
+        try:
+            from sqlalchemy import text
+            for col_sql in [
+                "ALTER TABLE users ADD COLUMN password_reset_token VARCHAR(100)",
+                "ALTER TABLE users ADD COLUMN password_reset_expires DATETIME",
+            ]:
+                try:
+                    db.session.execute(text(col_sql))
+                    db.session.commit()
+                except Exception:
+                    db.session.rollback()
+        except Exception:
+            pass
+
         # Create default super admin if no superadmin exists
         superadmin = User.query.filter_by(role='superadmin').first()
         if not superadmin:

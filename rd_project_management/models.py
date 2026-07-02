@@ -83,6 +83,10 @@ class User(UserMixin, db.Model):
     # Language preference
     language = db.Column(db.String(10), default='pt_BR')  # pt_BR, en, es
 
+    # Password reset
+    password_reset_token = db.Column(db.String(100), nullable=True)
+    password_reset_expires = db.Column(db.DateTime, nullable=True)
+
     __table_args__ = (
         db.UniqueConstraint('tenant_id', 'username', name='uq_tenant_username'),
         db.UniqueConstraint('tenant_id', 'email', name='uq_tenant_email'),
