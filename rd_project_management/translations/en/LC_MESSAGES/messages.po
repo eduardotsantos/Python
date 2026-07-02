@@ -6,695 +6,5926 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Orion 1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-01 00:00+0000\n"
+"POT-Creation-Date: 2026-06-24 02:40+0000\n"
 "PO-Revision-Date: 2024-01-01 00:00+0000\n"
 "Last-Translator: Orion Team\n"
-"Language: en\n"
 "Language-Team: en <en@orion.com>\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Language: en\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-
-# Navigation
-msgid "Inicio"
-msgstr "Home"
-
-msgid "Projetos"
-msgstr "Projects"
-
-msgid "Programas"
-msgstr "Programs"
-
-msgid "Portfolio"
-msgstr "Portfolio"
-
-msgid "Chamadas"
-msgstr "Calls"
-
-msgid "Chamadas Publicas"
-msgstr "Public Calls"
-
-msgid "Conformidade"
-msgstr "Compliance"
-
-msgid "Despesas"
-msgstr "Expenses"
-
-msgid "Recursos"
-msgstr "Resources"
-
-msgid "Cronograma"
-msgstr "Schedule"
-
-msgid "Timesheet"
-msgstr "Timesheet"
-
-msgid "Usuarios"
-msgstr "Users"
-
-msgid "Empresas"
-msgstr "Companies"
-
-msgid "Assistente IA"
-msgstr "AI Assistant"
-
-msgid "PMO Autonomo"
-msgstr "Autonomous PMO"
-
-msgid "Meu Perfil"
-msgstr "My Profile"
-
-msgid "Sair"
-msgstr "Logout"
-
-# Actions
-msgid "Salvar"
-msgstr "Save"
-
-msgid "Cancelar"
-msgstr "Cancel"
-
-msgid "Excluir"
-msgstr "Delete"
-
-msgid "Editar"
-msgstr "Edit"
-
-msgid "Adicionar"
-msgstr "Add"
-
-msgid "Novo"
-msgstr "New"
-
-msgid "Nova"
-msgstr "New"
-
-msgid "Voltar"
-msgstr "Back"
-
-msgid "Buscar"
-msgstr "Search"
-
-msgid "Filtrar"
-msgstr "Filter"
-
-msgid "Exportar"
-msgstr "Export"
-
-msgid "Importar"
-msgstr "Import"
-
-msgid "Ver"
-msgstr "View"
-
-msgid "Acoes"
-msgstr "Actions"
-
-# Status
-msgid "Planejamento"
-msgstr "Planning"
-
-msgid "Em Andamento"
-msgstr "In Progress"
-
-msgid "Concluido"
-msgstr "Completed"
-
-msgid "Cancelado"
-msgstr "Cancelled"
-
-msgid "Pendente"
-msgstr "Pending"
-
-msgid "Atrasado"
-msgstr "Delayed"
-
-msgid "Ativo"
-msgstr "Active"
-
-msgid "Inativo"
-msgstr "Inactive"
-
-msgid "Aberta"
-msgstr "Open"
-
-msgid "Fechada"
-msgstr "Closed"
-
-# Projects
-msgid "Novo Projeto"
-msgstr "New Project"
-
-msgid "Projeto"
-msgstr "Project"
-
-msgid "Codigo"
-msgstr "Code"
-
-msgid "Titulo"
-msgstr "Title"
-
-msgid "Descricao"
-msgstr "Description"
-
-msgid "Categoria"
-msgstr "Category"
-
-msgid "Orcamento"
-msgstr "Budget"
-
-msgid "Data Inicio"
-msgstr "Start Date"
-
-msgid "Data Termino"
-msgstr "End Date"
-
-msgid "Responsavel"
-msgstr "Responsible"
-
-msgid "Progresso"
-msgstr "Progress"
-
-msgid "Fonte de Financiamento"
-msgstr "Funding Source"
-
-# Schedule
-msgid "Marco"
-msgstr "Milestone"
-
-msgid "Marcos"
-msgstr "Milestones"
-
-msgid "Novo Marco"
-msgstr "New Milestone"
-
-msgid "Predecessora"
-msgstr "Predecessor"
-
-msgid "Grafico de Gantt"
-msgstr "Gantt Chart"
-
-msgid "Alocacao"
-msgstr "Allocation"
-
-msgid "Ordem"
-msgstr "Order"
-
-# Expenses
-msgid "Nova Despesa"
-msgstr "New Expense"
-
-msgid "Despesa"
-msgstr "Expense"
-
-msgid "Valor"
-msgstr "Amount"
-
-msgid "Data"
-msgstr "Date"
-
-msgid "Fornecedor"
-msgstr "Supplier"
-
-msgid "Anexos"
-msgstr "Attachments"
-
-# Resources
-msgid "Novo Recurso"
-msgstr "New Resource"
-
-msgid "Recurso"
-msgstr "Resource"
-
-msgid "Nome"
-msgstr "Name"
-
-msgid "Tipo"
-msgstr "Type"
-
-msgid "Funcao"
-msgstr "Role"
-
-msgid "Custo/Hora"
-msgstr "Hourly Cost"
-
-msgid "Horas Alocadas"
-msgstr "Allocated Hours"
-
-msgid "Pessoa"
-msgstr "Person"
-
-msgid "Equipamento"
-msgstr "Equipment"
-
-msgid "Equipe"
-msgstr "Team"
-
-# Agile
-msgid "Quadro Kanban"
-msgstr "Kanban Board"
-
-msgid "Sprint"
-msgstr "Sprint"
-
-msgid "Sprints"
-msgstr "Sprints"
-
-msgid "Novo Sprint"
-msgstr "New Sprint"
-
-msgid "Story Points"
-msgstr "Story Points"
-
-msgid "Prioridade"
-msgstr "Priority"
-
-msgid "Baixa"
-msgstr "Low"
-
-msgid "Media"
-msgstr "Medium"
-
-msgid "Alta"
-msgstr "High"
-
-msgid "Critica"
-msgstr "Critical"
-
-msgid "Velocidade"
-msgstr "Velocity"
-
-msgid "Burndown"
-msgstr "Burndown"
-
-# AI Features
-msgid "Chat IA"
-msgstr "AI Chat"
-
-msgid "Analise de Riscos"
-msgstr "Risk Analysis"
-
-msgid "Gerar Relatorio"
-msgstr "Generate Report"
-
-msgid "Matching com Editais"
-msgstr "Call Matching"
-
-msgid "Gerar Proposta"
-msgstr "Generate Proposal"
-
-# Compliance
-msgid "Central de Pendencias"
-msgstr "Pending Items Center"
-
-msgid "Riscos"
-msgstr "Risks"
-
-msgid "Risco"
-msgstr "Risk"
-
-msgid "Novo Risco"
-msgstr "New Risk"
-
-msgid "Pendencias"
-msgstr "Pending Items"
-
-msgid "Pendencia"
-msgstr "Pending Item"
-
-msgid "Nova Pendencia"
-msgstr "New Pending Item"
-
-msgid "Nao Conformidades"
-msgstr "Non-Conformities"
-
-msgid "Nao Conformidade"
-msgstr "Non-Conformity"
-
-msgid "Bugs"
-msgstr "Bugs"
-
-msgid "Bug"
-msgstr "Bug"
-
-msgid "Novo Bug"
-msgstr "New Bug"
-
-msgid "Acoes Corretivas"
-msgstr "Corrective Actions"
-
-msgid "Acao Corretiva"
-msgstr "Corrective Action"
-
-msgid "Probabilidade"
-msgstr "Probability"
-
-msgid "Impacto"
-msgstr "Impact"
-
-msgid "Severidade"
-msgstr "Severity"
-
-# TRL and Innovation
-msgid "TRL - Technology Readiness Level"
-msgstr "TRL - Technology Readiness Level"
-
-msgid "Nivel TRL Atual"
-msgstr "Current TRL Level"
-
-msgid "Historico TRL"
-msgstr "TRL History"
-
-msgid "KPIs de Inovacao"
-msgstr "Innovation KPIs"
-
-msgid "Tipo de Inovacao"
-msgstr "Innovation Type"
-
-msgid "Escopo de Inovacao"
-msgstr "Innovation Scope"
-
-msgid "Estrategia de PI"
-msgstr "IP Strategy"
-
-msgid "Mercado-Alvo"
-msgstr "Target Market"
-
-msgid "Vantagem Competitiva"
-msgstr "Competitive Advantage"
-
-msgid "Sugerir com IA"
-msgstr "Suggest with AI"
-
-msgid "Radical"
-msgstr "Radical"
-
-msgid "Incremental"
-msgstr "Incremental"
-
-msgid "Disruptiva"
-msgstr "Disruptive"
-
-msgid "Arquitetural"
-msgstr "Architectural"
-
-msgid "Produto"
-msgstr "Product"
-
-msgid "Processo"
-msgstr "Process"
-
-msgid "Modelo de Negocio"
-msgstr "Business Model"
-
-msgid "Organizacional"
-msgstr "Organizational"
-
-msgid "Patente"
-msgstr "Patent"
-
-msgid "Segredo Industrial"
-msgstr "Trade Secret"
-
-msgid "Open Source"
-msgstr "Open Source"
-
-# Stakeholders
-msgid "Stakeholders"
-msgstr "Stakeholders"
-
-msgid "Novo Stakeholder"
-msgstr "New Stakeholder"
-
-msgid "Papel"
-msgstr "Role"
-
-msgid "Influencia"
-msgstr "Influence"
-
-msgid "Interesse"
-msgstr "Interest"
-
-msgid "Estrategia de Engajamento"
-msgstr "Engagement Strategy"
-
-msgid "Comunicacoes"
-msgstr "Communications"
-
-msgid "Patrocinador"
-msgstr "Sponsor"
-
-msgid "Cliente"
-msgstr "Customer"
-
-msgid "Fornecedor"
-msgstr "Supplier"
-
-msgid "Parceiro"
-msgstr "Partner"
-
-msgid "Regulador"
-msgstr "Regulator"
-
-msgid "Consultor"
-msgstr "Consultant"
-
-# PMBOK 8
-msgid "Entrega de Valor"
-msgstr "Value Delivery"
-
-msgid "Valor Esperado"
-msgstr "Expected Value"
-
-msgid "Valor Realizado"
-msgstr "Realized Value"
-
-msgid "Status do Valor"
-msgstr "Value Status"
-
-msgid "Tipo de Valor"
-msgstr "Value Type"
-
-# Dashboard
-msgid "Projetos Ativos"
-msgstr "Active Projects"
-
-msgid "Orcamento Total"
-msgstr "Total Budget"
-
-msgid "Despesas Totais"
-msgstr "Total Expenses"
-
-msgid "Chamadas Abertas"
-msgstr "Open Calls"
-
-msgid "Acoes Rapidas"
-msgstr "Quick Actions"
-
-msgid "Proximos Marcos"
-msgstr "Upcoming Milestones"
-
-msgid "Distribuicao de Custos"
-msgstr "Cost Distribution"
-
-# Messages
-msgid "Bem-vindo"
-msgstr "Welcome"
-
-msgid "Alteracoes salvas com sucesso"
-msgstr "Changes saved successfully"
-
-msgid "Erro ao salvar alteracoes"
-msgstr "Error saving changes"
-
-msgid "Tem certeza?"
-msgstr "Are you sure?"
-
-msgid "Nenhum dado disponivel"
-msgstr "No data available"
-
-msgid "Campo obrigatorio"
-msgstr "Required field"
-
-msgid "Valor invalido"
-msgstr "Invalid value"
-
-# Language
-msgid "Idioma"
-msgstr "Language"
-
-msgid "Idioma da Interface"
-msgstr "Interface Language"
-
-msgid "Selecione o idioma de sua preferencia"
-msgstr "Select your preferred language"
-
-# Reports
-msgid "Relatorio de Status"
-msgstr "Status Report"
-
-msgid "Status Report"
-msgstr "Status Report"
-
-msgid "Imprimir"
-msgstr "Print"
-
-msgid "Gerar PDF"
-msgstr "Generate PDF"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Generated-By: Babel 2.18.0\n"
 
 # Status Report labels
+#: routes/status_report.py:24
 msgid "Sem marcos"
 msgstr "No milestones"
 
+#: routes/status_report.py:51 templates/ai/risks.html:117
+msgid "Atrasado"
+msgstr "Delayed"
+
+#: routes/status_report.py:54 templates/programs/form.html:67
+msgid "Concluido"
+msgstr "Completed"
+
+#: routes/status_report.py:57 templates/portfolio/status_report.html:125
+#: templates/programs/status_report.html:135
+#: templates/status_report/print.html:518
+#: templates/status_report/report.html:332
 msgid "No prazo"
 msgstr "On time"
 
+#: routes/status_report.py:79
 msgid "Sem orcamento"
 msgstr "No budget"
 
-msgid "Estourado"
-msgstr "Over budget"
-
-msgid "Saudavel"
-msgstr "Healthy"
-
-msgid "Acima do planejado"
-msgstr "Above planned"
-
-msgid "Dentro do planejado"
-msgstr "Within planned"
-
-msgid "Sem planejamento"
-msgstr "No planning"
-
-msgid "Critico"
-msgstr "Critical"
-
-msgid "Conforme"
-msgstr "Compliant"
-
-msgid "Sem dados"
-msgstr "No data"
-
-msgid "Existem marcos com data de entrega ultrapassada"
-msgstr "There are milestones past their delivery date"
-
-msgid "Revisar cronograma e realocar recursos"
-msgstr "Review schedule and reallocate resources"
-
-msgid "Projeto expirado"
-msgstr "Project expired"
-
-msgid "Solicitar prorrogacao ou encerrar projeto"
-msgstr "Request extension or close project"
-
-msgid "Prazo de encerramento proximo"
-msgstr "Closing deadline approaching"
-
-msgid "Acelerar entregas finais"
-msgstr "Speed up final deliveries"
-
-msgid "Orcamento estourado"
-msgstr "Budget exceeded"
-
-msgid "Solicitar remanejamento ou aditivo"
-msgstr "Request reallocation or amendment"
-
-msgid "Orcamento critico"
-msgstr "Critical budget"
-
-msgid "Controlar gastos e priorizar despesas essenciais"
-msgstr "Control expenses and prioritize essential costs"
-
-msgid "Progresso abaixo do esperado"
-msgstr "Progress below expected"
-
-msgid "Revisar escopo ou aumentar equipe"
-msgstr "Review scope or increase team"
-
-msgid "Sem recursos alocados"
-msgstr "No resources allocated"
-
-msgid "Nenhum recurso ativo no projeto"
-msgstr "No active resources in project"
-
-msgid "Alocar equipe para execucao"
-msgstr "Allocate team for execution"
-
-# Profile and User form
-msgid "Informacoes da Conta"
-msgstr "Account Information"
-
-msgid "Editar Perfil"
-msgstr "Edit Profile"
-
-msgid "Nome Completo"
-msgstr "Full Name"
-
-msgid "Alterar Senha"
-msgstr "Change Password"
-
-msgid "Senha Atual"
-msgstr "Current Password"
-
-msgid "Nova Senha"
-msgstr "New Password"
-
-msgid "Confirmar Nova Senha"
-msgstr "Confirm New Password"
-
-msgid "Preferencias de Email"
-msgstr "Email Preferences"
-
-msgid "Receber notificacoes por email"
-msgstr "Receive email notifications"
-
-msgid "Briefing diario"
-msgstr "Daily briefing"
-
-msgid "Alertas criticos"
-msgstr "Critical alerts"
-
-msgid "Salvar Alteracoes"
-msgstr "Save Changes"
-
-msgid "Membro desde"
-msgstr "Member since"
-
-msgid "Administrador"
-msgstr "Administrator"
-
-msgid "Gerente"
-msgstr "Manager"
-
-msgid "Usuario"
-msgstr "User"
-
-msgid "Visualizador"
-msgstr "Viewer"
-
-# Common form labels
-msgid "Entrar"
-msgstr "Login"
-
-msgid "Email"
-msgstr "Email"
-
-msgid "Senha"
-msgstr "Password"
-
-msgid "Lembrar-me"
-msgstr "Remember me"
-
-msgid "Criar conta"
-msgstr "Create account"
-
-msgid "Cadastrar"
-msgstr "Register"
-
+#: routes/status_report.py:93 templates/portfolio/dashboard.html:284
 msgid "Outros"
 msgstr "Others"
 
+#: routes/status_report.py:98
+msgid "Estourado"
+msgstr "Over budget"
+
+#: routes/status_report.py:101 routes/status_report.py:164
+#: routes/status_report.py:427 routes/status_report.py:492
+#: routes/status_report.py:554
 msgid "Atencao"
 msgstr "Attention"
+
+#: routes/status_report.py:104 routes/status_report.py:498
+#: routes/status_report.py:557
+msgid "Saudavel"
+msgstr "Healthy"
+
+#: routes/status_report.py:161
+msgid "Acima do planejado"
+msgstr "Above planned"
+
+#: routes/status_report.py:167
+msgid "Dentro do planejado"
+msgstr "Within planned"
+
+#: routes/status_report.py:171
+msgid "Sem planejamento"
+msgstr "No planning"
+
+#: routes/status_report.py:290
+#, python-format
+msgid "%(count)d marco(s) atrasado(s)"
+msgstr "%(count)d milestone(s) delayed"
+
+#: routes/status_report.py:291
+msgid "Existem marcos com data de entrega ultrapassada"
+msgstr "There are milestones past their delivery date"
+
+#: routes/status_report.py:292
+msgid "Revisar cronograma e realocar recursos"
+msgstr "Review schedule and reallocate resources"
+
+#: routes/status_report.py:302
+msgid "Projeto expirado"
+msgstr "Project expired"
+
+#: routes/status_report.py:303
+#, python-format
+msgid "Data de termino foi ha %(days)d dias"
+msgstr "End date was %(days)d days ago"
+
+#: routes/status_report.py:304
+msgid "Solicitar prorrogacao ou encerrar projeto"
+msgstr "Request extension or close project"
+
+#: routes/status_report.py:310
+#, python-format
+msgid "Projeto termina em %(days)d dias"
+msgstr "Project ends in %(days)d days"
+
+#: routes/status_report.py:311
+msgid "Prazo de encerramento proximo"
+msgstr "Closing deadline approaching"
+
+#: routes/status_report.py:312
+msgid "Acelerar entregas finais"
+msgstr "Speed up final deliveries"
+
+#: routes/status_report.py:321
+msgid "Orcamento estourado"
+msgstr "Budget exceeded"
+
+#: routes/status_report.py:322
+#, python-format
+msgid "Gasto excede orcamento em R$ %(value).2f"
+msgstr "Spending exceeds budget by R$ %(value).2f"
+
+#: routes/status_report.py:323
+msgid "Solicitar remanejamento ou aditivo"
+msgstr "Request reallocation or amendment"
+
+#: routes/status_report.py:329
+msgid "Orcamento critico"
+msgstr "Critical budget"
+
+#: routes/status_report.py:330
+#, python-format
+msgid "%(percent).1f%% do orcamento ja utilizado"
+msgstr "%(percent).1f%% of budget already used"
+
+#: routes/status_report.py:331
+msgid "Controlar gastos e priorizar despesas essenciais"
+msgstr "Control expenses and prioritize essential costs"
+
+#: routes/status_report.py:345
+msgid "Progresso abaixo do esperado"
+msgstr "Progress below expected"
+
+#: routes/status_report.py:346
+#, python-format
+msgid "%(time).0f%% do tempo decorrido, apenas %(progress).0f%% concluido"
+msgstr "%(time).0f%% of time elapsed, only %(progress).0f%% complete"
+
+#: routes/status_report.py:347
+msgid "Revisar escopo ou aumentar equipe"
+msgstr "Review scope or increase team"
+
+#: routes/status_report.py:356
+msgid "Sem recursos alocados"
+msgstr "No resources allocated"
+
+#: routes/status_report.py:357
+msgid "Nenhum recurso ativo no projeto"
+msgstr "No active resources in project"
+
+#: routes/status_report.py:358
+msgid "Alocar equipe para execucao"
+msgstr "Allocate team for execution"
+
+#: routes/status_report.py:424 routes/status_report.py:489
+#: routes/status_report.py:551
+msgid "Critico"
+msgstr "Critical"
+
+#: routes/status_report.py:430
+msgid "Conforme"
+msgstr "Compliant"
+
+#: routes/status_report.py:495
+msgid "Sem dados"
+msgstr "No data"
+
+#: templates/base.html:26 templates/portfolio/dashboard.html:328
+#: templates/programs/list.html:31 templates/programs/view.html:32
+#: templates/tenants/list.html:65 templates/tenants/view.html:146
+msgid "Projetos"
+msgstr "Projects"
+
+#: templates/base.html:31 templates/portfolio/dashboard.html:225
+#: templates/programs/list.html:2 templates/programs/list.html:6
+msgid "Programas"
+msgstr "Programs"
+
+#: templates/base.html:36 templates/portfolio/dashboard.html:2
+#: templates/portfolio/dashboard.html:21
+#: templates/portfolio/status_report.html:2
+#: templates/portfolio/status_report.html:46
+msgid "Portfolio"
+msgstr "Portfolio"
+
+#: templates/base.html:42 templates/portfolio/status_report.html:227
+#: templates/programs/status_report.html:237
+#: templates/status_report/print.html:652
+#: templates/status_report/report.html:515
+msgid "Conformidade"
+msgstr "Compliance"
+
+#: templates/base.html:49
+msgid "PMO Autonomo"
+msgstr "Autonomous PMO"
+
+#: templates/base.html:55
+msgid "Chamadas"
+msgstr "Calls"
+
+#: templates/base.html:60 templates/home/dashboard.html:270
+msgid "Assistente IA"
+msgstr "AI Assistant"
+
+#: templates/base.html:66
+msgid "Usuarios"
+msgstr "Users"
+
+#: templates/base.html:73 templates/tenants/list.html:2
+msgid "Empresas"
+msgstr "Companies"
+
+#: templates/base.html:123 templates/users/profile.html:2
+#: templates/users/profile.html:11
+msgid "Meu Perfil"
+msgstr "My Profile"
+
+#: templates/base.html:124
+msgid "Sair"
+msgstr "Logout"
+
+#: templates/ai/analyze_document.html:2
+msgid "Analisar Documento"
+msgstr "Analyze Document"
+
+#: templates/ai/analyze_document.html:9 templates/ai/matching.html:9
+#: templates/ai/project_actions.html:9 templates/ai/report.html:33
+#: templates/ai/risks.html:9 templates/projects/stakeholders/list.html:9
+#: templates/projects/trl_history.html:9
+msgid "Voltar ao Projeto"
+msgstr "Back to Project"
+
+#: templates/ai/analyze_document.html:11
+msgid "Analise de Documento"
+msgstr "Document Analysis"
+
+#: templates/ai/analyze_document.html:19 templates/ai/chat.html:85
+#: templates/ai/dashboard.html:13 templates/ai/matching.html:19
+#: templates/ai/project_actions.html:19 templates/ai/proposal.html:44
+#: templates/ai/report.html:43 templates/ai/risks.html:19
+msgid "API de IA nao configurada."
+msgstr "AI API not configured."
+
+#: templates/ai/analyze_document.html:20 templates/ai/chat.html:86
+#: templates/ai/dashboard.html:14 templates/ai/matching.html:20
+#: templates/ai/project_actions.html:20 templates/ai/report.html:44
+#: templates/ai/risks.html:20
+msgid "Configure a variavel de ambiente"
+msgstr "Configure the environment variable"
+
+#: templates/ai/analyze_document.html:25
+msgid "Apenas documentos PDF podem ser analisados pela IA."
+msgstr "Only PDF documents can be analyzed by AI."
+
+#: templates/ai/analyze_document.html:32
+msgid "Informacoes do Documento"
+msgstr "Document Information"
+
+#: templates/ai/analyze_document.html:35
+msgid "Nome:"
+msgstr "Name:"
+
+#: templates/ai/analyze_document.html:36
+msgid "Tamanho:"
+msgstr "Size:"
+
+#: templates/ai/analyze_document.html:37
+msgid "Upload:"
+msgstr "Upload:"
+
+#: templates/ai/analyze_document.html:38
+msgid "Por:"
+msgstr "By:"
+
+#: templates/ai/analyze_document.html:40 templates/ai/matching.html:33
+msgid "Descricao:"
+msgstr "Description:"
+
+#: templates/ai/analyze_document.html:46
+msgid "A IA extraira informacoes chave deste edital/documento."
+msgstr "AI will extract key information from this document/call."
+
+#: templates/ai/analyze_document.html:48 templates/projects/view.html:358
+msgid "Analisar com IA"
+msgstr "Analyze with AI"
+
+#: templates/ai/analyze_document.html:54
+msgid "Analisando documento..."
+msgstr "Analyzing document..."
+
+#: templates/ai/analyze_document.html:65 templates/ai/matching.html:61
+#: templates/ai/proposal.html:115 templates/ai/report.html:89
+#: templates/ai/risks.html:83
+msgid "Documento salvo!"
+msgstr "Document saved!"
+
+#: templates/ai/analyze_document.html:65 templates/ai/risks.html:83
+msgid "A analise foi salva em"
+msgstr "The analysis was saved in"
+
+#: templates/ai/analyze_document.html:65 templates/ai/matching.html:61
+#: templates/ai/proposal.html:115 templates/ai/report.html:89
+#: templates/ai/risks.html:83 templates/projects/form.html:263
+#: templates/projects/view.html:321
+msgid "Documentos do Projeto"
+msgstr "Project Documents"
+
+#: templates/ai/analyze_document.html:72
+msgid "Analise do Documento"
+msgstr "Document Analysis"
+
+#: templates/ai/analyze_document.html:80
+msgid "Clique em \"Analisar com IA\" para extrair informacoes do documento."
+msgstr "Click \"Analyze with AI\" to extract information from the document."
+
+#: templates/ai/analyze_document.html:91
+msgid "Resumo:"
+msgstr "Summary:"
+
+#: templates/ai/analyze_document.html:92
+msgid "Prazo de Submissao"
+msgstr "Submission Deadline"
+
+#: templates/ai/analyze_document.html:93
+msgid "Valor do Financiamento"
+msgstr "Funding Amount"
+
+#: templates/ai/analyze_document.html:94
+msgid "Duracao do Projeto:"
+msgstr "Project Duration:"
+
+#: templates/ai/analyze_document.html:95
+msgid "Contrapartida:"
+msgstr "Counterpart:"
+
+#: templates/ai/analyze_document.html:96
+msgid "Areas Tematicas:"
+msgstr "Thematic Areas:"
+
+#: templates/ai/analyze_document.html:97
+msgid "Requisitos de Elegibilidade:"
+msgstr "Eligibility Requirements:"
+
+#: templates/ai/analyze_document.html:98
+msgid "Itens Financiaveis:"
+msgstr "Eligible Items:"
+
+#: templates/ai/analyze_document.html:99
+msgid "Documentos Necessarios:"
+msgstr "Required Documents:"
+
+#: templates/ai/analyze_document.html:100
+msgid "Pontos de Atencao:"
+msgstr "Points of Attention:"
+
+#: templates/ai/analyze_document.html:101
+msgid "Contato:"
+msgstr "Contact:"
+
+#: templates/ai/analyze_document.html:102
+msgid "Orgao:"
+msgstr "Agency:"
+
+#: templates/ai/analyze_document.html:117 templates/ai/audit.html:93
+#: templates/ai/chat.html:141 templates/ai/matching.html:100
+#: templates/ai/proposal.html:213 templates/ai/proposal.html:232
+#: templates/ai/report.html:135 templates/ai/risks.html:138
+#: templates/projects/form.html:359
+msgid "Erro:"
+msgstr "Error:"
+
+#: templates/ai/analyze_document.html:126 templates/ai/chat.html:142
+#: templates/ai/matching.html:117 templates/ai/report.html:154
+#: templates/ai/risks.html:147
+msgid "Erro de conexao:"
+msgstr "Connection error:"
+
+#: templates/ai/audit.html:2 templates/ai/audit.html:10
+msgid "Auditoria de Projeto"
+msgstr "Project Audit"
+
+#: templates/ai/audit.html:17
+msgid "API de IA nao configurada. Configure a variavel ANTHROPIC_API_KEY."
+msgstr "AI API not configured. Set the ANTHROPIC_API_KEY variable."
+
+#: templates/ai/audit.html:25
+msgid "Chamada Vinculada"
+msgstr "Linked Call"
+
+#: templates/ai/audit.html:35 templates/ai/audit.html:80
+msgid "Executar Auditoria"
+msgstr "Run Audit"
+
+#: templates/ai/audit.html:42
+msgid "Sobre"
+msgstr "About"
+
+#: templates/ai/audit.html:45
+msgid "A auditoria de projeto analisa:"
+msgstr "The project audit analyzes:"
+
+#: templates/ai/audit.html:47
+msgid "Conformidade com requisitos da chamada"
+msgstr "Compliance with call requirements"
+
+#: templates/ai/audit.html:48
+msgid "Execucao orcamentaria"
+msgstr "Budget execution"
+
+#: templates/ai/audit.html:49
+msgid "Cumprimento de cronograma"
+msgstr "Schedule compliance"
+
+#: templates/ai/audit.html:50
+msgid "Documentacao necessaria"
+msgstr "Required documentation"
+
+#: templates/ai/audit.html:51
+msgid "Alocacao de recursos"
+msgstr "Resource allocation"
+
+#: templates/ai/audit.html:60
+msgid "Resultado da Auditoria"
+msgstr "Audit Result"
+
+#: templates/ai/audit.html:66
+msgid "Selecione a chamada e clique em \"Executar Auditoria\""
+msgstr "Select the call and click \"Run Audit\""
+
+#: templates/ai/audit.html:77 templates/projects/form.html:347
+#: templates/public_calls/list.html:199
+msgid "Analisando..."
+msgstr "Analyzing..."
+
+#: templates/ai/audit.html:78
+msgid "Analisando conformidade do projeto..."
+msgstr "Analyzing project compliance..."
+
+#: templates/ai/audit.html:79
+msgid "Isso pode levar alguns segundos"
+msgstr "This may take a few seconds"
+
+#: templates/ai/audit.html:81 templates/portfolio/status_report.html:83
+#: templates/portfolio/status_report.html:138
+#: templates/portfolio/status_report.html:312 templates/programs/list.html:44
+#: templates/programs/status_report.html:158
+#: templates/programs/status_report.html:323 templates/programs/view.html:87
+msgid "Orcamento"
+msgstr "Budget"
+
+#: templates/ai/audit.html:82 templates/compliance/risks/form.html:41
+#: templates/portfolio/status_report.html:111 templates/projects/view.html:296
+#: templates/schedule/view.html:2 templates/schedule/view.html:10
+#: templates/status_report/print.html:506
+#: templates/status_report/report.html:310
+msgid "Cronograma"
+msgstr "Schedule"
+
+#: templates/ai/audit.html:83
+msgid "Documentacao"
+msgstr "Documentation"
+
+#: templates/ai/audit.html:84
+msgid "Faltando:"
+msgstr "Missing:"
+
+#: templates/ai/audit.html:85
+msgid "Pontos Positivos"
+msgstr "Positive Points"
+
+#: templates/ai/audit.html:86
+msgid "Pontos de Atencao"
+msgstr "Points of Attention"
+
+#: templates/ai/audit.html:87
+msgid "Nao Conformidades"
+msgstr "Non-Conformities"
+
+#: templates/ai/audit.html:88 templates/ai/risks.html:101
+msgid "Recomendacoes"
+msgstr "Recommendations"
+
+#: templates/ai/audit.html:89
+msgid "Checklist de Conformidade"
+msgstr "Compliance Checklist"
+
+#: templates/ai/audit.html:90
+msgid "Item"
+msgstr "Item"
+
+#: templates/ai/audit.html:91 templates/ai/dashboard.html:109
+#: templates/compliance/actions/form.html:87
+#: templates/compliance/actions/list.html:58
+#: templates/compliance/bugs/form.html:56
+#: templates/compliance/bugs/list.html:59 templates/compliance/nc/form.html:57
+#: templates/compliance/nc/list.html:58
+#: templates/compliance/pending/form.html:47
+#: templates/compliance/pending/list.html:57
+#: templates/compliance/risks/form.html:80
+#: templates/compliance/risks/list.html:60 templates/expenses/form.html:43
+#: templates/expenses/list.html:93 templates/meeting_minutes/list.html:55
+#: templates/meeting_minutes/view.html:68 templates/programs/form.html:63
+#: templates/programs/status_report.html:321 templates/programs/view.html:85
+#: templates/projects/form.html:56 templates/projects/list.html:110
+#: templates/projects/stakeholders/list.html:74
+#: templates/projects/view.html:242 templates/public_calls/form.html:37
+#: templates/public_calls/view.html:155 templates/resources/form.html:37
+#: templates/schedule/form.html:50 templates/schedule/view.html:100
+#: templates/tenants/form.html:102 templates/tenants/list.html:67
+#: templates/tenants/view.html:31 templates/tenants/view.html:106
+#: templates/tenants/view.html:156 templates/users/list.html:93
+msgid "Status"
+msgstr "Status"
+
+#: templates/ai/audit.html:92
+msgid "Obs"
+msgstr "Notes"
+
+#: templates/ai/chat.html:2
+msgid "Chat IA - Gestao P&D"
+msgstr "AI Chat - R&D Management"
+
+#: templates/ai/chat.html:73 templates/ai/proposal.html:35
+#: templates/compliance/actions/form.html:11
+#: templates/compliance/actions/list.html:9
+#: templates/compliance/bugs/form.html:11
+#: templates/compliance/bugs/list.html:9 templates/compliance/nc/form.html:11
+#: templates/compliance/nc/list.html:9
+#: templates/compliance/pending/form.html:11
+#: templates/compliance/pending/list.html:9
+#: templates/compliance/risks/form.html:11
+#: templates/compliance/risks/list.html:9
+#: templates/meeting_minutes/print.html:206
+#: templates/pmo_agents/action_center.html:11
+#: templates/pmo_agents/agent_result.html:10
+#: templates/pmo_agents/briefing.html:20
+#: templates/pmo_agents/compliance_analysis.html:11
+#: templates/pmo_agents/minutes_parser.html:10
+#: templates/projects/stakeholders/form.html:9
+msgid "Voltar"
+msgstr "Back"
+
+#: templates/ai/chat.html:75 templates/ai/dashboard.html:26
+msgid "Assistente de Chat"
+msgstr "Chat Assistant"
+
+#: templates/ai/chat.html:78
+msgid "Limpar Historico"
+msgstr "Clear History"
+
+#: templates/ai/chat.html:93 templates/ai/chat.html:139
+msgid "Assistente"
+msgstr "Assistant"
+
+#: templates/ai/chat.html:94
+msgid ""
+"Ola! Sou seu assistente de IA para gestao de projetos de P&D. Como posso "
+"ajudar hoje? Posso responder perguntas sobre seus projetos, despesas, prazos"
+" e muito mais."
+msgstr ""
+"Hello! I'm your AI assistant for R&D project management. How can I help you "
+"today? I can answer questions about your projects, expenses, deadlines and "
+"much more."
+
+#: templates/ai/chat.html:98
+msgid "Pensando..."
+msgstr "Thinking..."
+
+#: templates/ai/chat.html:103
+msgid "Digite sua mensagem..."
+msgstr "Type your message..."
+
+#: templates/ai/chat.html:105 templates/expenses/form.html:150
+#: templates/projects/view.html:390
+msgid "Enviar"
+msgstr "Send"
+
+#: templates/ai/chat.html:114
+msgid "Sugestoes:"
+msgstr "Suggestions:"
+
+#: templates/ai/chat.html:116
+msgid "Projetos em andamento"
+msgstr "Projects in progress"
+
+#: templates/ai/chat.html:119
+msgid "Gastos do mes"
+msgstr "Monthly expenses"
+
+#: templates/ai/chat.html:122
+msgid "Prazos proximos"
+msgstr "Upcoming deadlines"
+
+#: templates/ai/chat.html:140
+msgid "Historico limpo. Como posso ajudar?"
+msgstr "History cleared. How can I help?"
+
+#: templates/ai/chat.html:143
+msgid "Limpar todo o historico do chat?"
+msgstr "Clear all chat history?"
+
+#: templates/ai/chat.html:144
+msgid "Erro ao limpar historico"
+msgstr "Error clearing history"
+
+#: templates/ai/dashboard.html:2
+msgid "Assistente de IA - Gestao P&D"
+msgstr "AI Assistant - R&D Management"
+
+#: templates/ai/dashboard.html:7
+msgid "Assistente de IA"
+msgstr "AI Assistant"
+
+#: templates/ai/dashboard.html:14
+msgid "para habilitar as funcionalidades de IA."
+msgstr "to enable AI features."
+
+#: templates/ai/dashboard.html:27
+msgid "Converse com a IA sobre seus projetos"
+msgstr "Chat with AI about your projects"
+
+#: templates/ai/dashboard.html:31
+msgid ""
+"Faca perguntas como: \"Quanto gastamos em bolsas?\", \"Quais projetos vencem"
+" em 30 dias?\""
+msgstr ""
+"Ask questions like: \"How much did we spend on grants?\", \"Which projects "
+"expire in 30 days?\""
+
+#: templates/ai/dashboard.html:34
+msgid "Iniciar Chat"
+msgstr "Start Chat"
+
+#: templates/ai/dashboard.html:42
+msgid "Funcionalidades Disponiveis"
+msgstr "Available Features"
+
+#: templates/ai/dashboard.html:44 templates/ai/dashboard.html:135
+#: templates/ai/project_actions.html:29 templates/ai/risks.html:2
+#: templates/ai/risks.html:11
+msgid "Analise de Riscos"
+msgstr "Risk Analysis"
+
+#: templates/ai/dashboard.html:44
+msgid "Identifique riscos de orcamento e cronograma"
+msgstr "Identify budget and schedule risks"
+
+#: templates/ai/dashboard.html:45
+msgid "Geracao de Relatorios"
+msgstr "Report Generation"
+
+#: templates/ai/dashboard.html:45
+msgid "Crie relatorios tecnicos automaticamente"
+msgstr "Create technical reports automatically"
+
+#: templates/ai/dashboard.html:46 templates/ai/matching.html:2
+#: templates/ai/matching.html:11
+msgid "Matching Projeto-Edital"
+msgstr "Project-Call Matching"
+
+#: templates/ai/dashboard.html:46
+msgid "Encontre editais compativeis"
+msgstr "Find compatible calls"
+
+#: templates/ai/dashboard.html:47
+msgid "Analise de Documentos"
+msgstr "Document Analysis"
+
+#: templates/ai/dashboard.html:47
+msgid "Extraia dados de editais em PDF"
+msgstr "Extract data from PDF calls"
+
+#: templates/ai/dashboard.html:48 templates/ai/dashboard.html:61
+#: templates/ai/dashboard.html:83
+msgid "Geracao de Propostas"
+msgstr "Proposal Generation"
+
+#: templates/ai/dashboard.html:48
+msgid "Crie propostas para chamadas publicas"
+msgstr "Create proposals for public calls"
+
+#: templates/ai/dashboard.html:64
+msgid ""
+"Para gerar uma proposta, vincule um projeto a uma chamada publica e clique "
+"em \"Gerar Proposta\"."
+msgstr ""
+"To generate a proposal, link a project to a public call and click \"Generate"
+" Proposal\"."
+
+#: templates/ai/dashboard.html:67
+msgid "Passo 1: Vincular Projeto"
+msgstr "Step 1: Link Project"
+
+#: templates/ai/dashboard.html:68
+msgid "Acesse uma chamada publica e vincule seu projeto a ela."
+msgstr "Access a public call and link your project to it."
+
+#: templates/ai/dashboard.html:70
+msgid "Ver Chamadas Publicas"
+msgstr "View Public Calls"
+
+#: templates/ai/dashboard.html:74
+msgid "Passo 2: Gerar Proposta"
+msgstr "Step 2: Generate Proposal"
+
+#: templates/ai/dashboard.html:75
+msgid ""
+"Na pagina da chamada, clique em \"Gerar Proposta\" ao lado do projeto "
+"vinculado."
+msgstr "On the call page, click \"Generate Proposal\" next to the linked project."
+
+#: templates/ai/dashboard.html:87
+msgid "Recurso exclusivo dos planos Profissional e Enterprise"
+msgstr "Exclusive feature of Professional and Enterprise plans"
+
+#: templates/ai/dashboard.html:88
+msgid ""
+"Gere propostas completas para chamadas publicas utilizando inteligencia "
+"artificial."
+msgstr ""
+"Generate complete proposals for public calls using artificial intelligence."
+
+#: templates/ai/dashboard.html:89
+msgid "Entre em contato para fazer upgrade do seu plano."
+msgstr "Contact us to upgrade your plan."
+
+#: templates/ai/dashboard.html:99
+msgid "Selecione um Projeto"
+msgstr "Select a Project"
+
+#: templates/ai/dashboard.html:100 templates/portfolio/dashboard.html:234
+#: templates/portfolio/status_report.html:48
+#: templates/programs/status_report.html:58
+msgid "projetos"
+msgstr "projects"
+
+#: templates/ai/dashboard.html:108 templates/ai/proposal.html:53
+#: templates/compliance/actions/form.html:24
+#: templates/compliance/actions/list.html:55
+#: templates/compliance/bugs/form.html:24
+#: templates/compliance/bugs/list.html:56 templates/compliance/nc/form.html:24
+#: templates/compliance/nc/list.html:55
+#: templates/compliance/pending/form.html:24
+#: templates/compliance/pending/list.html:54
+#: templates/compliance/risks/form.html:24
+#: templates/compliance/risks/list.html:55 templates/home/dashboard.html:149
+#: templates/pmo_agents/briefing.html:152
+#: templates/portfolio/dashboard.html:391 templates/projects/form.html:11
+msgid "Projeto"
+msgstr "Project"
+
+#: templates/ai/dashboard.html:110 templates/ai/project_actions.html:2
+#: templates/ai/project_actions.html:11
+msgid "Acoes de IA"
+msgstr "AI Actions"
+
+#: templates/ai/dashboard.html:140 templates/ai/project_actions.html:43
+#: templates/ai/project_actions.html:47 templates/ai/report.html:2
+msgid "Gerar Relatorio"
+msgstr "Generate Report"
+
+#: templates/ai/dashboard.html:145 templates/ai/project_actions.html:57
+msgid "Matching com Editais"
+msgstr "Call Matching"
+
+#: templates/ai/dashboard.html:150
+msgid "Todas as Acoes"
+msgstr "All Actions"
+
+#: templates/ai/dashboard.html:163
+msgid "Nenhum projeto encontrado."
+msgstr "No projects found."
+
+#: templates/ai/dashboard.html:165 templates/projects/form.html:252
+#: templates/projects/list.html:170
+msgid "Criar Projeto"
+msgstr "Create Project"
+
+#: templates/ai/dashboard.html:175
+msgid "Legenda:"
+msgstr "Legend:"
+
+#: templates/ai/dashboard.html:176 templates/compliance/dashboard.html:16
+#: templates/compliance/dashboard.html:83
+#: templates/compliance/risks/list.html:2
+#: templates/pmo_agents/minutes_parser.html:64
+#: templates/pmo_agents/minutes_parser.html:124
+#: templates/portfolio/status_report.html:201
+#: templates/portfolio/status_report.html:236
+#: templates/programs/status_report.html:246
+#: templates/status_report/print.html:434
+#: templates/status_report/print.html:661
+msgid "Riscos"
+msgstr "Risks"
+
+#: templates/ai/dashboard.html:177
+msgid "Relatorio"
+msgstr "Report"
+
+#: templates/ai/dashboard.html:178
+msgid "Matching"
+msgstr "Matching"
+
+#: templates/ai/dashboard.html:179
+msgid "Mais opcoes"
+msgstr "More options"
+
+#: templates/ai/matching.html:27
+msgid "Dados do Projeto"
+msgstr "Project Data"
+
+#: templates/ai/matching.html:30
+msgid "Titulo:"
+msgstr "Title:"
+
+#: templates/ai/matching.html:31
+msgid "Categoria:"
+msgstr "Category:"
+
+#: templates/ai/matching.html:31
+msgid "Nao definida"
+msgstr "Not defined"
+
+#: templates/ai/matching.html:32
+msgid "Orcamento:"
+msgstr "Budget:"
+
+#: templates/ai/matching.html:34 templates/ai/proposal.html:57
+#: templates/programs/list.html:25
+msgid "Sem descricao"
+msgstr "No description"
+
+#: templates/ai/matching.html:42
+msgid "Encontrar Editais Compativeis"
+msgstr "Find Compatible Calls"
+
+#: templates/ai/matching.html:43
+msgid "A IA analisara seu projeto e encontrara as melhores chamadas publicas."
+msgstr "AI will analyze your project and find the best public calls."
+
+#: templates/ai/matching.html:45
+msgid "Buscar Correspondencias"
+msgstr "Search Matches"
+
+#: templates/ai/matching.html:50
+msgid "Analisando compatibilidade com editais..."
+msgstr "Analyzing compatibility with calls..."
+
+#: templates/ai/matching.html:61
+msgid "O matching foi salvo em"
+msgstr "The matching was saved in"
+
+#: templates/ai/matching.html:66
+msgid "Editais Compativeis Encontrados"
+msgstr "Compatible Calls Found"
+
+#: templates/ai/matching.html:70
+msgid ""
+"Nenhum edital compativel encontrado. Verifique se ha chamadas publicas "
+"abertas cadastradas no sistema."
+msgstr ""
+"No compatible calls found. Check if there are open public calls registered "
+"in the system."
+
+#: templates/ai/matching.html:79 templates/ai/proposal.html:71
+#: templates/pmo_agents/minutes_parser.html:109
+msgid "Prazo:"
+msgstr "Deadline:"
+
+#: templates/ai/matching.html:80
+msgid "Nao informado"
+msgstr "Not informed"
+
+#: templates/ai/matching.html:81 templates/projects/trl_history.html:149
+msgid "Justificativa:"
+msgstr "Justification:"
+
+#: templates/ai/matching.html:82
+msgid "Pontos Fortes:"
+msgstr "Strengths:"
+
+#: templates/ai/matching.html:83
+msgid "Adaptacoes Necessarias:"
+msgstr "Required Adaptations:"
+
+#: templates/ai/matching.html:84
+msgid "Riscos:"
+msgstr "Risks:"
+
+#: templates/ai/matching.html:85
+msgid "Ver Edital"
+msgstr "View Call"
+
+#: templates/ai/project_actions.html:20
+msgid "para habilitar estas funcionalidades."
+msgstr "to enable these features."
+
+#: templates/ai/project_actions.html:30
+msgid "Identifique riscos de orcamento, cronograma e recursos."
+msgstr "Identify budget, schedule and resource risks."
+
+#: templates/ai/project_actions.html:33 templates/ai/risks.html:27
+msgid "Analisar Riscos"
+msgstr "Analyze Risks"
+
+#: templates/ai/project_actions.html:44
+msgid "Gere relatorios tecnicos parciais ou finais automaticamente."
+msgstr "Generate partial or final technical reports automatically."
+
+#: templates/ai/project_actions.html:58
+msgid "Encontre editais compativeis com este projeto."
+msgstr "Find compatible calls for this project."
+
+#: templates/ai/project_actions.html:61
+msgid "Buscar Editais"
+msgstr "Search Calls"
+
+#: templates/ai/project_actions.html:69
+msgid "Analisar Documentos do Projeto"
+msgstr "Analyze Project Documents"
+
+#: templates/ai/project_actions.html:84 templates/pmo_agents/dashboard.html:41
+msgid "Analisar"
+msgstr "Analyze"
+
+#: templates/ai/proposal.html:2 templates/ai/proposal.html:37
+#: templates/public_calls/view.html:115 templates/public_calls/view.html:119
+msgid "Gerar Proposta"
+msgstr "Generate Proposal"
+
+#: templates/ai/proposal.html:64 templates/public_calls/form.html:2
+#: templates/public_calls/form.html:11
+msgid "Chamada Publica"
+msgstr "Public Call"
+
+#: templates/ai/proposal.html:82
+msgid "Informacoes Adicionais para a Proposta"
+msgstr "Additional Information for the Proposal"
+
+#: templates/ai/proposal.html:85
+msgid ""
+"Preencha as informacoes abaixo para gerar uma proposta mais completa e "
+"personalizada."
+msgstr ""
+"Fill in the information below to generate a more complete and personalized "
+"proposal."
+
+#: templates/ai/proposal.html:89
+msgid "Carregando perguntas..."
+msgstr "Loading questions..."
+
+#: templates/ai/proposal.html:95
+msgid "Gerar Proposta com IA"
+msgstr "Generate Proposal with AI"
+
+#: templates/ai/proposal.html:105
+msgid "Gerando proposta..."
+msgstr "Generating proposal..."
+
+#: templates/ai/proposal.html:106
+msgid "Isso pode levar alguns segundos."
+msgstr "This may take a few seconds."
+
+#: templates/ai/proposal.html:115
+msgid "A proposta foi salva em"
+msgstr "The proposal was saved in"
+
+#: templates/ai/proposal.html:122 templates/ai/report.html:96
+msgid "Imprimir"
+msgstr "Print"
+
+#: templates/ai/proposal.html:125
+msgid "Copiar"
+msgstr "Copy"
+
+#: templates/ai/proposal.html:128
+msgid "Download"
+msgstr "Download"
+
+#: templates/ai/proposal.html:131
+msgid "Gerar Outra"
+msgstr "Generate Another"
+
+#: templates/ai/proposal.html:145
+msgid "Proposta copiada!"
+msgstr "Proposal copied!"
+
+#: templates/ai/proposal.html:146
+msgid "Erro ao carregar perguntas:"
+msgstr "Error loading questions:"
+
+#: templates/ai/report.html:35
+msgid "Geracao de Relatorio"
+msgstr "Report Generation"
+
+#: templates/ai/report.html:49
+msgid "Selecione o tipo de relatorio:"
+msgstr "Select report type:"
+
+#: templates/ai/report.html:55
+msgid "Relatorio Parcial"
+msgstr "Partial Report"
+
+#: templates/ai/report.html:56
+msgid ""
+"Para prestacao de contas intermediaria com foco em progresso e proximas "
+"etapas."
+msgstr "For interim reporting with focus on progress and next steps."
+
+#: templates/ai/report.html:58
+msgid "Gerar Parcial"
+msgstr "Generate Partial"
+
+#: templates/ai/report.html:67
+msgid "Relatorio Final"
+msgstr "Final Report"
+
+#: templates/ai/report.html:68
+msgid "Para conclusao do projeto com foco em resultados e impactos."
+msgstr "For project conclusion with focus on results and impacts."
+
+#: templates/ai/report.html:70
+msgid "Gerar Final"
+msgstr "Generate Final"
+
+#: templates/ai/report.html:81
+msgid "Gerando relatorio com IA... Isso pode levar alguns segundos."
+msgstr "Generating report with AI... This may take a few seconds."
+
+#: templates/ai/report.html:89
+msgid "O relatorio foi salvo em"
+msgstr "The report was saved in"
+
+#: templates/ai/report.html:99
+msgid "Copiar Texto"
+msgstr "Copy Text"
+
+#: templates/ai/report.html:102
+msgid "Download TXT"
+msgstr "Download TXT"
+
+#: templates/ai/report.html:105
+msgid "Gerar Outro"
+msgstr "Generate Another"
+
+#: templates/ai/report.html:119
+msgid "Relatorio copiado para a area de transferencia!"
+msgstr "Report copied to clipboard!"
+
+#: templates/ai/risks.html:25
+msgid "Clique no botao abaixo para analisar os riscos do projeto com IA."
+msgstr "Click the button below to analyze project risks with AI."
+
+#: templates/ai/risks.html:33
+msgid "Analisando riscos do projeto..."
+msgstr "Analyzing project risks..."
+
+#: templates/ai/risks.html:44
+msgid "Nivel de Risco Geral"
+msgstr "Overall Risk Level"
+
+#: templates/ai/risks.html:56
+msgid "Previsao de Conclusao"
+msgstr "Completion Forecast"
+
+#: templates/ai/risks.html:65
+msgid "Burn Rate"
+msgstr "Burn Rate"
+
+#: templates/ai/risks.html:68
+msgid "Mensal:"
+msgstr "Monthly:"
+
+#: templates/ai/risks.html:69
+msgid "Projecao Final:"
+msgstr "Final Projection:"
+
+#: templates/ai/risks.html:91 templates/status_report/report.html:131
+msgid "Riscos Identificados"
+msgstr "Identified Risks"
+
+#: templates/ai/risks.html:114
+msgid "Nenhum risco critico identificado."
+msgstr "No critical risks identified."
+
+#: templates/ai/risks.html:115
+msgid "Nenhuma recomendacao adicional."
+msgstr "No additional recommendations."
+
+#: templates/ai/risks.html:116
+msgid "No Prazo"
+msgstr "On Schedule"
+
+#: templates/ai/risks.html:118
+msgid "Em Risco"
+msgstr "At Risk"
+
+#: templates/ai/risks.html:119
+msgid "Dentro do Orcamento"
+msgstr "Within Budget"
+
+#: templates/ai/risks.html:120
+msgid "Acima do Orcamento"
+msgstr "Above Budget"
+
+#: templates/ai/risks.html:121
+msgid "Prob:"
+msgstr "Prob:"
+
+#: templates/ai/risks.html:122
+msgid "Impacto:"
+msgstr "Impact:"
+
+#: templates/ai/risks.html:123
+msgid "Mitigacao:"
+msgstr "Mitigation:"
+
+#: templates/audit/list.html:2 templates/compliance/nc/form.html:41
+#: templates/projects/view.html:19
+msgid "Auditoria"
+msgstr "Audit"
+
+#: templates/audit/list.html:7 templates/audit/logs.html:2
+#: templates/audit/logs.html:7
+msgid "Logs de Auditoria"
+msgstr "Audit Logs"
+
+#: templates/audit/list.html:8
+msgid "Registro de acessos e alterações no sistema"
+msgstr "Record of accesses and changes in the system"
+
+#: templates/audit/list.html:17
+msgid "Total de Registros"
+msgstr "Total Records"
+
+#: templates/audit/list.html:25
+msgid "Hoje"
+msgstr "Today"
+
+#: templates/audit/list.html:33
+msgid "Logins"
+msgstr "Logins"
+
+#: templates/audit/list.html:41
+msgid "Alterações"
+msgstr "Changes"
+
+#: templates/audit/list.html:53 templates/audit/list.html:106
+#: templates/audit/logs.html:17 templates/audit/logs.html:63
+#: templates/compliance/dashboard.html:186
+#: templates/pmo_agents/action_center.html:38
+msgid "Ação"
+msgstr "Action"
+
+#: templates/audit/list.html:55 templates/audit/list.html:66
+#: templates/audit/logs.html:19 templates/audit/logs.html:28
+msgid "Todas"
+msgstr "All"
+
+#: templates/audit/list.html:56 templates/audit/list.html:129
+#: templates/audit/logs.html:84
+msgid "Login"
+msgstr "Login"
+
+#: templates/audit/list.html:57 templates/audit/list.html:131
+#: templates/audit/logs.html:86
+msgid "Logout"
+msgstr "Logout"
+
+#: templates/audit/list.html:58 templates/audit/list.html:133
+#: templates/audit/logs.html:88 templates/pmo_agents/minutes_parser.html:113
+#: templates/pmo_agents/minutes_parser.html:132
+#: templates/pmo_agents/minutes_parser.html:151
+#: templates/pmo_agents/minutes_parser.html:170
+msgid "Criar"
+msgstr "Create"
+
+#: templates/audit/list.html:59 templates/audit/list.html:135
+#: templates/audit/logs.html:90 templates/compliance/actions/form.html:131
+#: templates/compliance/bugs/form.html:104
+#: templates/compliance/nc/form.html:97
+#: templates/compliance/pending/form.html:79
+#: templates/compliance/risks/form.html:112
+msgid "Atualizar"
+msgstr "Update"
+
+#: templates/audit/list.html:60 templates/audit/list.html:137
+#: templates/audit/logs.html:92 templates/compliance/actions/list.html:112
+#: templates/compliance/bugs/list.html:101
+#: templates/compliance/nc/list.html:98
+#: templates/compliance/pending/list.html:107
+#: templates/compliance/risks/list.html:117 templates/expenses/form.html:119
+#: templates/projects/form.html:296
+#: templates/projects/stakeholders/list.html:135 templates/users/list.html:144
+msgid "Excluir"
+msgstr "Delete"
+
+#: templates/audit/list.html:64 templates/audit/list.html:107
+#: templates/audit/logs.html:26 templates/audit/logs.html:64
+msgid "Entidade"
+msgstr "Entity"
+
+#: templates/audit/list.html:73 templates/audit/list.html:105
+#: templates/audit/logs.html:35 templates/audit/logs.html:62
+#: templates/auth/register.html:25 templates/tenants/view.html:120
+#: templates/tenants/view.html:282 templates/users/form.html:2
+#: templates/users/form.html:11 templates/users/form.html:53
+#: templates/users/form.html:59 templates/users/list.html:73
+#: templates/users/list.html:90 templates/users/list.html:119
+#: templates/users/profile.html:33 templates/users/view.html:43
+msgid "Usuário"
+msgstr "User"
+
+#: templates/audit/list.html:75 templates/audit/logs.html:37
+#: templates/resources/list.html:61
+msgid "Todos"
+msgstr "All"
+
+#: templates/audit/list.html:82
+msgid "Data Inicial"
+msgstr "Start Date"
+
+#: templates/audit/list.html:86
+msgid "Data Final"
+msgstr "End Date"
+
+#: templates/audit/list.html:90 templates/audit/logs.html:45
+#: templates/compliance/actions/list.html:40
+#: templates/compliance/bugs/list.html:41 templates/compliance/nc/list.html:40
+#: templates/compliance/pending/list.html:39
+#: templates/compliance/risks/list.html:40 templates/expenses/list.html:75
+#: templates/projects/list.html:93 templates/public_calls/list.html:85
+#: templates/timesheet/list.html:84 templates/users/list.html:77
+msgid "Filtrar"
+msgstr "Filter"
+
+#: templates/audit/list.html:104 templates/audit/logs.html:61
+msgid "Data/Hora"
+msgstr "Date/Time"
+
+#: templates/audit/list.html:108 templates/audit/logs.html:65
+msgid "Detalhes"
+msgstr "Details"
+
+#: templates/audit/list.html:124 templates/audit/logs.html:79
+msgid "Sistema"
+msgstr "System"
+
+#: templates/audit/list.html:169
+msgid ""
+"Exibindo os últimos 500 registros. Use os filtros para refinar a busca."
+msgstr "Showing the last 500 records. Use filters to refine the search."
+
+#: templates/audit/list.html:175
+msgid "Nenhum registro encontrado"
+msgstr "No records found"
+
+#: templates/audit/list.html:176
+msgid "Não há logs de auditoria com os filtros selecionados."
+msgstr "There are no audit logs with the selected filters."
+
+#: templates/audit/logs.html:8
+msgid "Histórico de ações no sistema"
+msgstr "History of actions in the system"
+
+#: templates/audit/logs.html:48 templates/compliance/actions/list.html:41
+#: templates/compliance/bugs/list.html:42 templates/compliance/nc/list.html:41
+#: templates/compliance/pending/list.html:40
+#: templates/compliance/risks/list.html:41 templates/projects/list.html:94
+msgid "Limpar"
+msgstr "Clear"
+
+#: templates/audit/logs.html:124
+msgid "Nenhum log encontrado"
+msgstr "No logs found"
+
+#: templates/auth/login.html:6 templates/auth/login.html:420
+msgid "Portal de Inovação Aberta"
+msgstr "Open Innovation Portal"
+
+#: templates/auth/login.html:448
+msgid "Transforme suas idéias em"
+msgstr "Transform your ideas into"
+
+#: templates/auth/login.html:448
+msgid "projetos de inovação"
+msgstr "innovation projects"
+
+#: templates/auth/login.html:451
+msgid ""
+"Plataforma inteligente para gestão de projetos de P&D com monitoramento "
+"automático de editais, análise com IA e geração de propostas."
+msgstr ""
+"Intelligent platform for R&D project management with automatic call "
+"monitoring, AI analysis and proposal generation."
+
+#: templates/auth/login.html:460
+msgid "Recursos Disponíveis"
+msgstr "Available Resources"
+
+#: templates/auth/login.html:466
+msgid "Editais por Ano"
+msgstr "Calls per Year"
+
+#: templates/auth/login.html:472 templates/auth/login.html:563
+msgid "Monitoramento"
+msgstr "Monitoring"
+
+#: templates/auth/login.html:492
+msgid "Acesso ao Sistema"
+msgstr "System Access"
+
+#: templates/auth/login.html:496
+msgid "Email ou Usuário"
+msgstr "Email or Username"
+
+#: templates/auth/login.html:505 templates/auth/register.html:30
+#: templates/tenants/form.html:193 templates/tenants/view.html:276
+#: templates/users/form.html:41
+msgid "Senha"
+msgstr "Password"
+
+#: templates/auth/login.html:514
+msgid "Entrar na Plataforma"
+msgstr "Enter Platform"
+
+#: templates/auth/login.html:520
+msgid "Conexão segura e criptografada"
+msgstr "Secure and encrypted connection"
+
+#: templates/auth/login.html:526
+msgid "Metodologia alinhada ao PMBOK 8 - Entrega de Valor"
+msgstr "Methodology aligned with PMBOK 8 - Value Delivery"
+
+#: templates/auth/login.html:532
+msgid "Idioma / Language"
+msgstr "Language / Idioma"
+
+#: templates/auth/login.html:551
+msgid "Recursos da Plataforma"
+msgstr "Platform Features"
+
+#: templates/auth/login.html:556
+msgid "Inteligência Artificial"
+msgstr "Artificial Intelligence"
+
+#: templates/auth/login.html:557
+msgid "Análise automática de editais e geração de propostas com IA avançada"
+msgstr "Automatic analysis of calls and proposal generation with advanced AI"
+
+#: templates/auth/login.html:564
+msgid "Acompanhamento automático de chamadas FINEP, BNDES e FAPESC"
+msgstr "Automatic monitoring of FINEP, BNDES and FAPESC calls"
+
+#: templates/auth/login.html:570
+msgid "Gestão Financeira"
+msgstr "Financial Management"
+
+#: templates/auth/login.html:571
+msgid "Controle de despesas com anexos de boletos, NFs e comprovantes"
+msgstr "Expense control with bill, invoice and receipt attachments"
+
+#: templates/auth/login.html:577
+msgid "Propostas"
+msgstr "Proposals"
+
+#: templates/auth/login.html:578
+msgid "Geração automática de propostas alinhadas com requisitos do edital"
+msgstr "Automatic generation of proposals aligned with call requirements"
+
+#: templates/auth/login.html:588
+msgid "Notícias de Inovação"
+msgstr "Innovation News"
+
+#: templates/auth/login.html:623 templates/auth/login.html:642
+#: templates/auth/login.html:657 templates/auth/login.html:672
+msgid "Leia mais"
+msgstr "Read more"
+
+#: templates/auth/login.html:639
+msgid "Programas de apoio a inovação tecnológica"
+msgstr "Technological innovation support programs"
+
+#: templates/auth/login.html:640
+msgid ""
+"FINEP disponibiliza recursos para projetos de pesquisa e desenvolvimento"
+msgstr "FINEP provides resources for research and development projects"
+
+#: templates/auth/login.html:654
+msgid "Chamadas públicas para pesquisadores catarinenses"
+msgstr "Public calls for researchers from Santa Catarina"
+
+#: templates/auth/login.html:655
+msgid "Oportunidades de financiamento para projetos de inovação em SC"
+msgstr "Funding opportunities for innovation projects in SC"
+
+#: templates/auth/login.html:669
+msgid "Linhas de crédito para inovação empresarial"
+msgstr "Credit lines for business innovation"
+
+#: templates/auth/login.html:670
+msgid "Recursos disponíveis para empresas investirem em P&D"
+msgstr "Resources available for companies to invest in R&D"
+
+#: templates/auth/login.html:682
+msgid "Ver mais notícias FINEP"
+msgstr "See more FINEP news"
+
+#: templates/auth/login.html:685
+msgid "Ver mais notícias FAPESC"
+msgstr "See more FAPESC news"
+
+#: templates/auth/login.html:696
+msgid "Fontes de Fomento:"
+msgstr "Funding Sources:"
+
+#: templates/auth/login.html:733
+msgid "Plataforma de Gestão de Inovação"
+msgstr "Innovation Management Platform"
+
+#: templates/auth/register.html:2
+msgid "Cadastro"
+msgstr "Registration"
+
+#: templates/auth/register.html:2 templates/compliance/actions/form.html:2
+#: templates/compliance/actions/list.html:2
+#: templates/compliance/bugs/form.html:2 templates/compliance/bugs/list.html:2
+#: templates/compliance/dashboard.html:2 templates/compliance/nc/form.html:2
+#: templates/compliance/nc/list.html:2
+#: templates/compliance/pending/form.html:2
+#: templates/compliance/pending/list.html:2
+#: templates/compliance/risks/form.html:2
+#: templates/compliance/risks/list.html:2 templates/projects/view.html:2
+msgid "Gestão P&D"
+msgstr "R&D Management"
+
+#: templates/auth/register.html:11
+msgid "Criar Conta"
+msgstr "Create Account"
+
+#: templates/auth/register.html:12
+msgid "Cadastre-se no sistema de Gestão P&D"
+msgstr "Register in the R&D Management system"
+
+#: templates/auth/register.html:17 templates/tenants/form.html:183
+#: templates/tenants/view.html:268 templates/users/form.html:19
+#: templates/users/profile.html:51
+msgid "Nome Completo"
+msgstr "Full Name"
+
+#: templates/auth/register.html:21 templates/pmo_agents/briefing.html:14
+#: templates/projects/stakeholders/form.html:55 templates/users/form.html:35
+#: templates/users/list.html:91 templates/users/profile.html:56
+#: templates/users/view.html:56
+msgid "Email"
+msgstr "Email"
+
+#: templates/auth/register.html:34
+msgid "Confirmar Senha"
+msgstr "Confirm Password"
+
+#: templates/auth/register.html:39 templates/public_calls/form.html:111
+msgid "Cadastrar"
+msgstr "Register"
+
+#: templates/auth/register.html:44
+msgid "Já tem conta?"
+msgstr "Already have an account?"
+
+#: templates/auth/register.html:45
+msgid "Fazer login"
+msgstr "Log in"
+
+#: templates/compliance/dashboard.html:2
+msgid "Central de Conformidade"
+msgstr "Compliance Center"
+
+#: templates/compliance/dashboard.html:6
+msgid "Central de Pendências e Conformidade"
+msgstr "Pending Items and Compliance Center"
+
+#: templates/compliance/dashboard.html:29
+#: templates/compliance/dashboard.html:99
+#: templates/compliance/pending/list.html:2
+#: templates/compliance/pending/list.html:6
+#: templates/pmo_agents/minutes_parser.html:57
+#: templates/pmo_agents/minutes_parser.html:99
+#: templates/status_report/print.html:665
+msgid "Pendências"
+msgstr "Pending Items"
+
+#: templates/compliance/dashboard.html:42
+#: templates/compliance/dashboard.html:115 templates/compliance/nc/list.html:2
+#: templates/compliance/nc/list.html:6
+#: templates/pmo_agents/minutes_parser.html:71
+#: templates/pmo_agents/minutes_parser.html:143
+msgid "Não Conformidades"
+msgstr "Non-Conformances"
+
+#: templates/compliance/bugs/list.html:2
+#: templates/compliance/dashboard.html:55
+#: templates/compliance/dashboard.html:134
+#: templates/portfolio/status_report.html:244
+#: templates/programs/status_report.html:254
+#: templates/status_report/print.html:669
+msgid "Bugs"
+msgstr "Bugs"
+
+#: templates/compliance/actions/list.html:2
+#: templates/compliance/actions/list.html:6
+#: templates/compliance/dashboard.html:68
+#: templates/compliance/dashboard.html:150
+msgid "Ações Corretivas"
+msgstr "Corrective Actions"
+
+#: templates/compliance/dashboard.html:86
+msgid "Gerencie os riscos identificados nos projetos"
+msgstr "Manage identified risks in projects"
+
+#: templates/compliance/dashboard.html:88
+#: templates/compliance/dashboard.html:104
+#: templates/compliance/dashboard.html:120
+#: templates/compliance/dashboard.html:139
+#: templates/compliance/dashboard.html:155
+msgid "Ver Lista"
+msgstr "View List"
+
+#: templates/compliance/bugs/form.html:2
+#: templates/compliance/dashboard.html:91
+#: templates/compliance/dashboard.html:142
+#: templates/compliance/risks/form.html:2 templates/programs/form.html:2
+#: templates/projects/form.html:2 templates/projects/form.html:11
+#: templates/resources/form.html:2 templates/resources/form.html:11
+#: templates/schedule/form.html:2 templates/schedule/form.html:11
+#: templates/timesheet/form.html:2 templates/users/form.html:2
+#: templates/users/form.html:11
+msgid "Novo"
+msgstr "New"
+
+#: templates/compliance/dashboard.html:102
+msgid "Acompanhe itens pendentes dos projetos"
+msgstr "Track pending project items"
+
+#: templates/compliance/actions/form.html:2
+#: templates/compliance/dashboard.html:107
+#: templates/compliance/dashboard.html:123
+#: templates/compliance/dashboard.html:158 templates/compliance/nc/form.html:2
+#: templates/compliance/pending/form.html:2 templates/expenses/form.html:2
+#: templates/expenses/form.html:11 templates/public_calls/form.html:2
+#: templates/public_calls/form.html:11 templates/tenants/form.html:2
+msgid "Nova"
+msgstr "New"
+
+#: templates/compliance/dashboard.html:118
+msgid "Registre e trate não conformidades"
+msgstr "Record and handle non-conformances"
+
+#: templates/compliance/dashboard.html:137
+msgid "Rastreie bugs e problemas técnicos"
+msgstr "Track bugs and technical issues"
+
+#: templates/compliance/dashboard.html:153
+msgid "Gerencie ações para resolver pendências, NC, bugs e riscos"
+msgstr "Manage actions to resolve pending items, NC, bugs and risks"
+
+#: templates/compliance/dashboard.html:170
+msgid "Últimos Itens Registrados"
+msgstr "Last Registered Items"
+
+#: templates/compliance/actions/form.html:68
+#: templates/compliance/actions/list.html:77
+#: templates/compliance/dashboard.html:178
+#: templates/compliance/risks/form.html:2 templates/projects/view.html:174
+msgid "Risco"
+msgstr "Risk"
+
+#: templates/compliance/actions/form.html:41
+#: templates/compliance/actions/list.html:71
+#: templates/compliance/dashboard.html:180
+#: templates/compliance/pending/form.html:2
+msgid "Pendência"
+msgstr "Pending Item"
+
+#: templates/compliance/actions/list.html:73
+#: templates/compliance/dashboard.html:182
+msgid "NC"
+msgstr "NC"
+
+#: templates/compliance/actions/form.html:59
+#: templates/compliance/actions/list.html:75
+#: templates/compliance/bugs/form.html:2
+#: templates/compliance/dashboard.html:184
+msgid "Bug"
+msgstr "Bug"
+
+#: templates/compliance/dashboard.html:193
+msgid "Nenhum item registrado"
+msgstr "No items registered"
+
+#: templates/compliance/dashboard.html:202
+#: templates/pmo_agents/briefing.html:302
+msgid "Resumo por Projeto"
+msgstr "Summary by Project"
+
+#: templates/compliance/dashboard.html:205
+msgid "Selecione um projeto na lista para ver estatísticas detalhadas"
+msgstr "Select a project in the list to see detailed statistics"
+
+#: templates/compliance/dashboard.html:208
+msgid "Ir para Projetos"
+msgstr "Go to Projects"
+
+#: templates/compliance/actions/form.html:2
+#: templates/compliance/actions/list.html:108
+#: templates/compliance/bugs/form.html:2
+#: templates/compliance/bugs/list.html:97 templates/compliance/nc/form.html:2
+#: templates/compliance/nc/list.html:94
+#: templates/compliance/pending/form.html:2
+#: templates/compliance/pending/list.html:103
+#: templates/compliance/risks/form.html:2
+#: templates/compliance/risks/list.html:113 templates/expenses/form.html:2
+#: templates/expenses/form.html:11 templates/meeting_minutes/view.html:49
+#: templates/meeting_minutes/view.html:146 templates/programs/form.html:2
+#: templates/programs/list.html:63 templates/programs/view.html:21
+#: templates/projects/form.html:2 templates/projects/form.html:11
+#: templates/projects/list.html:153
+#: templates/projects/stakeholders/form.html:2
+#: templates/projects/stakeholders/form.html:13
+#: templates/projects/stakeholders/list.html:130
+#: templates/projects/view.html:29 templates/public_calls/form.html:2
+#: templates/public_calls/form.html:11 templates/public_calls/view.html:15
+#: templates/resources/form.html:2 templates/resources/form.html:11
+#: templates/resources/list.html:108 templates/schedule/form.html:2
+#: templates/schedule/form.html:11 templates/tenants/form.html:2
+#: templates/tenants/list.html:123 templates/tenants/view.html:16
+#: templates/timesheet/form.html:2 templates/timesheet/form.html:11
+#: templates/users/form.html:2 templates/users/form.html:11
+#: templates/users/list.html:134 templates/users/view.html:15
+msgid "Editar"
+msgstr "Edit"
+
+#: templates/compliance/actions/form.html:2
+msgid "Ação Corretiva"
+msgstr "Corrective Action"
+
+#: templates/compliance/actions/form.html:8
+msgid "Editar Ação Corretiva"
+msgstr "Edit Corrective Action"
+
+#: templates/compliance/actions/form.html:8
+msgid "Nova Ação Corretiva"
+msgstr "New Corrective Action"
+
+#: templates/compliance/actions/form.html:20
+#: templates/compliance/actions/list.html:54
+#: templates/compliance/bugs/form.html:34 templates/compliance/nc/form.html:34
+#: templates/compliance/pending/form.html:34
+#: templates/compliance/risks/form.html:34 templates/projects/form.html:42
+msgid "Descrição"
+msgstr "Description"
+
+#: templates/compliance/actions/form.html:26
+#: templates/compliance/actions/form.html:109
+#: templates/compliance/bugs/form.html:26
+#: templates/compliance/bugs/form.html:83 templates/compliance/nc/form.html:26
+#: templates/compliance/nc/form.html:40 templates/compliance/nc/form.html:76
+#: templates/compliance/pending/form.html:26
+#: templates/compliance/pending/form.html:62
+#: templates/compliance/risks/form.html:26
+#: templates/compliance/risks/form.html:40
+#: templates/compliance/risks/form.html:50
+#: templates/compliance/risks/form.html:61
+#: templates/compliance/risks/form.html:72
+#: templates/compliance/risks/form.html:99
+#: templates/pmo_agents/minutes_parser.html:26 templates/schedule/form.html:83
+#: templates/schedule/form.html:106 templates/schedule/form.html:160
+msgid "Selecione"
+msgstr "Select"
+
+#: templates/compliance/actions/form.html:31
+#: templates/compliance/bugs/form.html:31 templates/compliance/nc/form.html:31
+#: templates/compliance/pending/form.html:31
+#: templates/compliance/risks/form.html:31
+msgid "Obrigatório para aparecer no Status Report"
+msgstr "Required to appear in Status Report"
+
+#: templates/compliance/actions/form.html:36
+msgid "Vincule esta ação a um item de origem (opcional)"
+msgstr "Link this action to a source item (optional)"
+
+#: templates/compliance/actions/form.html:43
+#: templates/compliance/actions/form.html:52
+#: templates/projects/stakeholders/list.html:118
+#: templates/schedule/form.html:62
+msgid "Nenhuma"
+msgstr "None"
+
+#: templates/compliance/actions/form.html:50
+#: templates/compliance/nc/form.html:2
+msgid "Não Conformidade"
+msgstr "Non-Conformance"
+
+#: templates/compliance/actions/form.html:61
+#: templates/compliance/actions/form.html:70 templates/tenants/form.html:148
+#: templates/timesheet/form.html:47
+msgid "Nenhum"
+msgstr "None"
+
+#: templates/compliance/actions/form.html:78
+msgid "Tipo de Ação"
+msgstr "Action Type"
+
+#: templates/compliance/actions/form.html:80
+msgid "Corretiva"
+msgstr "Corrective"
+
+#: templates/compliance/actions/form.html:80
+msgid "Preventiva"
+msgstr "Preventive"
+
+#: templates/compliance/actions/form.html:80
+msgid "Melhoria"
+msgstr "Improvement"
+
+#: templates/compliance/actions/form.html:89
+#: templates/compliance/actions/list.html:24
+#: templates/compliance/actions/list.html:95
+msgid "Planejada"
+msgstr "Planned"
+
+#: templates/compliance/actions/form.html:89
+#: templates/compliance/actions/list.html:25
+#: templates/compliance/actions/list.html:97
+#: templates/compliance/pending/form.html:49
+#: templates/compliance/pending/list.html:25
+#: templates/compliance/pending/list.html:94 templates/projects/list.html:37
+#: templates/projects/list.html:87 templates/projects/list.html:128
+#: templates/projects/view.html:244
+msgid "Em Andamento"
+msgstr "In Progress"
+
+#: templates/compliance/actions/form.html:89
+#: templates/compliance/actions/list.html:26
+msgid "Concluída"
+msgstr "Completed"
+
+#: templates/compliance/actions/form.html:89
+#: templates/compliance/actions/list.html:27
+msgid "Verificada"
+msgstr "Verified"
+
+#: templates/compliance/actions/form.html:89
+#: templates/compliance/actions/list.html:28
+#: templates/compliance/actions/list.html:101
+#: templates/compliance/pending/form.html:49
+#: templates/compliance/pending/list.html:27
+#: templates/compliance/pending/list.html:98
+msgid "Cancelada"
+msgstr "Cancelled"
+
+#: templates/compliance/actions/form.html:96
+msgid "Eficácia"
+msgstr "Effectiveness"
+
+#: templates/compliance/actions/form.html:98
+msgid "Não avaliada"
+msgstr "Not evaluated"
+
+#: templates/compliance/actions/form.html:99
+msgid "Eficaz"
+msgstr "Effective"
+
+#: templates/compliance/actions/form.html:99
+msgid "Parcialmente Eficaz"
+msgstr "Partially Effective"
+
+#: templates/compliance/actions/form.html:99
+msgid "Não Eficaz"
+msgstr "Not Effective"
+
+#: templates/compliance/actions/form.html:107
+#: templates/compliance/actions/list.html:59
+#: templates/compliance/bugs/form.html:81
+#: templates/compliance/bugs/list.html:60 templates/compliance/nc/form.html:74
+#: templates/compliance/nc/list.html:59
+#: templates/compliance/pending/form.html:60
+#: templates/compliance/pending/list.html:58
+#: templates/compliance/risks/form.html:97
+#: templates/compliance/risks/list.html:61 templates/projects/form.html:90
+#: templates/projects/view.html:273 templates/status_report/print.html:733
+#: templates/status_report/report.html:652
+msgid "Responsável"
+msgstr "Responsible"
+
+#: templates/compliance/actions/form.html:116
+#: templates/compliance/actions/list.html:57
+#: templates/compliance/pending/form.html:56
+#: templates/compliance/pending/list.html:56
+msgid "Data Limite"
+msgstr "Deadline"
+
+#: templates/compliance/actions/form.html:120
+msgid "Data Conclusão"
+msgstr "Completion Date"
+
+#: templates/compliance/actions/form.html:125
+msgid "Notas de Verificação"
+msgstr "Verification Notes"
+
+# Actions
+#: templates/compliance/actions/form.html:131
+#: templates/compliance/bugs/form.html:104
+#: templates/compliance/nc/form.html:97
+#: templates/compliance/pending/form.html:79
+#: templates/compliance/risks/form.html:112 templates/expenses/form.html:69
+#: templates/meeting_minutes/view.html:183 templates/programs/form.html:76
+#: templates/public_calls/form.html:111 templates/resources/form.html:72
+#: templates/schedule/form.html:141 templates/tenants/form.html:206
+#: templates/timesheet/form.html:62
+msgid "Salvar"
+msgstr "Save"
+
+#: templates/compliance/actions/form.html:133
+#: templates/compliance/bugs/form.html:106
+#: templates/compliance/nc/form.html:99
+#: templates/compliance/pending/form.html:81
+#: templates/compliance/risks/form.html:114 templates/expenses/form.html:67
+#: templates/meeting_minutes/form.html:81
+#: templates/meeting_minutes/view.html:186
+#: templates/pmo_agents/briefing.html:512 templates/programs/form.html:78
+#: templates/programs/view.html:216 templates/projects/form.html:250
+#: templates/projects/stakeholders/form.html:219
+#: templates/public_calls/form.html:109 templates/resources/form.html:70
+#: templates/schedule/form.html:139 templates/schedule/import.html:46
+#: templates/tenants/form.html:204 templates/tenants/view.html:289
+#: templates/timesheet/form.html:60 templates/timesheet/upload.html:33
+#: templates/users/form.html:128 templates/users/profile.html:140
+msgid "Cancelar"
+msgstr "Cancel"
+
+#: templates/compliance/actions/list.html:12
+msgid "Nova Ação"
+msgstr "New Action"
+
+#: templates/compliance/actions/list.html:23
+#: templates/compliance/bugs/list.html:23 templates/compliance/nc/list.html:23
+#: templates/compliance/pending/list.html:23
+#: templates/compliance/risks/list.html:23 templates/projects/list.html:85
+msgid "Todos os Status"
+msgstr "All Statuses"
+
+#: templates/compliance/actions/list.html:33
+#: templates/compliance/bugs/list.html:34 templates/compliance/nc/list.html:33
+#: templates/compliance/pending/list.html:32
+#: templates/compliance/risks/list.html:33
+#: templates/pmo_agents/compliance_analysis.html:23
+msgid "Todos os Projetos"
+msgstr "All Projects"
+
+#: templates/compliance/actions/list.html:53
+#: templates/compliance/bugs/list.html:54 templates/compliance/nc/list.html:53
+#: templates/compliance/pending/list.html:52
+#: templates/compliance/risks/list.html:53 templates/projects/list.html:107
+#: templates/tenants/view.html:154
+msgid "Código"
+msgstr "Code"
+
+#: templates/compliance/actions/list.html:56
+msgid "Origem"
+msgstr "Source"
+
+#: templates/compliance/actions/list.html:60
+#: templates/compliance/bugs/list.html:61 templates/compliance/nc/list.html:60
+#: templates/compliance/pending/list.html:59
+#: templates/compliance/risks/list.html:62
+#: templates/meeting_minutes/list.html:56
+#: templates/pmo_agents/briefing.html:17
+#: templates/pmo_agents/minutes_parser.html:78
+#: templates/pmo_agents/minutes_parser.html:162
+#: templates/projects/list.html:113
+#: templates/projects/stakeholders/list.html:75 templates/tenants/list.html:68
+#: templates/tenants/view.html:193 templates/users/list.html:95
+msgid "Ações"
+msgstr "Actions"
+
+#: templates/compliance/actions/list.html:111
+#: templates/compliance/bugs/list.html:100
+#: templates/compliance/nc/list.html:97
+#: templates/compliance/pending/list.html:106
+#: templates/compliance/risks/list.html:116
+msgid "Confirma exclusão?"
+msgstr "Confirm deletion?"
+
+#: templates/compliance/actions/list.html:127
+msgid "Nenhuma ação corretiva encontrada"
+msgstr "No corrective actions found"
+
+#: templates/compliance/actions/list.html:128
+msgid "Registre ações corretivas vinculadas a pendências, NC, bugs ou riscos"
+msgstr "Record corrective actions linked to pending items, NC, bugs or risks"
+
+#: templates/compliance/actions/list.html:130
+msgid "Registrar Ação"
+msgstr "Register Action"
+
+#: templates/compliance/bugs/form.html:8
+#: templates/pmo_agents/compliance_analysis.html:159
+msgid "Editar Bug"
+msgstr "Edit Bug"
+
+#: templates/compliance/bugs/form.html:8
+#: templates/compliance/bugs/list.html:12
+msgid "Novo Bug"
+msgstr "New Bug"
+
+#: templates/compliance/bugs/form.html:20
+#: templates/compliance/bugs/list.html:55 templates/compliance/nc/form.html:20
+#: templates/compliance/nc/list.html:54
+#: templates/compliance/pending/form.html:20
+#: templates/compliance/pending/list.html:53
+#: templates/compliance/risks/form.html:20
+#: templates/compliance/risks/list.html:54
+#: templates/meeting_minutes/list.html:53 templates/projects/form.html:37
+#: templates/projects/list.html:108 templates/tenants/view.html:155
+msgid "Título"
+msgstr "Title"
+
+#: templates/compliance/bugs/form.html:38
+#: templates/compliance/bugs/list.html:57
+msgid "Severidade"
+msgstr "Severity"
+
+#: templates/compliance/bugs/form.html:40
+#: templates/compliance/bugs/list.html:78
+#: templates/compliance/pending/form.html:40
+#: templates/compliance/pending/list.html:76
+#: templates/compliance/risks/form.html:52
+msgid "Baixa"
+msgstr "Low"
+
+#: templates/compliance/bugs/form.html:40
+#: templates/compliance/bugs/list.html:76
+#: templates/compliance/pending/form.html:40
+#: templates/compliance/pending/list.html:74
+#: templates/compliance/risks/form.html:53
+msgid "Média"
+msgstr "Medium"
+
+#: templates/compliance/bugs/form.html:40
+#: templates/compliance/bugs/list.html:74
+#: templates/compliance/pending/form.html:40
+#: templates/compliance/pending/list.html:72
+#: templates/compliance/risks/form.html:54
+msgid "Alta"
+msgstr "High"
+
+#: templates/compliance/bugs/form.html:40
+#: templates/compliance/bugs/list.html:72
+#: templates/compliance/pending/form.html:40
+#: templates/compliance/pending/list.html:70
+msgid "Crítica"
+msgstr "Critical"
+
+#: templates/compliance/bugs/form.html:47
+#: templates/compliance/bugs/list.html:58
+msgid "Ambiente"
+msgstr "Environment"
+
+#: templates/compliance/bugs/form.html:49
+msgid "Desenvolvimento"
+msgstr "Development"
+
+#: templates/compliance/bugs/form.html:49
+msgid "Homologação"
+msgstr "Staging"
+
+#: templates/compliance/bugs/form.html:49
+msgid "Produção"
+msgstr "Production"
+
+#: templates/compliance/bugs/form.html:58
+#: templates/compliance/bugs/list.html:24
+#: templates/compliance/bugs/list.html:84
+msgid "Aberto"
+msgstr "Open"
+
+#: templates/compliance/bugs/form.html:58
+#: templates/compliance/bugs/list.html:25 templates/compliance/nc/form.html:59
+#: templates/compliance/nc/list.html:25
+msgid "Em Análise"
+msgstr "Under Analysis"
+
+#: templates/compliance/bugs/form.html:58
+#: templates/compliance/bugs/list.html:26
+msgid "Em Correção"
+msgstr "Under Correction"
+
+#: templates/compliance/bugs/form.html:58
+#: templates/compliance/bugs/list.html:27
+#: templates/compliance/bugs/list.html:88
+msgid "Teste"
+msgstr "Testing"
+
+#: templates/compliance/bugs/form.html:58
+#: templates/compliance/bugs/list.html:28
+msgid "Resolvido"
+msgstr "Resolved"
+
+#: templates/compliance/bugs/form.html:58
+#: templates/compliance/bugs/list.html:29
+#: templates/compliance/risks/form.html:82
+#: templates/compliance/risks/list.html:28
+msgid "Fechado"
+msgstr "Closed"
+
+#: templates/compliance/bugs/form.html:65
+msgid "Passos para Reproduzir"
+msgstr "Steps to Reproduce"
+
+#: templates/compliance/bugs/form.html:66
+msgid "1. Acessar a tela X"
+msgstr "1. Access screen X"
+
+#: templates/compliance/bugs/form.html:66
+msgid "2. Clicar no botão Y"
+msgstr "2. Click button Y"
+
+#: templates/compliance/bugs/form.html:66
+msgid "3. Observar o erro Z"
+msgstr "3. Observe error Z"
+
+#: templates/compliance/bugs/form.html:69
+msgid "Comportamento Esperado"
+msgstr "Expected Behavior"
+
+#: templates/compliance/bugs/form.html:73
+msgid "Comportamento Atual"
+msgstr "Current Behavior"
+
+#: templates/compliance/bugs/form.html:77
+msgid "Evidência (URL ou descrição)"
+msgstr "Evidence (URL or description)"
+
+#: templates/compliance/bugs/form.html:90 templates/compliance/nc/form.html:83
+#: templates/compliance/risks/form.html:106
+msgid "Data Identificação"
+msgstr "Identification Date"
+
+#: templates/compliance/bugs/form.html:94
+#: templates/compliance/pending/form.html:69
+msgid "Data Resolução"
+msgstr "Resolution Date"
+
+#: templates/compliance/bugs/form.html:98
+msgid "Notas de Resolução"
+msgstr "Resolution Notes"
+
+#: templates/compliance/bugs/list.html:6
+msgid "Registro de Bugs"
+msgstr "Bug Registry"
+
+#: templates/compliance/bugs/list.html:116
+msgid "Nenhum bug encontrado"
+msgstr "No bugs found"
+
+#: templates/compliance/bugs/list.html:117
+msgid "Registre bugs para rastreamento"
+msgstr "Register bugs for tracking"
+
+#: templates/compliance/bugs/list.html:119
+msgid "Registrar Bug"
+msgstr "Register Bug"
+
+#: templates/compliance/nc/form.html:8
+msgid "Editar Não Conformidade"
+msgstr "Edit Non-Conformance"
+
+#: templates/compliance/nc/form.html:8
+msgid "Nova Não Conformidade"
+msgstr "New Non-Conformance"
+
+#: templates/compliance/nc/form.html:38 templates/compliance/nc/list.html:56
+#: templates/expenses/form.html:88 templates/pmo_agents/action_center.html:40
+#: templates/projects/view.html:162 templates/resources/form.html:19
+msgid "Tipo"
+msgstr "Type"
+
+#: templates/compliance/nc/form.html:41
+msgid "Processo"
+msgstr "Process"
+
+#: templates/compliance/nc/form.html:41
+msgid "Produto"
+msgstr "Product"
+
+#: templates/compliance/nc/form.html:41
+msgid "Documentação"
+msgstr "Documentation"
+
+#: templates/compliance/nc/form.html:41
+msgid "Cliente"
+msgstr "Customer"
+
+#: templates/compliance/nc/form.html:41
+msgid "Regulatório"
+msgstr "Regulatory"
+
+#: templates/compliance/nc/form.html:48 templates/compliance/nc/list.html:57
+#: templates/compliance/risks/list.html:58
+msgid "Impacto"
+msgstr "Impact"
+
+#: templates/compliance/nc/form.html:50 templates/compliance/nc/list.html:76
+#: templates/compliance/risks/form.html:63
+#: templates/pmo_agents/action_center.html:55
+#: templates/projects/stakeholders/list.html:97
+#: templates/projects/stakeholders/list.html:108
+#: templates/status_report/report.html:496
+msgid "Baixo"
+msgstr "Low"
+
+#: templates/compliance/nc/form.html:50 templates/compliance/nc/list.html:74
+#: templates/compliance/risks/form.html:64
+#: templates/pmo_agents/action_center.html:53
+#: templates/pmo_agents/compliance_analysis.html:203
+#: templates/projects/stakeholders/list.html:95
+#: templates/projects/stakeholders/list.html:106
+#: templates/status_report/report.html:496
+msgid "Médio"
+msgstr "Medium"
+
+#: templates/compliance/nc/form.html:50 templates/compliance/nc/list.html:72
+#: templates/compliance/risks/form.html:65
+#: templates/pmo_agents/action_center.html:51
+#: templates/projects/stakeholders/list.html:93
+#: templates/projects/stakeholders/list.html:104
+#: templates/projects/view.html:178 templates/status_report/report.html:496
+msgid "Alto"
+msgstr "High"
+
+#: templates/compliance/nc/form.html:59 templates/compliance/nc/list.html:24
+#: templates/compliance/nc/list.html:81
+#: templates/compliance/pending/form.html:49
+#: templates/compliance/pending/list.html:24
+#: templates/compliance/pending/list.html:92
+#: templates/public_calls/form.html:39
+msgid "Aberta"
+msgstr "Open"
+
+#: templates/compliance/nc/form.html:59 templates/compliance/nc/list.html:26
+#: templates/compliance/risks/form.html:82
+#: templates/compliance/risks/list.html:26
+#: templates/compliance/risks/list.html:104
+msgid "Em Tratamento"
+msgstr "Under Treatment"
+
+#: templates/compliance/nc/form.html:59 templates/compliance/nc/list.html:27
+#: templates/compliance/nc/list.html:85
+msgid "Verificação"
+msgstr "Verification"
+
+#: templates/compliance/nc/form.html:59 templates/compliance/nc/list.html:28
+#: templates/compliance/nc/list.html:87
+msgid "Fechada"
+msgstr "Closed"
+
+#: templates/compliance/nc/form.html:66
+msgid "Causa Raiz"
+msgstr "Root Cause"
+
+#: templates/compliance/nc/form.html:70
+msgid "Plano Corretivo"
+msgstr "Corrective Plan"
+
+#: templates/compliance/nc/form.html:87
+msgid "Data Fechamento"
+msgstr "Closing Date"
+
+#: templates/compliance/nc/form.html:91
+msgid "Evidência"
+msgstr "Evidence"
+
+#: templates/compliance/nc/list.html:12
+msgid "Nova NC"
+msgstr "New NC"
+
+#: templates/compliance/nc/list.html:113
+msgid "Nenhuma não conformidade encontrada"
+msgstr "No non-conformances found"
+
+#: templates/compliance/nc/list.html:114
+msgid "Registre não conformidades para tratamento"
+msgstr "Register non-conformances for treatment"
+
+#: templates/compliance/nc/list.html:116
+msgid "Registrar NC"
+msgstr "Register NC"
+
+#: templates/compliance/pending/form.html:8
+#: templates/pmo_agents/compliance_analysis.html:152
+msgid "Editar Pendência"
+msgstr "Edit Pending Item"
+
+#: templates/compliance/pending/form.html:8
+#: templates/compliance/pending/list.html:12
+msgid "Nova Pendência"
+msgstr "New Pending Item"
+
+#: templates/compliance/pending/form.html:38
+#: templates/compliance/pending/list.html:55
+#: templates/pmo_agents/action_center.html:37
+msgid "Prioridade"
+msgstr "Priority"
+
+#: templates/compliance/pending/form.html:49
+#: templates/compliance/pending/list.html:26
+#: templates/compliance/pending/list.html:96
+msgid "Resolvida"
+msgstr "Resolved"
+
+#: templates/compliance/pending/form.html:73
+msgid "Observações de Resolução"
+msgstr "Resolution Notes"
+
+#: templates/compliance/pending/list.html:122
+msgid "Nenhuma pendência encontrada"
+msgstr "No pending items found"
+
+#: templates/compliance/pending/list.html:123
+msgid "Registre pendências para acompanhamento"
+msgstr "Register pending items for tracking"
+
+#: templates/compliance/pending/list.html:125
+msgid "Registrar Pendência"
+msgstr "Register Pending Item"
+
+#: templates/compliance/risks/form.html:8
+msgid "Editar Risco"
+msgstr "Edit Risk"
+
+#: templates/compliance/risks/form.html:8
+#: templates/compliance/risks/list.html:12
+msgid "Novo Risco"
+msgstr "New Risk"
+
+#: templates/compliance/risks/form.html:38
+#: templates/compliance/risks/list.html:56 templates/expenses/form.html:24
+#: templates/expenses/list.html:90 templates/projects/form.html:46
+#: templates/projects/list.html:109 templates/projects/view.html:254
+msgid "Categoria"
+msgstr "Category"
+
+#: templates/compliance/risks/form.html:41
+msgid "Técnico"
+msgstr "Technical"
+
+#: templates/compliance/risks/form.html:41
+msgid "Financeiro"
+msgstr "Financial"
+
+#: templates/compliance/risks/form.html:41 templates/projects/view.html:292
+#: templates/resources/list.html:2 templates/resources/list.html:10
+msgid "Recursos"
+msgstr "Resources"
+
+#: templates/compliance/risks/form.html:41 templates/projects/form.html:194
+#: templates/projects/view.html:166
+msgid "Escopo"
+msgstr "Scope"
+
+#: templates/compliance/risks/form.html:41
+msgid "Externo"
+msgstr "External"
+
+#: templates/compliance/risks/form.html:41
+msgid "Organizacional"
+msgstr "Organizational"
+
+#: templates/compliance/risks/form.html:48
+msgid "Probabilidade (1-5)"
+msgstr "Probability (1-5)"
+
+#: templates/compliance/risks/form.html:51
+msgid "Muito Baixa"
+msgstr "Very Low"
+
+#: templates/compliance/risks/form.html:55
+msgid "Muito Alta"
+msgstr "Very High"
+
+#: templates/compliance/risks/form.html:59
+msgid "Impacto (1-5)"
+msgstr "Impact (1-5)"
+
+#: templates/compliance/risks/form.html:62
+msgid "Muito Baixo"
+msgstr "Very Low"
+
+#: templates/compliance/risks/form.html:66
+#: templates/projects/stakeholders/list.html:91
+#: templates/projects/stakeholders/list.html:102
+#: templates/projects/view.html:176
+msgid "Muito Alto"
+msgstr "Very High"
+
+#: templates/compliance/risks/form.html:70
+msgid "Estratégia de Resposta"
+msgstr "Response Strategy"
+
+#: templates/compliance/risks/form.html:73
+msgid "Evitar"
+msgstr "Avoid"
+
+#: templates/compliance/risks/form.html:73
+msgid "Mitigar"
+msgstr "Mitigate"
+
+#: templates/compliance/risks/form.html:73
+msgid "Transferir"
+msgstr "Transfer"
+
+#: templates/compliance/risks/form.html:73
+msgid "Aceitar"
+msgstr "Accept"
+
+#: templates/compliance/risks/form.html:82
+#: templates/compliance/risks/list.html:24
+#: templates/compliance/risks/list.html:102
+msgid "Identificado"
+msgstr "Identified"
+
+#: templates/compliance/risks/form.html:82
+#: templates/compliance/risks/list.html:25
+msgid "Analisado"
+msgstr "Analyzed"
+
+#: templates/compliance/risks/form.html:82
+#: templates/compliance/risks/list.html:27
+msgid "Mitigado"
+msgstr "Mitigated"
+
+#: templates/compliance/risks/form.html:89
+msgid "Plano de Mitigação"
+msgstr "Mitigation Plan"
+
+#: templates/compliance/risks/form.html:93
+msgid "Plano de Contingência"
+msgstr "Contingency Plan"
+
+#: templates/compliance/risks/list.html:6
+msgid "Registro de Riscos"
+msgstr "Risk Registry"
+
+#: templates/compliance/risks/list.html:57
+msgid "Probabilidade"
+msgstr "Probability"
+
+#: templates/compliance/risks/list.html:59
+msgid "Score"
+msgstr "Score"
+
+#: templates/compliance/risks/list.html:132
+msgid "Nenhum risco encontrado"
+msgstr "No risks found"
+
+#: templates/compliance/risks/list.html:133
+msgid "Registre riscos para gerenciá-los proativamente"
+msgstr "Register risks to manage them proactively"
+
+#: templates/compliance/risks/list.html:135
+msgid "Registrar Risco"
+msgstr "Register Risk"
+
+#: templates/expenses/form.html:2 templates/expenses/form.html:11
+msgid "Despesa"
+msgstr "Expense"
+
+#: templates/expenses/form.html:2 templates/resources/form.html:2
+#: templates/schedule/form.html:2 templates/timesheet/form.html:2
+msgid "Gestao P&D"
+msgstr "R&D Management"
+
+#: templates/expenses/form.html:19 templates/expenses/list.html:89
+#: templates/programs/form.html:29 templates/public_calls/form.html:102
+#: templates/public_calls/view.html:38 templates/schedule/form.html:29
+msgid "Descricao"
+msgstr "Description"
+
+#: templates/expenses/form.html:26 templates/programs/form.html:54
+#: templates/projects/form.html:48 templates/projects/form.html:82
+#: templates/projects/form.html:107 templates/projects/form.html:186
+#: templates/projects/form.html:196 templates/projects/form.html:206
+#: templates/projects/form.html:216
+#: templates/projects/stakeholders/form.html:37 templates/tenants/form.html:50
+msgid "Selecione..."
+msgstr "Select..."
+
+#: templates/expenses/form.html:33 templates/expenses/list.html:92
+msgid "Valor"
+msgstr "Amount"
+
+#: templates/expenses/form.html:38 templates/expenses/form.html:91
+#: templates/expenses/list.html:88 templates/meeting_minutes/form.html:29
+#: templates/meeting_minutes/list.html:52
+#: templates/meeting_minutes/view.html:78
+#: templates/portfolio/dashboard.html:391
+#: templates/status_report/print.html:732
+#: templates/status_report/report.html:651 templates/timesheet/form.html:19
+#: templates/timesheet/list.html:97
+msgid "Data"
+msgstr "Date"
+
+#: templates/expenses/form.html:51 templates/expenses/list.html:91
+msgid "Fornecedor"
+msgstr "Supplier"
+
+#: templates/expenses/form.html:56
+msgid "No Nota Fiscal"
+msgstr "Invoice No."
+
+#: templates/expenses/form.html:61 templates/public_calls/view.html:165
+#: templates/resources/form.html:64 templates/timesheet/form.html:54
+msgid "Observacoes"
+msgstr "Notes"
+
+#: templates/expenses/form.html:69 templates/programs/view.html:217
+#: templates/projects/stakeholders/form.html:2
+#: templates/projects/stakeholders/form.html:13
+#: templates/projects/view.html:220 templates/resources/form.html:72
+#: templates/tenants/view.html:94 templates/tenants/view.html:290
+msgid "Adicionar"
+msgstr "Add"
+
+#: templates/expenses/form.html:80
+msgid "Anexos"
+msgstr "Attachments"
+
+#: templates/expenses/form.html:89 templates/expenses/form.html:145
+msgid "Arquivo"
+msgstr "File"
+
+#: templates/expenses/form.html:90
+msgid "Tamanho"
+msgstr "Size"
+
+#: templates/expenses/form.html:92 templates/expenses/list.html:94
+#: templates/schedule/view.html:101 templates/timesheet/list.html:102
+msgid "Acoes"
+msgstr "Actions"
+
+#: templates/expenses/form.html:100 templates/expenses/form.html:139
+msgid "Boleto"
+msgstr "Bill"
+
+#: templates/expenses/form.html:102 templates/expenses/form.html:140
+msgid "Nota Fiscal"
+msgstr "Invoice"
+
+#: templates/expenses/form.html:104
+msgid "Comprovante"
+msgstr "Receipt"
+
+#: templates/expenses/form.html:115 templates/projects/form.html:292
+#: templates/projects/view.html:355
+msgid "Baixar"
+msgstr "Download"
+
+#: templates/expenses/form.html:119
+msgid "Excluir este anexo?"
+msgstr "Delete this attachment?"
+
+#: templates/expenses/form.html:130
+msgid "Nenhum anexo adicionado."
+msgstr "No attachments added."
+
+#: templates/expenses/form.html:137
+msgid "Tipo de Anexo"
+msgstr "Attachment Type"
+
+#: templates/expenses/form.html:141
+msgid "Comprovante de Pagamento"
+msgstr "Payment Receipt"
+
+#: templates/expenses/list.html:2 templates/expenses/list.html:10
+#: templates/home/dashboard.html:73 templates/pmo_agents/briefing.html:136
+#: templates/projects/view.html:52 templates/projects/view.html:288
+msgid "Despesas"
+msgstr "Expenses"
+
+# Expenses
+#: templates/expenses/list.html:14
+msgid "Nova Despesa"
+msgstr "New Expense"
+
+#: templates/expenses/list.html:23
+msgid "Orcamento Projeto"
+msgstr "Project Budget"
+
+#: templates/expenses/list.html:31
+msgid "Total Despesas"
+msgstr "Total Expenses"
+
+#: templates/expenses/list.html:39
+msgid "Aprovadas"
+msgstr "Approved"
+
+#: templates/expenses/list.html:47
+msgid "Pendentes"
+msgstr "Pending"
+
+#: templates/expenses/list.html:60
+msgid "Todas Categorias"
+msgstr "All Categories"
+
+#: templates/expenses/list.html:68
+msgid "Todos Status"
+msgstr "All Statuses"
+
+#: templates/expenses/list.html:104
+msgid "anexo(s)"
+msgstr "attachment(s)"
+
+#: templates/expenses/list.html:128
+msgid "Excluir esta despesa?"
+msgstr "Delete this expense?"
+
+#: templates/expenses/list.html:143 templates/home/dashboard.html:130
+msgid "Nenhuma despesa registrada"
+msgstr "No expenses registered"
+
+#: templates/expenses/list.html:144
+msgid "Adicione despesas para controlar os gastos do projeto"
+msgstr "Add expenses to control project spending"
+
+#: templates/expenses/list.html:146
+msgid "Adicionar Despesa"
+msgstr "Add Expense"
+
+#: templates/home/dashboard.html:2
+msgid "Home"
+msgstr "Home"
+
+# Messages
+#: templates/home/dashboard.html:20
+msgid "Bem-vindo"
+msgstr "Welcome"
+
+# AI Features
+#: templates/home/dashboard.html:26
+msgid "Chat IA"
+msgstr "AI Chat"
+
+#: templates/home/dashboard.html:29
+msgid "Gerar Insights IA"
+msgstr "Generate AI Insights"
+
+# Dashboard
+#: templates/home/dashboard.html:46
+msgid "Projetos Ativos"
+msgstr "Active Projects"
+
+#: templates/home/dashboard.html:48 templates/status_report/print.html:425
+#: templates/tenants/view.html:238 templates/tenants/view.html:247
+msgid "de"
+msgstr "of"
+
+#: templates/home/dashboard.html:48
+msgid "total"
+msgstr "total"
+
+#: templates/home/dashboard.html:60 templates/pmo_agents/briefing.html:98
+#: templates/projects/list.html:63 templates/status_report/report.html:246
+msgid "Orçamento Total"
+msgstr "Total Budget"
+
+#: templates/home/dashboard.html:86
+msgid "Chamadas Abertas"
+msgstr "Open Calls"
+
+#: templates/home/dashboard.html:88
+msgid "Ver todas"
+msgstr "View all"
+
+#: templates/home/dashboard.html:102
+msgid "Insights de IA para seu setor de P&D"
+msgstr "AI Insights for your R&D sector"
+
+#: templates/home/dashboard.html:108 templates/home/dashboard.html:354
+msgid "Analisando dados e gerando insights..."
+msgstr "Analyzing data and generating insights..."
+
+#: templates/home/dashboard.html:121
+msgid "Distribuição de Custos por Projeto"
+msgstr "Cost Distribution by Project"
+
+#: templates/home/dashboard.html:122 templates/home/dashboard.html:140
+msgid "Ver Projetos"
+msgstr "View Projects"
+
+#: templates/home/dashboard.html:139
+msgid "Timeline de Marcos"
+msgstr "Milestone Timeline"
+
+# Schedule
+#: templates/home/dashboard.html:148 templates/portfolio/dashboard.html:391
+#: templates/schedule/form.html:2 templates/schedule/form.html:11
+#: templates/schedule/view.html:94 templates/timesheet/list.html:100
+msgid "Marco"
+msgstr "Milestone"
+
+#: templates/home/dashboard.html:150 templates/public_calls/view.html:53
+msgid "Prazo"
+msgstr "Deadline"
+
+#: templates/home/dashboard.html:151 templates/portfolio/dashboard.html:391
+#: templates/portfolio/status_report.html:311 templates/programs/list.html:37
+#: templates/programs/status_report.html:322 templates/programs/view.html:86
+#: templates/projects/view.html:68 templates/schedule/form.html:43
+#: templates/schedule/view.html:99 templates/status_report/print.html:419
+msgid "Progresso"
+msgstr "Progress"
+
+#: templates/home/dashboard.html:160 templates/portfolio/dashboard.html:418
+msgid "Nenhum marco cadastrado"
+msgstr "No milestones registered"
+
+#: templates/home/dashboard.html:172
+msgid "Notícias de Editais"
+msgstr "Call News"
+
+#: templates/home/dashboard.html:192
+msgid "Nenhuma chamada recente"
+msgstr "No recent calls"
+
+#: templates/home/dashboard.html:198
+msgid "Ver Todas"
+msgstr "View All"
+
+#: templates/home/dashboard.html:206 templates/status_report/print.html:707
+#: templates/status_report/report.html:581
+msgid "Próximos Marcos"
+msgstr "Upcoming Milestones"
+
+#: templates/home/dashboard.html:229
+msgid "Nenhum marco próximo"
+msgstr "No upcoming milestones"
+
+#: templates/home/dashboard.html:239
+msgid "Projetos Encerrando"
+msgstr "Closing Projects"
+
+#: templates/home/dashboard.html:259
+msgid "Ações Rápidas"
+msgstr "Quick Actions"
+
+# Projects
+#: templates/home/dashboard.html:264 templates/projects/list.html:12
+msgid "Novo Projeto"
+msgstr "New Project"
+
+#: templates/home/dashboard.html:267
+msgid "Ver Chamadas"
+msgstr "View Calls"
+
+#: templates/meeting_minutes/form.html:2
+#: templates/meeting_minutes/form.html:10
+msgid "Editar Ata"
+msgstr "Edit Minutes"
+
+#: templates/meeting_minutes/form.html:2
+#: templates/meeting_minutes/form.html:10
+#: templates/meeting_minutes/list.html:14
+#: templates/meeting_minutes/list.html:117
+msgid "Nova Ata"
+msgstr "New Minutes"
+
+#: templates/meeting_minutes/form.html:22
+msgid "Título da Reunião"
+msgstr "Meeting Title"
+
+#: templates/meeting_minutes/form.html:35
+#: templates/meeting_minutes/print.html:225
+msgid "Horário"
+msgstr "Time"
+
+#: templates/meeting_minutes/form.html:41
+#: templates/meeting_minutes/list.html:54
+#: templates/meeting_minutes/print.html:226
+#: templates/meeting_minutes/view.html:86
+msgid "Local"
+msgstr "Location"
+
+#: templates/meeting_minutes/form.html:48
+#: templates/meeting_minutes/view.html:92
+msgid "Participantes"
+msgstr "Participants"
+
+#: templates/meeting_minutes/form.html:54
+msgid "Documento/Gravação (PDF, DOC, TXT)"
+msgstr "Document/Recording (PDF, DOC, TXT)"
+
+#: templates/meeting_minutes/form.html:58
+msgid "Arquivo atual:"
+msgstr "Current file:"
+
+#: templates/meeting_minutes/form.html:61
+msgid "O texto de PDFs será extraído automaticamente"
+msgstr "PDF text will be extracted automatically"
+
+#: templates/meeting_minutes/form.html:65
+msgid "Transcrição / Anotações"
+msgstr "Transcription / Notes"
+
+#: templates/meeting_minutes/form.html:78 templates/projects/form.html:252
+#: templates/projects/stakeholders/form.html:222 templates/users/form.html:130
+#: templates/users/profile.html:142
+msgid "Salvar Alterações"
+msgstr "Save Changes"
+
+#: templates/meeting_minutes/form.html:78
+msgid "Criar Ata"
+msgstr "Create Minutes"
+
+#: templates/meeting_minutes/form.html:92
+msgid "Dicas"
+msgstr "Tips"
+
+#: templates/meeting_minutes/form.html:95
+msgid "Como usar:"
+msgstr "How to use:"
+
+#: templates/meeting_minutes/form.html:108
+msgid "Formatos Aceitos"
+msgstr "Accepted Formats"
+
+#: templates/meeting_minutes/list.html:2
+#: templates/meeting_minutes/list.html:10 templates/projects/view.html:304
+msgid "Atas de Reunião"
+msgstr "Meeting Minutes"
+
+#: templates/meeting_minutes/list.html:23
+msgid "Total de Atas"
+msgstr "Total Minutes"
+
+#: templates/meeting_minutes/list.html:31
+msgid "Finalizadas"
+msgstr "Finalized"
+
+#: templates/meeting_minutes/list.html:39
+msgid "Rascunhos"
+msgstr "Drafts"
+
+#: templates/meeting_minutes/list.html:79
+#: templates/meeting_minutes/view.html:70
+msgid "Finalizada"
+msgstr "Finalized"
+
+#: templates/meeting_minutes/list.html:81
+#: templates/meeting_minutes/view.html:72
+msgid "Gerada"
+msgstr "Generated"
+
+#: templates/meeting_minutes/list.html:83
+#: templates/meeting_minutes/view.html:74
+msgid "Rascunho"
+msgstr "Draft"
+
+#: templates/meeting_minutes/list.html:114
+msgid "Nenhuma ata registrada"
+msgstr "No minutes registered"
+
+#: templates/meeting_minutes/list.html:115
+msgid "Registre as atas das reuniões do projeto"
+msgstr "Register the meeting minutes of the project"
+
+#: templates/meeting_minutes/print.html:209
+#: templates/status_report/print.html:395
+msgid "Salvar como PDF"
+msgstr "Save as PDF"
+
+#: templates/meeting_minutes/print.html:224
+msgid "Data da Reunião:"
+msgstr "Meeting Date:"
+
+#: templates/meeting_minutes/print.html:238
+msgid "Documento gerado pelo sistema Orion Gestão de P&D"
+msgstr "Document generated by Orion R&D Management system"
+
+#: templates/meeting_minutes/view.html:53
+#: templates/portfolio/status_report.html:37
+#: templates/programs/status_report.html:45
+#: templates/status_report/report.html:65
+msgid "Exportar PDF"
+msgstr "Export PDF"
+
+#: templates/meeting_minutes/view.html:64
+msgid "Informações"
+msgstr "Information"
+
+#: templates/meeting_minutes/view.html:98
+msgid "Anexo"
+msgstr "Attachment"
+
+#: templates/meeting_minutes/view.html:103
+msgid "Criado por"
+msgstr "Created by"
+
+#: templates/meeting_minutes/view.html:115
+msgid "Gerar Ata com IA"
+msgstr "Generate Minutes with AI"
+
+#: templates/meeting_minutes/view.html:116
+msgid "A IA irá criar uma ata formal baseada na transcrição"
+msgstr "AI will create a formal minutes based on the transcription"
+
+#: templates/meeting_minutes/view.html:118
+msgid "Gerar Ata"
+msgstr "Generate Minutes"
+
+#: templates/meeting_minutes/view.html:128
+msgid "Transcrição"
+msgstr "Transcription"
+
+#: templates/meeting_minutes/view.html:143
+msgid "Ata de Reunião"
+msgstr "Meeting Minutes"
+
+#: templates/meeting_minutes/view.html:153
+msgid "Gerando..."
+msgstr "Generating..."
+
+#: templates/meeting_minutes/view.html:155
+msgid "Gerando ata com inteligência artificial..."
+msgstr "Generating minutes with artificial intelligence..."
+
+#: templates/meeting_minutes/view.html:166
+msgid "Ata não gerada"
+msgstr "Minutes not generated"
+
+#: templates/meeting_minutes/view.html:172
+msgid "Adicionar Transcrição"
+msgstr "Add Transcription"
+
+#: templates/pmo_agents/action_center.html:7
+#: templates/pmo_agents/dashboard.html:17
+msgid "Central de Ações"
+msgstr "Action Center"
+
+#: templates/pmo_agents/action_center.html:14
+msgid "Briefing"
+msgstr "Briefing"
+
+#: templates/pmo_agents/action_center.html:21
+msgid "Execução Autônoma:"
+msgstr "Autonomous Execution:"
+
+#: templates/pmo_agents/action_center.html:21
+msgid ""
+"O Orion não apenas recomenda - ele pode executar as ações com sua aprovação."
+msgstr ""
+"Orion doesn't just recommend - it can execute actions with your approval."
+
+#: templates/pmo_agents/action_center.html:29
+#: templates/pmo_agents/briefing.html:437
+msgid "Ações Recomendadas"
+msgstr "Recommended Actions"
+
+#: templates/pmo_agents/action_center.html:39
+msgid "Agente"
+msgstr "Agent"
+
+#: templates/pmo_agents/action_center.html:41
+#: templates/pmo_agents/action_center.html:72
+#: templates/pmo_agents/agent_result.html:112
+#: templates/pmo_agents/briefing.html:454
+#: templates/pmo_agents/dashboard.html:86
+msgid "Executar"
+msgstr "Execute"
+
+#: templates/pmo_agents/action_center.html:49
+#: templates/status_report/report.html:194
+msgid "Crítico"
+msgstr "Critical"
+
+#: templates/pmo_agents/action_center.html:89
+msgid "Nenhuma ação pendente"
+msgstr "No pending actions"
+
+#: templates/pmo_agents/action_center.html:92
+msgid "Gerar Novo Briefing"
+msgstr "Generate New Briefing"
+
+#: templates/pmo_agents/action_center.html:101
+msgid "Tipos de Ações"
+msgstr "Action Types"
+
+#: templates/pmo_agents/action_center.html:107
+msgid "Agendar reunião"
+msgstr "Schedule meeting"
+
+#: templates/pmo_agents/action_center.html:111
+msgid "Criar pendência"
+msgstr "Create pending item"
+
+#: templates/pmo_agents/action_center.html:115
+msgid "Criar risco"
+msgstr "Create risk"
+
+#: templates/pmo_agents/action_center.html:119
+msgid "Criar não conformidade"
+msgstr "Create non-conformance"
+
+#: templates/pmo_agents/action_center.html:123
+msgid "Criar ação corretiva"
+msgstr "Create corrective action"
+
+#: templates/pmo_agents/action_center.html:127
+msgid "Gerar relatório"
+msgstr "Generate report"
+
+#: templates/pmo_agents/action_center.html:131
+msgid "Criar cenários"
+msgstr "Create scenarios"
+
+#: templates/pmo_agents/action_center.html:135
+msgid "Enviar notificação"
+msgstr "Send notification"
+
+#: templates/pmo_agents/agent_result.html:32
+#: templates/pmo_agents/briefing.html:425
+msgid "insights"
+msgstr "insights"
+
+#: templates/pmo_agents/agent_result.html:33
+msgid "ações"
+msgstr "actions"
+
+#: templates/pmo_agents/agent_result.html:43
+msgid "Insights"
+msgstr "Insights"
+
+#: templates/pmo_agents/agent_result.html:96
+#: templates/pmo_agents/compliance_analysis.html:127
+msgid "Ações Sugeridas"
+msgstr "Suggested Actions"
+
+#: templates/pmo_agents/agent_result.html:122
+msgid "Nenhuma ação necessária no momento."
+msgstr "No actions needed at the moment."
+
+#: templates/pmo_agents/agent_result.html:132
+msgid "Métricas"
+msgstr "Metrics"
+
+#: templates/pmo_agents/agent_result.html:155
+msgid "Erros durante execução"
+msgstr "Errors during execution"
+
+#: templates/pmo_agents/briefing.html:7
+#: templates/projects/stakeholders/form.html:151
+msgid "Briefing Executivo Diário"
+msgstr "Daily Executive Briefing"
+
+#: templates/pmo_agents/briefing.html:39
+msgid "Status Geral:"
+msgstr "Overall Status:"
+
+#: templates/pmo_agents/briefing.html:58
+msgid "Agentes Saudáveis"
+msgstr "Healthy Agents"
+
+#: templates/pmo_agents/briefing.html:66
+msgid "Requerem Atenção"
+msgstr "Require Attention"
+
+#: templates/pmo_agents/briefing.html:74
+#: templates/pmo_agents/compliance_analysis.html:211
+msgid "Críticos"
+msgstr "Critical"
+
+#: templates/pmo_agents/briefing.html:82
+msgid "Total Insights"
+msgstr "Total Insights"
+
+#: templates/pmo_agents/briefing.html:92
+msgid "Análise Financeira Consolidada"
+msgstr "Consolidated Financial Analysis"
+
+#: templates/pmo_agents/briefing.html:104
+#: templates/pmo_agents/briefing.html:154 templates/projects/view.html:85
+#: templates/status_report/print.html:577
+#: templates/status_report/report.html:432
+msgid "Realizado"
+msgstr "Actual"
+
+#: templates/pmo_agents/briefing.html:110
+#: templates/pmo_agents/briefing.html:155
+#: templates/status_report/print.html:583
+#: templates/status_report/print.html:599
+#: templates/status_report/report.html:438
+#: templates/status_report/report.html:456
+msgid "Variação"
+msgstr "Variance"
+
+#: templates/pmo_agents/briefing.html:118
+msgid "Gasto do Mês"
+msgstr "Monthly Spending"
+
+#: templates/pmo_agents/briefing.html:127
+msgid "Mão de Obra"
+msgstr "Labor"
+
+#: templates/pmo_agents/briefing.html:147
+msgid "Projetos Acima do Orçamento"
+msgstr "Projects Above Budget"
+
+#: templates/pmo_agents/briefing.html:153 templates/projects/list.html:111
+#: templates/projects/view.html:44 templates/status_report/print.html:424
+#: templates/status_report/print.html:539
+#: templates/status_report/print.html:547
+#: templates/status_report/report.html:359
+#: templates/status_report/report.html:377
+msgid "Orçamento"
+msgstr "Budget"
+
+#: templates/pmo_agents/briefing.html:183
+msgid "Próximas Atividades"
+msgstr "Upcoming Activities"
+
+#: templates/pmo_agents/briefing.html:183
+#: templates/pmo_agents/briefing.html:244
+msgid "dias"
+msgstr "days"
+
+#: templates/pmo_agents/briefing.html:244
+#: templates/status_report/print.html:728
+#: templates/status_report/report.html:644
+msgid "Atividades Recentes"
+msgstr "Recent Activities"
+
+#: templates/pmo_agents/briefing.html:334
+msgid "concluídos"
+msgstr "completed"
+
+#: templates/pmo_agents/briefing.html:335
+#: templates/portfolio/status_report.html:129
+#: templates/programs/status_report.html:139
+#: templates/status_report/print.html:522
+#: templates/status_report/report.html:336
+msgid "Atrasados"
+msgstr "Delayed"
+
+#: templates/pmo_agents/briefing.html:339
+msgid "Próximos Marcos:"
+msgstr "Upcoming Milestones:"
+
+#: templates/pmo_agents/briefing.html:347
+msgid "Ver Projeto"
+msgstr "View Project"
+
+#: templates/pmo_agents/briefing.html:362
+msgid "Prioridades do Dia"
+msgstr "Day's Priorities"
+
+#: templates/pmo_agents/briefing.html:387
+msgid "Recomendação:"
+msgstr "Recommendation:"
+
+#: templates/pmo_agents/briefing.html:403
+msgid "Status dos Agentes"
+msgstr "Agent Status"
+
+#: templates/pmo_agents/briefing.html:482
+msgid "Enviar Briefing por Email"
+msgstr "Send Briefing by Email"
+
+#: templates/pmo_agents/briefing.html:487
+msgid "Selecione os Projetos"
+msgstr "Select Projects"
+
+#: templates/pmo_agents/briefing.html:503
+msgid "Emails Adicionais"
+msgstr "Additional Emails"
+
+#: templates/pmo_agents/briefing.html:514
+msgid "Enviar Briefing"
+msgstr "Send Briefing"
+
+#: templates/pmo_agents/compliance_analysis.html:7
+msgid "Análise de Conformidade"
+msgstr "Compliance Analysis"
+
+#: templates/pmo_agents/compliance_analysis.html:21
+msgid "Filtrar por Projeto"
+msgstr "Filter by Project"
+
+#: templates/pmo_agents/compliance_analysis.html:33
+msgid "Limpar Filtro"
+msgstr "Clear Filter"
+
+#: templates/pmo_agents/compliance_analysis.html:46
+msgid "Itens Analisados"
+msgstr "Analyzed Items"
+
+#: templates/pmo_agents/compliance_analysis.html:56
+msgid "Requerem Ação"
+msgstr "Require Action"
+
+#: templates/pmo_agents/compliance_analysis.html:64
+msgid "Correlações Encontradas"
+msgstr "Correlations Found"
+
+#: templates/pmo_agents/compliance_analysis.html:74
+msgid "Itens Críticos/Antigos"
+msgstr "Critical/Old Items"
+
+#: templates/pmo_agents/compliance_analysis.html:91
+msgid "Análises"
+msgstr "Analyses"
+
+#: templates/pmo_agents/compliance_analysis.html:116
+msgid "Nenhum item requer atenção"
+msgstr "No items require attention"
+
+#: templates/pmo_agents/compliance_analysis.html:155
+#: templates/pmo_agents/compliance_analysis.html:162
+#: templates/pmo_agents/compliance_analysis.html:169
+msgid "Criar Ação Corretiva"
+msgstr "Create Corrective Action"
+
+#: templates/pmo_agents/compliance_analysis.html:166
+msgid "Editar NC"
+msgstr "Edit NC"
+
+#: templates/pmo_agents/compliance_analysis.html:182
+msgid "Nenhuma ação necessária no momento"
+msgstr "No actions needed at the moment"
+
+#: templates/pmo_agents/compliance_analysis.html:193
+msgid "Distribuição por Idade"
+msgstr "Distribution by Age"
+
+#: templates/pmo_agents/compliance_analysis.html:199
+msgid "Novos"
+msgstr "New"
+
+#: templates/pmo_agents/compliance_analysis.html:199
+msgid "até 7 dias"
+msgstr "up to 7 days"
+
+#: templates/pmo_agents/compliance_analysis.html:203
+msgid "8-30 dias"
+msgstr "8-30 days"
+
+#: templates/pmo_agents/compliance_analysis.html:207
+msgid "Antigos"
+msgstr "Old"
+
+#: templates/pmo_agents/compliance_analysis.html:207
+msgid "31-60 dias"
+msgstr "31-60 days"
+
+#: templates/pmo_agents/compliance_analysis.html:211
+msgid "+60 dias"
+msgstr "+60 days"
+
+#: templates/pmo_agents/dashboard.html:11
+msgid "Briefing Diário"
+msgstr "Daily Briefing"
+
+#: templates/pmo_agents/dashboard.html:14
+#: templates/pmo_agents/dashboard.html:38
+msgid "Análise Conformidade"
+msgstr "Compliance Analysis"
+
+#: templates/pmo_agents/dashboard.html:28
+msgid "Análise automática todas as manhãs com recomendações priorizadas."
+msgstr "Automatic analysis every morning with prioritized recommendations."
+
+#: templates/pmo_agents/dashboard.html:30
+msgid "Executar Agora"
+msgstr "Run Now"
+
+#: templates/pmo_agents/dashboard.html:52
+#: templates/pmo_agents/minutes_parser.html:45
+msgid "Analisar Ata"
+msgstr "Analyze Minutes"
+
+#: templates/pmo_agents/dashboard.html:63
+msgid "Ver Ações"
+msgstr "View Actions"
+
+#: templates/pmo_agents/dashboard.html:71
+msgid "Equipe de Agentes IA"
+msgstr "AI Agent Team"
+
+#: templates/pmo_agents/dashboard.html:97
+msgid "Como Funciona o PMO Autônomo"
+msgstr "How the Autonomous PMO Works"
+
+#: templates/pmo_agents/dashboard.html:105
+msgid "Análise Diária"
+msgstr "Daily Analysis"
+
+#: templates/pmo_agents/dashboard.html:112
+msgid "Identificação"
+msgstr "Identification"
+
+#: templates/pmo_agents/dashboard.html:119
+msgid "Recomendação"
+msgstr "Recommendation"
+
+#: templates/pmo_agents/dashboard.html:126
+msgid "Execução"
+msgstr "Execution"
+
+#: templates/pmo_agents/minutes_parser.html:7
+msgid "Leitor de Atas IA"
+msgstr "AI Minutes Reader"
+
+#: templates/pmo_agents/minutes_parser.html:19
+msgid "Cole a Ata da Reunião"
+msgstr "Paste the Meeting Minutes"
+
+#: templates/pmo_agents/minutes_parser.html:24
+msgid "Projeto (opcional)"
+msgstr "Project (optional)"
+
+#: templates/pmo_agents/minutes_parser.html:33
+msgid "Conteúdo da Ata"
+msgstr "Minutes Content"
+
+#: templates/pmo_agents/minutes_parser.html:54
+msgid "Padrões Detectados"
+msgstr "Detected Patterns"
+
+#: templates/pmo_agents/minutes_parser.html:93
+msgid "Itens Extraídos"
+msgstr "Extracted Items"
+
+#: templates/pmo_agents/minutes_parser.html:106
+msgid "Responsável:"
+msgstr "Responsible:"
+
+#: templates/pmo_agents/minutes_parser.html:181
+msgid "Nenhum item identificado automaticamente."
+msgstr "No items identified automatically."
+
+#: templates/pmo_agents/minutes_parser.html:191
+msgid "Cole uma ata para análise"
+msgstr "Paste a minutes for analysis"
+
+#: templates/portfolio/dashboard.html:22
+#: templates/portfolio/status_report.html:34
+msgid "Visao consolidada de todos os projetos"
+msgstr "Consolidated view of all projects"
+
+#: templates/portfolio/dashboard.html:26
+#: templates/portfolio/status_report.html:2 templates/programs/list.html:60
+#: templates/programs/status_report.html:2 templates/programs/view.html:15
+#: templates/projects/list.html:147 templates/projects/view.html:15
+#: templates/status_report/print.html:401
+#: templates/status_report/report.html:61
+msgid "Status Report"
+msgstr "Status Report"
+
+#: templates/portfolio/dashboard.html:29
+#: templates/programs/status_report.html:42 templates/programs/view.html:18
+#: templates/projects/view.html:22
+msgid "Exportar MS Project"
+msgstr "Export MS Project"
+
+#: templates/portfolio/dashboard.html:42
+msgid "Projetos Totais"
+msgstr "Total Projects"
+
+#: templates/portfolio/dashboard.html:43
+#: templates/portfolio/status_report.html:48
+msgid "ativos"
+msgstr "active"
+
+#: templates/portfolio/dashboard.html:56 templates/programs/view.html:48
+msgid "Orcamento Total"
+msgstr "Total Budget"
+
+#: templates/portfolio/dashboard.html:58 templates/programs/list.html:52
+msgid "utilizado"
+msgstr "used"
+
+#: templates/portfolio/dashboard.html:72
+#: templates/portfolio/status_report.html:73
+#: templates/programs/status_report.html:83 templates/programs/view.html:40
+#: templates/schedule/view.html:32 templates/status_report/report.html:103
+#: templates/status_report/report.html:316
+msgid "Progresso Geral"
+msgstr "Overall Progress"
+
+#: templates/portfolio/dashboard.html:88
+msgid "Marcos Atrasados"
+msgstr "Delayed Milestones"
+
+#: templates/portfolio/dashboard.html:89 templates/resources/list.html:52
+msgid "trabalhadas"
+msgstr "worked"
+
+#: templates/portfolio/dashboard.html:103
+msgid "Distribuicao de Custos por Projeto"
+msgstr "Cost Distribution by Project"
+
+#: templates/portfolio/dashboard.html:115
+msgid "Despesas por Categoria"
+msgstr "Expenses by Category"
+
+#: templates/portfolio/dashboard.html:130
+msgid "Distribuicao TRL"
+msgstr "TRL Distribution"
+
+#: templates/portfolio/dashboard.html:131
+msgid "Media"
+msgstr "Medium"
+
+#: templates/portfolio/dashboard.html:143
+msgid "Tipo de Inovacao"
+msgstr "Innovation Type"
+
+#: templates/portfolio/dashboard.html:155
+msgid "Escopo de Inovacao"
+msgstr "Innovation Scope"
+
+#: templates/portfolio/dashboard.html:167
+msgid "Projetos por Nivel TRL"
+msgstr "Projects by TRL Level"
+
+#: templates/portfolio/dashboard.html:187
+msgid "mais..."
+msgstr "more..."
+
+#: templates/portfolio/dashboard.html:190
+msgid "Nenhum projeto"
+msgstr "No projects"
+
+#: templates/portfolio/dashboard.html:203
+msgid "Timeline dos Marcos"
+msgstr "Milestone Timeline"
+
+#: templates/portfolio/dashboard.html:215
+msgid "Projetos por Status"
+msgstr "Projects by Status"
+
+#: templates/portfolio/dashboard.html:244
+msgid "Nenhum programa criado"
+msgstr "No programs created"
+
+#: templates/portfolio/dashboard.html:245 templates/programs/list.html:78
+msgid "Criar Programa"
+msgstr "Create Program"
+
+#: templates/portfolio/status_report.html:33
+msgid "Status Report - Portfolio"
+msgstr "Status Report - Portfolio"
+
+#: templates/portfolio/status_report.html:52
+#: templates/programs/status_report.html:62
+msgid "Data do Relatorio"
+msgstr "Report Date"
+
+#: templates/portfolio/status_report.html:56
+#: templates/programs/status_report.html:66
+#: templates/status_report/report.html:86
+msgid "Status Geral"
+msgstr "Overall Status"
+
+#: templates/portfolio/status_report.html:74
+#: templates/programs/status_report.html:84
+#: templates/status_report/print.html:420
+#: templates/status_report/report.html:104
+msgid "marcos"
+msgstr "milestones"
+
+#: templates/portfolio/status_report.html:92
+#: templates/programs/status_report.html:102
+#: templates/status_report/report.html:122
+msgid "Horas Trabalhadas"
+msgstr "Hours Worked"
+
+#: templates/portfolio/status_report.html:100
+msgid "Equipe Total"
+msgstr "Total Team"
+
+#: templates/portfolio/status_report.html:121
+#: templates/programs/status_report.html:131
+msgid "Concluidos"
+msgstr "Completed"
+
+#: templates/portfolio/status_report.html:148
+#: templates/public_calls/list.html:26
+msgid "Total"
+msgstr "Total"
+
+#: templates/portfolio/status_report.html:152
+#: templates/portfolio/status_report.html:313
+#: templates/programs/status_report.html:162
+#: templates/status_report/print.html:551
+#: templates/status_report/report.html:381
+msgid "Gasto"
+msgstr "Spent"
+
+#: templates/portfolio/status_report.html:158
+#: templates/programs/status_report.html:168
+#: templates/status_report/print.html:557
+#: templates/status_report/report.html:387
+msgid "Saldo"
+msgstr "Balance"
+
+#: templates/portfolio/status_report.html:168
+#: templates/programs/status_report.html:178 templates/projects/form.html:101
+#: templates/projects/view.html:83
+msgid "Entrega de Valor (PMBOK 8)"
+msgstr "Value Delivery (PMBOK 8)"
+
+#: templates/portfolio/status_report.html:170
+#: templates/programs/status_report.html:180
+msgid "capturado"
+msgstr "captured"
+
+#: templates/portfolio/status_report.html:181
+#: templates/programs/status_report.html:191 templates/projects/view.html:100
+msgid "Valor Esperado"
+msgstr "Expected Value"
+
+#: templates/portfolio/status_report.html:185
+#: templates/programs/status_report.html:195 templates/projects/view.html:104
+msgid "Valor Realizado"
+msgstr "Realized Value"
+
+#: templates/portfolio/status_report.html:189
+#: templates/programs/status_report.html:199
+msgid "Projetos c/ Valor"
+msgstr "Projects w/ Value"
+
+#: templates/portfolio/status_report.html:217
+msgid "Nenhum risco critico"
+msgstr "No critical risks"
+
+#: templates/portfolio/status_report.html:240
+#: templates/programs/status_report.html:250
+msgid "Pendencias"
+msgstr "Pending Items"
+
+#: templates/portfolio/status_report.html:248
+#: templates/programs/status_report.html:258
+#: templates/status_report/print.html:673
+msgid "NCs"
+msgstr "NCs"
+
+#: templates/portfolio/status_report.html:254
+#: templates/programs/status_report.html:264
+msgid "Pendencias Atrasadas"
+msgstr "Overdue Pending Items"
+
+#: templates/portfolio/status_report.html:271
+#: templates/programs/status_report.html:281 templates/programs/view.html:169
+msgid "Proximos Marcos"
+msgstr "Upcoming Milestones"
+
+#: templates/portfolio/status_report.html:292
+#: templates/programs/status_report.html:302 templates/programs/view.html:188
+#: templates/status_report/print.html:719
+#: templates/status_report/report.html:604
+msgid "Nenhum marco pendente"
+msgstr "No pending milestones"
+
+#: templates/portfolio/status_report.html:302
+msgid "Projetos Principais"
+msgstr "Main Projects"
+
+#: templates/portfolio/status_report.html:309 templates/programs/form.html:20
+#: templates/programs/status_report.html:319 templates/programs/view.html:83
+msgid "Codigo"
+msgstr "Code"
+
+#: templates/portfolio/status_report.html:310
+#: templates/programs/status_report.html:320 templates/programs/view.html:84
+#: templates/public_calls/form.html:45 templates/schedule/form.html:19
+msgid "Titulo"
+msgstr "Title"
+
+#: templates/programs/form.html:2
+msgid "Programa"
+msgstr "Program"
+
+#: templates/programs/form.html:11
+msgid "Editar Programa"
+msgstr "Edit Program"
+
+#: templates/programs/form.html:11 templates/programs/list.html:8
+msgid "Novo Programa"
+msgstr "New Program"
+
+#: templates/programs/form.html:24
+#: templates/projects/stakeholders/form.html:29
+#: templates/projects/stakeholders/list.html:67
+#: templates/resources/form.html:26 templates/tenants/view.html:103
+msgid "Nome"
+msgstr "Name"
+
+#: templates/programs/form.html:34 templates/programs/view.html:146
+msgid "Objetivo"
+msgstr "Objective"
+
+#: templates/programs/form.html:39
+msgid "Data de Inicio"
+msgstr "Start Date"
+
+#: templates/programs/form.html:43
+msgid "Data de Termino"
+msgstr "End Date"
+
+#: templates/programs/form.html:47
+msgid "Orcamento Planejado"
+msgstr "Planned Budget"
+
+#: templates/programs/form.html:52 templates/programs/view.html:159
+msgid "Gestor"
+msgstr "Manager"
+
+#: templates/programs/form.html:65
+#: templates/projects/stakeholders/list.html:123
+#: templates/resources/form.html:39 templates/tenants/view.html:125
+#: templates/users/form.html:83 templates/users/list.html:124
+#: templates/users/view.html:46
+msgid "Ativo"
+msgstr "Active"
+
+#: templates/programs/form.html:66
+msgid "Suspenso"
+msgstr "Suspended"
+
+#: templates/programs/form.html:68 templates/projects/list.html:89
+#: templates/projects/list.html:132 templates/projects/view.html:248
+msgid "Cancelado"
+msgstr "Cancelled"
+
+#: templates/programs/list.html:58 templates/programs/view.html:109
+#: templates/projects/list.html:150 templates/tenants/list.html:120
+msgid "Ver"
+msgstr "View"
+
+#: templates/programs/list.html:75
+msgid "Nenhum programa cadastrado"
+msgstr "No programs registered"
+
+#: templates/programs/list.html:76
+msgid "Crie seu primeiro programa para agrupar projetos relacionados"
+msgstr "Create your first program to group related projects"
+
+#: templates/programs/status_report.html:38
+msgid "Status Report - Programa"
+msgstr "Status Report - Program"
+
+#: templates/programs/status_report.html:93 templates/programs/view.html:59
+msgid "Orcamento Utilizado"
+msgstr "Budget Used"
+
+#: templates/programs/status_report.html:110
+msgid "Membros da Equipe"
+msgstr "Team Members"
+
+#: templates/programs/status_report.html:121
+msgid "Cronograma Consolidado"
+msgstr "Consolidated Schedule"
+
+#: templates/programs/status_report.html:148
+msgid "Orcamento Consolidado"
+msgstr "Consolidated Budget"
+
+#: templates/programs/status_report.html:211
+#: templates/status_report/print.html:630
+#: templates/status_report/report.html:482
+msgid "Riscos e Alertas"
+msgstr "Risks and Alerts"
+
+#: templates/programs/status_report.html:227
+#: templates/status_report/print.html:644
+#: templates/status_report/report.html:505
+msgid "Nenhum risco identificado"
+msgstr "No risks identified"
+
+#: templates/programs/status_report.html:312 templates/programs/view.html:70
+msgid "Projetos do Programa"
+msgstr "Program Projects"
+
+#: templates/programs/view.html:73
+msgid "Adicionar Projeto"
+msgstr "Add Project"
+
+#: templates/programs/view.html:113
+msgid "Remover"
+msgstr "Remove"
+
+#: templates/programs/view.html:113
+msgid "Remover projeto do programa?"
+msgstr "Remove project from program?"
+
+#: templates/programs/view.html:127
+msgid "Nenhum projeto vinculado"
+msgstr "No linked projects"
+
+#: templates/programs/view.html:139
+msgid "Informacoes"
+msgstr "Information"
+
+# Navigation
+#: templates/programs/view.html:150 templates/schedule/view.html:97
+msgid "Inicio"
+msgstr "Home"
+
+#: templates/programs/view.html:154 templates/schedule/view.html:98
+msgid "Termino"
+msgstr "End"
+
+#: templates/programs/view.html:200
+msgid "Adicionar Projeto ao Programa"
+msgstr "Add Project to Program"
+
+#: templates/programs/view.html:206
+msgid "Selecione o Projeto"
+msgstr "Select Project"
+
+#: templates/programs/view.html:208
+msgid "Escolha um projeto..."
+msgstr "Choose a project..."
+
+#: templates/projects/form.html:2
+msgid "Projeto - Gestão P&D"
+msgstr "Project - R&D Management"
+
+#: templates/projects/form.html:20 templates/tenants/form.html:2
+#: templates/tenants/list.html:62
+msgid "Empresa"
+msgstr "Company"
+
+#: templates/projects/form.html:22
+msgid "Selecione a empresa..."
+msgstr "Select company..."
+
+#: templates/projects/form.html:27
+msgid ""
+"Como superadmin, você precisa selecionar a empresa para criar o projeto."
+msgstr "As superadmin, you need to select the company to create the project."
+
+#: templates/projects/form.html:31
+msgid "Código do Projeto"
+msgstr "Project Code"
+
+#: templates/projects/form.html:34
+msgid "Ex: PD-2024-001"
+msgstr "Ex: PD-2024-001"
+
+#: templates/projects/form.html:65
+msgid "Data Início"
+msgstr "Start Date"
+
+#: templates/projects/form.html:70
+msgid "Data Término"
+msgstr "End Date"
+
+#: templates/projects/form.html:75
+msgid "Orçamento (R$)"
+msgstr "Budget (R$)"
+
+#: templates/projects/form.html:80 templates/projects/view.html:269
+#: templates/public_calls/form.html:72 templates/public_calls/view.html:60
+msgid "Fonte de Recursos"
+msgstr "Funding Source"
+
+#: templates/projects/form.html:101
+msgid "Defina o valor esperado do projeto"
+msgstr "Define the expected project value"
+
+#: templates/projects/form.html:105 templates/projects/view.html:96
+msgid "Tipo de Valor"
+msgstr "Value Type"
+
+#: templates/projects/form.html:115
+msgid "Valor Esperado (R$)"
+msgstr "Expected Value (R$)"
+
+#: templates/projects/form.html:120
+msgid "Valor Realizado (R$)"
+msgstr "Realized Value (R$)"
+
+#: templates/projects/form.html:125
+msgid "Status do Valor"
+msgstr "Value Status"
+
+# TRL and Innovation
+#: templates/projects/form.html:137
+msgid "TRL - Technology Readiness Level"
+msgstr "TRL - Technology Readiness Level"
+
+#: templates/projects/form.html:140
+msgid "Ver Histórico"
+msgstr "View History"
+
+#: templates/projects/form.html:146
+msgid "Nível TRL Atual"
+msgstr "Current TRL Level"
+
+#: templates/projects/form.html:149 templates/projects/trl_history.html:29
+msgid "Princípios básicos observados"
+msgstr "Basic principles observed"
+
+#: templates/projects/form.html:150 templates/projects/trl_history.html:30
+msgid "Conceito de tecnologia formulado"
+msgstr "Technology concept formulated"
+
+#: templates/projects/form.html:151 templates/projects/trl_history.html:31
+msgid "Prova de conceito experimental"
+msgstr "Experimental proof of concept"
+
+#: templates/projects/form.html:152 templates/projects/trl_history.html:32
+msgid "Validação em laboratório"
+msgstr "Laboratory validation"
+
+#: templates/projects/form.html:153 templates/projects/trl_history.html:33
+msgid "Validação em ambiente relevante"
+msgstr "Validation in relevant environment"
+
+#: templates/projects/form.html:154 templates/projects/trl_history.html:34
+msgid "Demonstração em ambiente relevante"
+msgstr "Demonstration in relevant environment"
+
+#: templates/projects/form.html:155 templates/projects/trl_history.html:35
+msgid "Demonstração em ambiente operacional"
+msgstr "Demonstration in operational environment"
+
+#: templates/projects/form.html:156 templates/projects/trl_history.html:36
+msgid "Sistema completo e qualificado"
+msgstr "Complete and qualified system"
+
+#: templates/projects/form.html:157 templates/projects/trl_history.html:37
+msgid "Sistema comprovado em operação"
+msgstr "System proven in operation"
+
+#: templates/projects/form.html:167
+msgid "Justificativa da Mudança (se alterado)"
+msgstr "Change Justification (if changed)"
+
+#: templates/projects/form.html:169 templates/projects/trl_history.html:76
+msgid "Por que o TRL mudou?"
+msgstr "Why did the TRL change?"
+
+#: templates/projects/form.html:175
+msgid "KPIs de Inovação"
+msgstr "Innovation KPIs"
+
+#: templates/projects/form.html:178
+msgid "Sugerir com IA"
+msgstr "Suggest with AI"
+
+#: templates/projects/form.html:184
+msgid "Tipo de Inovação"
+msgstr "Innovation Type"
+
+#: templates/projects/form.html:204
+msgid "Estratégia de PI"
+msgstr "IP Strategy"
+
+#: templates/projects/form.html:214
+msgid "Nível de Risco"
+msgstr "Risk Level"
+
+#: templates/projects/form.html:224
+msgid "Mercado-Alvo"
+msgstr "Target Market"
+
+#: templates/projects/form.html:227
+msgid "Ex: Indústria automotiva, Saúde"
+msgstr "Ex: Automotive industry, Healthcare"
+
+#: templates/projects/form.html:230
+msgid "Time to Market (meses)"
+msgstr "Time to Market (months)"
+
+#: templates/projects/form.html:233
+msgid "Meses estimados"
+msgstr "Estimated months"
+
+#: templates/projects/form.html:236
+msgid "ROI Esperado (%)"
+msgstr "Expected ROI (%)"
+
+#: templates/projects/form.html:239
+msgid "Ex: 150"
+msgstr "Ex: 150"
+
+#: templates/projects/form.html:242
+msgid "Vantagem Competitiva"
+msgstr "Competitive Advantage"
+
+#: templates/projects/form.html:244
+msgid "Qual a vantagem competitiva esperada?"
+msgstr "What is the expected competitive advantage?"
+
+#: templates/projects/form.html:269
+msgid "Documentos Anexados"
+msgstr "Attached Documents"
+
+#: templates/projects/form.html:289
+msgid "Enviado em"
+msgstr "Uploaded on"
+
+#: templates/projects/form.html:296 templates/projects/view.html:363
+msgid "Tem certeza que deseja excluir este documento?"
+msgstr "Are you sure you want to delete this document?"
+
+#: templates/projects/form.html:312 templates/projects/view.html:378
+msgid "Adicionar Documento"
+msgstr "Add Document"
+
+#: templates/projects/form.html:315 templates/projects/view.html:381
+msgid "PDF, Word, Excel ou PowerPoint (máx. 16 MB)"
+msgstr "PDF, Word, Excel or PowerPoint (max. 16 MB)"
+
+#: templates/projects/form.html:318 templates/projects/view.html:384
+msgid "Descrição (opcional)"
+msgstr "Description (optional)"
+
+#: templates/projects/form.html:320 templates/projects/view.html:386
+msgid "Ex: Proposta técnica, Relatório parcial..."
+msgstr "Ex: Technical proposal, Partial report..."
+
+#: templates/projects/form.html:324
+msgid "Enviar Documento"
+msgstr "Upload Document"
+
+#: templates/projects/form.html:331 templates/projects/view.html:397
+msgid ""
+"Limite de 3 documentos atingido. Exclua um documento para adicionar outro."
+msgstr "3 document limit reached. Delete a document to add another."
+
+#: templates/projects/form.html:397
+msgid "Sugestões aplicadas! Revise os valores antes de salvar."
+msgstr "Suggestions applied! Review the values before saving."
+
+#: templates/projects/form.html:400
+msgid "Erro de conexão:"
+msgstr "Connection error:"
+
+#: templates/projects/list.html:2
+msgid "Projetos - Gestão P&D"
+msgstr "Projects - R&D Management"
+
+#: templates/projects/list.html:6
+msgid "Projetos de P&D"
+msgstr "R&D Projects"
+
+#: templates/projects/list.html:9
+msgid "Exportar Excel"
+msgstr "Export Excel"
+
+#: templates/projects/list.html:24
+msgid "Total Projetos"
+msgstr "Total Projects"
+
+#: templates/projects/list.html:50 templates/status_report/print.html:514
+#: templates/status_report/report.html:328
+msgid "Concluídos"
+msgstr "Completed"
+
+#: templates/projects/list.html:80
+msgid "Buscar projetos..."
+msgstr "Search projects..."
+
+# Status
+#: templates/projects/list.html:86 templates/projects/list.html:134
+#: templates/projects/view.html:250
+msgid "Planejamento"
+msgstr "Planning"
+
+#: templates/projects/list.html:88 templates/projects/list.html:130
+#: templates/projects/view.html:246
+msgid "Concluído"
+msgstr "Completed"
+
+#: templates/projects/list.html:112 templates/projects/view.html:258
+msgid "Período"
+msgstr "Period"
+
+#: templates/projects/list.html:167
+msgid "Nenhum projeto encontrado"
+msgstr "No projects found"
+
+#: templates/projects/list.html:168
+msgid "Comece criando seu primeiro projeto de P&D"
+msgstr "Start by creating your first R&D project"
+
+#: templates/projects/trl_history.html:2
+#: templates/projects/trl_history.html:11
+msgid "Histórico TRL"
+msgstr "TRL History"
+
+#: templates/projects/trl_history.html:26
+msgid "TRL Atual"
+msgstr "Current TRL"
+
+#: templates/projects/trl_history.html:39
+msgid "Nível não definido"
+msgstr "Level not defined"
+
+#: templates/projects/trl_history.html:49
+#: templates/projects/trl_history.html:84
+msgid "Atualizar TRL"
+msgstr "Update TRL"
+
+#: templates/projects/trl_history.html:55
+msgid "Novo TRL"
+msgstr "New TRL"
+
+#: templates/projects/trl_history.html:65
+msgid "Data da Mudança"
+msgstr "Change Date"
+
+#: templates/projects/trl_history.html:69
+msgid "Verificado por"
+msgstr "Verified by"
+
+#: templates/projects/trl_history.html:70
+msgid "Nome do verificador"
+msgstr "Verifier name"
+
+#: templates/projects/trl_history.html:74
+msgid "Justificativa"
+msgstr "Justification"
+
+#: templates/projects/trl_history.html:79
+msgid "Evidências"
+msgstr "Evidence"
+
+#: templates/projects/trl_history.html:81
+msgid "Quais evidências suportam esta mudança?"
+msgstr "What evidence supports this change?"
+
+#: templates/projects/trl_history.html:95
+msgid "Escala TRL (Technology Readiness Level)"
+msgstr "TRL Scale (Technology Readiness Level)"
+
+#: templates/projects/trl_history.html:114
+msgid "Linha do Tempo"
+msgstr "Timeline"
+
+#: templates/projects/trl_history.html:136
+msgid "TRL Inicial:"
+msgstr "Initial TRL:"
+
+#: templates/projects/trl_history.html:142
+msgid "por"
+msgstr "by"
+
+#: templates/projects/trl_history.html:152
+msgid "Evidências:"
+msgstr "Evidence:"
+
+#: templates/projects/trl_history.html:155
+msgid "Verificado por:"
+msgstr "Verified by:"
+
+#: templates/projects/trl_history.html:167
+msgid "Nenhuma mudança de TRL registrada."
+msgstr "No TRL changes registered."
+
+#: templates/projects/trl_history.html:168
+msgid "O histórico será criado quando o TRL for atualizado."
+msgstr "History will be created when TRL is updated."
+
+#: templates/projects/view.html:18
+msgid "Auditoria de Conformidade"
+msgstr "Compliance Audit"
+
+#: templates/projects/view.html:23
+msgid "MS Project"
+msgstr "MS Project"
+
+#: templates/projects/view.html:26
+msgid "IA"
+msgstr "AI"
+
+#: templates/projects/view.html:32
+msgid ""
+"Tem certeza que deseja excluir este projeto e todos os dados associados?"
+msgstr "Are you sure you want to delete this project and all associated data?"
+
+#: templates/projects/view.html:60
+msgid "Horas Registradas"
+msgstr "Registered Hours"
+
+#: templates/projects/view.html:87
+msgid "Parcial"
+msgstr "Partial"
+
+#: templates/projects/view.html:89
+msgid "Em captura"
+msgstr "In capture"
+
+#: templates/projects/view.html:91
+msgid "Não iniciado"
+msgstr "Not started"
+
+#: templates/projects/view.html:108
+msgid "Captura de Valor"
+msgstr "Value Capture"
+
+#: templates/projects/view.html:129
+msgid "TRL"
+msgstr "TRL"
+
+#: templates/projects/view.html:138
+msgid "Princípios básicos"
+msgstr "Basic principles"
+
+#: templates/projects/view.html:139
+msgid "Conceito formulado"
+msgstr "Concept formulated"
+
+#: templates/projects/view.html:140
+msgid "Prova de conceito"
+msgstr "Proof of concept"
+
+#: templates/projects/view.html:141
+msgid "Lab validado"
+msgstr "Lab validated"
+
+#: templates/projects/view.html:142
+msgid "Ambiente relevante"
+msgstr "Relevant environment"
+
+#: templates/projects/view.html:143
+msgid "Demonstrado relevante"
+msgstr "Demonstrated relevant"
+
+#: templates/projects/view.html:144
+msgid "Demonstrado operacional"
+msgstr "Demonstrated operational"
+
+#: templates/projects/view.html:145
+msgid "Sistema qualificado"
+msgstr "Qualified system"
+
+#: templates/projects/view.html:146
+msgid "Operação comprovada"
+msgstr "Proven operation"
+
+#: templates/projects/view.html:159
+msgid "Inovação"
+msgstr "Innovation"
+
+#: templates/projects/view.html:170
+msgid "PI"
+msgstr "IP"
+
+# Stakeholders
+#: templates/projects/stakeholders/list.html:2
+#: templates/projects/stakeholders/list.html:11
+#: templates/projects/view.html:195
+msgid "Stakeholders"
+msgstr "Stakeholders"
+
+#: templates/projects/view.html:203
+msgid "cadastrados"
+msgstr "registered"
+
+#: templates/projects/view.html:218
+msgid "Nenhum stakeholder"
+msgstr "No stakeholders"
+
+#: templates/projects/view.html:234
+msgid "Informações do Projeto"
+msgstr "Project Information"
+
+#: templates/projects/view.html:262
+msgid "a"
+msgstr "to"
+
+#: templates/projects/view.html:264
+msgid "Não definido"
+msgstr "Not defined"
+
+#: templates/projects/view.html:284
+msgid "Acesso Rápido"
+msgstr "Quick Access"
+
+#: templates/projects/view.html:300 templates/timesheet/list.html:2
+#: templates/timesheet/list.html:10
+msgid "Timesheet"
+msgstr "Timesheet"
+
+#: templates/projects/view.html:309
+msgid "Ágil / Kanban"
+msgstr "Agile / Kanban"
+
+#: templates/projects/stakeholders/form.html:2
+#: templates/projects/stakeholders/form.html:13
+msgid "Stakeholder"
+msgstr "Stakeholder"
+
+#: templates/projects/stakeholders/form.html:25
+msgid "Informações Básicas"
+msgstr "Basic Information"
+
+#: templates/projects/stakeholders/form.html:32
+msgid "Nome completo do stakeholder"
+msgstr "Full name of stakeholder"
+
+#: templates/projects/stakeholders/form.html:35
+msgid "Papel no Projeto"
+msgstr "Role in Project"
+
+#: templates/projects/stakeholders/form.html:48
+#: templates/projects/stakeholders/list.html:69
+msgid "Organização"
+msgstr "Organization"
+
+#: templates/projects/stakeholders/form.html:51
+msgid "Empresa ou instituição"
+msgstr "Company or institution"
+
+#: templates/projects/stakeholders/form.html:61 templates/tenants/form.html:43
+#: templates/tenants/view.html:64
+msgid "Telefone"
+msgstr "Phone"
+
+#: templates/projects/stakeholders/form.html:72
+msgid "Stakeholder ativo"
+msgstr "Active stakeholder"
+
+#: templates/projects/stakeholders/form.html:84
+msgid "Matriz Poder/Interesse"
+msgstr "Power/Interest Matrix"
+
+#: templates/projects/stakeholders/form.html:89
+msgid "Nível de Influência (Poder)"
+msgstr "Influence Level (Power)"
+
+#: templates/projects/stakeholders/form.html:98
+msgid "Capacidade de impactar o projeto"
+msgstr "Ability to impact the project"
+
+#: templates/projects/stakeholders/form.html:101
+msgid "Nível de Interesse"
+msgstr "Interest Level"
+
+#: templates/projects/stakeholders/form.html:110
+msgid "Interesse nos resultados"
+msgstr "Interest in results"
+
+#: templates/projects/stakeholders/form.html:114
+msgid "Estratégia de Engajamento"
+msgstr "Engagement Strategy"
+
+#: templates/projects/stakeholders/form.html:116
+msgid "Automático (baseado na matriz)"
+msgstr "Automatic (based on matrix)"
+
+#: templates/projects/stakeholders/form.html:127
+msgid "Matriz Poder/Interesse:"
+msgstr "Power/Interest Matrix:"
+
+#: templates/projects/stakeholders/form.html:128
+msgid "Gerenciar de Perto:"
+msgstr "Manage Closely:"
+
+#: templates/projects/stakeholders/form.html:128
+#: templates/projects/stakeholders/list.html:27
+msgid "Alto poder + Alto interesse"
+msgstr "High power + High interest"
+
+#: templates/projects/stakeholders/form.html:129
+msgid "Manter Satisfeito:"
+msgstr "Keep Satisfied:"
+
+#: templates/projects/stakeholders/form.html:129
+#: templates/projects/stakeholders/list.html:36
+msgid "Alto poder + Baixo interesse"
+msgstr "High power + Low interest"
+
+#: templates/projects/stakeholders/form.html:130
+msgid "Manter Informado:"
+msgstr "Keep Informed:"
+
+#: templates/projects/stakeholders/form.html:130
+#: templates/projects/stakeholders/list.html:45
+msgid "Baixo poder + Alto interesse"
+msgstr "Low power + High interest"
+
+#: templates/projects/stakeholders/form.html:131
+msgid "Monitorar:"
+msgstr "Monitor:"
+
+#: templates/projects/stakeholders/form.html:131
+#: templates/projects/stakeholders/list.html:54
+msgid "Baixo poder + Baixo interesse"
+msgstr "Low power + Low interest"
+
+#: templates/projects/stakeholders/form.html:141
+msgid "Comunicações dos Agentes de IA"
+msgstr "AI Agent Communications"
+
+#: templates/projects/stakeholders/form.html:144
+msgid ""
+"Selecione quais comunicações automáticas este stakeholder deve receber:"
+msgstr ""
+"Select which automatic communications this stakeholder should receive:"
+
+#: templates/projects/stakeholders/form.html:158
+msgid "Relatórios de Status"
+msgstr "Status Reports"
+
+#: templates/projects/stakeholders/form.html:167
+msgid "Alertas de Riscos"
+msgstr "Risk Alerts"
+
+#: templates/projects/stakeholders/form.html:174
+msgid "Alertas Financeiros"
+msgstr "Financial Alerts"
+
+#: templates/projects/stakeholders/form.html:183
+msgid "Alertas de Cronograma"
+msgstr "Schedule Alerts"
+
+#: templates/projects/stakeholders/form.html:190
+msgid "Alertas de Qualidade"
+msgstr "Quality Alerts"
+
+#: templates/projects/stakeholders/form.html:197
+msgid "Alertas de Conformidade"
+msgstr "Compliance Alerts"
+
+#: templates/projects/stakeholders/form.html:208
+msgid "Observações"
+msgstr "Notes"
+
+#: templates/projects/stakeholders/form.html:212
+msgid "Observações sobre este stakeholder..."
+msgstr "Notes about this stakeholder..."
+
+#: templates/projects/stakeholders/form.html:222
+#: templates/projects/stakeholders/list.html:15
+msgid "Adicionar Stakeholder"
+msgstr "Add Stakeholder"
+
+#: templates/projects/stakeholders/list.html:25
+msgid "Gerenciar de Perto"
+msgstr "Manage Closely"
+
+#: templates/projects/stakeholders/list.html:34
+msgid "Manter Satisfeito"
+msgstr "Keep Satisfied"
+
+#: templates/projects/stakeholders/list.html:43
+msgid "Manter Informado"
+msgstr "Keep Informed"
+
+#: templates/projects/stakeholders/list.html:52
+msgid "Monitorar"
+msgstr "Monitor"
+
+#: templates/projects/stakeholders/list.html:68 templates/users/list.html:92
+msgid "Papel"
+msgstr "Role"
+
+#: templates/projects/stakeholders/list.html:70
+msgid "Influência"
+msgstr "Influence"
+
+#: templates/projects/stakeholders/list.html:71
+msgid "Interesse"
+msgstr "Interest"
+
+#: templates/projects/stakeholders/list.html:72
+msgid "Estratégia"
+msgstr "Strategy"
+
+#: templates/projects/stakeholders/list.html:73
+msgid "Comunicações"
+msgstr "Communications"
+
+#: templates/projects/stakeholders/list.html:116
+msgid "ativas"
+msgstr "active"
+
+#: templates/projects/stakeholders/list.html:125
+#: templates/resources/form.html:40 templates/tenants/view.html:127
+#: templates/users/list.html:126 templates/users/view.html:48
+msgid "Inativo"
+msgstr "Inactive"
+
+#: templates/projects/stakeholders/list.html:134
+msgid "Excluir stakeholder?"
+msgstr "Delete stakeholder?"
+
+#: templates/projects/stakeholders/list.html:151
+msgid "Nenhum stakeholder cadastrado."
+msgstr "No stakeholders registered."
+
+#: templates/projects/stakeholders/list.html:153
+msgid "Adicionar Primeiro Stakeholder"
+msgstr "Add First Stakeholder"
+
+#: templates/public_calls/form.html:19
+msgid "Fonte/Instituicao"
+msgstr "Source/Institution"
+
+#: templates/public_calls/form.html:22
+msgid "Ex: FINEP, BNDES, CNPq, FAPESP..."
+msgstr "Ex: FINEP, BNDES, CNPq, FAPESP..."
+
+#: templates/public_calls/form.html:33
+msgid "Outro"
+msgstr "Other"
+
+#: templates/public_calls/form.html:40
+msgid "Encerrada"
+msgstr "Closed"
+
+#: templates/public_calls/form.html:41
+msgid "Em Analise"
+msgstr "Under Analysis"
+
+#: templates/public_calls/form.html:48
+msgid "Titulo completo da chamada publica"
+msgstr "Full title of the public call"
+
+#: templates/public_calls/form.html:51
+msgid "Tema"
+msgstr "Theme"
+
+#: templates/public_calls/form.html:54
+msgid "Ex: Inovacao, Saude, Energia..."
+msgstr "Ex: Innovation, Health, Energy..."
+
+#: templates/public_calls/form.html:57
+msgid "Inovacao"
+msgstr "Innovation"
+
+#: templates/public_calls/form.html:58
+msgid "Saude"
+msgstr "Health"
+
+#: templates/public_calls/form.html:59
+msgid "Energia"
+msgstr "Energy"
+
+#: templates/public_calls/form.html:60
+msgid "Agropecuaria"
+msgstr "Agriculture"
+
+#: templates/public_calls/form.html:61
+msgid "Tecnologia da Informacao"
+msgstr "Information Technology"
+
+#: templates/public_calls/form.html:62
+msgid "Transformacao Digital"
+msgstr "Digital Transformation"
+
+#: templates/public_calls/form.html:63
+msgid "Sustentabilidade"
+msgstr "Sustainability"
+
+#: templates/public_calls/form.html:64
+msgid "Industria"
+msgstr "Industry"
+
+#: templates/public_calls/form.html:65
+msgid "Infraestrutura"
+msgstr "Infrastructure"
+
+#: templates/public_calls/form.html:66
+msgid "Biotecnologia"
+msgstr "Biotechnology"
+
+#: templates/public_calls/form.html:67
+msgid "Defesa"
+msgstr "Defense"
+
+#: templates/public_calls/form.html:68
+msgid "Aeroespacial"
+msgstr "Aerospace"
+
+#: templates/public_calls/form.html:75
+msgid "Ex: FNDCT, Recursos Proprios..."
+msgstr "Ex: FNDCT, Own Resources..."
+
+#: templates/public_calls/form.html:78 templates/public_calls/view.html:46
+msgid "Data de Publicacao"
+msgstr "Publication Date"
+
+#: templates/public_calls/form.html:81
+msgid "Ex: 15/01/2024"
+msgstr "Ex: 15/01/2024"
+
+#: templates/public_calls/form.html:84
+msgid "Prazo/Deadline"
+msgstr "Deadline"
+
+#: templates/public_calls/form.html:87
+msgid "Ex: 30/03/2024"
+msgstr "Ex: 30/03/2024"
+
+#: templates/public_calls/form.html:90
+msgid "Publico-Alvo"
+msgstr "Target Audience"
+
+#: templates/public_calls/form.html:93
+msgid "Ex: Empresas, ICTs, Startups, Pesquisadores..."
+msgstr "Ex: Companies, ICTs, Startups, Researchers..."
+
+#: templates/public_calls/form.html:96
+msgid "Link do Edital"
+msgstr "Call Link"
+
+#: templates/public_calls/form.html:104
+msgid "Descricao detalhada da chamada publica"
+msgstr "Detailed description of the public call"
+
+#: templates/public_calls/list.html:2 templates/public_calls/list.html:7
+msgid "Chamadas Publicas"
+msgstr "Public Calls"
+
+#: templates/public_calls/list.html:8
+msgid "FINEP, BNDES, FAPESC e outras fontes de fomento"
+msgstr "FINEP, BNDES, FAPESC and other funding sources"
+
+#: templates/public_calls/list.html:11
+msgid "Nova Chamada"
+msgstr "New Call"
+
+#: templates/public_calls/list.html:14
+msgid "Sincronizar Chamadas"
+msgstr "Sync Calls"
+
+#: templates/public_calls/list.html:17
+msgid "Sugerir Vinculos"
+msgstr "Suggest Links"
+
+#: templates/public_calls/list.html:58 templates/public_calls/list.html:81
+msgid "Outras"
+msgstr "Others"
+
+#: templates/public_calls/list.html:72
+msgid "Buscar chamadas..."
+msgstr "Search calls..."
+
+#: templates/public_calls/list.html:77
+msgid "Todas as Fontes"
+msgstr "All Sources"
+
+#: templates/public_calls/list.html:136
+msgid "Abrir no site"
+msgstr "Open on website"
+
+#: templates/public_calls/list.html:141
+msgid "Remover esta chamada?"
+msgstr "Remove this call?"
+
+#: templates/public_calls/list.html:156
+msgid "Nenhuma chamada publica encontrada"
+msgstr "No public calls found"
+
+#: templates/public_calls/list.html:157
+msgid "Clique no botao \"Sincronizar Chamadas\" para buscar chamadas disponiveis"
+msgstr "Click the \"Sync Calls\" button to find available calls"
+
+#: templates/public_calls/list.html:160
+msgid "Sincronizar Agora"
+msgstr "Sync Now"
+
+#: templates/public_calls/list.html:173
+msgid "Sincronizando..."
+msgstr "Syncing..."
+
+#: templates/public_calls/list.html:182
+msgid "chamadas"
+msgstr "calls"
+
+#: templates/public_calls/list.html:184
+msgid "Sincronizacao parcial."
+msgstr "Partial sync."
+
+#: templates/public_calls/list.html:184
+msgid "Erros:"
+msgstr "Errors:"
+
+#: templates/public_calls/list.html:186
+msgid "Sincronizacao concluida!"
+msgstr "Sync completed!"
+
+#: templates/public_calls/list.html:190
+msgid "Erro ao sincronizar:"
+msgstr "Error syncing:"
+
+#: templates/public_calls/list.html:212
+msgid "Erro ao sugerir vinculos:"
+msgstr "Error suggesting links:"
+
+#: templates/public_calls/view.html:12
+msgid "Detalhes da Chamada"
+msgstr "Call Details"
+
+#: templates/public_calls/view.html:18
+msgid "Excluir esta chamada?"
+msgstr "Delete this call?"
+
+#: templates/public_calls/view.html:67
+msgid "Publico Alvo"
+msgstr "Target Audience"
+
+#: templates/public_calls/view.html:76
+msgid "Acessar no Site Oficial"
+msgstr "Access Official Website"
+
+#: templates/public_calls/view.html:82
+msgid "Atualizado em"
+msgstr "Updated on"
+
+#: templates/public_calls/view.html:92
+msgid "Projetos Vinculados"
+msgstr "Linked Projects"
+
+#: templates/public_calls/view.html:105
+msgid "Vinculado em"
+msgstr "Linked on"
+
+#: templates/public_calls/view.html:118
+msgid "Disponivel nos planos Profissional e Enterprise"
+msgstr "Available in Professional and Enterprise plans"
+
+#: templates/public_calls/view.html:125
+msgid "Remover vinculo"
+msgstr "Remove link"
+
+#: templates/public_calls/view.html:125
+msgid "Remover vinculo com este projeto?"
+msgstr "Remove link with this project?"
+
+#: templates/public_calls/view.html:134
+msgid "Nenhum projeto vinculado a esta chamada."
+msgstr "No projects linked to this call."
+
+#: templates/public_calls/view.html:141
+msgid "Vincular Projeto"
+msgstr "Link Project"
+
+#: templates/public_calls/view.html:144
+msgid "Selecione um projeto..."
+msgstr "Select a project..."
+
+#: templates/public_calls/view.html:151
+msgid "Data de Vinculacao"
+msgstr "Link Date"
+
+#: templates/public_calls/view.html:157
+msgid "Vinculado"
+msgstr "Linked"
+
+#: templates/public_calls/view.html:158
+msgid "Em Elaboracao"
+msgstr "Under Development"
+
+#: templates/public_calls/view.html:159
+msgid "Submetido"
+msgstr "Submitted"
+
+#: templates/public_calls/view.html:160
+msgid "Aprovado"
+msgstr "Approved"
+
+#: templates/public_calls/view.html:161
+msgid "Rejeitado"
+msgstr "Rejected"
+
+#: templates/public_calls/view.html:166
+msgid "Notas sobre a vinculacao..."
+msgstr "Notes about the link..."
+
+#: templates/public_calls/view.html:169
+msgid "Vincular"
+msgstr "Link"
+
+#: templates/resources/form.html:2 templates/resources/form.html:11
+#: templates/timesheet/list.html:98
+msgid "Recurso"
+msgstr "Resource"
+
+#: templates/resources/form.html:21
+msgid "Pessoa"
+msgstr "Person"
+
+#: templates/resources/form.html:22
+msgid "Maquina / Equipamento"
+msgstr "Machine / Equipment"
+
+#: templates/resources/form.html:31
+msgid "Funcao/Papel"
+msgstr "Function/Role"
+
+#: templates/resources/form.html:34
+msgid "Ex: Pesquisador, Tecnico, CNC, etc."
+msgstr "Ex: Researcher, Technician, CNC, etc."
+
+#: templates/resources/form.html:44
+msgid "Horas Alocadas"
+msgstr "Allocated Hours"
+
+#: templates/resources/form.html:49
+msgid "Custo/Hora"
+msgstr "Hourly Cost"
+
+#: templates/resources/form.html:54 templates/schedule/form.html:33
+msgid "Data Inicio"
+msgstr "Start Date"
+
+#: templates/resources/form.html:59
+msgid "Data Fim"
+msgstr "End Date"
+
+# Resources
+#: templates/resources/list.html:14
+msgid "Novo Recurso"
+msgstr "New Resource"
+
+#: templates/resources/list.html:23 templates/resources/list.html:62
+msgid "Pessoas"
+msgstr "People"
+
+#: templates/resources/list.html:31
+msgid "Maquinas/Equip."
+msgstr "Machines/Equip."
+
+#: templates/resources/list.html:39
+msgid "Custo Planejado"
+msgstr "Planned Cost"
+
+#: templates/resources/list.html:41 templates/resources/list.html:85
+msgid "alocadas"
+msgstr "allocated"
+
+#: templates/resources/list.html:48
+msgid "Custo Realizado"
+msgstr "Actual Cost"
+
+#: templates/resources/list.html:63
+msgid "Maquinas"
+msgstr "Machines"
+
+#: templates/resources/list.html:93
+msgid "realizadas"
+msgstr "completed"
+
+#: templates/resources/list.html:111
+msgid "Excluir este recurso?"
+msgstr "Delete this resource?"
+
+#: templates/resources/list.html:124
+msgid "Nenhum recurso cadastrado"
+msgstr "No resources registered"
+
+#: templates/resources/list.html:125
+msgid "Adicione pessoas e maquinas ao projeto"
+msgstr "Add people and machines to the project"
+
+#: templates/resources/list.html:127
+msgid "Adicionar Recurso"
+msgstr "Add Resource"
+
+#: templates/schedule/form.html:24
+msgid "Ordem"
+msgstr "Order"
+
+#: templates/schedule/form.html:38
+msgid "Data Termino"
+msgstr "End Date"
+
+#: templates/schedule/form.html:60 templates/schedule/view.html:95
+msgid "Predecessora"
+msgstr "Predecessor"
+
+#: templates/schedule/form.html:71
+msgid "A atividade selecionada deve terminar antes desta iniciar"
+msgstr "The selected activity must end before this one starts"
+
+#: templates/schedule/form.html:76
+msgid "Responsaveis"
+msgstr "Responsible"
+
+#: templates/schedule/form.html:76
+msgid "opcional"
+msgstr "optional"
+
+#: templates/schedule/form.html:85 templates/schedule/form.html:108
+#: templates/schedule/form.html:162 templates/status_report/print.html:607
+#: templates/status_report/report.html:612
+msgid "Equipe"
+msgstr "Team"
+
+#: templates/schedule/form.html:127
+msgid "Adicionar Responsavel"
+msgstr "Add Responsible"
+
+#: templates/schedule/form.html:130
+msgid "A soma das alocacoes nao pode ultrapassar 100%"
+msgstr "The sum of allocations cannot exceed 100%"
+
+#: templates/schedule/form.html:133
+msgid "Total alocado:"
+msgstr "Total allocated:"
+
+#: templates/schedule/form.html:141 templates/schedule/view.html:175
+msgid "Criar Marco"
+msgstr "Create Milestone"
+
+#: templates/schedule/import.html:2 templates/schedule/import.html:12
+msgid "Importar Cronograma"
+msgstr "Import Schedule"
+
+#: templates/schedule/import.html:19 templates/schedule/view.html:14
+msgid "Importar do MS Project"
+msgstr "Import from MS Project"
+
+#: templates/schedule/import.html:23
+msgid "Como exportar do MS Project:"
+msgstr "How to export from MS Project:"
+
+#: templates/schedule/import.html:25
+msgid "No MS Project, va em"
+msgstr "In MS Project, go to"
+
+#: templates/schedule/import.html:25
+msgid "Arquivo > Salvar Como"
+msgstr "File > Save As"
+
+#: templates/schedule/import.html:26
+msgid "Escolha o formato"
+msgstr "Choose the format"
+
+#: templates/schedule/import.html:27
+msgid "Salve o arquivo e faca upload aqui"
+msgstr "Save the file and upload it here"
+
+#: templates/schedule/import.html:33
+msgid "Arquivo XML do MS Project"
+msgstr "MS Project XML File"
+
+#: templates/schedule/import.html:35
+msgid "Selecione o arquivo .xml exportado do MS Project"
+msgstr "Select the .xml file exported from MS Project"
+
+#: templates/schedule/import.html:40
+msgid "Atencao:"
+msgstr "Attention:"
+
+#: templates/schedule/import.html:40
+msgid "Os marcos importados serao adicionados ao cronograma existente."
+msgstr "Imported milestones will be added to the existing schedule."
+
+#: templates/schedule/import.html:41
+msgid "Marcos duplicados nao serao verificados."
+msgstr "Duplicate milestones will not be checked."
+
+#: templates/schedule/import.html:49 templates/schedule/view.html:15
+#: templates/timesheet/list.html:18
+msgid "Importar"
+msgstr "Import"
+
+#: templates/schedule/view.html:17
+msgid "Exportar para MS Project"
+msgstr "Export to MS Project"
+
+#: templates/schedule/view.html:18
+msgid "Exportar"
+msgstr "Export"
+
+#: templates/schedule/view.html:21
+msgid "Novo Marco"
+msgstr "New Milestone"
+
+#: templates/schedule/view.html:44
+msgid "Grafico de Gantt"
+msgstr "Gantt Chart"
+
+#: templates/schedule/view.html:58
+msgid "Depende de:"
+msgstr "Depends on:"
+
+#: templates/schedule/view.html:87
+msgid "Marcos do Projeto"
+msgstr "Project Milestones"
+
+#: templates/schedule/view.html:96
+msgid "Responsavel"
+msgstr "Responsible"
+
+#: templates/schedule/view.html:126
+msgid "alocacao"
+msgstr "allocation"
+
+#: templates/schedule/view.html:157
+msgid "Excluir este marco?"
+msgstr "Delete this milestone?"
+
+#: templates/schedule/view.html:172
+msgid "Nenhum marco definido"
+msgstr "No milestones defined"
+
+#: templates/schedule/view.html:173
+msgid "Defina marcos e etapas para o cronograma do projeto"
+msgstr "Define milestones and stages for the project schedule"
+
+#: templates/status_report/print.html:429
+#: templates/status_report/print.html:735
+#: templates/status_report/report.html:654 templates/timesheet/form.html:11
+#: templates/timesheet/form.html:24 templates/timesheet/list.html:101
+msgid "Horas"
+msgstr "Hours"
+
+#: templates/status_report/print.html:430
+msgid "Total trabalhado"
+msgstr "Total worked"
+
+#: templates/status_report/print.html:435
+#: templates/status_report/report.html:132
+msgid "críticos"
+msgstr "critical"
+
+#: templates/status_report/print.html:442
+#: templates/status_report/report.html:192
+msgid "Indicadores de Valor Agregado (EVM)"
+msgstr "Earned Value Indicators (EVM)"
+
+#: templates/status_report/print.html:449
+msgid "Desempenho de Custo"
+msgstr "Cost Performance"
+
+#: templates/status_report/print.html:456
+msgid "Desempenho de Prazo"
+msgstr "Schedule Performance"
+
+#: templates/status_report/print.html:461
+msgid "Estimativa p/ Terminar"
+msgstr "Estimate to Complete"
+
+#: templates/status_report/print.html:468
+#: templates/status_report/report.html:233
+msgid "Estimativa no Término"
+msgstr "Estimate at Completion"
+
+#: templates/status_report/print.html:527
+#: templates/status_report/report.html:344
+msgid "Início"
+msgstr "Start"
+
+#: templates/status_report/print.html:531
+#: templates/status_report/report.html:348
+msgid "Término"
+msgstr "End"
+
+#: templates/status_report/print.html:565
+msgid "Custo de Recursos (Planejado x Realizado)"
+msgstr "Resource Cost (Planned vs Actual)"
+
+#: templates/status_report/print.html:573
+#: templates/status_report/report.html:428
+msgid "Planejado"
+msgstr "Planned"
+
+#: templates/status_report/print.html:589
+#: templates/status_report/report.html:446
+msgid "Horas Plan."
+msgstr "Planned Hrs."
+
+#: templates/status_report/print.html:593
+#: templates/status_report/report.html:450
+msgid "Horas Real."
+msgstr "Actual Hrs."
+
+#: templates/status_report/print.html:618
+#: templates/status_report/report.html:630
+msgid "outros membros"
+msgstr "other members"
+
+#: templates/status_report/print.html:621
+#: templates/status_report/report.html:633
+msgid "Nenhum recurso alocado"
+msgstr "No resources allocated"
+
+#: templates/status_report/print.html:635
+msgid "ALTO"
+msgstr "HIGH"
+
+#: templates/status_report/print.html:635
+msgid "MÉDIO"
+msgstr "MEDIUM"
+
+#: templates/status_report/print.html:635
+msgid "BAIXO"
+msgstr "LOW"
+
+#: templates/status_report/print.html:639
+msgid "Ação:"
+msgstr "Action:"
+
+#: templates/status_report/print.html:695
+#: templates/status_report/report.html:559
+msgid "Itens Atrasados"
+msgstr "Delayed Items"
+
+#: templates/status_report/print.html:713
+msgid "concluído"
+msgstr "completed"
+
+#: templates/status_report/print.html:734
+#: templates/status_report/report.html:653 templates/timesheet/form.html:29
+#: templates/timesheet/list.html:99
+msgid "Atividade"
+msgstr "Activity"
+
+#: templates/status_report/print.html:754
+msgid "Gerado por Orion Gestão de P&D em"
+msgstr "Generated by Orion R&D Management on"
+
+#: templates/status_report/report.html:82
+msgid "Data do Relatório"
+msgstr "Report Date"
+
+#: templates/status_report/report.html:113
+msgid "Orçamento Utilizado"
+msgstr "Budget Used"
+
+#: templates/status_report/report.html:123
+msgid "Total acumulado"
+msgstr "Total accumulated"
+
+#: templates/status_report/report.html:194
+msgid "Saudável"
+msgstr "Healthy"
+
+#: templates/status_report/report.html:194
+msgid "Atenção"
+msgstr "Attention"
+
+#: templates/status_report/report.html:206
+msgid "Índice de Desempenho de Custo"
+msgstr "Cost Performance Index"
+
+#: templates/status_report/report.html:215
+msgid "Índice de Desempenho de Prazo"
+msgstr "Schedule Performance Index"
+
+#: templates/status_report/report.html:224
+msgid "Estimativa para Terminar"
+msgstr "Estimate to Complete"
+
+#: templates/status_report/report.html:253
+msgid "Valor Agregado"
+msgstr "Earned Value"
+
+#: templates/status_report/report.html:260
+msgid "Custo Real"
+msgstr "Actual Cost"
+
+#: templates/status_report/report.html:269
+msgid "Variação de Custo"
+msgstr "Cost Variance"
+
+#: templates/status_report/report.html:278
+msgid "Variação de Prazo"
+msgstr "Schedule Variance"
+
+#: templates/status_report/report.html:287
+msgid "Variação no Término"
+msgstr "Variance at Completion"
+
+#: templates/status_report/report.html:294
+msgid "Tempo decorrido"
+msgstr "Elapsed time"
+
+#: templates/status_report/report.html:365
+msgid "Utilização"
+msgstr "Utilization"
+
+#: templates/status_report/report.html:393
+msgid "Por Categoria"
+msgstr "By Category"
+
+#: templates/status_report/report.html:410
+msgid "Custo de Recursos"
+msgstr "Resource Cost"
+
+#: templates/status_report/report.html:416
+msgid "Realizado vs Planejado"
+msgstr "Actual vs Planned"
+
+#: templates/status_report/report.html:462
+msgid "Custo por Recurso"
+msgstr "Cost per Resource"
+
+#: templates/status_report/report.html:524
+msgid "Riscos Abertos"
+msgstr "Open Risks"
+
+#: templates/status_report/report.html:528
+msgid "Pendências Abertas"
+msgstr "Open Pending Items"
+
+#: templates/status_report/report.html:532
+msgid "Bugs Abertos"
+msgstr "Open Bugs"
+
+#: templates/status_report/report.html:536
+msgid "NCs Abertas"
+msgstr "Open NCs"
+
+#: templates/status_report/report.html:571
+msgid "Projeto em conformidade"
+msgstr "Project in compliance"
+
+#: templates/tenants/form.html:11
+msgid "Editar Empresa"
+msgstr "Edit Company"
+
+#: templates/tenants/form.html:11 templates/tenants/list.html:8
+#: templates/tenants/list.html:140
+msgid "Nova Empresa"
+msgstr "New Company"
+
+#: templates/tenants/form.html:17
+msgid "Dados da Empresa"
+msgstr "Company Data"
+
+#: templates/tenants/form.html:22
+msgid "Nome da Empresa"
+msgstr "Company Name"
+
+#: templates/tenants/form.html:24
+msgid "Nome completo da empresa"
+msgstr "Full company name"
+
+#: templates/tenants/form.html:27
+msgid "Identificador (slug)"
+msgstr "Identifier (slug)"
+
+#: templates/tenants/form.html:29
+msgid "Ex: empresa-abc"
+msgstr "Ex: company-abc"
+
+#: templates/tenants/form.html:30
+msgid "URL amigável. Deixe em branco para gerar automaticamente."
+msgstr "Friendly URL. Leave blank to generate automatically."
+
+#: templates/tenants/form.html:33 templates/tenants/view.html:52
+msgid "CNPJ"
+msgstr "CNPJ"
+
+#: templates/tenants/form.html:38 templates/tenants/form.html:188
+#: templates/tenants/view.html:58 templates/tenants/view.html:104
+#: templates/tenants/view.html:272
+msgid "E-mail"
+msgstr "E-mail"
+
+#: templates/tenants/form.html:48
+msgid "Estado (UF)"
+msgstr "State (UF)"
+
+#: templates/tenants/form.html:57
+msgid "Município"
+msgstr "Municipality"
+
+#: templates/tenants/form.html:59
+msgid "Nome do município"
+msgstr "Municipality name"
+
+#: templates/tenants/form.html:62 templates/tenants/view.html:80
+msgid "Endereço"
+msgstr "Address"
+
+#: templates/tenants/form.html:64
+msgid "Endereço completo"
+msgstr "Full address"
+
+#: templates/tenants/form.html:72
+msgid "Plano e Limites"
+msgstr "Plan and Limits"
+
+#: templates/tenants/form.html:77 templates/tenants/list.html:63
+#: templates/tenants/view.html:41
+msgid "Plano"
+msgstr "Plan"
+
+#: templates/tenants/form.html:85
+msgid "Máximo de Usuários"
+msgstr "Maximum Users"
+
+#: templates/tenants/form.html:90
+msgid "Máximo de Projetos"
+msgstr "Maximum Projects"
+
+#: templates/tenants/form.html:95
+msgid "Data de Expiração"
+msgstr "Expiration Date"
+
+#: templates/tenants/form.html:98
+msgid "Deixe em branco para sem limite."
+msgstr "Leave blank for no limit."
+
+#: templates/tenants/form.html:106
+msgid "Empresa Ativa"
+msgstr "Active Company"
+
+#: templates/tenants/form.html:117
+msgid "Configuração de Email"
+msgstr "Email Configuration"
+
+#: templates/tenants/form.html:126
+msgid "Habilitar envio de emails"
+msgstr "Enable email sending"
+
+#: templates/tenants/form.html:127
+msgid "Ativa o envio de briefings e notificações por email"
+msgstr "Enables sending of briefings and notifications by email"
+
+#: templates/tenants/form.html:132
+msgid "Servidor SMTP"
+msgstr "SMTP Server"
+
+#: templates/tenants/form.html:138
+msgid "Porta"
+msgstr "Port"
+
+#: templates/tenants/form.html:144
+msgid "Segurança"
+msgstr "Security"
+
+#: templates/tenants/form.html:146 templates/tenants/form.html:147
+msgid "porta"
+msgstr "port"
+
+#: templates/tenants/form.html:152
+msgid "Usuário SMTP (Email)"
+msgstr "SMTP User (Email)"
+
+#: templates/tenants/form.html:158
+msgid "Senha SMTP"
+msgstr "SMTP Password"
+
+#: templates/tenants/form.html:161
+msgid "Senha ou App Password"
+msgstr "Password or App Password"
+
+#: templates/tenants/form.html:162
+msgid "Para Gmail, use uma"
+msgstr "For Gmail, use a"
+
+#: templates/tenants/form.html:162
+msgid "Senha de App"
+msgstr "App Password"
+
+#: templates/tenants/form.html:165
+msgid "Remetente Padrão"
+msgstr "Default Sender"
+
+#: templates/tenants/form.html:169
+msgid "Formato: Nome <email@empresa.com>"
+msgstr "Format: Name <email@company.com>"
+
+#: templates/tenants/form.html:178
+msgid "Administrador da Empresa"
+msgstr "Company Administrator"
+
+#: templates/tenants/form.html:185
+msgid "Nome do administrador"
+msgstr "Administrator name"
+
+#: templates/tenants/form.html:195
+msgid "Senha inicial"
+msgstr "Initial password"
+
+#: templates/tenants/form.html:198
+msgid ""
+"Opcional: Cria automaticamente o primeiro usuário administrador da empresa."
+msgstr "Optional: Automatically creates the first company administrator user."
+
+#: templates/tenants/form.html:206
+msgid "Criar Empresa"
+msgstr "Create Company"
+
+#: templates/tenants/list.html:6
+msgid "Gestão de Empresas"
+msgstr "Company Management"
+
+#: templates/tenants/list.html:19
+msgid "Total Empresas"
+msgstr "Total Companies"
+
+#: templates/tenants/list.html:32
+msgid "Empresas Ativas"
+msgstr "Active Companies"
+
+#: templates/tenants/list.html:45
+msgid "Empresas Inativas"
+msgstr "Inactive Companies"
+
+#: templates/tenants/list.html:64 templates/tenants/view.html:91
+#: templates/users/list.html:2
+msgid "Usuários"
+msgstr "Users"
+
+#: templates/tenants/list.html:66 templates/tenants/view.html:69
+msgid "Validade"
+msgstr "Validity"
+
+#: templates/tenants/list.html:107 templates/tenants/view.html:74
+msgid "Sem limite"
+msgstr "No limit"
+
+#: templates/tenants/list.html:112 templates/tenants/view.html:33
+msgid "Ativa"
+msgstr "Active"
+
+#: templates/tenants/list.html:114 templates/tenants/view.html:35
+msgid "Expirada"
+msgstr "Expired"
+
+#: templates/tenants/list.html:116 templates/tenants/view.html:37
+msgid "Inativa"
+msgstr "Inactive"
+
+#: templates/tenants/list.html:137
+msgid "Nenhuma empresa cadastrada"
+msgstr "No companies registered"
+
+#: templates/tenants/list.html:138
+msgid "Cadastre a primeira empresa para começar"
+msgstr "Register the first company to start"
+
+#: templates/tenants/view.html:21 templates/users/list.html:139
+msgid "Desativar"
+msgstr "Deactivate"
+
+#: templates/tenants/view.html:21 templates/users/list.html:139
+msgid "Ativar"
+msgstr "Activate"
+
+#: templates/tenants/view.html:105 templates/tenants/view.html:280
+msgid "Função"
+msgstr "Role"
+
+#: templates/tenants/view.html:118 templates/tenants/view.html:283
+#: templates/users/form.html:54 templates/users/form.html:60
+#: templates/users/list.html:72 templates/users/list.html:117
+#: templates/users/profile.html:31 templates/users/view.html:41
+msgid "Gerente"
+msgstr "Manager"
+
+#: templates/tenants/view.html:137
+msgid "Nenhum usuário cadastrado."
+msgstr "No users registered."
+
+#: templates/tenants/view.html:182
+msgid "Nenhum projeto cadastrado."
+msgstr "No projects registered."
+
+#: templates/tenants/view.html:198
+msgid "Renovar Licença"
+msgstr "Renew License"
+
+#: templates/tenants/view.html:201
+msgid "1 mês"
+msgstr "1 month"
+
+#: templates/tenants/view.html:202
+msgid "3 meses"
+msgstr "3 months"
+
+#: templates/tenants/view.html:203
+msgid "6 meses"
+msgstr "6 months"
+
+#: templates/tenants/view.html:204
+msgid "12 meses"
+msgstr "12 months"
+
+#: templates/tenants/view.html:205
+msgid "24 meses"
+msgstr "24 months"
+
+#: templates/tenants/view.html:208
+msgid "Renovar"
+msgstr "Renew"
+
+#: templates/tenants/view.html:218
+msgid ""
+"Tem certeza que deseja excluir esta empresa? Esta ação não pode ser "
+"desfeita."
+msgstr ""
+"Are you sure you want to delete this company? This action cannot be undone."
+
+#: templates/tenants/view.html:219
+msgid "Excluir Empresa"
+msgstr "Delete Company"
+
+#: templates/tenants/view.html:228
+msgid "Estatísticas"
+msgstr "Statistics"
+
+#: templates/tenants/view.html:232
+msgid "Uso de Usuários"
+msgstr "User Usage"
+
+#: templates/tenants/view.html:241
+msgid "Uso de Projetos"
+msgstr "Project Usage"
+
+#: templates/tenants/view.html:250 templates/users/list.html:94
+msgid "Criado em"
+msgstr "Created on"
+
+#: templates/tenants/view.html:263
+msgid "Adicionar Usuário"
+msgstr "Add User"
+
+#: templates/tenants/view.html:284 templates/users/form.html:55
+#: templates/users/list.html:71 templates/users/list.html:115
+#: templates/users/profile.html:29 templates/users/view.html:39
+msgid "Administrador"
+msgstr "Administrator"
+
+#: templates/timesheet/form.html:2
+msgid "Registro"
+msgstr "Record"
+
+#: templates/timesheet/form.html:11 templates/timesheet/form.html:62
+msgid "Registrar"
+msgstr "Register"
+
+#: templates/timesheet/form.html:32
+msgid "Descreva a atividade realizada"
+msgstr "Describe the activity performed"
+
+#: templates/timesheet/form.html:35
+msgid "Recurso (Pessoa)"
+msgstr "Resource (Person)"
+
+#: templates/timesheet/form.html:37
+msgid "Selecione o colaborador"
+msgstr "Select collaborator"
+
+#: templates/timesheet/form.html:42
+msgid "Selecione o colaborador que realizou a atividade"
+msgstr "Select the collaborator who performed the activity"
+
+#: templates/timesheet/form.html:45
+msgid "Marco/Etapa Relacionada"
+msgstr "Related Milestone/Stage"
+
+#: templates/timesheet/list.html:14 templates/timesheet/upload.html:68
+msgid "Baixar Template Excel"
+msgstr "Download Excel Template"
+
+#: templates/timesheet/list.html:17 templates/timesheet/list.html:152
+msgid "Importar Excel"
+msgstr "Import Excel"
+
+#: templates/timesheet/list.html:22 templates/timesheet/list.html:149
+msgid "Registrar Horas"
+msgstr "Register Hours"
+
+#: templates/timesheet/list.html:31
+msgid "Total de Horas"
+msgstr "Total Hours"
+
+#: templates/timesheet/list.html:39
+msgid "Registros"
+msgstr "Records"
+
+#: templates/timesheet/list.html:47
+msgid "Colaboradores"
+msgstr "Collaborators"
+
+#: templates/timesheet/list.html:58
+msgid "Horas por Colaborador"
+msgstr "Hours per Collaborator"
+
+#: templates/timesheet/list.html:130
+msgid "Excluir este registro?"
+msgstr "Delete this record?"
+
+#: templates/timesheet/list.html:145
+msgid "Nenhum registro de horas"
+msgstr "No hour records"
+
+#: templates/timesheet/list.html:146
+msgid "Registre horas trabalhadas neste projeto"
+msgstr "Register hours worked on this project"
+
+#: templates/timesheet/upload.html:2 templates/timesheet/upload.html:10
+msgid "Importar Timesheet"
+msgstr "Import Timesheet"
+
+#: templates/timesheet/upload.html:19
+msgid "Upload de Arquivo"
+msgstr "File Upload"
+
+#: templates/timesheet/upload.html:24
+msgid "Arquivo Excel"
+msgstr "Excel File"
+
+#: templates/timesheet/upload.html:26
+msgid "Selecione um arquivo Excel com os registros de horas"
+msgstr "Select an Excel file with hour records"
+
+#: templates/timesheet/upload.html:30
+msgid "Importar Registros"
+msgstr "Import Records"
+
+#: templates/timesheet/upload.html:43
+msgid "Instrucoes"
+msgstr "Instructions"
+
+#: templates/timesheet/upload.html:47
+msgid "Baixe o template clicando no botao abaixo"
+msgstr "Download the template by clicking the button below"
+
+#: templates/timesheet/upload.html:48
+msgid "Preencha os dados seguindo o formato do template"
+msgstr "Fill in the data following the template format"
+
+#: templates/timesheet/upload.html:49
+msgid "Salve o arquivo e faca o upload"
+msgstr "Save the file and upload it"
+
+#: templates/timesheet/upload.html:52
+msgid "Campos obrigatorios:"
+msgstr "Required fields:"
+
+#: templates/timesheet/upload.html:54
+msgid "Data:"
+msgstr "Date:"
+
+#: templates/timesheet/upload.html:54
+msgid "Formato DD/MM/AAAA"
+msgstr "Format DD/MM/YYYY"
+
+#: templates/timesheet/upload.html:55
+msgid "Horas:"
+msgstr "Hours:"
+
+#: templates/timesheet/upload.html:55
+msgid "Numero (ex: 8 ou 2.5)"
+msgstr "Number (ex: 8 or 2.5)"
+
+#: templates/timesheet/upload.html:56
+msgid "Atividade:"
+msgstr "Activity:"
+
+#: templates/timesheet/upload.html:56
+msgid "Descricao da tarefa"
+msgstr "Task description"
+
+#: templates/timesheet/upload.html:59
+msgid "Campos opcionais:"
+msgstr "Optional fields:"
+
+#: templates/timesheet/upload.html:61
+msgid "Marco:"
+msgstr "Milestone:"
+
+#: templates/timesheet/upload.html:61 templates/timesheet/upload.html:62
+msgid "Selecione da lista no template"
+msgstr "Select from the list in the template"
+
+#: templates/timesheet/upload.html:62
+msgid "Recurso:"
+msgstr "Resource:"
+
+#: templates/timesheet/upload.html:63
+msgid "Observacoes:"
+msgstr "Notes:"
+
+#: templates/timesheet/upload.html:63
+msgid "Texto livre"
+msgstr "Free text"
+
+#: templates/users/form.html:22
+msgid "Nome completo do usuário"
+msgstr "Full name of the user"
+
+#: templates/users/form.html:25
+msgid "Nome de Usuário"
+msgstr "Username"
+
+#: templates/users/form.html:30
+msgid "nome.usuario"
+msgstr "name.user"
+
+#: templates/users/form.html:32
+msgid "Apenas letras, números, pontos, hífens e underscores"
+msgstr "Only letters, numbers, dots, hyphens and underscores"
+
+#: templates/users/form.html:38
+msgid "email@exemplo.com"
+msgstr "email@example.com"
+
+#: templates/users/form.html:44
+msgid "Deixe em branco para manter"
+msgstr "Leave blank to keep"
+
+#: templates/users/form.html:44 templates/users/profile.html:75
+msgid "Mínimo 6 caracteres"
+msgstr "Minimum 6 characters"
+
+#: templates/users/form.html:46
+msgid "Deixe em branco para manter a senha atual"
+msgstr "Leave blank to keep current password"
+
+#: templates/users/form.html:50
+msgid "Papel/Função"
+msgstr "Role/Function"
+
+#: templates/users/form.html:52 templates/users/form.html:58
+msgid "Visualizador"
+msgstr "Viewer"
+
+#: templates/users/form.html:58
+msgid "Apenas leitura"
+msgstr "Read only"
+
+#: templates/users/form.html:59
+msgid "Acesso básico"
+msgstr "Basic access"
+
+#: templates/users/form.html:60
+msgid "Gerencia projetos"
+msgstr "Manages projects"
+
+#: templates/users/form.html:61
+msgid "Admin"
+msgstr "Admin"
+
+#: templates/users/form.html:61
+msgid "Acesso total"
+msgstr "Full access"
+
+#: templates/users/form.html:65 templates/users/profile.html:85
+msgid "Idioma da Interface"
+msgstr "Interface Language"
+
+#: templates/users/form.html:68 templates/users/profile.html:91
+msgid "Português (Brasil)"
+msgstr "Portuguese (Brazil)"
+
+#: templates/users/form.html:71 templates/users/profile.html:94
+msgid "English"
+msgstr "English"
+
+#: templates/users/form.html:74 templates/users/profile.html:97
+msgid "Español"
+msgstr "Spanish"
+
+#: templates/users/form.html:84
+msgid "Usuários inativos não conseguem fazer login"
+msgstr "Inactive users cannot log in"
+
+#: templates/users/form.html:92 templates/users/profile.html:104
+msgid "Preferências de Email"
+msgstr "Email Preferences"
+
+#: templates/users/form.html:99 templates/users/profile.html:111
+msgid "Receber notificações por email"
+msgstr "Receive email notifications"
+
+#: templates/users/form.html:100 templates/users/profile.html:112
+msgid "Desative para não receber nenhum email do sistema"
+msgstr "Disable to not receive any system emails"
+
+#: templates/users/form.html:109 templates/users/profile.html:121
+msgid "Briefing diário"
+msgstr "Daily briefing"
+
+#: templates/users/form.html:110
+msgid "Resumo executivo diário"
+msgstr "Daily executive summary"
+
+#: templates/users/form.html:119 templates/users/profile.html:131
+msgid "Alertas críticos"
+msgstr "Critical alerts"
+
+#: templates/users/form.html:120 templates/users/profile.html:132
+msgid "Notificações de riscos e problemas"
+msgstr "Risk and issue notifications"
+
+#: templates/users/form.html:130
+msgid "Criar Usuário"
+msgstr "Create User"
+
+#: templates/users/list.html:7
+msgid "Usuários do Sistema"
+msgstr "System Users"
+
+#: templates/users/list.html:8
+msgid "Gerenciamento de contas e permissões"
+msgstr "Account and permissions management"
+
+#: templates/users/list.html:11 templates/users/list.html:163
+msgid "Novo Usuário"
+msgstr "New User"
+
+#: templates/users/list.html:22
+msgid "Total de Usuários"
+msgstr "Total Users"
+
+#: templates/users/list.html:35
+msgid "Administradores"
+msgstr "Administrators"
+
+#: templates/users/list.html:48
+msgid "Ativos"
+msgstr "Active"
+
+#: templates/users/list.html:65
+msgid "Buscar por nome, usuário ou email..."
+msgstr "Search by name, username or email..."
+
+#: templates/users/list.html:70
+msgid "Todos os Papéis"
+msgstr "All Roles"
+
+#: templates/users/list.html:131
+msgid "Ver detalhes"
+msgstr "View details"
+
+#: templates/users/list.html:144 templates/users/view.html:19
+msgid "Excluir usuário"
+msgstr "Delete user"
+
+#: templates/users/list.html:160
+msgid "Nenhum usuário encontrado"
+msgstr "No users found"
+
+#: templates/users/list.html:161
+msgid "Cadastre o primeiro usuário do sistema"
+msgstr "Register the first system user"
+
+#: templates/users/profile.html:16
+msgid "Informações da Conta"
+msgstr "Account Information"
+
+#: templates/users/profile.html:38
+msgid "Membro desde"
+msgstr "Member since"
+
+#: templates/users/profile.html:45
+msgid "Editar Perfil"
+msgstr "Edit Profile"
+
+#: templates/users/profile.html:63
+msgid "Alterar Senha"
+msgstr "Change Password"
+
+#: templates/users/profile.html:64
+msgid "Deixe os campos em branco se não deseja alterar a senha."
+msgstr "Leave the fields blank if you do not want to change the password."
+
+#: templates/users/profile.html:68
+msgid "Senha Atual"
+msgstr "Current Password"
+
+#: templates/users/profile.html:70
+msgid "Digite sua senha atual"
+msgstr "Enter your current password"
+
+#: templates/users/profile.html:73
+msgid "Nova Senha"
+msgstr "New Password"
+
+#: templates/users/profile.html:78
+msgid "Confirmar Nova Senha"
+msgstr "Confirm New Password"
+
+#: templates/users/profile.html:80
+msgid "Repita a nova senha"
+msgstr "Repeat the new password"
+
+#: templates/users/profile.html:86
+msgid "Selecione o idioma de sua preferência para a interface do sistema."
+msgstr "Select your preferred language for the system interface."
+
+#: templates/users/profile.html:122
+msgid "Resumo executivo diário às 7h"
+msgstr "Daily executive summary at 7am"
+
+#: templates/users/view.html:12
+msgid "Detalhes do Usuário"
+msgstr "User Details"
+
+#: templates/users/view.html:60
+msgid "Cadastrado em"
+msgstr "Registered on"
+
+#: templates/users/view.html:74
+msgid "Projetos Responsável"
+msgstr "Responsible Projects"
+
+#: templates/users/view.html:83
+msgid "Registros de Horas"
+msgstr "Hour Records"
+
+#: templates/users/view.html:92
+msgid "Despesas Cadastradas"
+msgstr "Registered Expenses"
+
+#~ msgid "Buscar"
+#~ msgstr "Search"
+
+#~ msgid "Pendente"
+#~ msgstr "Pending"
+
+#~ msgid "Fonte de Financiamento"
+#~ msgstr "Funding Source"
+
+#~ msgid "Marcos"
+#~ msgstr "Milestones"
+
+#~ msgid "Alocacao"
+#~ msgstr "Allocation"
+
+#~ msgid "Funcao"
+#~ msgstr "Role"
+
+#~ msgid "Equipamento"
+#~ msgstr "Equipment"
+
+# Agile
+#~ msgid "Quadro Kanban"
+#~ msgstr "Kanban Board"
+
+#~ msgid "Sprint"
+#~ msgstr "Sprint"
+
+#~ msgid "Sprints"
+#~ msgstr "Sprints"
+
+#~ msgid "Novo Sprint"
+#~ msgstr "New Sprint"
+
+#~ msgid "Story Points"
+#~ msgstr "Story Points"
+
+#~ msgid "Critica"
+#~ msgstr "Critical"
+
+#~ msgid "Velocidade"
+#~ msgstr "Velocity"
+
+#~ msgid "Burndown"
+#~ msgstr "Burndown"
+
+# Compliance
+#~ msgid "Central de Pendencias"
+#~ msgstr "Pending Items Center"
+
+#~ msgid "Pendencia"
+#~ msgstr "Pending Item"
+
+#~ msgid "Nova Pendencia"
+#~ msgstr "New Pending Item"
+
+#~ msgid "Nao Conformidade"
+#~ msgstr "Non-Conformity"
+
+#~ msgid "Acoes Corretivas"
+#~ msgstr "Corrective Actions"
+
+#~ msgid "Acao Corretiva"
+#~ msgstr "Corrective Action"
+
+#~ msgid "Nivel TRL Atual"
+#~ msgstr "Current TRL Level"
+
+#~ msgid "Historico TRL"
+#~ msgstr "TRL History"
+
+#~ msgid "KPIs de Inovacao"
+#~ msgstr "Innovation KPIs"
+
+#~ msgid "Estrategia de PI"
+#~ msgstr "IP Strategy"
+
+#~ msgid "Radical"
+#~ msgstr "Radical"
+
+#~ msgid "Incremental"
+#~ msgstr "Incremental"
+
+#~ msgid "Disruptiva"
+#~ msgstr "Disruptive"
+
+#~ msgid "Arquitetural"
+#~ msgstr "Architectural"
+
+#~ msgid "Modelo de Negocio"
+#~ msgstr "Business Model"
+
+#~ msgid "Patente"
+#~ msgstr "Patent"
+
+#~ msgid "Segredo Industrial"
+#~ msgstr "Trade Secret"
+
+#~ msgid "Open Source"
+#~ msgstr "Open Source"
+
+#~ msgid "Novo Stakeholder"
+#~ msgstr "New Stakeholder"
+
+#~ msgid "Influencia"
+#~ msgstr "Influence"
+
+#~ msgid "Estrategia de Engajamento"
+#~ msgstr "Engagement Strategy"
+
+#~ msgid "Comunicacoes"
+#~ msgstr "Communications"
+
+#~ msgid "Patrocinador"
+#~ msgstr "Sponsor"
+
+#~ msgid "Parceiro"
+#~ msgstr "Partner"
+
+#~ msgid "Regulador"
+#~ msgstr "Regulator"
+
+#~ msgid "Consultor"
+#~ msgstr "Consultant"
+
+# PMBOK 8
+#~ msgid "Entrega de Valor"
+#~ msgstr "Value Delivery"
+
+#~ msgid "Despesas Totais"
+#~ msgstr "Total Expenses"
+
+#~ msgid "Acoes Rapidas"
+#~ msgstr "Quick Actions"
+
+#~ msgid "Distribuicao de Custos"
+#~ msgstr "Cost Distribution"
+
+#~ msgid "Alteracoes salvas com sucesso"
+#~ msgstr "Changes saved successfully"
+
+#~ msgid "Erro ao salvar alteracoes"
+#~ msgstr "Error saving changes"
+
+#~ msgid "Tem certeza?"
+#~ msgstr "Are you sure?"
+
+#~ msgid "Nenhum dado disponivel"
+#~ msgstr "No data available"
+
+#~ msgid "Campo obrigatorio"
+#~ msgstr "Required field"
+
+#~ msgid "Valor invalido"
+#~ msgstr "Invalid value"
+
+# Language
+#~ msgid "Idioma"
+#~ msgstr "Language"
+
+#~ msgid "Selecione o idioma de sua preferencia"
+#~ msgstr "Select your preferred language"
+
+# Reports
+#~ msgid "Relatorio de Status"
+#~ msgstr "Status Report"
+
+#~ msgid "Gerar PDF"
+#~ msgstr "Generate PDF"
+
+# Profile and User form
+#~ msgid "Informacoes da Conta"
+#~ msgstr "Account Information"
+
+#~ msgid "Preferencias de Email"
+#~ msgstr "Email Preferences"
+
+#~ msgid "Receber notificacoes por email"
+#~ msgstr "Receive email notifications"
+
+#~ msgid "Briefing diario"
+#~ msgstr "Daily briefing"
+
+#~ msgid "Alertas criticos"
+#~ msgstr "Critical alerts"
+
+#~ msgid "Salvar Alteracoes"
+#~ msgstr "Save Changes"
+
+#~ msgid "Usuario"
+#~ msgstr "User"
+
+# Common form labels
+#~ msgid "Entrar"
+#~ msgstr "Login"
+
+#~ msgid "Lembrar-me"
+#~ msgstr "Remember me"
+
+#~ msgid "Criar conta"
+#~ msgstr "Create account"
