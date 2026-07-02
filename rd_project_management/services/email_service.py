@@ -2,11 +2,43 @@
 Email service using per-tenant SMTP configuration.
 """
 import smtplib
+import ssl
 import logging
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 
 logger = logging.getLogger(__name__)
+
+SMTP_TIMEOUT = 30
+
+
+def _open_smtp(host, port, use_ssl, use_tls):
+    """Open an SMTP connection in the given mode (implicit SSL or STARTTLS)."""
+    if use_ssl:
+        server = smtplib.SMTP_SSL(host, port, timeout=SMTP_TIMEOUT)
+        server.ehlo()
+    else:
+        server = smtplib.SMTP(host, port, timeout=SMTP_TIMEOUT)
+        server.ehlo()
+        if use_tls:
+            server.starttls()
+            server.ehlo()
+    return server
+
+
+def _resolve_security_mode(port, use_ssl, use_tls):
+    """
+    Normalize the SSL/TLS mode based on the port to avoid the classic
+    WRONG_VERSION_NUMBER error caused by mismatched port/security combos:
+      - port 465 -> implicit SSL (SMTP_SSL)
+      - port 587/25 -> STARTTLS (plain connection upgraded)
+    """
+    if port == 465:
+        return True, False
+    if port in (587, 25):
+        return False, True if (use_tls or use_ssl) else False
+    # Non-standard port: respect what was configured
+    return bool(use_ssl), bool(use_tls)
 
 
 def send_email_via_tenant(tenant, to_email, subject, html_body, text_body=None):
@@ -31,26 +63,44 @@ def send_email_via_tenant(tenant, to_email, subject, html_body, text_body=None):
         msg.attach(MIMEText(text_body, 'plain', 'utf-8'))
     msg.attach(MIMEText(html_body, 'html', 'utf-8'))
 
-    try:
-        port = tenant.mail_port or 587
-        use_ssl = tenant.mail_use_ssl
-        use_tls = tenant.mail_use_tls
+    host = tenant.mail_server
+    port = tenant.mail_port or 587
+    use_ssl, use_tls = _resolve_security_mode(port, tenant.mail_use_ssl, tenant.mail_use_tls)
 
-        if use_ssl:
-            server = smtplib.SMTP_SSL(tenant.mail_server, port)
-        else:
-            server = smtplib.SMTP(tenant.mail_server, port)
-            if use_tls:
-                server.starttls()
+    # Primary attempt + fallback with the opposite mode if the TLS handshake
+    # fails (e.g. WRONG_VERSION_NUMBER when port/security combo is mismatched)
+    if use_ssl:
+        attempts = [(True, False), (False, True)]   # SSL first, then STARTTLS
+    else:
+        attempts = [(False, use_tls), (True, False)]  # STARTTLS/plain first, then SSL
+    last_error = None
 
-        server.login(tenant.mail_username, tenant.mail_password)
-        server.sendmail(sender, [to_email], msg.as_string())
-        server.quit()
-        logger.info(f"Email sent to {to_email} via tenant {tenant.name}")
-        return True, None
-    except Exception as e:
-        logger.error(f"Failed to send email to {to_email}: {e}")
-        return False, str(e)
+    for i, (ssl_mode, tls_mode) in enumerate(attempts):
+        try:
+            server = _open_smtp(host, port, ssl_mode, tls_mode)
+            server.login(tenant.mail_username, tenant.mail_password)
+            server.sendmail(sender, [to_email], msg.as_string())
+            server.quit()
+            mode = 'SSL' if ssl_mode else ('STARTTLS' if tls_mode else 'plain')
+            logger.info(f"Email sent to {to_email} via tenant {tenant.name} ({host}:{port} {mode})")
+            return True, None
+        except (ssl.SSLError, smtplib.SMTPServerDisconnected, ConnectionResetError, OSError) as e:
+            last_error = e
+            logger.warning(f"SMTP attempt {i+1} failed for {host}:{port} (ssl={ssl_mode}, tls={tls_mode}): {e}")
+            continue  # try the alternate security mode
+        except smtplib.SMTPAuthenticationError as e:
+            logger.error(f"SMTP auth failed for {tenant.mail_username}@{host}: {e}")
+            return False, f"Falha de autenticação SMTP: verifique usuário e senha (para Gmail use Senha de App). Detalhe: {e}"
+        except Exception as e:
+            logger.error(f"Failed to send email to {to_email}: {e}")
+            return False, str(e)
+
+    hint = ""
+    if isinstance(last_error, ssl.SSLError):
+        hint = (" Verifique a combinação porta/segurança na configuração da empresa: "
+                "porta 465 = SSL, porta 587 = TLS.")
+    logger.error(f"Failed to send email to {to_email} after retries: {last_error}")
+    return False, f"{last_error}.{hint}"
 
 
 def send_password_reset_email(user, reset_url):
