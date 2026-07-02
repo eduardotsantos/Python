@@ -11,16 +11,60 @@ from email.utils import formataddr, parseaddr
 
 logger = logging.getLogger(__name__)
 
+# Version marker included in error messages so stale deployments can be
+# detected from the flash message alone
+EMAIL_SERVICE_VERSION = '3.0.3'
+
 SMTP_TIMEOUT = 30
+
+
+class _UTF8AuthMixin:
+    """
+    smtplib hardcodes ASCII when encoding AUTH credentials, so usernames or
+    passwords containing accents raise "'ascii' codec can't encode".
+    RFC 4954 SASL PLAIN/LOGIN allow UTF-8; re-implement auth() with it.
+    """
+
+    def auth(self, mechanism, authobject, *, initial_response_ok=True):
+        import base64
+        from smtplib import SMTPAuthenticationError, SMTPException
+
+        mechanism = mechanism.upper()
+        initial_response = (authobject() if initial_response_ok else None)
+        if initial_response is not None:
+            response = base64.b64encode(initial_response.encode('utf-8')).decode('ascii')
+            (code, resp) = self.docmd("AUTH", mechanism + " " + response)
+            self._auth_challenge_count = 1
+        else:
+            (code, resp) = self.docmd("AUTH", mechanism)
+            self._auth_challenge_count = 0
+        while code == 334:
+            self._auth_challenge_count += 1
+            challenge = base64.decodebytes(resp)
+            response = base64.b64encode(authobject(challenge).encode('utf-8')).decode('ascii')
+            (code, resp) = self.docmd(response)
+            if self._auth_challenge_count > 5:
+                raise SMTPException("Server AUTH mechanism infinite loop.")
+        if code in (235, 503):
+            return (code, resp)
+        raise SMTPAuthenticationError(code, resp)
+
+
+class _SMTP(_UTF8AuthMixin, smtplib.SMTP):
+    pass
+
+
+class _SMTP_SSL(_UTF8AuthMixin, smtplib.SMTP_SSL):
+    pass
 
 
 def _open_smtp(host, port, use_ssl, use_tls):
     """Open an SMTP connection in the given mode (implicit SSL or STARTTLS)."""
     if use_ssl:
-        server = smtplib.SMTP_SSL(host, port, timeout=SMTP_TIMEOUT)
+        server = _SMTP_SSL(host, port, timeout=SMTP_TIMEOUT)
         server.ehlo()
     else:
-        server = smtplib.SMTP(host, port, timeout=SMTP_TIMEOUT)
+        server = _SMTP(host, port, timeout=SMTP_TIMEOUT)
         server.ehlo()
         if use_tls:
             server.starttls()
@@ -43,25 +87,11 @@ def _resolve_security_mode(port, use_ssl, use_tls):
     return bool(use_ssl), bool(use_tls)
 
 
-def send_email_via_tenant(tenant, to_email, subject, html_body, text_body=None):
-    """
-    Send an email using the tenant's SMTP configuration.
-    Returns (success: bool, error_message: str|None).
-    """
-    if not tenant or not tenant.email_enabled:
-        return False, "Email not enabled for this tenant"
-
-    if not tenant.mail_server or not tenant.mail_username or not tenant.mail_password:
-        return False, "Incomplete SMTP configuration"
-
-    sender = tenant.mail_default_sender or tenant.mail_username
-
-    # Headers must be RFC 2047-encoded when they contain non-ASCII characters
-    # (e.g. "Redefinição de Senha"), otherwise smtplib fails with
-    # "'ascii' codec can't encode characters"
-    sender_name, sender_addr = parseaddr(sender)
+def _build_message(subject, sender, to_email, html_body, text_body=None):
+    """Build a MIME message with all headers RFC 2047-safe."""
+    sender_name, sender_addr = parseaddr(sender or '')
     if not sender_addr:
-        sender_addr = tenant.mail_username
+        sender_addr = sender or ''
 
     msg = MIMEMultipart('alternative')
     msg['Subject'] = Header(subject, 'utf-8')
@@ -74,45 +104,94 @@ def send_email_via_tenant(tenant, to_email, subject, html_body, text_body=None):
     if text_body:
         msg.attach(MIMEText(text_body, 'plain', 'utf-8'))
     msg.attach(MIMEText(html_body, 'html', 'utf-8'))
+    return msg, sender_addr
 
-    host = tenant.mail_server
-    port = tenant.mail_port or 587
-    use_ssl, use_tls = _resolve_security_mode(port, tenant.mail_use_ssl, tenant.mail_use_tls)
+
+def _send_via_smtp(host, port, use_ssl, use_tls, username, password,
+                   sender, to_email, subject, html_body, text_body=None,
+                   origin='smtp'):
+    """
+    Single hardened send path. Returns (success: bool, error: str|None).
+
+    The flattened message is encoded to UTF-8 bytes BEFORE handing it to
+    smtplib: sendmail() only applies its internal ASCII encoding to str
+    payloads, so passing bytes eliminates any possible
+    "'ascii' codec can't encode" error regardless of message content.
+    """
+    msg, sender_addr = _build_message(subject, sender, to_email, html_body, text_body)
+    port = port or 587
+    use_ssl, use_tls = _resolve_security_mode(port, use_ssl, use_tls)
 
     # Primary attempt + fallback with the opposite mode if the TLS handshake
     # fails (e.g. WRONG_VERSION_NUMBER when port/security combo is mismatched)
     if use_ssl:
-        attempts = [(True, False), (False, True)]   # SSL first, then STARTTLS
+        attempts = [(True, False), (False, True)]     # SSL first, then STARTTLS
     else:
         attempts = [(False, use_tls), (True, False)]  # STARTTLS/plain first, then SSL
     last_error = None
 
+    payload = msg.as_string().encode('utf-8')
+
     for i, (ssl_mode, tls_mode) in enumerate(attempts):
         try:
             server = _open_smtp(host, port, ssl_mode, tls_mode)
-            server.login(tenant.mail_username, tenant.mail_password)
-            server.sendmail(sender_addr, [to_email], msg.as_string())
+            server.login(username, password)
+            server.sendmail(sender_addr, [to_email], payload)
             server.quit()
             mode = 'SSL' if ssl_mode else ('STARTTLS' if tls_mode else 'plain')
-            logger.info(f"Email sent to {to_email} via tenant {tenant.name} ({host}:{port} {mode})")
+            logger.info(f"Email sent to {to_email} via {origin} ({host}:{port} {mode})")
             return True, None
         except (ssl.SSLError, smtplib.SMTPServerDisconnected, ConnectionResetError, OSError) as e:
             last_error = e
             logger.warning(f"SMTP attempt {i+1} failed for {host}:{port} (ssl={ssl_mode}, tls={tls_mode}): {e}")
             continue  # try the alternate security mode
         except smtplib.SMTPAuthenticationError as e:
-            logger.error(f"SMTP auth failed for {tenant.mail_username}@{host}: {e}")
-            return False, f"Falha de autenticação SMTP: verifique usuário e senha (para Gmail use Senha de App). Detalhe: {e}"
+            logger.error(f"SMTP auth failed for {username}@{host}: {e}")
+            return False, (f"Falha de autenticação SMTP: verifique usuário e senha "
+                           f"(para Gmail use Senha de App). Detalhe: {e} "
+                           f"[email v{EMAIL_SERVICE_VERSION}]")
+        except UnicodeEncodeError as e:
+            logger.error(f"Unicode error in SMTP credentials for {host}: {e}")
+            return False, (f"A senha ou usuário SMTP contém caracteres especiais/acentos "
+                           f"não suportados pelo servidor de email. Use uma senha sem acentos. "
+                           f"[email v{EMAIL_SERVICE_VERSION}]")
         except Exception as e:
             logger.error(f"Failed to send email to {to_email}: {e}")
-            return False, str(e)
+            return False, f"{e} [email v{EMAIL_SERVICE_VERSION}]"
 
     hint = ""
     if isinstance(last_error, ssl.SSLError):
         hint = (" Verifique a combinação porta/segurança na configuração da empresa: "
                 "porta 465 = SSL, porta 587 = TLS.")
     logger.error(f"Failed to send email to {to_email} after retries: {last_error}")
-    return False, f"{last_error}.{hint}"
+    return False, f"{last_error}.{hint} [email v{EMAIL_SERVICE_VERSION}]"
+
+
+def send_email_via_tenant(tenant, to_email, subject, html_body, text_body=None):
+    """
+    Send an email using the tenant's SMTP configuration.
+    Returns (success: bool, error_message: str|None).
+    """
+    if not tenant or not tenant.email_enabled:
+        return False, "Email not enabled for this tenant"
+
+    if not tenant.mail_server or not tenant.mail_username or not tenant.mail_password:
+        return False, "Incomplete SMTP configuration"
+
+    return _send_via_smtp(
+        host=tenant.mail_server,
+        port=tenant.mail_port,
+        use_ssl=tenant.mail_use_ssl,
+        use_tls=tenant.mail_use_tls,
+        username=tenant.mail_username,
+        password=tenant.mail_password,
+        sender=tenant.mail_default_sender or tenant.mail_username,
+        to_email=to_email,
+        subject=subject,
+        html_body=html_body,
+        text_body=text_body,
+        origin=f'tenant {tenant.name}',
+    )
 
 
 def send_password_reset_email(user, reset_url):
@@ -170,14 +249,29 @@ Se você não solicitou a redefinição, ignore este email.
     if tenant and tenant.email_enabled and tenant.mail_server:
         return send_email_via_tenant(tenant, user.email, subject, html_body, text_body)
 
-    # Fallback: try global Flask-Mail config
+    # Fallback: global SMTP settings (MAIL_* environment variables) using the
+    # same hardened send path (no Flask-Mail, which has its own encoding quirks)
     try:
         from flask import current_app
-        from flask_mail import Mail, Message
-        mail = Mail(current_app)
-        msg = Message(subject, recipients=[user.email], html=html_body, body=text_body)
-        mail.send(msg)
-        return True, None
+        cfg = current_app.config
+        if not cfg.get('MAIL_SERVER') or not cfg.get('MAIL_USERNAME'):
+            return False, ("Nenhum SMTP configurado: habilite o email da empresa "
+                           "(Empresas > Editar > Configuração de Email) ou defina as "
+                           f"variáveis MAIL_* no servidor. [email v{EMAIL_SERVICE_VERSION}]")
+        return _send_via_smtp(
+            host=cfg.get('MAIL_SERVER'),
+            port=cfg.get('MAIL_PORT'),
+            use_ssl=cfg.get('MAIL_USE_SSL', False),
+            use_tls=cfg.get('MAIL_USE_TLS', True),
+            username=cfg.get('MAIL_USERNAME'),
+            password=cfg.get('MAIL_PASSWORD'),
+            sender=cfg.get('MAIL_DEFAULT_SENDER') or cfg.get('MAIL_USERNAME'),
+            to_email=user.email,
+            subject=subject,
+            html_body=html_body,
+            text_body=text_body,
+            origin='global config',
+        )
     except Exception as e:
         logger.error(f"Fallback email failed: {e}")
-        return False, str(e)
+        return False, f"{e} [email v{EMAIL_SERVICE_VERSION}]"
