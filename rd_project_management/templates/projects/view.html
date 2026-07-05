@@ -94,7 +94,7 @@
         <div class="row g-3">
             <div class="col-md-3">
                 <small class="text-muted d-block">{{ _('Tipo de Valor') }}</small>
-                <strong>{{ project.value_type or '-' }}</strong>
+                <strong>{{ _(project.value_type) if project.value_type else '-' }}</strong>
             </div>
             <div class="col-md-3">
                 <small class="text-muted d-block">{{ _('Valor Esperado') }}</small>

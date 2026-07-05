@@ -22,7 +22,7 @@
                             <label class="form-label">{{ _('Título da Reunião') }} *</label>
                             <input type="text" name="title" class="form-control" required
                                    value="{{ minutes.title if minutes else '' }}"
-                                   placeholder="Ex: Reunião de Acompanhamento - Sprint 3">
+                                   placeholder="{{ _('Ex: Reunião de Acompanhamento - Sprint 3') }}">
                         </div>
 
                         <div class="col-md-4">
@@ -41,13 +41,13 @@
                             <label class="form-label">{{ _('Local') }}</label>
                             <input type="text" name="location" class="form-control"
                                    value="{{ minutes.location if minutes else '' }}"
-                                   placeholder="Sala de reuniões / Google Meet">
+                                   placeholder="{{ _('Sala de reuniões / Google Meet') }}">
                         </div>
 
                         <div class="col-12">
                             <label class="form-label">{{ _('Participantes') }}</label>
                             <textarea name="participants" class="form-control" rows="2"
-                                      placeholder="Nome dos participantes, separados por vírgula">{{ minutes.participants if minutes else '' }}</textarea>
+                                      placeholder="{{ _('Nome dos participantes, separados por vírgula') }}">{{ minutes.participants if minutes else '' }}</textarea>
                         </div>
 
                         <div class="col-12">
@@ -64,9 +64,9 @@
                         <div class="col-12">
                             <label class="form-label">{{ _('Transcrição / Anotações') }}</label>
                             <textarea name="transcription" class="form-control" rows="10"
-                                      placeholder="Cole aqui a transcrição da reunião ou suas anotações. A IA usará este conteúdo para gerar a ata formal.">{{ minutes.transcription if minutes else '' }}</textarea>
+                                      placeholder="{{ _('Cole aqui a transcrição da reunião ou suas anotações. A IA usará este conteúdo para gerar a ata formal.') }}">{{ minutes.transcription if minutes else '' }}</textarea>
                             <div class="form-text">
-                                <i class="bi bi-robot"></i> Após salvar, você poderá gerar a ata automaticamente com IA
+                                <i class="bi bi-robot"></i> {{ _('Após salvar, você poderá gerar a ata automaticamente com IA') }}
                             </div>
                         </div>
                     </div>
@@ -94,11 +94,11 @@
             <div class="card-body">
                 <p class="small mb-2"><strong>{{ _('Como usar:') }}</strong></p>
                 <ol class="small mb-0">
-                    <li class="mb-2">Preencha os dados básicos da reunião</li>
-                    <li class="mb-2">Cole a transcrição ou anotações no campo correspondente</li>
-                    <li class="mb-2">Salve a ata como rascunho</li>
-                    <li class="mb-2">Na visualização, clique em "Gerar Ata com IA"</li>
-                    <li class="mb-2">Revise e exporte como PDF</li>
+                    <li class="mb-2">{{ _('Preencha os dados básicos da reunião') }}</li>
+                    <li class="mb-2">{{ _('Cole a transcrição ou anotações no campo correspondente') }}</li>
+                    <li class="mb-2">{{ _('Salve a ata como rascunho') }}</li>
+                    <li class="mb-2">{{ _('Na visualização, clique em "Gerar Ata com IA"') }}</li>
+                    <li class="mb-2">{{ _('Revise e exporte como PDF') }}</li>
                 </ol>
             </div>
         </div>
@@ -109,9 +109,9 @@
             </div>
             <div class="card-body">
                 <ul class="small mb-0">
-                    <li><strong>PDF</strong> - Texto será extraído automaticamente</li>
-                    <li><strong>DOC/DOCX</strong> - Documento Word</li>
-                    <li><strong>TXT</strong> - Texto simples</li>
+                    <li><strong>PDF</strong> - {{ _('Texto será extraído automaticamente') }}</li>
+                    <li><strong>DOC/DOCX</strong> - {{ _('Documento Word') }}</li>
+                    <li><strong>TXT</strong> - {{ _('Texto simples') }}</li>
                 </ul>
             </div>
         </div>

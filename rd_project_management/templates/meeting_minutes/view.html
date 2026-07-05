@@ -78,7 +78,7 @@
                     <small class="text-muted d-block">{{ _('Data') }}</small>
                     <strong>{{ minutes.meeting_date.strftime('%d/%m/%Y') }}</strong>
                     {% if minutes.meeting_time %}
-                    <span class="text-muted">às {{ minutes.meeting_time }}</span>
+                    <span class="text-muted">{{ _('às') }} {{ minutes.meeting_time }}</span>
                     {% endif %}
                 </div>
                 {% if minutes.location %}
@@ -165,9 +165,9 @@
                         <i class="bi bi-journal-text fs-1"></i>
                         <h5 class="mt-3">{{ _('Ata não gerada') }}</h5>
                         {% if minutes.transcription %}
-                        <p>Clique em "Gerar Ata" para criar a ata automaticamente</p>
+                        <p>{{ _('Clique em "Gerar Ata" para criar a ata automaticamente') }}</p>
                         {% else %}
-                        <p>Adicione uma transcrição ou anotações para gerar a ata</p>
+                        <p>{{ _('Adicione uma transcrição ou anotações para gerar a ata') }}</p>
                         <a href="{{ url_for('meeting_minutes.edit_minutes', project_id=project.id, minutes_id=minutes.id) }}" class="btn btn-primary">
                             <i class="bi bi-pencil"></i> {{ _('Adicionar Transcrição') }}
                         </a>

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Orion 1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-06-24 02:40+0000\n"
+"POT-Creation-Date: 2026-07-02 01:23+0000\n"
 "PO-Revision-Date: 2024-01-01 00:00+0000\n"
 "Last-Translator: Orion Team\n"
 "Language-Team: pt_BR <pt_BR@orion.com>\n"
@@ -17,6 +17,221 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "Generated-By: Babel 2.18.0\n"
+
+#: i18n_dynamic.py:18
+msgid "ROI"
+msgstr "ROI"
+
+#: i18n_dynamic.py:19
+msgid "Economia"
+msgstr "Economia"
+
+#: i18n_dynamic.py:20
+msgid "Receita"
+msgstr "Receita"
+
+#: i18n_dynamic.py:21
+msgid "Estratégico"
+msgstr "Estratégico"
+
+#: i18n_dynamic.py:24 templates/projects/view.html:91
+#: templates/status_report/report.html:150
+msgid "Não iniciado"
+msgstr "Não iniciado"
+
+#: i18n_dynamic.py:25 templates/projects/view.html:89
+#: templates/status_report/report.html:148
+msgid "Em captura"
+msgstr "Em captura"
+
+#: i18n_dynamic.py:26 templates/projects/view.html:87
+#: templates/status_report/report.html:146
+msgid "Parcial"
+msgstr "Parcial"
+
+#: i18n_dynamic.py:27 templates/pmo_agents/briefing.html:104
+#: templates/pmo_agents/briefing.html:154 templates/projects/view.html:85
+#: templates/status_report/print.html:577
+#: templates/status_report/report.html:144
+#: templates/status_report/report.html:432
+msgid "Realizado"
+msgstr "Realizado"
+
+#: i18n_dynamic.py:30
+msgid "Patrocinador"
+msgstr "Patrocinador"
+
+#: i18n_dynamic.py:31 templates/compliance/nc/form.html:41
+msgid "Cliente"
+msgstr "Cliente"
+
+#: i18n_dynamic.py:32
+msgid "Usuário Final"
+msgstr "Usuário Final"
+
+#: i18n_dynamic.py:33 templates/expenses/form.html:51
+#: templates/expenses/list.html:91
+msgid "Fornecedor"
+msgstr "Fornecedor"
+
+#: i18n_dynamic.py:34
+msgid "Parceiro"
+msgstr "Parceiro"
+
+#: i18n_dynamic.py:35
+msgid "Regulador"
+msgstr "Regulador"
+
+#: i18n_dynamic.py:36
+msgid "Equipe Técnica"
+msgstr "Equipe Técnica"
+
+#: i18n_dynamic.py:37
+msgid "Consultor"
+msgstr "Consultor"
+
+#: i18n_dynamic.py:38
+msgid "Financiador"
+msgstr "Financiador"
+
+#: i18n_dynamic.py:39 templates/public_calls/form.html:33
+msgid "Outro"
+msgstr "Outro"
+
+#: i18n_dynamic.py:42 templates/compliance/nc/form.html:50
+#: templates/compliance/nc/list.html:76
+#: templates/compliance/risks/form.html:63
+#: templates/pmo_agents/action_center.html:55
+#: templates/projects/stakeholders/list.html:97
+#: templates/projects/stakeholders/list.html:108
+#: templates/status_report/report.html:496
+msgid "Baixo"
+msgstr "Baixo"
+
+#: i18n_dynamic.py:43 templates/compliance/nc/form.html:50
+#: templates/compliance/nc/list.html:74
+#: templates/compliance/risks/form.html:64
+#: templates/pmo_agents/action_center.html:53
+#: templates/pmo_agents/compliance_analysis.html:203
+#: templates/projects/stakeholders/list.html:95
+#: templates/projects/stakeholders/list.html:106
+#: templates/status_report/report.html:496
+msgid "Médio"
+msgstr "Médio"
+
+#: i18n_dynamic.py:44 templates/compliance/nc/form.html:50
+#: templates/compliance/nc/list.html:72
+#: templates/compliance/risks/form.html:65
+#: templates/pmo_agents/action_center.html:51
+#: templates/projects/stakeholders/list.html:93
+#: templates/projects/stakeholders/list.html:104
+#: templates/projects/view.html:178 templates/status_report/report.html:496
+msgid "Alto"
+msgstr "Alto"
+
+#: i18n_dynamic.py:45 templates/compliance/risks/form.html:66
+#: templates/projects/stakeholders/list.html:91
+#: templates/projects/stakeholders/list.html:102
+#: templates/projects/view.html:176
+msgid "Muito Alto"
+msgstr "Muito Alto"
+
+#: i18n_dynamic.py:48 templates/projects/stakeholders/list.html:25
+msgid "Gerenciar de Perto"
+msgstr "Gerenciar de Perto"
+
+#: i18n_dynamic.py:49 templates/projects/stakeholders/list.html:34
+msgid "Manter Satisfeito"
+msgstr "Manter Satisfeito"
+
+#: i18n_dynamic.py:50 templates/projects/stakeholders/list.html:43
+msgid "Manter Informado"
+msgstr "Manter Informado"
+
+#: i18n_dynamic.py:51 templates/projects/stakeholders/list.html:52
+msgid "Monitorar"
+msgstr "Monitorar"
+
+# Status
+#: i18n_dynamic.py:54 templates/projects/list.html:86
+#: templates/projects/list.html:134 templates/projects/view.html:250
+msgid "Planejamento"
+msgstr "Planejamento"
+
+#: i18n_dynamic.py:55
+msgid "Em Execução"
+msgstr "Em Execução"
+
+#: i18n_dynamic.py:56 templates/compliance/actions/form.html:89
+#: templates/compliance/actions/list.html:25
+#: templates/compliance/actions/list.html:97
+#: templates/compliance/pending/form.html:49
+#: templates/compliance/pending/list.html:25
+#: templates/compliance/pending/list.html:94 templates/projects/list.html:37
+#: templates/projects/list.html:87 templates/projects/list.html:128
+#: templates/projects/view.html:244
+msgid "Em Andamento"
+msgstr "Em Andamento"
+
+#: i18n_dynamic.py:57
+msgid "Pausado"
+msgstr "Pausado"
+
+#: i18n_dynamic.py:58 templates/projects/list.html:88
+#: templates/projects/list.html:130 templates/projects/view.html:246
+msgid "Concluído"
+msgstr "Concluído"
+
+#: i18n_dynamic.py:59 templates/programs/form.html:68
+#: templates/projects/list.html:89 templates/projects/list.html:132
+#: templates/projects/view.html:248
+msgid "Cancelado"
+msgstr "Cancelado"
+
+#: i18n_dynamic.py:62
+msgid "Bolsas"
+msgstr "Bolsas"
+
+#: i18n_dynamic.py:63
+msgid "Material de Consumo"
+msgstr "Material de Consumo"
+
+#: i18n_dynamic.py:64
+msgid "Equipamentos"
+msgstr "Equipamentos"
+
+#: i18n_dynamic.py:65
+msgid "Serviços de Terceiros"
+msgstr "Serviços de Terceiros"
+
+#: i18n_dynamic.py:66
+msgid "Viagens"
+msgstr "Viagens"
+
+#: i18n_dynamic.py:67 templates/pmo_agents/briefing.html:127
+msgid "Mão de Obra"
+msgstr "Mão de Obra"
+
+#: i18n_dynamic.py:68 routes/status_report.py:93
+#: templates/portfolio/dashboard.html:284
+msgid "Outros"
+msgstr "Outros"
+
+#: i18n_dynamic.py:71
+msgid "Pendente"
+msgstr "Pendente"
+
+#: i18n_dynamic.py:72
+msgid "Aprovada"
+msgstr "Aprovada"
+
+#: i18n_dynamic.py:73
+msgid "Paga"
+msgstr "Paga"
+
+#: i18n_dynamic.py:74
+msgid "Rejeitada"
+msgstr "Rejeitada"
 
 # Status Report labels
 #: routes/status_report.py:24
@@ -41,10 +256,6 @@ msgstr "No prazo"
 #: routes/status_report.py:79
 msgid "Sem orcamento"
 msgstr "Sem orçamento"
-
-#: routes/status_report.py:93 templates/portfolio/dashboard.html:284
-msgid "Outros"
-msgstr "Outros"
 
 #: routes/status_report.py:98
 msgid "Estourado"
@@ -1292,6 +1503,37 @@ msgstr "Limpar"
 msgid "Nenhum log encontrado"
 msgstr "Nenhum log encontrado"
 
+#: templates/auth/forgot_password.html:6
+#: templates/auth/forgot_password.html:57
+msgid "Esqueci Minha Senha"
+msgstr "Esqueci Minha Senha"
+
+#: templates/auth/forgot_password.html:44 templates/auth/login.html:739
+#: templates/auth/reset_password.html:46
+msgid "Plataforma de Gestão de Inovação"
+msgstr "Plataforma de Gestão de Inovação"
+
+#: templates/auth/forgot_password.html:59
+msgid "Digite seu email e enviaremos um link para redefinir sua senha."
+msgstr "Digite seu email e enviaremos um link para redefinir sua senha."
+
+#: templates/auth/forgot_password.html:64 templates/auth/register.html:21
+#: templates/pmo_agents/briefing.html:14
+#: templates/projects/stakeholders/form.html:55 templates/users/form.html:35
+#: templates/users/list.html:91 templates/users/profile.html:56
+#: templates/users/view.html:56
+msgid "Email"
+msgstr "Email"
+
+#: templates/auth/forgot_password.html:73
+msgid "Enviar Link de Redefinição"
+msgstr "Enviar Link de Redefinição"
+
+#: templates/auth/forgot_password.html:79
+#: templates/auth/reset_password.html:98
+msgid "Voltar ao Login"
+msgstr "Voltar ao Login"
+
 #: templates/auth/login.html:6 templates/auth/login.html:420
 msgid "Portal de Inovação Aberta"
 msgstr "Portal de Inovação Aberta"
@@ -1320,7 +1562,7 @@ msgstr "Recursos Disponíveis"
 msgid "Editais por Ano"
 msgstr "Editais por Ano"
 
-#: templates/auth/login.html:472 templates/auth/login.html:563
+#: templates/auth/login.html:472 templates/auth/login.html:569
 msgid "Monitoramento"
 msgstr "Monitoramento"
 
@@ -1343,99 +1585,99 @@ msgid "Entrar na Plataforma"
 msgstr "Entrar na Plataforma"
 
 #: templates/auth/login.html:520
+msgid "Esqueci minha senha"
+msgstr "Esqueci minha senha"
+
+#: templates/auth/login.html:526
 msgid "Conexão segura e criptografada"
 msgstr "Conexão segura e criptografada"
 
-#: templates/auth/login.html:526
+#: templates/auth/login.html:532
 msgid "Metodologia alinhada ao PMBOK 8 - Entrega de Valor"
 msgstr "Metodologia alinhada ao PMBOK 8 - Entrega de Valor"
 
-#: templates/auth/login.html:532
+#: templates/auth/login.html:538
 msgid "Idioma / Language"
 msgstr "Idioma / Language"
 
-#: templates/auth/login.html:551
+#: templates/auth/login.html:557
 msgid "Recursos da Plataforma"
 msgstr "Recursos da Plataforma"
 
-#: templates/auth/login.html:556
+#: templates/auth/login.html:562
 msgid "Inteligência Artificial"
 msgstr "Inteligência Artificial"
 
-#: templates/auth/login.html:557
+#: templates/auth/login.html:563
 msgid "Análise automática de editais e geração de propostas com IA avançada"
 msgstr "Análise automática de editais e geração de propostas com IA avançada"
 
-#: templates/auth/login.html:564
+#: templates/auth/login.html:570
 msgid "Acompanhamento automático de chamadas FINEP, BNDES e FAPESC"
 msgstr "Acompanhamento automático de chamadas FINEP, BNDES e FAPESC"
 
-#: templates/auth/login.html:570
+#: templates/auth/login.html:576
 msgid "Gestão Financeira"
 msgstr "Gestão Financeira"
 
-#: templates/auth/login.html:571
+#: templates/auth/login.html:577
 msgid "Controle de despesas com anexos de boletos, NFs e comprovantes"
 msgstr "Controle de despesas com anexos de boletos, NFs e comprovantes"
 
-#: templates/auth/login.html:577
+#: templates/auth/login.html:583
 msgid "Propostas"
 msgstr "Propostas"
 
-#: templates/auth/login.html:578
+#: templates/auth/login.html:584
 msgid "Geração automática de propostas alinhadas com requisitos do edital"
 msgstr "Geração automática de propostas alinhadas com requisitos do edital"
 
-#: templates/auth/login.html:588
+#: templates/auth/login.html:594
 msgid "Notícias de Inovação"
 msgstr "Notícias de Inovação"
 
-#: templates/auth/login.html:623 templates/auth/login.html:642
-#: templates/auth/login.html:657 templates/auth/login.html:672
+#: templates/auth/login.html:629 templates/auth/login.html:648
+#: templates/auth/login.html:663 templates/auth/login.html:678
 msgid "Leia mais"
 msgstr "Leia mais"
 
-#: templates/auth/login.html:639
+#: templates/auth/login.html:645
 msgid "Programas de apoio a inovação tecnológica"
 msgstr "Programas de apoio a inovação tecnológica"
 
-#: templates/auth/login.html:640
+#: templates/auth/login.html:646
 msgid ""
 "FINEP disponibiliza recursos para projetos de pesquisa e desenvolvimento"
 msgstr ""
 "FINEP disponibiliza recursos para projetos de pesquisa e desenvolvimento"
 
-#: templates/auth/login.html:654
+#: templates/auth/login.html:660
 msgid "Chamadas públicas para pesquisadores catarinenses"
 msgstr "Chamadas públicas para pesquisadores catarinenses"
 
-#: templates/auth/login.html:655
+#: templates/auth/login.html:661
 msgid "Oportunidades de financiamento para projetos de inovação em SC"
 msgstr "Oportunidades de financiamento para projetos de inovação em SC"
 
-#: templates/auth/login.html:669
+#: templates/auth/login.html:675
 msgid "Linhas de crédito para inovação empresarial"
 msgstr "Linhas de crédito para inovação empresarial"
 
-#: templates/auth/login.html:670
+#: templates/auth/login.html:676
 msgid "Recursos disponíveis para empresas investirem em P&D"
 msgstr "Recursos disponíveis para empresas investirem em P&D"
 
-#: templates/auth/login.html:682
+#: templates/auth/login.html:688
 msgid "Ver mais notícias FINEP"
 msgstr "Ver mais notícias FINEP"
 
-#: templates/auth/login.html:685
+#: templates/auth/login.html:691
 msgid "Ver mais notícias FAPESC"
 msgstr "Ver mais notícias FAPESC"
 
-#: templates/auth/login.html:696
+#: templates/auth/login.html:702
 msgid "Fontes de Fomento:"
 msgstr "Fontes de Fomento:"
-
-#: templates/auth/login.html:733
-msgid "Plataforma de Gestão de Inovação"
-msgstr "Plataforma de Gestão de Inovação"
 
 #: templates/auth/register.html:2
 msgid "Cadastro"
@@ -1467,13 +1709,6 @@ msgstr "Cadastre-se no sistema de Gestão P&D"
 msgid "Nome Completo"
 msgstr "Nome Completo"
 
-#: templates/auth/register.html:21 templates/pmo_agents/briefing.html:14
-#: templates/projects/stakeholders/form.html:55 templates/users/form.html:35
-#: templates/users/list.html:91 templates/users/profile.html:56
-#: templates/users/view.html:56
-msgid "Email"
-msgstr "Email"
-
 #: templates/auth/register.html:34
 msgid "Confirmar Senha"
 msgstr "Confirmar Senha"
@@ -1489,6 +1724,26 @@ msgstr "Já tem conta?"
 #: templates/auth/register.html:45
 msgid "Fazer login"
 msgstr "Fazer login"
+
+#: templates/auth/reset_password.html:6 templates/auth/reset_password.html:59
+msgid "Redefinir Senha"
+msgstr "Redefinir Senha"
+
+#: templates/auth/reset_password.html:61
+msgid "Digite e confirme sua nova senha."
+msgstr "Digite e confirme sua nova senha."
+
+#: templates/auth/reset_password.html:66 templates/users/profile.html:73
+msgid "Nova Senha"
+msgstr "Nova Senha"
+
+#: templates/auth/reset_password.html:80 templates/users/profile.html:78
+msgid "Confirmar Nova Senha"
+msgstr "Confirmar Nova Senha"
+
+#: templates/auth/reset_password.html:92
+msgid "Salvar Nova Senha"
+msgstr "Salvar Nova Senha"
 
 #: templates/compliance/dashboard.html:2
 msgid "Central de Conformidade"
@@ -1746,17 +2001,6 @@ msgstr "Melhoria"
 #: templates/compliance/actions/list.html:95
 msgid "Planejada"
 msgstr "Planejada"
-
-#: templates/compliance/actions/form.html:89
-#: templates/compliance/actions/list.html:25
-#: templates/compliance/actions/list.html:97
-#: templates/compliance/pending/form.html:49
-#: templates/compliance/pending/list.html:25
-#: templates/compliance/pending/list.html:94 templates/projects/list.html:37
-#: templates/projects/list.html:87 templates/projects/list.html:128
-#: templates/projects/view.html:244
-msgid "Em Andamento"
-msgstr "Em Andamento"
 
 #: templates/compliance/actions/form.html:89
 #: templates/compliance/actions/list.html:26
@@ -2117,10 +2361,6 @@ msgid "Documentação"
 msgstr "Documentação"
 
 #: templates/compliance/nc/form.html:41
-msgid "Cliente"
-msgstr "Cliente"
-
-#: templates/compliance/nc/form.html:41
 msgid "Regulatório"
 msgstr "Regulatório"
 
@@ -2128,34 +2368,6 @@ msgstr "Regulatório"
 #: templates/compliance/risks/list.html:58
 msgid "Impacto"
 msgstr "Impacto"
-
-#: templates/compliance/nc/form.html:50 templates/compliance/nc/list.html:76
-#: templates/compliance/risks/form.html:63
-#: templates/pmo_agents/action_center.html:55
-#: templates/projects/stakeholders/list.html:97
-#: templates/projects/stakeholders/list.html:108
-#: templates/status_report/report.html:496
-msgid "Baixo"
-msgstr "Baixo"
-
-#: templates/compliance/nc/form.html:50 templates/compliance/nc/list.html:74
-#: templates/compliance/risks/form.html:64
-#: templates/pmo_agents/action_center.html:53
-#: templates/pmo_agents/compliance_analysis.html:203
-#: templates/projects/stakeholders/list.html:95
-#: templates/projects/stakeholders/list.html:106
-#: templates/status_report/report.html:496
-msgid "Médio"
-msgstr "Médio"
-
-#: templates/compliance/nc/form.html:50 templates/compliance/nc/list.html:72
-#: templates/compliance/risks/form.html:65
-#: templates/pmo_agents/action_center.html:51
-#: templates/projects/stakeholders/list.html:93
-#: templates/projects/stakeholders/list.html:104
-#: templates/projects/view.html:178 templates/status_report/report.html:496
-msgid "Alto"
-msgstr "Alto"
 
 #: templates/compliance/nc/form.html:59 templates/compliance/nc/list.html:24
 #: templates/compliance/nc/list.html:81
@@ -2315,13 +2527,6 @@ msgstr "Impacto (1-5)"
 msgid "Muito Baixo"
 msgstr "Muito Baixo"
 
-#: templates/compliance/risks/form.html:66
-#: templates/projects/stakeholders/list.html:91
-#: templates/projects/stakeholders/list.html:102
-#: templates/projects/view.html:176
-msgid "Muito Alto"
-msgstr "Muito Alto"
-
 #: templates/compliance/risks/form.html:70
 msgid "Estratégia de Resposta"
 msgstr "Estratégia de Resposta"
@@ -2428,10 +2633,6 @@ msgstr "Valor"
 #: templates/timesheet/list.html:97
 msgid "Data"
 msgstr "Data"
-
-#: templates/expenses/form.html:51 templates/expenses/list.html:91
-msgid "Fornecedor"
-msgstr "Fornecedor"
 
 #: templates/expenses/form.html:56
 msgid "No Nota Fiscal"
@@ -2697,6 +2898,10 @@ msgstr "Nova Ata"
 msgid "Título da Reunião"
 msgstr "Título da Reunião"
 
+#: templates/meeting_minutes/form.html:25
+msgid "Ex: Reunião de Acompanhamento - Sprint 3"
+msgstr "Ex: Reunião de Acompanhamento - Sprint 3"
+
 #: templates/meeting_minutes/form.html:35
 #: templates/meeting_minutes/print.html:225
 msgid "Horário"
@@ -2709,10 +2914,18 @@ msgstr "Horário"
 msgid "Local"
 msgstr "Local"
 
+#: templates/meeting_minutes/form.html:44
+msgid "Sala de reuniões / Google Meet"
+msgstr "Sala de reuniões / Google Meet"
+
 #: templates/meeting_minutes/form.html:48
 #: templates/meeting_minutes/view.html:92
 msgid "Participantes"
 msgstr "Participantes"
+
+#: templates/meeting_minutes/form.html:50
+msgid "Nome dos participantes, separados por vírgula"
+msgstr "Nome dos participantes, separados por vírgula"
 
 #: templates/meeting_minutes/form.html:54
 msgid "Documento/Gravação (PDF, DOC, TXT)"
@@ -2729,6 +2942,18 @@ msgstr "O texto de PDFs será extraído automaticamente"
 #: templates/meeting_minutes/form.html:65
 msgid "Transcrição / Anotações"
 msgstr "Transcrição / Anotações"
+
+#: templates/meeting_minutes/form.html:67
+msgid ""
+"Cole aqui a transcrição da reunião ou suas anotações. A IA usará este "
+"conteúdo para gerar a ata formal."
+msgstr ""
+"Cole aqui a transcrição da reunião ou suas anotações. A IA usará este "
+"conteúdo para gerar a ata formal."
+
+#: templates/meeting_minutes/form.html:69
+msgid "Após salvar, você poderá gerar a ata automaticamente com IA"
+msgstr "Após salvar, você poderá gerar a ata automaticamente com IA"
 
 #: templates/meeting_minutes/form.html:78 templates/projects/form.html:252
 #: templates/projects/stakeholders/form.html:222 templates/users/form.html:130
@@ -2748,9 +2973,41 @@ msgstr "Dicas"
 msgid "Como usar:"
 msgstr "Como usar:"
 
+#: templates/meeting_minutes/form.html:97
+msgid "Preencha os dados básicos da reunião"
+msgstr "Preencha os dados básicos da reunião"
+
+#: templates/meeting_minutes/form.html:98
+msgid "Cole a transcrição ou anotações no campo correspondente"
+msgstr "Cole a transcrição ou anotações no campo correspondente"
+
+#: templates/meeting_minutes/form.html:99
+msgid "Salve a ata como rascunho"
+msgstr "Salve a ata como rascunho"
+
+#: templates/meeting_minutes/form.html:100
+msgid "Na visualização, clique em \"Gerar Ata com IA\""
+msgstr "Na visualização, clique em \"Gerar Ata com IA\""
+
+#: templates/meeting_minutes/form.html:101
+msgid "Revise e exporte como PDF"
+msgstr "Revise e exporte como PDF"
+
 #: templates/meeting_minutes/form.html:108
 msgid "Formatos Aceitos"
 msgstr "Formatos Aceitos"
+
+#: templates/meeting_minutes/form.html:112
+msgid "Texto será extraído automaticamente"
+msgstr "Texto será extraído automaticamente"
+
+#: templates/meeting_minutes/form.html:113
+msgid "Documento Word"
+msgstr "Documento Word"
+
+#: templates/meeting_minutes/form.html:114
+msgid "Texto simples"
+msgstr "Texto simples"
 
 #: templates/meeting_minutes/list.html:2
 #: templates/meeting_minutes/list.html:10 templates/projects/view.html:304
@@ -2816,6 +3073,10 @@ msgstr "Exportar PDF"
 msgid "Informações"
 msgstr "Informações"
 
+#: templates/meeting_minutes/view.html:81
+msgid "às"
+msgstr "às"
+
 #: templates/meeting_minutes/view.html:98
 msgid "Anexo"
 msgstr "Anexo"
@@ -2855,6 +3116,14 @@ msgstr "Gerando ata com inteligência artificial..."
 #: templates/meeting_minutes/view.html:166
 msgid "Ata não gerada"
 msgstr "Ata não gerada"
+
+#: templates/meeting_minutes/view.html:168
+msgid "Clique em \"Gerar Ata\" para criar a ata automaticamente"
+msgstr "Clique em \"Gerar Ata\" para criar a ata automaticamente"
+
+#: templates/meeting_minutes/view.html:170
+msgid "Adicione uma transcrição ou anotações para gerar a ata"
+msgstr "Adicione uma transcrição ou anotações para gerar a ata"
 
 #: templates/meeting_minutes/view.html:172
 msgid "Adicionar Transcrição"
@@ -3005,13 +3274,6 @@ msgstr "Total Insights"
 msgid "Análise Financeira Consolidada"
 msgstr "Análise Financeira Consolidada"
 
-#: templates/pmo_agents/briefing.html:104
-#: templates/pmo_agents/briefing.html:154 templates/projects/view.html:85
-#: templates/status_report/print.html:577
-#: templates/status_report/report.html:432
-msgid "Realizado"
-msgstr "Realizado"
-
 #: templates/pmo_agents/briefing.html:110
 #: templates/pmo_agents/briefing.html:155
 #: templates/status_report/print.html:583
@@ -3024,10 +3286,6 @@ msgstr "Variação"
 #: templates/pmo_agents/briefing.html:118
 msgid "Gasto do Mês"
 msgstr "Gasto do Mês"
-
-#: templates/pmo_agents/briefing.html:127
-msgid "Mão de Obra"
-msgstr "Mão de Obra"
 
 #: templates/pmo_agents/briefing.html:147
 msgid "Projetos Acima do Orçamento"
@@ -3433,7 +3691,7 @@ msgstr "Saldo"
 
 #: templates/portfolio/status_report.html:168
 #: templates/programs/status_report.html:178 templates/projects/form.html:101
-#: templates/projects/view.html:83
+#: templates/projects/view.html:83 templates/status_report/report.html:142
 msgid "Entrega de Valor (PMBOK 8)"
 msgstr "Entrega de Valor (PMBOK 8)"
 
@@ -3444,11 +3702,13 @@ msgstr "capturado"
 
 #: templates/portfolio/status_report.html:181
 #: templates/programs/status_report.html:191 templates/projects/view.html:100
+#: templates/status_report/report.html:164
 msgid "Valor Esperado"
 msgstr "Valor Esperado"
 
 #: templates/portfolio/status_report.html:185
 #: templates/programs/status_report.html:195 templates/projects/view.html:104
+#: templates/status_report/report.html:170
 msgid "Valor Realizado"
 msgstr "Valor Realizado"
 
@@ -3554,11 +3814,6 @@ msgstr "Ativo"
 #: templates/programs/form.html:66
 msgid "Suspenso"
 msgstr "Suspenso"
-
-#: templates/programs/form.html:68 templates/projects/list.html:89
-#: templates/projects/list.html:132 templates/projects/view.html:248
-msgid "Cancelado"
-msgstr "Cancelado"
 
 #: templates/programs/list.html:58 templates/programs/view.html:109
 #: templates/projects/list.html:150 templates/tenants/list.html:120
@@ -3699,6 +3954,7 @@ msgid "Defina o valor esperado do projeto"
 msgstr "Defina o valor esperado do projeto"
 
 #: templates/projects/form.html:105 templates/projects/view.html:96
+#: templates/status_report/report.html:158
 msgid "Tipo de Valor"
 msgstr "Tipo de Valor"
 
@@ -3894,17 +4150,6 @@ msgstr "Concluídos"
 msgid "Buscar projetos..."
 msgstr "Buscar projetos..."
 
-# Status
-#: templates/projects/list.html:86 templates/projects/list.html:134
-#: templates/projects/view.html:250
-msgid "Planejamento"
-msgstr "Planejamento"
-
-#: templates/projects/list.html:88 templates/projects/list.html:130
-#: templates/projects/view.html:246
-msgid "Concluído"
-msgstr "Concluído"
-
 #: templates/projects/list.html:112 templates/projects/view.html:258
 msgid "Período"
 msgstr "Período"
@@ -4017,19 +4262,7 @@ msgstr ""
 msgid "Horas Registradas"
 msgstr "Horas Registradas"
 
-#: templates/projects/view.html:87
-msgid "Parcial"
-msgstr "Parcial"
-
-#: templates/projects/view.html:89
-msgid "Em captura"
-msgstr "Em captura"
-
-#: templates/projects/view.html:91
-msgid "Não iniciado"
-msgstr "Não iniciado"
-
-#: templates/projects/view.html:108
+#: templates/projects/view.html:108 templates/status_report/report.html:177
 msgid "Captura de Valor"
 msgstr "Captura de Valor"
 
@@ -4271,22 +4504,6 @@ msgstr "Observações sobre este stakeholder..."
 msgid "Adicionar Stakeholder"
 msgstr "Adicionar Stakeholder"
 
-#: templates/projects/stakeholders/list.html:25
-msgid "Gerenciar de Perto"
-msgstr "Gerenciar de Perto"
-
-#: templates/projects/stakeholders/list.html:34
-msgid "Manter Satisfeito"
-msgstr "Manter Satisfeito"
-
-#: templates/projects/stakeholders/list.html:43
-msgid "Manter Informado"
-msgstr "Manter Informado"
-
-#: templates/projects/stakeholders/list.html:52
-msgid "Monitorar"
-msgstr "Monitorar"
-
 #: templates/projects/stakeholders/list.html:68 templates/users/list.html:92
 msgid "Papel"
 msgstr "Papel"
@@ -4336,10 +4553,6 @@ msgstr "Fonte/Instituicao"
 #: templates/public_calls/form.html:22
 msgid "Ex: FINEP, BNDES, CNPq, FAPESP..."
 msgstr "Ex: FINEP, BNDES, CNPq, FAPESP..."
-
-#: templates/public_calls/form.html:33
-msgid "Outro"
-msgstr "Outro"
 
 #: templates/public_calls/form.html:40
 msgid "Encerrada"
@@ -5702,14 +5915,6 @@ msgstr "Senha Atual"
 msgid "Digite sua senha atual"
 msgstr "Digite sua senha atual"
 
-#: templates/users/profile.html:73
-msgid "Nova Senha"
-msgstr "Nova Senha"
-
-#: templates/users/profile.html:78
-msgid "Confirmar Nova Senha"
-msgstr "Confirmar Nova Senha"
-
 #: templates/users/profile.html:80
 msgid "Repita a nova senha"
 msgstr "Repita a nova senha"
@@ -5741,33 +5946,6 @@ msgstr "Registros de Horas"
 #: templates/users/view.html:92
 msgid "Despesas Cadastradas"
 msgstr "Despesas Cadastradas"
-
-msgid "Esqueci Minha Senha"
-msgstr "Esqueci Minha Senha"
-
-msgid "Esqueci minha senha"
-msgstr "Esqueci minha senha"
-
-msgid "Digite seu email e enviaremos um link para redefinir sua senha."
-msgstr "Digite seu email e enviaremos um link para redefinir sua senha."
-
-msgid "Enviar Link de Redefinição"
-msgstr "Enviar Link de Redefinição"
-
-msgid "Voltar ao Login"
-msgstr "Voltar ao Login"
-
-msgid "Redefinir Senha"
-msgstr "Redefinir Senha"
-
-msgid "Digite e confirme sua nova senha."
-msgstr "Digite e confirme sua nova senha."
-
-msgid "Salvar Nova Senha"
-msgstr "Salvar Nova Senha"
-
-msgid "Repita a senha"
-msgstr "Repita a senha"
 
 #~ msgid "Buscar"
 #~ msgstr "Buscar"
@@ -5970,3 +6148,27 @@ msgstr "Repita a senha"
 
 #~ msgid "Criar conta"
 #~ msgstr "Criar conta"
+
+#~ msgid "Repita a senha"
+#~ msgstr "Repita a senha"
+
+#~ msgid "Receita"
+#~ msgstr "Receita"
+
+#~ msgid "Economia"
+#~ msgstr "Economia"
+
+#~ msgid "ROI"
+#~ msgstr "ROI"
+
+#~ msgid "Estratégico"
+#~ msgstr "Estratégico"
+
+#~ msgid "Usuário Final"
+#~ msgstr "Usuário Final"
+
+#~ msgid "Equipe Técnica"
+#~ msgstr "Equipe Técnica"
+
+#~ msgid "Financiador"
+#~ msgstr "Financiador"
