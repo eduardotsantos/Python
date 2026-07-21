@@ -90,7 +90,7 @@ EDITAL:
 
     try:
         response = client.messages.create(
-            model="claude-sonnet-4-20250514",
+            model="claude-sonnet-5",
             max_tokens=2000,
             messages=[{"role": "user", "content": prompt}]
         )
@@ -168,7 +168,7 @@ Ordene por score decrescente. Inclua apenas chamadas com score >= 40.
 
     try:
         response = client.messages.create(
-            model="claude-sonnet-4-20250514",
+            model="claude-sonnet-5",
             max_tokens=2000,
             messages=[{"role": "user", "content": prompt}]
         )
@@ -259,7 +259,7 @@ Use formatação markdown. Seja profissional e objetivo.
 
     try:
         response = client.messages.create(
-            model="claude-sonnet-4-20250514",
+            model="claude-sonnet-5",
             max_tokens=4000,
             messages=[{"role": "user", "content": prompt}]
         )
@@ -378,7 +378,7 @@ Retorne um JSON com a seguinte estrutura:
 
     try:
         response = client.messages.create(
-            model="claude-sonnet-4-20250514",
+            model="claude-sonnet-5",
             max_tokens=2000,
             messages=[{"role": "user", "content": prompt}]
         )
@@ -440,7 +440,7 @@ Você pode fazer cálculos, análises e dar recomendações baseadas nos dados d
 
     try:
         response = client.messages.create(
-            model="claude-sonnet-4-20250514",
+            model="claude-sonnet-5",
             max_tokens=1500,
             system=system_prompt,
             messages=messages

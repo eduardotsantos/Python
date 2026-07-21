@@ -573,7 +573,7 @@ Use linguagem técnica apropriada para editais de P&D.
 
     try:
         response = client.messages.create(
-            model="claude-sonnet-4-20250514",
+            model="claude-sonnet-5",
             max_tokens=6000,
             messages=[{"role": "user", "content": prompt}]
         )
@@ -857,7 +857,7 @@ Seja rigoroso mas justo na avaliacao. Considere requisitos tipicos de editais de
 
     try:
         response = client.messages.create(
-            model="claude-sonnet-4-20250514",
+            model="claude-sonnet-5",
             max_tokens=4000,
             messages=[{"role": "user", "content": prompt}]
         )
