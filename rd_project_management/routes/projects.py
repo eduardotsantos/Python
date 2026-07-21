@@ -952,12 +952,13 @@ Baseie-se nos níveis TRL:
     try:
         response = client.messages.create(
             model="claude-sonnet-5",
+            thinking={"type": "disabled"},
             max_tokens=1000,
             messages=[{"role": "user", "content": prompt}]
         )
 
         import json
-        response_text = response.content[0].text.strip()
+        response_text = "".join(b.text for b in response.content if b.type == "text").strip()
         # Extract JSON from response
         if '```json' in response_text:
             response_text = response_text.split('```json')[1].split('```')[0]

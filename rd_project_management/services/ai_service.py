@@ -91,12 +91,13 @@ EDITAL:
     try:
         response = client.messages.create(
             model="claude-sonnet-5",
+            thinking={"type": "disabled"},
             max_tokens=2000,
             messages=[{"role": "user", "content": prompt}]
         )
 
         # Extract JSON from response
-        response_text = response.content[0].text
+        response_text = "".join(b.text for b in response.content if b.type == "text")
 
         # Try to find JSON in the response
         start = response_text.find('{')
@@ -169,11 +170,12 @@ Ordene por score decrescente. Inclua apenas chamadas com score >= 40.
     try:
         response = client.messages.create(
             model="claude-sonnet-5",
+            thinking={"type": "disabled"},
             max_tokens=2000,
             messages=[{"role": "user", "content": prompt}]
         )
 
-        response_text = response.content[0].text
+        response_text = "".join(b.text for b in response.content if b.type == "text")
         start = response_text.find('{')
         end = response_text.rfind('}') + 1
         if start != -1 and end > start:
@@ -260,11 +262,12 @@ Use formatação markdown. Seja profissional e objetivo.
     try:
         response = client.messages.create(
             model="claude-sonnet-5",
+            thinking={"type": "disabled"},
             max_tokens=4000,
             messages=[{"role": "user", "content": prompt}]
         )
 
-        return response.content[0].text
+        return "".join(b.text for b in response.content if b.type == "text")
 
     except Exception as e:
         logger.error(f"Error generating report: {e}")
@@ -379,11 +382,12 @@ Retorne um JSON com a seguinte estrutura:
     try:
         response = client.messages.create(
             model="claude-sonnet-5",
+            thinking={"type": "disabled"},
             max_tokens=2000,
             messages=[{"role": "user", "content": prompt}]
         )
 
-        response_text = response.content[0].text
+        response_text = "".join(b.text for b in response.content if b.type == "text")
         start = response_text.find('{')
         end = response_text.rfind('}') + 1
         if start != -1 and end > start:
@@ -441,12 +445,13 @@ Você pode fazer cálculos, análises e dar recomendações baseadas nos dados d
     try:
         response = client.messages.create(
             model="claude-sonnet-5",
+            thinking={"type": "disabled"},
             max_tokens=1500,
             system=system_prompt,
             messages=messages
         )
 
-        return response.content[0].text
+        return "".join(b.text for b in response.content if b.type == "text")
 
     except Exception as e:
         logger.error(f"Error in chat assistant: {e}")

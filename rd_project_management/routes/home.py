@@ -234,11 +234,12 @@ Seja específico e prático nas recomendações.
     try:
         response = client.messages.create(
             model="claude-sonnet-5",
+            thinking={"type": "disabled"},
             max_tokens=1500,
             messages=[{"role": "user", "content": prompt}]
         )
 
-        response_text = response.content[0].text
+        response_text = "".join(b.text for b in response.content if b.type == "text")
 
         # Extract JSON
         import json

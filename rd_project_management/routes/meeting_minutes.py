@@ -300,11 +300,12 @@ Seja objetivo, profissional e capture todos os pontos importantes da discussão.
     try:
         response = client.messages.create(
             model="claude-sonnet-5",
+            thinking={"type": "disabled"},
             max_tokens=4000,
             messages=[{"role": "user", "content": prompt}]
         )
 
-        generated = response.content[0].text
+        generated = "".join(b.text for b in response.content if b.type == "text")
         minutes.generated_minutes = generated
         minutes.status = 'Gerada'
         db.session.commit()

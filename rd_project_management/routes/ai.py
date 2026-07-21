@@ -574,11 +574,12 @@ Use linguagem técnica apropriada para editais de P&D.
     try:
         response = client.messages.create(
             model="claude-sonnet-5",
+            thinking={"type": "disabled"},
             max_tokens=6000,
             messages=[{"role": "user", "content": prompt}]
         )
 
-        proposal = response.content[0].text
+        proposal = "".join(b.text for b in response.content if b.type == "text")
 
         # Save proposal as Word document in project documents
         result = {'proposal': proposal}
@@ -858,11 +859,12 @@ Seja rigoroso mas justo na avaliacao. Considere requisitos tipicos de editais de
     try:
         response = client.messages.create(
             model="claude-sonnet-5",
+            thinking={"type": "disabled"},
             max_tokens=4000,
             messages=[{"role": "user", "content": prompt}]
         )
 
-        response_text = response.content[0].text
+        response_text = "".join(b.text for b in response.content if b.type == "text")
 
         # Extract JSON
         import json
