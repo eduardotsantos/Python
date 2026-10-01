@@ -16,6 +16,8 @@ class Tenant(db.Model):
     email = db.Column(db.String(120))
     phone = db.Column(db.String(20))
     address = db.Column(db.Text)
+    state = db.Column(db.String(2))  # UF - sigla do estado
+    municipality = db.Column(db.String(200))  # Município
     logo_url = db.Column(db.String(500))
     plan = db.Column(db.String(50), default='basic')  # basic, professional, enterprise
     max_users = db.Column(db.Integer, default=5)
@@ -24,6 +26,16 @@ class Tenant(db.Model):
     expires_at = db.Column(db.Date)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+
+    # Email configuration per tenant
+    email_enabled = db.Column(db.Boolean, default=False)  # Enable/disable email sending
+    mail_server = db.Column(db.String(200))  # SMTP server (e.g., smtp.gmail.com)
+    mail_port = db.Column(db.Integer, default=587)
+    mail_use_tls = db.Column(db.Boolean, default=True)
+    mail_use_ssl = db.Column(db.Boolean, default=False)
+    mail_username = db.Column(db.String(200))  # SMTP username/email
+    mail_password = db.Column(db.String(200))  # SMTP password (encrypted in production)
+    mail_default_sender = db.Column(db.String(200))  # Default sender name and email
 
     # Relationships
     users = db.relationship('User', backref='tenant', lazy='dynamic')
@@ -46,6 +58,10 @@ class Tenant(db.Model):
         """Check if tenant can add more projects."""
         return self.projects.count() < self.max_projects
 
+    def can_generate_proposals(self):
+        """Check if tenant plan allows AI proposal generation."""
+        return self.plan in ('professional', 'enterprise')
+
 
 class User(UserMixin, db.Model):
     __tablename__ = 'users'
@@ -55,9 +71,21 @@ class User(UserMixin, db.Model):
     email = db.Column(db.String(120), nullable=False)
     password_hash = db.Column(db.String(256), nullable=False)
     full_name = db.Column(db.String(200), nullable=False)
-    role = db.Column(db.String(50), default='user')  # superadmin, admin, manager, user
+    role = db.Column(db.String(50), default='user')  # superadmin, admin, manager, user, viewer
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     active = db.Column(db.Boolean, default=True)
+
+    # Email notification preferences
+    email_notifications = db.Column(db.Boolean, default=True)  # Receive email notifications
+    email_briefing_daily = db.Column(db.Boolean, default=True)  # Receive daily briefing
+    email_alerts = db.Column(db.Boolean, default=True)  # Receive critical alerts
+
+    # Language preference
+    language = db.Column(db.String(10), default='pt_BR')  # pt_BR, en, es
+
+    # Password reset
+    password_reset_token = db.Column(db.String(100), nullable=True)
+    password_reset_expires = db.Column(db.DateTime, nullable=True)
 
     __table_args__ = (
         db.UniqueConstraint('tenant_id', 'username', name='uq_tenant_username'),
@@ -76,11 +104,19 @@ class User(UserMixin, db.Model):
     def is_tenant_admin(self):
         return self.role == 'admin'
 
+    def is_viewer(self):
+        return self.role == 'viewer'
+
+    def can_edit(self):
+        """Check if user can edit/create content."""
+        return self.role in ['superadmin', 'admin', 'manager', 'user']
+
 
 class Project(db.Model):
     __tablename__ = 'projects'
     id = db.Column(db.Integer, primary_key=True)
     tenant_id = db.Column(db.Integer, db.ForeignKey('tenants.id'), nullable=False)
+    program_id = db.Column(db.Integer, db.ForeignKey('programs.id'), nullable=True)
     code = db.Column(db.String(50), nullable=False)
     title = db.Column(db.String(300), nullable=False)
     description = db.Column(db.Text)
@@ -93,6 +129,25 @@ class Project(db.Model):
     responsible_id = db.Column(db.Integer, db.ForeignKey('users.id'))
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+
+    # PMBOK 8 - Value Delivery fields
+    expected_value = db.Column(db.Float, default=0.0)
+    value_type = db.Column(db.String(50))  # ROI, Economia, Receita, Estratégico
+    value_status = db.Column(db.String(50), default='Não iniciado')  # Não iniciado, Em captura, Parcial, Realizado
+    realized_value = db.Column(db.Float, default=0.0)
+
+    # TRL - Technology Readiness Level (1-9)
+    trl = db.Column(db.Integer, default=1)  # Current TRL level
+
+    # Innovation KPIs
+    innovation_type = db.Column(db.String(100))  # Radical, Incremental, Disruptiva, Arquitetural
+    innovation_scope = db.Column(db.String(100))  # Produto, Processo, Modelo de Negócio, Organizacional
+    target_market = db.Column(db.String(200))  # Mercado-alvo
+    competitive_advantage = db.Column(db.Text)  # Vantagem competitiva esperada
+    ip_strategy = db.Column(db.String(100))  # Patente, Segredo Industrial, Open Source, Nenhuma
+    time_to_market = db.Column(db.Integer)  # Meses estimados para mercado
+    expected_roi_percent = db.Column(db.Float)  # ROI esperado em %
+    innovation_risk_level = db.Column(db.String(50))  # Baixo, Médio, Alto, Muito Alto
 
     __table_args__ = (
         db.UniqueConstraint('tenant_id', 'code', name='uq_tenant_project_code'),
@@ -123,6 +178,46 @@ class Expense(db.Model):
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
 
     created_by = db.relationship('User', backref='expenses')
+    attachments = db.relationship('ExpenseAttachment', backref='expense', cascade='all, delete-orphan')
+
+
+class ExpenseAttachment(db.Model):
+    """Attachments for expenses (boletos, notas fiscais, comprovantes)."""
+    __tablename__ = 'expense_attachments'
+    id = db.Column(db.Integer, primary_key=True)
+    tenant_id = db.Column(db.Integer, db.ForeignKey('tenants.id'), nullable=False)
+    expense_id = db.Column(db.Integer, db.ForeignKey('expenses.id'), nullable=False)
+    filename = db.Column(db.String(255), nullable=False)
+    stored_filename = db.Column(db.String(255), nullable=False)
+    file_type = db.Column(db.String(50), nullable=False)
+    file_size = db.Column(db.Integer)
+    attachment_type = db.Column(db.String(50), nullable=False)  # boleto, nota_fiscal, comprovante
+    uploaded_by_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+
+    uploaded_by = db.relationship('User', backref='expense_attachments')
+
+    @property
+    def file_size_display(self):
+        """Return human-readable file size."""
+        if not self.file_size:
+            return "0 B"
+        size = self.file_size
+        for unit in ['B', 'KB', 'MB', 'GB']:
+            if size < 1024:
+                return f"{size:.1f} {unit}"
+            size /= 1024
+        return f"{size:.1f} TB"
+
+    @property
+    def attachment_type_display(self):
+        """Return human-readable attachment type."""
+        types = {
+            'boleto': 'Boleto',
+            'nota_fiscal': 'Nota Fiscal',
+            'comprovante': 'Comprovante de Pagamento'
+        }
+        return types.get(self.attachment_type, self.attachment_type)
 
 
 class Resource(db.Model):
@@ -142,19 +237,70 @@ class Resource(db.Model):
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
 
 
+class Sprint(db.Model):
+    """Sprint for agile project management."""
+    __tablename__ = 'sprints'
+    id = db.Column(db.Integer, primary_key=True)
+    tenant_id = db.Column(db.Integer, db.ForeignKey('tenants.id'), nullable=False)
+    project_id = db.Column(db.Integer, db.ForeignKey('projects.id'), nullable=False)
+    name = db.Column(db.String(100), nullable=False)
+    number = db.Column(db.Integer, default=1)
+    goal = db.Column(db.Text)
+    start_date = db.Column(db.Date, nullable=False)
+    end_date = db.Column(db.Date, nullable=False)
+    status = db.Column(db.String(50), default='Planejado')  # Planejado, Ativo, Concluído
+    velocity = db.Column(db.Integer, default=0)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+
+    milestones = db.relationship('Milestone', backref='sprint', lazy='dynamic')
+
+
+class MilestoneResource(db.Model):
+    """Association table linking milestones to resources with allocation percentage."""
+    __tablename__ = 'milestone_resources'
+    id = db.Column(db.Integer, primary_key=True)
+    milestone_id = db.Column(db.Integer, db.ForeignKey('milestones.id'), nullable=False)
+    resource_id = db.Column(db.Integer, db.ForeignKey('resources.id'), nullable=False)
+    allocation = db.Column(db.Integer, default=100)  # % de alocação (0-100)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+
+    milestone = db.relationship('Milestone', backref=db.backref('resource_assignments', cascade='all, delete-orphan'))
+    resource = db.relationship('Resource', backref='milestone_assignments')
+
+    __table_args__ = (
+        db.UniqueConstraint('milestone_id', 'resource_id', name='uq_milestone_resource'),
+    )
+
+
 class Milestone(db.Model):
     __tablename__ = 'milestones'
     id = db.Column(db.Integer, primary_key=True)
     tenant_id = db.Column(db.Integer, db.ForeignKey('tenants.id'), nullable=False)
     project_id = db.Column(db.Integer, db.ForeignKey('projects.id'), nullable=False)
+    sprint_id = db.Column(db.Integer, db.ForeignKey('sprints.id'), nullable=True)
+    predecessor_id = db.Column(db.Integer, db.ForeignKey('milestones.id'), nullable=True)
     title = db.Column(db.String(300), nullable=False)
     description = db.Column(db.Text)
     start_date = db.Column(db.Date, nullable=False)
     end_date = db.Column(db.Date, nullable=False)
     progress = db.Column(db.Integer, default=0)
     status = db.Column(db.String(50), default='Pendente')
+    priority = db.Column(db.String(20), default='Média')  # Baixa, Média, Alta, Crítica
+    story_points = db.Column(db.Integer, default=0)
     order = db.Column(db.Integer, default=0)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
+
+    predecessor = db.relationship('Milestone', remote_side=[id], backref='successors', foreign_keys=[predecessor_id])
+
+    @property
+    def responsibles(self):
+        """Return list of responsible resources with allocation."""
+        return [(ra.resource, ra.allocation) for ra in self.resource_assignments]
+
+    @property
+    def responsible_names(self):
+        """Return comma-separated list of responsible names."""
+        return ', '.join([ra.resource.name for ra in self.resource_assignments])
 
 
 class Timesheet(db.Model):
@@ -261,6 +407,442 @@ class ProjectDocument(db.Model):
             'pptx': 'bi-file-earmark-ppt text-warning',
         }
         return icons.get(self.file_type, 'bi-file-earmark')
+
+
+class AuditLog(db.Model):
+    """Audit log for tracking user actions."""
+    __tablename__ = 'audit_logs'
+    id = db.Column(db.Integer, primary_key=True)
+    tenant_id = db.Column(db.Integer, db.ForeignKey('tenants.id'), nullable=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=True)
+    action = db.Column(db.String(50), nullable=False)  # login, logout, create, update, delete
+    entity_type = db.Column(db.String(100))  # project, expense, user, etc.
+    entity_id = db.Column(db.Integer)
+    entity_name = db.Column(db.String(300))  # Human-readable name
+    details = db.Column(db.Text)  # JSON with changed fields
+    ip_address = db.Column(db.String(50))
+    user_agent = db.Column(db.String(500))
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+
+    user = db.relationship('User', backref='audit_logs')
+    tenant = db.relationship('Tenant', backref='audit_logs')
+
+    @staticmethod
+    def log(action, entity_type=None, entity_id=None, entity_name=None, details=None):
+        """Create an audit log entry."""
+        from flask_login import current_user
+        from flask import request
+
+        log_entry = AuditLog(
+            tenant_id=current_user.tenant_id if current_user.is_authenticated else None,
+            user_id=current_user.id if current_user.is_authenticated else None,
+            action=action,
+            entity_type=entity_type,
+            entity_id=entity_id,
+            entity_name=entity_name,
+            details=details,
+            ip_address=request.remote_addr if request else None,
+            user_agent=request.user_agent.string[:500] if request and request.user_agent else None
+        )
+        db.session.add(log_entry)
+        return log_entry
+
+
+class Program(db.Model):
+    """Program model - groups related projects."""
+    __tablename__ = 'programs'
+    id = db.Column(db.Integer, primary_key=True)
+    tenant_id = db.Column(db.Integer, db.ForeignKey('tenants.id'), nullable=False)
+    code = db.Column(db.String(50), nullable=False)
+    name = db.Column(db.String(300), nullable=False)
+    description = db.Column(db.Text)
+    objective = db.Column(db.Text)
+    start_date = db.Column(db.Date)
+    end_date = db.Column(db.Date)
+    budget = db.Column(db.Float, default=0.0)
+    status = db.Column(db.String(50), default='Ativo')
+    manager_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+
+    __table_args__ = (
+        db.UniqueConstraint('tenant_id', 'code', name='uq_tenant_program_code'),
+    )
+
+    manager = db.relationship('User', backref='managed_programs')
+    tenant = db.relationship('Tenant', backref='programs')
+    projects = db.relationship('Project', backref='program', lazy='dynamic')
+
+    @property
+    def total_budget(self):
+        """Sum of all project budgets."""
+        return sum(p.budget or 0 for p in self.projects)
+
+    @property
+    def total_spent(self):
+        """Sum of all project expenses."""
+        from sqlalchemy import func
+        return db.session.query(func.sum(Expense.amount)).filter(
+            Expense.project_id.in_([p.id for p in self.projects])
+        ).scalar() or 0
+
+    @property
+    def project_count(self):
+        """Number of projects in this program."""
+        return self.projects.count()
+
+
+class SyncSchedule(db.Model):
+    """Schedule for automatic sync of public calls."""
+    __tablename__ = 'sync_schedules'
+    id = db.Column(db.Integer, primary_key=True)
+    tenant_id = db.Column(db.Integer, db.ForeignKey('tenants.id'), nullable=True)
+    source = db.Column(db.String(50), nullable=False)  # fapesc, finep, cnpq, etc.
+    frequency = db.Column(db.String(20), default='weekly')  # daily, weekly, monthly
+    day_of_week = db.Column(db.Integer, default=0)  # 0=Monday, 6=Sunday
+    hour = db.Column(db.Integer, default=8)  # Hour to run (0-23)
+    last_run = db.Column(db.DateTime)
+    next_run = db.Column(db.DateTime)
+    enabled = db.Column(db.Boolean, default=True)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+
+    tenant = db.relationship('Tenant', backref='sync_schedules')
+
+
+class MeetingMinutes(db.Model):
+    """Meeting minutes for projects."""
+    __tablename__ = 'meeting_minutes'
+    id = db.Column(db.Integer, primary_key=True)
+    tenant_id = db.Column(db.Integer, db.ForeignKey('tenants.id'), nullable=False)
+    project_id = db.Column(db.Integer, db.ForeignKey('projects.id'), nullable=False)
+    title = db.Column(db.String(300), nullable=False)
+    meeting_date = db.Column(db.Date, nullable=False)
+    meeting_time = db.Column(db.String(10))
+    location = db.Column(db.String(200))
+    participants = db.Column(db.Text)
+    transcription = db.Column(db.Text)
+    generated_minutes = db.Column(db.Text)
+    status = db.Column(db.String(50), default='Rascunho')
+    attachment_filename = db.Column(db.String(255))
+    attachment_stored = db.Column(db.String(255))
+    created_by_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+
+    created_by = db.relationship('User', backref='meeting_minutes')
+    project = db.relationship('Project', backref='meeting_minutes')
+
+
+# ============================================================================
+# CENTRAL DE PENDÊNCIAS E CONFORMIDADE
+# ============================================================================
+
+class Risk(db.Model):
+    """Project risks registry."""
+    __tablename__ = 'risks'
+    id = db.Column(db.Integer, primary_key=True)
+    tenant_id = db.Column(db.Integer, db.ForeignKey('tenants.id'), nullable=False)
+    project_id = db.Column(db.Integer, db.ForeignKey('projects.id'), nullable=True)
+    code = db.Column(db.String(50))  # RSK-2024-001
+    title = db.Column(db.String(300), nullable=False)
+    description = db.Column(db.Text)
+    category = db.Column(db.String(100))  # Técnico, Financeiro, Cronograma, Recursos, Externo
+    probability = db.Column(db.Integer, default=3)  # 1-5 scale
+    impact = db.Column(db.Integer, default=3)  # 1-5 scale
+    response_strategy = db.Column(db.String(50))  # Evitar, Mitigar, Transferir, Aceitar
+    status = db.Column(db.String(50), default='Identificado')  # Identificado, Analisado, Em Tratamento, Mitigado, Fechado
+    mitigation_plan = db.Column(db.Text)
+    contingency_plan = db.Column(db.Text)
+    owner_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=True)
+    identified_date = db.Column(db.Date, default=date.today)
+    review_date = db.Column(db.Date)
+    created_by_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+
+    project = db.relationship('Project', backref='risks')
+    owner = db.relationship('User', foreign_keys=[owner_id], backref='owned_risks')
+    created_by = db.relationship('User', foreign_keys=[created_by_id], backref='created_risks')
+
+    @property
+    def risk_score(self):
+        """Calculate risk score based on probability and impact."""
+        return (self.probability or 1) * (self.impact or 1)
+
+    @property
+    def risk_level(self):
+        """Get risk level based on score."""
+        score = self.risk_score
+        if score >= 16:
+            return 'Crítico'
+        elif score >= 9:
+            return 'Alto'
+        elif score >= 4:
+            return 'Médio'
+        return 'Baixo'
+
+
+class PendingItem(db.Model):
+    """Pending items for projects."""
+    __tablename__ = 'pending_items'
+    id = db.Column(db.Integer, primary_key=True)
+    tenant_id = db.Column(db.Integer, db.ForeignKey('tenants.id'), nullable=False)
+    project_id = db.Column(db.Integer, db.ForeignKey('projects.id'), nullable=True)
+    code = db.Column(db.String(50))  # PND-2024-001
+    title = db.Column(db.String(300), nullable=False)
+    description = db.Column(db.Text)
+    category = db.Column(db.String(100))  # Documento, Reunião, Aprovação, Contratação, Outro
+    priority = db.Column(db.String(20), default='Média')  # Baixa, Média, Alta, Crítica
+    status = db.Column(db.String(50), default='Aberta')  # Aberta, Em Andamento, Resolvida, Cancelada
+    due_date = db.Column(db.Date)
+    resolution_date = db.Column(db.Date)
+    responsible_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=True)
+    created_by_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+    resolved_by_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+    resolution_notes = db.Column(db.Text)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+
+    project = db.relationship('Project', backref='pending_items')
+    responsible = db.relationship('User', foreign_keys=[responsible_id], backref='pending_items_responsible')
+    created_by = db.relationship('User', foreign_keys=[created_by_id], backref='created_pending_items')
+    resolved_by = db.relationship('User', foreign_keys=[resolved_by_id], backref='resolved_pending_items')
+
+    @property
+    def is_overdue(self):
+        """Check if item is overdue."""
+        if self.due_date and self.status in ['Aberta', 'Em Andamento']:
+            return self.due_date < date.today()
+        return False
+
+
+class NonConformity(db.Model):
+    """Non-conformity records for projects."""
+    __tablename__ = 'non_conformities'
+    id = db.Column(db.Integer, primary_key=True)
+    tenant_id = db.Column(db.Integer, db.ForeignKey('tenants.id'), nullable=False)
+    project_id = db.Column(db.Integer, db.ForeignKey('projects.id'), nullable=True)
+    code = db.Column(db.String(50))  # NC-2024-001
+    title = db.Column(db.String(300), nullable=False)
+    description = db.Column(db.Text)
+    nc_type = db.Column(db.String(100))  # Processo, Produto, Documentação, Auditoria, Cliente, Regulatório
+    impact = db.Column(db.String(20))  # Baixo, Médio, Alto
+    root_cause = db.Column(db.Text)
+    corrective_plan = db.Column(db.Text)
+    evidence = db.Column(db.Text)
+    status = db.Column(db.String(50), default='Aberta')  # Aberta, Em Análise, Em Tratamento, Verificação, Fechada
+    responsible_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=True)
+    identified_date = db.Column(db.Date, default=date.today)
+    due_date = db.Column(db.Date)
+    closure_date = db.Column(db.Date)
+    created_by_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+
+    project = db.relationship('Project', backref='non_conformities')
+    responsible = db.relationship('User', foreign_keys=[responsible_id], backref='nc_responsible')
+    created_by = db.relationship('User', foreign_keys=[created_by_id], backref='created_non_conformities')
+
+
+class Bug(db.Model):
+    """Bug tracking for software projects."""
+    __tablename__ = 'bugs'
+    id = db.Column(db.Integer, primary_key=True)
+    tenant_id = db.Column(db.Integer, db.ForeignKey('tenants.id'), nullable=False)
+    project_id = db.Column(db.Integer, db.ForeignKey('projects.id'), nullable=True)
+    code = db.Column(db.String(50))  # BUG-2024-001
+    title = db.Column(db.String(300), nullable=False)
+    description = db.Column(db.Text)
+    severity = db.Column(db.String(20))  # Baixa, Média, Alta, Crítica
+    environment = db.Column(db.String(100))  # Desenvolvimento, Homologação, Produção
+    steps_to_reproduce = db.Column(db.Text)
+    expected_behavior = db.Column(db.Text)
+    actual_behavior = db.Column(db.Text)
+    evidence = db.Column(db.Text)  # Screenshots, logs, etc.
+    status = db.Column(db.String(50), default='Aberto')  # Aberto, Em Análise, Em Correção, Teste, Resolvido, Fechado
+    assigned_to_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=True)
+    reported_by_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+    reported_date = db.Column(db.Date, default=date.today)
+    resolved_date = db.Column(db.Date)
+    resolution_notes = db.Column(db.Text)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+
+    project = db.relationship('Project', backref='bugs')
+    assigned_to = db.relationship('User', foreign_keys=[assigned_to_id], backref='assigned_bugs')
+    reported_by = db.relationship('User', foreign_keys=[reported_by_id], backref='reported_bugs')
+
+
+class CorrectiveAction(db.Model):
+    """Corrective actions linked to pending items, bugs, non-conformities, or risks."""
+    __tablename__ = 'corrective_actions'
+    id = db.Column(db.Integer, primary_key=True)
+    tenant_id = db.Column(db.Integer, db.ForeignKey('tenants.id'), nullable=False)
+    project_id = db.Column(db.Integer, db.ForeignKey('projects.id'), nullable=True)
+    code = db.Column(db.String(50))  # AC-2024-001
+    description = db.Column(db.Text, nullable=False)
+    action_type = db.Column(db.String(50), default='Corretiva')  # Corretiva, Preventiva, Melhoria
+
+    # Links to related items (only one should be filled)
+    pending_item_id = db.Column(db.Integer, db.ForeignKey('pending_items.id'), nullable=True)
+    non_conformity_id = db.Column(db.Integer, db.ForeignKey('non_conformities.id'), nullable=True)
+    bug_id = db.Column(db.Integer, db.ForeignKey('bugs.id'), nullable=True)
+    risk_id = db.Column(db.Integer, db.ForeignKey('risks.id'), nullable=True)
+
+    status = db.Column(db.String(50), default='Planejada')  # Planejada, Em Andamento, Concluída, Verificada, Cancelada
+    effectiveness = db.Column(db.String(50))  # Eficaz, Parcialmente Eficaz, Não Eficaz
+    responsible_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=True)
+    due_date = db.Column(db.Date)
+    completion_date = db.Column(db.Date)
+    verification_notes = db.Column(db.Text)
+    created_by_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+
+    project = db.relationship('Project', backref='corrective_actions')
+    responsible = db.relationship('User', foreign_keys=[responsible_id], backref='action_responsible')
+    pending_item = db.relationship('PendingItem', backref='corrective_actions')
+    non_conformity = db.relationship('NonConformity', backref='corrective_actions')
+    bug = db.relationship('Bug', backref='corrective_actions')
+    risk = db.relationship('Risk', backref='corrective_actions')
+    created_by = db.relationship('User', foreign_keys=[created_by_id], backref='created_corrective_actions')
+
+    @property
+    def linked_item_type(self):
+        """Return the type of linked item."""
+        if self.pending_item_id:
+            return 'Pendência'
+        elif self.non_conformity_id:
+            return 'Não Conformidade'
+        elif self.bug_id:
+            return 'Bug'
+        elif self.risk_id:
+            return 'Risco'
+        return None
+
+    @property
+    def linked_item(self):
+        """Return the linked item object."""
+        if self.pending_item_id:
+            return self.pending_item
+        elif self.non_conformity_id:
+            return self.non_conformity
+        elif self.bug_id:
+            return self.bug
+        elif self.risk_id:
+            return self.risk
+        return None
+
+
+class ProjectStakeholder(db.Model):
+    """Stakeholders linked to projects with role and communication preferences."""
+    __tablename__ = 'project_stakeholders'
+    id = db.Column(db.Integer, primary_key=True)
+    tenant_id = db.Column(db.Integer, db.ForeignKey('tenants.id'), nullable=False)
+    project_id = db.Column(db.Integer, db.ForeignKey('projects.id'), nullable=False)
+
+    # Stakeholder info
+    name = db.Column(db.String(200), nullable=False)
+    email = db.Column(db.String(120))
+    phone = db.Column(db.String(20))
+    organization = db.Column(db.String(200))  # Organização/empresa do stakeholder
+
+    # Role and influence
+    role = db.Column(db.String(100), nullable=False)  # Patrocinador, Cliente, Fornecedor, Regulador, Equipe, Consultor, etc.
+    influence_level = db.Column(db.String(50), default='Médio')  # Baixo, Médio, Alto, Muito Alto
+    interest_level = db.Column(db.String(50), default='Médio')  # Baixo, Médio, Alto, Muito Alto
+    engagement_strategy = db.Column(db.String(100))  # Monitorar, Manter Informado, Manter Satisfeito, Gerenciar de Perto
+
+    # Communication preferences - which agent communications to receive
+    receive_briefing = db.Column(db.Boolean, default=False)  # Daily executive briefing
+    receive_risk_alerts = db.Column(db.Boolean, default=False)  # Risk agent alerts
+    receive_financial_alerts = db.Column(db.Boolean, default=False)  # Financial agent alerts
+    receive_schedule_alerts = db.Column(db.Boolean, default=False)  # Schedule agent alerts
+    receive_quality_alerts = db.Column(db.Boolean, default=False)  # Quality agent alerts
+    receive_compliance_alerts = db.Column(db.Boolean, default=False)  # Compliance agent alerts
+    receive_status_reports = db.Column(db.Boolean, default=False)  # Status reports
+
+    # Status
+    active = db.Column(db.Boolean, default=True)
+    notes = db.Column(db.Text)
+
+    created_by_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+
+    project = db.relationship('Project', backref='stakeholders')
+    created_by = db.relationship('User', backref='created_stakeholders')
+
+    @property
+    def power_interest_quadrant(self):
+        """Return stakeholder quadrant based on power/interest matrix."""
+        power_map = {'Baixo': 1, 'Médio': 2, 'Alto': 3, 'Muito Alto': 4}
+        interest_map = {'Baixo': 1, 'Médio': 2, 'Alto': 3, 'Muito Alto': 4}
+
+        power = power_map.get(self.influence_level, 2)
+        interest = interest_map.get(self.interest_level, 2)
+
+        if power >= 3 and interest >= 3:
+            return 'Gerenciar de Perto'
+        elif power >= 3 and interest < 3:
+            return 'Manter Satisfeito'
+        elif power < 3 and interest >= 3:
+            return 'Manter Informado'
+        else:
+            return 'Monitorar'
+
+    @property
+    def communication_count(self):
+        """Count how many communication types are enabled."""
+        count = 0
+        if self.receive_briefing: count += 1
+        if self.receive_risk_alerts: count += 1
+        if self.receive_financial_alerts: count += 1
+        if self.receive_schedule_alerts: count += 1
+        if self.receive_quality_alerts: count += 1
+        if self.receive_compliance_alerts: count += 1
+        if self.receive_status_reports: count += 1
+        return count
+
+
+class ProjectTRLHistory(db.Model):
+    """History of TRL changes for a project."""
+    __tablename__ = 'project_trl_history'
+    id = db.Column(db.Integer, primary_key=True)
+    tenant_id = db.Column(db.Integer, db.ForeignKey('tenants.id'), nullable=False)
+    project_id = db.Column(db.Integer, db.ForeignKey('projects.id'), nullable=False)
+
+    trl_from = db.Column(db.Integer)  # Previous TRL level (null if first entry)
+    trl_to = db.Column(db.Integer, nullable=False)  # New TRL level
+    change_date = db.Column(db.Date, nullable=False, default=date.today)
+
+    # Evidence and justification
+    justification = db.Column(db.Text)  # Why the TRL changed
+    evidence = db.Column(db.Text)  # Evidence supporting the change
+    verified_by = db.Column(db.String(200))  # Who verified/approved the change
+
+    changed_by_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+
+    project = db.relationship('Project', backref='trl_history')
+    changed_by = db.relationship('User', backref='trl_changes')
+
+    @property
+    def trl_description(self):
+        """Return description for the TRL level."""
+        descriptions = {
+            1: 'Princípios básicos observados',
+            2: 'Conceito de tecnologia formulado',
+            3: 'Prova de conceito experimental',
+            4: 'Validação em laboratório',
+            5: 'Validação em ambiente relevante',
+            6: 'Demonstração em ambiente relevante',
+            7: 'Demonstração em ambiente operacional',
+            8: 'Sistema completo e qualificado',
+            9: 'Sistema comprovado em operação'
+        }
+        return descriptions.get(self.trl_to, 'Nível não definido')
 
 
 # Helper function to get current tenant

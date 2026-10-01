@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% block title %}{{ 'Editar' if call else 'Nova' }} Chamada Pública - Gestão P&D{% endblock %}
+{% block title %}{{ _('Editar') if call else _('Nova') }} {{ _('Chamada Publica') }} - Gestao P&D{% endblock %}
 
 {% block content %}
 <div class="row justify-content-center">
@@ -8,7 +8,7 @@
             <a href="{{ url_for('public_calls.list_calls') }}" class="btn btn-outline-secondary btn-sm me-3">
                 <i class="bi bi-arrow-left"></i>
             </a>
-            <h4 class="fw-bold mb-0">{{ 'Editar' if call else 'Nova' }} Chamada Pública</h4>
+            <h4 class="fw-bold mb-0">{{ _('Editar') if call else _('Nova') }} {{ _('Chamada Publica') }}</h4>
         </div>
 
         <div class="card shadow-sm">
@@ -16,10 +16,10 @@
                 <form method="POST">
                     <div class="row g-3">
                         <div class="col-md-6">
-                            <label for="source" class="form-label">Fonte/Instituição *</label>
+                            <label for="source" class="form-label">{{ _('Fonte/Instituicao') }} *</label>
                             <input type="text" class="form-control" id="source" name="source"
                                    value="{{ call.source if call else '' }}" required
-                                   placeholder="Ex: FINEP, BNDES, CNPq, FAPESP..."
+                                   placeholder="{{ _('Ex: FINEP, BNDES, CNPq, FAPESP...') }}"
                                    list="source-list">
                             <datalist id="source-list">
                                 <option value="FINEP">
@@ -30,85 +30,85 @@
                                 <option value="Embrapii">
                                 <option value="FAPERJ">
                                 <option value="FAPEMIG">
-                                <option value="Outro">
+                                <option value="{{ _('Outro') }}">
                             </datalist>
                         </div>
                         <div class="col-md-6">
-                            <label for="status" class="form-label">Status</label>
+                            <label for="status" class="form-label">{{ _('Status') }}</label>
                             <select class="form-select" id="status" name="status">
-                                <option value="Aberta" {{ 'selected' if not call or call.status == 'Aberta' }}>Aberta</option>
-                                <option value="Encerrada" {{ 'selected' if call and call.status == 'Encerrada' }}>Encerrada</option>
-                                <option value="Em Análise" {{ 'selected' if call and call.status == 'Em Análise' }}>Em Análise</option>
+                                <option value="Aberta" {{ 'selected' if not call or call.status == 'Aberta' }}>{{ _('Aberta') }}</option>
+                                <option value="Encerrada" {{ 'selected' if call and call.status == 'Encerrada' }}>{{ _('Encerrada') }}</option>
+                                <option value="Em Análise" {{ 'selected' if call and call.status == 'Em Análise' }}>{{ _('Em Analise') }}</option>
                             </select>
                         </div>
                         <div class="col-12">
-                            <label for="title" class="form-label">Título *</label>
+                            <label for="title" class="form-label">{{ _('Titulo') }} *</label>
                             <input type="text" class="form-control" id="title" name="title"
                                    value="{{ call.title if call else '' }}" required
-                                   placeholder="Título completo da chamada pública">
+                                   placeholder="{{ _('Titulo completo da chamada publica') }}">
                         </div>
                         <div class="col-md-6">
-                            <label for="theme" class="form-label">Tema</label>
+                            <label for="theme" class="form-label">{{ _('Tema') }}</label>
                             <input type="text" class="form-control" id="theme" name="theme"
                                    value="{{ call.theme if call else '' }}"
-                                   placeholder="Ex: Inovação, Saúde, Energia..."
+                                   placeholder="{{ _('Ex: Inovacao, Saude, Energia...') }}"
                                    list="theme-list">
                             <datalist id="theme-list">
-                                <option value="Inovação">
-                                <option value="Saúde">
-                                <option value="Energia">
-                                <option value="Agropecuária">
-                                <option value="Tecnologia da Informação">
-                                <option value="Transformação Digital">
-                                <option value="Sustentabilidade">
-                                <option value="Indústria">
-                                <option value="Infraestrutura">
-                                <option value="Biotecnologia">
-                                <option value="Defesa">
-                                <option value="Aeroespacial">
+                                <option value="{{ _('Inovacao') }}">
+                                <option value="{{ _('Saude') }}">
+                                <option value="{{ _('Energia') }}">
+                                <option value="{{ _('Agropecuaria') }}">
+                                <option value="{{ _('Tecnologia da Informacao') }}">
+                                <option value="{{ _('Transformacao Digital') }}">
+                                <option value="{{ _('Sustentabilidade') }}">
+                                <option value="{{ _('Industria') }}">
+                                <option value="{{ _('Infraestrutura') }}">
+                                <option value="{{ _('Biotecnologia') }}">
+                                <option value="{{ _('Defesa') }}">
+                                <option value="{{ _('Aeroespacial') }}">
                             </datalist>
                         </div>
                         <div class="col-md-6">
-                            <label for="funding_source" class="form-label">Fonte de Recursos</label>
+                            <label for="funding_source" class="form-label">{{ _('Fonte de Recursos') }}</label>
                             <input type="text" class="form-control" id="funding_source" name="funding_source"
                                    value="{{ call.funding_source if call else '' }}"
-                                   placeholder="Ex: FNDCT, Recursos Próprios...">
+                                   placeholder="{{ _('Ex: FNDCT, Recursos Proprios...') }}">
                         </div>
                         <div class="col-md-6">
-                            <label for="publication_date" class="form-label">Data de Publicação</label>
+                            <label for="publication_date" class="form-label">{{ _('Data de Publicacao') }}</label>
                             <input type="text" class="form-control" id="publication_date" name="publication_date"
                                    value="{{ call.publication_date if call else '' }}"
-                                   placeholder="Ex: 15/01/2024">
+                                   placeholder="{{ _('Ex: 15/01/2024') }}">
                         </div>
                         <div class="col-md-6">
-                            <label for="deadline" class="form-label">Prazo/Deadline</label>
+                            <label for="deadline" class="form-label">{{ _('Prazo/Deadline') }}</label>
                             <input type="text" class="form-control" id="deadline" name="deadline"
                                    value="{{ call.deadline if call else '' }}"
-                                   placeholder="Ex: 30/03/2024">
+                                   placeholder="{{ _('Ex: 30/03/2024') }}">
                         </div>
                         <div class="col-12">
-                            <label for="target_audience" class="form-label">Público-Alvo</label>
+                            <label for="target_audience" class="form-label">{{ _('Publico-Alvo') }}</label>
                             <input type="text" class="form-control" id="target_audience" name="target_audience"
                                    value="{{ call.target_audience if call else '' }}"
-                                   placeholder="Ex: Empresas, ICTs, Startups, Pesquisadores...">
+                                   placeholder="{{ _('Ex: Empresas, ICTs, Startups, Pesquisadores...') }}">
                         </div>
                         <div class="col-12">
-                            <label for="url" class="form-label">Link do Edital</label>
+                            <label for="url" class="form-label">{{ _('Link do Edital') }}</label>
                             <input type="url" class="form-control" id="url" name="url"
                                    value="{{ call.url if call else '' }}"
                                    placeholder="https://...">
                         </div>
                         <div class="col-12">
-                            <label for="description" class="form-label">Descrição</label>
+                            <label for="description" class="form-label">{{ _('Descricao') }}</label>
                             <textarea class="form-control" id="description" name="description" rows="4"
-                                      placeholder="Descrição detalhada da chamada pública">{{ call.description if call else '' }}</textarea>
+                                      placeholder="{{ _('Descricao detalhada da chamada publica') }}">{{ call.description if call else '' }}</textarea>
                         </div>
                     </div>
                     <hr class="my-4">
                     <div class="d-flex justify-content-end gap-2">
-                        <a href="{{ url_for('public_calls.list_calls') }}" class="btn btn-outline-secondary">Cancelar</a>
+                        <a href="{{ url_for('public_calls.list_calls') }}" class="btn btn-outline-secondary">{{ _('Cancelar') }}</a>
                         <button type="submit" class="btn btn-primary">
-                            <i class="bi bi-check-lg"></i> {{ 'Salvar' if call else 'Cadastrar' }}
+                            <i class="bi bi-check-lg"></i> {{ _('Salvar') if call else _('Cadastrar') }}
                         </button>
                     </div>
                 </form>

@@ -1,0 +1,216 @@
+{% extends "base.html" %}
+{% block title %}{{ page_title }} - Gestao P&D{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h4 class="fw-bold mb-0">
+        <i class="bi bi-shield-check text-primary"></i> {{ _('Análise de Conformidade') }}
+    </h4>
+    <div>
+        <a href="{{ url_for('pmo_agents.dashboard') }}" class="btn btn-outline-secondary">
+            <i class="bi bi-arrow-left"></i> {{ _('Voltar') }}
+        </a>
+    </div>
+</div>
+
+<!-- Filter -->
+<div class="card shadow-sm mb-4">
+    <div class="card-body">
+        <form method="GET" class="row g-3 align-items-end">
+            <div class="col-md-6">
+                <label class="form-label">{{ _('Filtrar por Projeto') }}</label>
+                <select name="project_id" class="form-select" onchange="this.form.submit()">
+                    <option value="">{{ _('Todos os Projetos') }}</option>
+                    {% for project in projects %}
+                    <option value="{{ project.id }}" {{ 'selected' if selected_project and selected_project.id == project.id }}>
+                        {{ project.code }} - {{ project.title }}
+                    </option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col-md-6">
+                <a href="{{ url_for('pmo_agents.compliance_analysis') }}" class="btn btn-outline-secondary">
+                    <i class="bi bi-arrow-counterclockwise"></i> {{ _('Limpar Filtro') }}
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Summary -->
+<div class="row g-3 mb-4">
+    <div class="col-md-3">
+        <div class="card border-0 shadow-sm h-100">
+            <div class="card-body text-center">
+                <div class="fs-1 fw-bold text-primary">{{ result.metrics.total_items_analyzed }}</div>
+                <div class="text-muted">{{ _('Itens Analisados') }}</div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card border-0 shadow-sm h-100">
+            <div class="card-body text-center">
+                <div class="fs-1 fw-bold text-{{ 'danger' if result.metrics.items_needing_action > 0 else 'success' }}">
+                    {{ result.metrics.items_needing_action }}
+                </div>
+                <div class="text-muted">{{ _('Requerem Ação') }}</div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card border-0 shadow-sm h-100">
+            <div class="card-body text-center">
+                <div class="fs-1 fw-bold text-info">{{ result.metrics.correlations_found }}</div>
+                <div class="text-muted">{{ _('Correlações Encontradas') }}</div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card border-0 shadow-sm h-100">
+            <div class="card-body text-center">
+                <div class="fs-1 fw-bold text-{{ 'danger' if result.metrics.items_by_age.critical > 0 else 'warning' if result.metrics.items_by_age.old > 0 else 'success' }}">
+                    {{ result.metrics.items_by_age.critical + result.metrics.items_by_age.old }}
+                </div>
+                <div class="text-muted">{{ _('Itens Críticos/Antigos') }}</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Status -->
+<div class="alert alert-{{ 'danger' if result.health_status.value == 'critical' else 'warning' if result.health_status.value == 'attention' else 'success' }} mb-4">
+    <i class="bi bi-{% if result.health_status.value == 'critical' %}exclamation-triangle{% elif result.health_status.value == 'attention' %}exclamation-circle{% else %}check-circle{% endif %}"></i>
+    {{ result.summary }}
+</div>
+
+<div class="row">
+    <!-- Insights -->
+    <div class="col-lg-6">
+        <div class="card shadow-sm mb-4">
+            <div class="card-header bg-white">
+                <h6 class="mb-0 fw-bold"><i class="bi bi-lightbulb text-warning"></i> {{ _('Análises') }} ({{ result.insights|length }})</h6>
+            </div>
+            <div class="card-body p-0">
+                {% if result.insights %}
+                <div class="list-group list-group-flush">
+                    {% for insight in result.insights[:15] %}
+                    <div class="list-group-item">
+                        <div class="d-flex justify-content-between align-items-start">
+                            <div class="flex-grow-1">
+                                <span class="badge bg-{{ 'danger' if insight.severity.value == 'critical' else 'warning' if insight.severity.value == 'high' else 'info' if insight.severity.value == 'medium' else 'secondary' }} me-2">
+                                    {{ insight.severity.value|upper }}
+                                </span>
+                                <strong>{{ insight.title }}</strong>
+                                <p class="mb-1 small text-muted">{{ insight.description }}</p>
+                                {% if insight.project_name %}
+                                <small class="text-primary"><i class="bi bi-folder"></i> {{ insight.project_name }}</small>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% else %}
+                <div class="text-center py-4 text-muted">
+                    <i class="bi bi-check-circle fs-1 text-success"></i>
+                    <p class="mb-0 mt-2">{{ _('Nenhum item requer atenção') }}</p>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <!-- Suggested Actions -->
+    <div class="col-lg-6">
+        <div class="card shadow-sm mb-4">
+            <div class="card-header bg-white">
+                <h6 class="mb-0 fw-bold"><i class="bi bi-lightning text-success"></i> {{ _('Ações Sugeridas') }} ({{ result.actions|length }})</h6>
+            </div>
+            <div class="card-body p-0">
+                {% if result.actions %}
+                <div class="list-group list-group-flush">
+                    {% for action in result.actions[:15] %}
+                    <div class="list-group-item">
+                        <div class="d-flex justify-content-between align-items-start">
+                            <div class="flex-grow-1">
+                                <span class="badge bg-{{ 'danger' if action.priority.value == 'critical' else 'warning' if action.priority.value == 'high' else 'info' }} me-2">
+                                    {{ action.priority.value|upper }}
+                                </span>
+                                <strong>{{ action.title }}</strong>
+                                <p class="mb-1 small text-muted" style="white-space: pre-line;">{{ action.description }}</p>
+                                {% if action.data and action.data.correlation %}
+                                <div class="alert alert-info py-1 px-2 mb-2 mt-2 small">
+                                    <i class="bi bi-link-45deg"></i> <strong>Correlacao:</strong> Item similar encontrado
+                                </div>
+                                {% endif %}
+
+                                <!-- Action Buttons -->
+                                <div class="mt-2">
+                                    {% if action.data %}
+                                        {% if action.data.type == 'pending_resolution' %}
+                                        <a href="{{ url_for('compliance.pending_edit', item_id=action.data.item_id) }}" class="btn btn-sm btn-outline-primary me-1">
+                                            <i class="bi bi-pencil"></i> {{ _('Editar Pendência') }}
+                                        </a>
+                                        <a href="{{ url_for('compliance.action_create') }}?pending_item_id={{ action.data.item_id }}&project_id={{ action.project_id }}" class="btn btn-sm btn-success">
+                                            <i class="bi bi-plus-circle"></i> {{ _('Criar Ação Corretiva') }}
+                                        </a>
+                                        {% elif action.data.type == 'bug_fix' %}
+                                        <a href="{{ url_for('compliance.bug_edit', bug_id=action.data.item_id) }}" class="btn btn-sm btn-outline-primary me-1">
+                                            <i class="bi bi-pencil"></i> {{ _('Editar Bug') }}
+                                        </a>
+                                        <a href="{{ url_for('compliance.action_create') }}?bug_id={{ action.data.item_id }}&project_id={{ action.project_id }}" class="btn btn-sm btn-success">
+                                            <i class="bi bi-plus-circle"></i> {{ _('Criar Ação Corretiva') }}
+                                        </a>
+                                        {% elif action.data.type == 'nc_treatment' %}
+                                        <a href="{{ url_for('compliance.nc_edit', item_id=action.data.item_id) }}" class="btn btn-sm btn-outline-primary me-1">
+                                            <i class="bi bi-pencil"></i> {{ _('Editar NC') }}
+                                        </a>
+                                        <a href="{{ url_for('compliance.action_create') }}?non_conformity_id={{ action.data.item_id }}&project_id={{ action.project_id }}" class="btn btn-sm btn-success">
+                                            <i class="bi bi-plus-circle"></i> {{ _('Criar Ação Corretiva') }}
+                                        </a>
+                                        {% endif %}
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% else %}
+                <div class="text-center py-4 text-muted">
+                    <i class="bi bi-hand-thumbs-up fs-1 text-success"></i>
+                    <p class="mb-0 mt-2">{{ _('Nenhuma ação necessária no momento') }}</p>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Age Distribution -->
+<div class="card shadow-sm">
+    <div class="card-header bg-white">
+        <h6 class="mb-0 fw-bold"><i class="bi bi-clock-history"></i> {{ _('Distribuição por Idade') }}</h6>
+    </div>
+    <div class="card-body">
+        <div class="row text-center">
+            <div class="col">
+                <div class="fs-3 fw-bold text-success">{{ result.metrics.items_by_age.new }}</div>
+                <div class="text-muted small">{{ _('Novos') }}<br>({{ _('até 7 dias') }})</div>
+            </div>
+            <div class="col">
+                <div class="fs-3 fw-bold text-info">{{ result.metrics.items_by_age.medium }}</div>
+                <div class="text-muted small">{{ _('Médio') }}<br>({{ _('8-30 dias') }})</div>
+            </div>
+            <div class="col">
+                <div class="fs-3 fw-bold text-warning">{{ result.metrics.items_by_age.old }}</div>
+                <div class="text-muted small">{{ _('Antigos') }}<br>({{ _('31-60 dias') }})</div>
+            </div>
+            <div class="col">
+                <div class="fs-3 fw-bold text-danger">{{ result.metrics.items_by_age.critical }}</div>
+                <div class="text-muted small">{{ _('Críticos') }}<br>({{ _('+60 dias') }})</div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

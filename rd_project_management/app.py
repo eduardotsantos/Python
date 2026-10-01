@@ -1,16 +1,22 @@
 import os
 import sys
 import logging
-from flask import Flask, redirect, url_for, g
+from flask import Flask, redirect, url_for, g, request, session
 from flask_login import LoginManager, current_user
+from flask_mail import Mail
+from flask_babel import Babel, format_datetime, format_date, get_locale
 
 # Add project directory to path
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
 from models import db, User, Tenant
+from extensions import babel, LANGUAGES, DEFAULT_LANGUAGE
 
 # Configure logging
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+
+# Global mail instance
+mail = Mail()
 
 def create_app():
     app = Flask(__name__)
@@ -25,11 +31,37 @@ def create_app():
     app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024  # 16 MB max file size
     app.config['ALLOWED_EXTENSIONS'] = {'pdf', 'doc', 'docx', 'xls', 'xlsx', 'ppt', 'pptx'}
 
+    # Email configuration (Flask-Mail)
+    app.config['MAIL_SERVER'] = os.environ.get('MAIL_SERVER', 'smtp.gmail.com')
+    app.config['MAIL_PORT'] = int(os.environ.get('MAIL_PORT', 587))
+    app.config['MAIL_USE_TLS'] = os.environ.get('MAIL_USE_TLS', 'True').lower() in ('true', '1', 'yes')
+    app.config['MAIL_USE_SSL'] = os.environ.get('MAIL_USE_SSL', 'False').lower() in ('true', '1', 'yes')
+    app.config['MAIL_USERNAME'] = os.environ.get('MAIL_USERNAME', '')
+    app.config['MAIL_PASSWORD'] = os.environ.get('MAIL_PASSWORD', '')
+    app.config['MAIL_DEFAULT_SENDER'] = os.environ.get('MAIL_DEFAULT_SENDER', 'Orion PMO <noreply@orionpmo.com>')
+
     # Ensure upload folder exists
     os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
 
     # Initialize extensions
     db.init_app(app)
+    mail.init_app(app)
+
+    # Flask-Babel configuration
+    app.config['BABEL_DEFAULT_LOCALE'] = 'pt_BR'
+    app.config['BABEL_DEFAULT_TIMEZONE'] = 'America/Sao_Paulo'
+    app.config['LANGUAGES'] = LANGUAGES
+
+    def get_locale_selector():
+        # Priority: 1) User preference, 2) Session, 3) Request header, 4) Default
+        if current_user.is_authenticated:
+            if hasattr(current_user, 'language') and current_user.language:
+                return current_user.language
+        if 'language' in session:
+            return session['language']
+        return request.accept_languages.best_match(LANGUAGES.keys()) or DEFAULT_LANGUAGE
+
+    babel.init_app(app, locale_selector=get_locale_selector)
 
     # Flask-Login
     login_manager = LoginManager()
@@ -40,7 +72,7 @@ def create_app():
 
     @login_manager.user_loader
     def load_user(user_id):
-        return User.query.get(int(user_id))
+        return db.session.get(User, int(user_id))
 
     # Register blueprints
     from routes.auth import auth_bp
@@ -53,6 +85,9 @@ def create_app():
     from routes.users import users_bp
     from routes.tenants import tenants_bp
     from routes.ai import ai_bp
+    from routes.home import home_bp
+    from routes.status_report import status_report_bp
+    from routes.meeting_minutes import meeting_minutes_bp
 
     app.register_blueprint(auth_bp)
     app.register_blueprint(projects_bp)
@@ -64,6 +99,63 @@ def create_app():
     app.register_blueprint(users_bp)
     app.register_blueprint(tenants_bp)
     app.register_blueprint(ai_bp)
+    app.register_blueprint(home_bp)
+    app.register_blueprint(status_report_bp)
+    app.register_blueprint(meeting_minutes_bp)
+
+    # Optional audit blueprint
+    has_audit = False
+    try:
+        from routes.audit import audit_bp
+        app.register_blueprint(audit_bp)
+        has_audit = True
+    except ImportError as e:
+        logging.warning(f"Audit module not loaded: {e}")
+
+    # Optional blueprints (Programs and Portfolio modules)
+    has_programs = False
+    has_portfolio = False
+
+    try:
+        from routes.programs import programs_bp
+        app.register_blueprint(programs_bp)
+        has_programs = True
+    except ImportError:
+        pass
+
+    try:
+        from routes.portfolio import portfolio_bp
+        app.register_blueprint(portfolio_bp)
+        has_portfolio = True
+    except ImportError:
+        pass
+
+    # Optional Agile blueprint
+    has_agile = False
+    try:
+        from routes.agile import agile_bp
+        app.register_blueprint(agile_bp)
+        has_agile = True
+    except ImportError:
+        pass
+
+    # Optional Compliance blueprint
+    has_compliance = False
+    try:
+        from routes.compliance import compliance_bp
+        app.register_blueprint(compliance_bp)
+        has_compliance = True
+    except ImportError:
+        pass
+
+    # Optional PMO Agents blueprint (Orion Autonomous PMO)
+    has_pmo_agents = False
+    try:
+        from routes.pmo_agents import pmo_agents_bp
+        app.register_blueprint(pmo_agents_bp)
+        has_pmo_agents = True
+    except ImportError as e:
+        logging.warning(f"PMO Agents module not loaded: {e}")
 
     # Before request - set current tenant
     @app.before_request
@@ -72,12 +164,20 @@ def create_app():
         if current_user.is_authenticated and current_user.tenant_id:
             g.current_tenant = current_user.tenant
 
-    # Context processor to make tenant available in templates
+    # Context processor to make tenant and i18n available in templates
     @app.context_processor
     def inject_tenant():
         return {
             'current_tenant': getattr(g, 'current_tenant', None),
-            'is_superadmin': current_user.is_superadmin() if current_user.is_authenticated else False
+            'is_superadmin': current_user.is_superadmin() if current_user.is_authenticated else False,
+            'has_programs_module': has_programs,
+            'has_portfolio_module': has_portfolio,
+            'has_audit_module': has_audit,
+            'has_agile_module': has_agile,
+            'has_compliance_module': has_compliance,
+            'has_pmo_agents_module': has_pmo_agents,
+            'current_locale': str(get_locale()),
+            'available_languages': LANGUAGES
         }
 
     # Root redirect
@@ -97,6 +197,21 @@ def create_app():
     with app.app_context():
         db.create_all()
 
+        # Add new columns if they don't exist (safe ALTER TABLE)
+        try:
+            from sqlalchemy import text
+            for col_sql in [
+                "ALTER TABLE users ADD COLUMN password_reset_token VARCHAR(100)",
+                "ALTER TABLE users ADD COLUMN password_reset_expires DATETIME",
+            ]:
+                try:
+                    db.session.execute(text(col_sql))
+                    db.session.commit()
+                except Exception:
+                    db.session.rollback()
+        except Exception:
+            pass
+
         # Create default super admin if no superadmin exists
         superadmin = User.query.filter_by(role='superadmin').first()
         if not superadmin:
@@ -111,6 +226,14 @@ def create_app():
             db.session.add(superadmin)
             db.session.commit()
             logging.info("Default super admin user created: superadmin / super123")
+
+    # Initialize scheduler for automated tasks (daily briefing at 7 AM)
+    try:
+        from services.scheduler_service import init_scheduler
+        init_scheduler(app)
+        logging.info("Scheduler initialized for daily briefing")
+    except Exception as e:
+        logging.warning(f"Scheduler not initialized: {e}")
 
     return app
 

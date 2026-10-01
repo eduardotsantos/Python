@@ -1,0 +1,262 @@
+{% extends "base.html" %}
+{% block title %}Métricas Ágeis - {{ project.title }}{% endblock %}
+
+{% block content %}
+<div class="d-flex align-items-center mb-4">
+    <a href="{{ url_for('agile.kanban_board', project_id=project.id) }}" class="btn btn-outline-secondary btn-sm me-3">
+        <i class="bi bi-arrow-left"></i>
+    </a>
+    <div class="flex-grow-1">
+        <h4 class="fw-bold mb-0"><i class="bi bi-graph-up text-success"></i> Métricas Ágeis</h4>
+        <span class="text-muted">{{ project.title }}</span>
+    </div>
+    <select class="form-select form-select-sm" id="sprintSelector" style="width: 200px;">
+        <option value="">Selecione um Sprint</option>
+        {% for sprint in sprints %}
+        <option value="{{ sprint.id }}" {{ 'selected' if selected_sprint and selected_sprint.id == sprint.id }}>
+            {{ sprint.name }} {% if sprint.status == 'Ativo' %}(Ativo){% endif %}
+        </option>
+        {% endfor %}
+    </select>
+</div>
+
+<!-- KPIs -->
+<div class="row g-3 mb-4">
+    <div class="col-md-3">
+        <div class="card card-stats border-primary shadow-sm">
+            <div class="card-body text-center">
+                <h3 class="fw-bold text-primary">{{ avg_velocity }}</h3>
+                <small class="text-muted">Velocity Médio</small>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card card-stats border-success shadow-sm">
+            <div class="card-body text-center">
+                <h3 class="fw-bold text-success">{{ status_distribution['Concluído'] }}</h3>
+                <small class="text-muted">Tarefas Concluídas</small>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card card-stats border-warning shadow-sm">
+            <div class="card-body text-center">
+                <h3 class="fw-bold text-warning">{{ status_distribution['Em Andamento'] }}</h3>
+                <small class="text-muted">Em Andamento</small>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card card-stats border-secondary shadow-sm">
+            <div class="card-body text-center">
+                <h3 class="fw-bold text-secondary">{{ status_distribution['Pendente'] }}</h3>
+                <small class="text-muted">Backlog</small>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row g-4">
+    <!-- Burndown Chart -->
+    <div class="col-lg-8">
+        <div class="card shadow-sm">
+            <div class="card-header bg-white">
+                <h6 class="mb-0 fw-bold"><i class="bi bi-graph-down text-danger"></i> Burndown Chart</h6>
+            </div>
+            <div class="card-body">
+                {% if burndown_data %}
+                <canvas id="burndownChart" height="200"></canvas>
+                {% else %}
+                <div class="text-center py-5 text-muted">
+                    <i class="bi bi-speedometer2" style="font-size: 3rem;"></i>
+                    <p class="mt-2">Selecione um sprint para ver o burndown</p>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <!-- Velocity Chart -->
+    <div class="col-lg-4">
+        <div class="card shadow-sm">
+            <div class="card-header bg-white">
+                <h6 class="mb-0 fw-bold"><i class="bi bi-speedometer text-info"></i> Velocity</h6>
+            </div>
+            <div class="card-body">
+                {% if velocity_data %}
+                <canvas id="velocityChart" height="200"></canvas>
+                {% else %}
+                <div class="text-center py-4 text-muted">
+                    <i class="bi bi-bar-chart" style="font-size: 2rem;"></i>
+                    <p class="mt-2 small">Complete sprints para ver o velocity</p>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <!-- Status Distribution -->
+    <div class="col-lg-4">
+        <div class="card shadow-sm">
+            <div class="card-header bg-white">
+                <h6 class="mb-0 fw-bold"><i class="bi bi-pie-chart text-primary"></i> Distribuição por Status</h6>
+            </div>
+            <div class="card-body">
+                <canvas id="statusChart" height="200"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <!-- Priority Distribution -->
+    <div class="col-lg-4">
+        <div class="card shadow-sm">
+            <div class="card-header bg-white">
+                <h6 class="mb-0 fw-bold"><i class="bi bi-exclamation-triangle text-warning"></i> Distribuição por Prioridade</h6>
+            </div>
+            <div class="card-body">
+                <canvas id="priorityChart" height="200"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <!-- Team Workload -->
+    <div class="col-lg-4">
+        <div class="card shadow-sm">
+            <div class="card-header bg-white">
+                <h6 class="mb-0 fw-bold"><i class="bi bi-people text-success"></i> Carga por Membro</h6>
+            </div>
+            <div class="card-body">
+                {% if workload %}
+                <div class="list-group list-group-flush">
+                    {% for name, data in workload.items() %}
+                    <div class="list-group-item px-0">
+                        <div class="d-flex justify-content-between align-items-center mb-1">
+                            <span class="fw-medium">{{ name }}</span>
+                            <span class="badge bg-primary">{{ data.total }}</span>
+                        </div>
+                        <div class="progress" style="height: 6px;">
+                            <div class="progress-bar bg-success" style="width: {{ (data.completed / data.total * 100) if data.total > 0 else 0 }}%"></div>
+                        </div>
+                        <small class="text-muted">{{ data.completed }}/{{ data.total }} concluídas</small>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% else %}
+                <div class="text-center py-4 text-muted">
+                    <i class="bi bi-person-badge" style="font-size: 2rem;"></i>
+                    <p class="mt-2 small">Atribua tarefas aos membros</p>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Sprint selector
+    document.getElementById('sprintSelector').addEventListener('change', function() {
+        const sprintId = this.value;
+        const url = new URL(window.location.href);
+        if (sprintId) {
+            url.searchParams.set('sprint_id', sprintId);
+        } else {
+            url.searchParams.delete('sprint_id');
+        }
+        window.location.href = url.toString();
+    });
+
+    // Burndown Chart
+    {% if burndown_data %}
+    const burndownData = {{ burndown_data | tojson }};
+    new Chart(document.getElementById('burndownChart'), {
+        type: 'line',
+        data: {
+            labels: burndownData.map(d => d.date.split('-').slice(1).join('/')),
+            datasets: [
+                {
+                    label: 'Ideal',
+                    data: burndownData.map(d => d.ideal),
+                    borderColor: '#6c757d',
+                    borderDash: [5, 5],
+                    fill: false,
+                    tension: 0
+                },
+                {
+                    label: 'Real',
+                    data: burndownData.map(d => d.actual),
+                    borderColor: '#0d6efd',
+                    backgroundColor: 'rgba(13,110,253,0.1)',
+                    fill: true,
+                    tension: 0.1
+                }
+            ]
+        },
+        options: {
+            responsive: true,
+            plugins: { legend: { position: 'bottom' } },
+            scales: { y: { beginAtZero: true, title: { display: true, text: 'Story Points' } } }
+        }
+    });
+    {% endif %}
+
+    // Velocity Chart
+    {% if velocity_data %}
+    const velocityData = {{ velocity_data | tojson }};
+    new Chart(document.getElementById('velocityChart'), {
+        type: 'bar',
+        data: {
+            labels: velocityData.map(d => d.sprint),
+            datasets: [{
+                label: 'Velocity',
+                data: velocityData.map(d => d.velocity),
+                backgroundColor: '#17a2b8'
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: { legend: { display: false } },
+            scales: { y: { beginAtZero: true } }
+        }
+    });
+    {% endif %}
+
+    // Status Distribution
+    const statusData = {{ status_distribution | tojson }};
+    new Chart(document.getElementById('statusChart'), {
+        type: 'doughnut',
+        data: {
+            labels: Object.keys(statusData),
+            datasets: [{
+                data: Object.values(statusData),
+                backgroundColor: ['#6c757d', '#0d6efd', '#198754']
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: { legend: { position: 'bottom' } }
+        }
+    });
+
+    // Priority Distribution
+    const priorityData = {{ priority_distribution | tojson }};
+    new Chart(document.getElementById('priorityChart'), {
+        type: 'doughnut',
+        data: {
+            labels: Object.keys(priorityData),
+            datasets: [{
+                data: Object.values(priorityData),
+                backgroundColor: ['#dc3545', '#fd7e14', '#ffc107', '#20c997']
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: { legend: { position: 'bottom' } }
+        }
+    });
+});
+</script>
+{% endblock %}

@@ -3,6 +3,7 @@ from flask_login import login_required, current_user
 from models import db, PublicCall, Project, ProjectCall
 from services.finep_scraper import scrape_finep_calls
 from services.bndes_scraper import scrape_bndes_calls
+from services.fapesc_scraper import scrape_fapesc_calls
 from services.tenant_utils import tenant_required, get_current_tenant_id, ensure_tenant_access
 from datetime import datetime, date
 import logging
@@ -45,12 +46,14 @@ def list_calls():
     calls = query.order_by(PublicCall.updated_at.desc()).all()
     total_finep = PublicCall.query.filter_by(source='FINEP').count()
     total_bndes = PublicCall.query.filter_by(source='BNDES').count()
-    total_other = PublicCall.query.filter(~PublicCall.source.in_(['FINEP', 'BNDES'])).count()
+    total_fapesc = PublicCall.query.filter_by(source='FAPESC').count()
+    total_other = PublicCall.query.filter(~PublicCall.source.in_(['FINEP', 'BNDES', 'FAPESC'])).count()
 
     return render_template('public_calls/list.html',
                            calls=calls,
                            total_finep=total_finep,
                            total_bndes=total_bndes,
+                           total_fapesc=total_fapesc,
                            total_other=total_other,
                            source_filter=source_filter,
                            search=search)
@@ -60,8 +63,8 @@ def list_calls():
 @login_required
 @tenant_required
 def refresh_calls():
-    """Manually trigger a refresh of public calls from FINEP and BNDES."""
-    results = {'finep': 0, 'bndes': 0, 'errors': []}
+    """Manually trigger a refresh of public calls from FINEP, BNDES and FAPESC."""
+    results = {'finep': 0, 'bndes': 0, 'fapesc': 0, 'errors': []}
 
     # Scrape FINEP
     try:
@@ -83,15 +86,25 @@ def refresh_calls():
         logger.error(f"Error refreshing BNDES: {e}")
         results['errors'].append(f'BNDES: {str(e)}')
 
+    # Scrape FAPESC
+    try:
+        fapesc_calls = scrape_fapesc_calls()
+        for call_data in fapesc_calls:
+            _upsert_call(call_data)
+        results['fapesc'] = len(fapesc_calls)
+    except Exception as e:
+        logger.error(f"Error refreshing FAPESC: {e}")
+        results['errors'].append(f'FAPESC: {str(e)}')
+
     db.session.commit()
 
     if results['errors']:
-        flash(f'Atualização parcial. FINEP: {results["finep"]} chamadas. '
-              f'BNDES: {results["bndes"]} chamadas. '
+        flash(f'Sincronização parcial. FINEP: {results["finep"]}, '
+              f'BNDES: {results["bndes"]}, FAPESC: {results["fapesc"]} chamadas. '
               f'Erros: {"; ".join(results["errors"])}', 'warning')
     else:
-        flash(f'Atualização concluída! FINEP: {results["finep"]} chamadas. '
-              f'BNDES: {results["bndes"]} chamadas.', 'success')
+        flash(f'Sincronização concluída! FINEP: {results["finep"]}, '
+              f'BNDES: {results["bndes"]}, FAPESC: {results["fapesc"]} chamadas.', 'success')
 
     return redirect(url_for('public_calls.list_calls'))
 
@@ -101,7 +114,7 @@ def refresh_calls():
 @tenant_required
 def refresh_calls_ajax():
     """AJAX endpoint for refreshing calls."""
-    results = {'finep': 0, 'bndes': 0, 'errors': []}
+    results = {'finep': 0, 'bndes': 0, 'fapesc': 0, 'errors': []}
 
     try:
         finep_calls = scrape_finep_calls()
@@ -118,6 +131,14 @@ def refresh_calls_ajax():
         results['bndes'] = len(bndes_calls)
     except Exception as e:
         results['errors'].append(f'BNDES: {str(e)}')
+
+    try:
+        fapesc_calls = scrape_fapesc_calls()
+        for call_data in fapesc_calls:
+            _upsert_call(call_data)
+        results['fapesc'] = len(fapesc_calls)
+    except Exception as e:
+        results['errors'].append(f'FAPESC: {str(e)}')
 
     db.session.commit()
     return jsonify(results)
@@ -197,7 +218,14 @@ def view_call(call_id):
     else:
         projects = Project.query.order_by(Project.title).all()
 
-    return render_template('public_calls/view.html', call=call, projects=projects)
+    # Check if tenant can generate proposals (Professional/Enterprise only)
+    can_generate_proposals = False
+    if current_user.is_superadmin():
+        can_generate_proposals = True
+    elif current_user.tenant:
+        can_generate_proposals = current_user.tenant.can_generate_proposals()
+
+    return render_template('public_calls/view.html', call=call, projects=projects, can_generate_proposals=can_generate_proposals)
 
 
 @public_calls_bp.route('/public-calls/<int:call_id>/delete', methods=['POST'])
@@ -257,7 +285,7 @@ def link_to_project(call_id):
         return redirect(url_for('public_calls.view_call', call_id=call_id))
 
     link = ProjectCall(
-        tenant_id=tenant_id,
+        tenant_id=project.tenant_id,  # Use project's tenant_id
         project_id=int(project_id),
         public_call_id=call_id,
         linked_at=datetime.strptime(linked_at, '%Y-%m-%d').date() if linked_at else date.today(),
@@ -333,7 +361,7 @@ def suggest_links():
             common_keywords = call_keywords & project_keywords
             if len(common_keywords) >= 2:  # At least 2 matching keywords
                 link = ProjectCall(
-                    tenant_id=tenant_id,
+                    tenant_id=project.tenant_id,  # Use project's tenant_id
                     project_id=project.id,
                     public_call_id=call.id,
                     linked_at=date.today(),

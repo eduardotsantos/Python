@@ -1,0 +1,763 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Status Report - {{ project.title }}</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-size: 11pt;
+            line-height: 1.4;
+            color: #333;
+            padding: 20px;
+            max-width: 210mm;
+            margin: 0 auto;
+        }
+
+        @media print {
+            body {
+                padding: 0;
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+            }
+            .no-print {
+                display: none !important;
+            }
+            @page {
+                size: A4;
+                margin: 15mm;
+            }
+        }
+
+        /* Header */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            border-bottom: 3px solid #0d6efd;
+            padding-bottom: 15px;
+            margin-bottom: 20px;
+        }
+
+        .header-left h1 {
+            font-size: 18pt;
+            color: #0d6efd;
+            margin-bottom: 5px;
+        }
+
+        .header-left .project-code {
+            font-size: 12pt;
+            color: #666;
+        }
+
+        .header-left .company {
+            font-size: 10pt;
+            color: #888;
+            margin-top: 5px;
+        }
+
+        .header-right {
+            text-align: right;
+        }
+
+        .header-right .report-date {
+            font-size: 10pt;
+            color: #666;
+        }
+
+        .overall-status {
+            display: inline-block;
+            padding: 8px 20px;
+            border-radius: 20px;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+
+        .overall-status.green { background-color: #d4edda; color: #155724; }
+        .overall-status.yellow { background-color: #fff3cd; color: #856404; }
+        .overall-status.red { background-color: #f8d7da; color: #721c24; }
+        .overall-status.gray { background-color: #e9ecef; color: #6c757d; }
+
+        /* Metrics */
+        .metrics {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .metric-box {
+            flex: 1;
+            text-align: center;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            border-top: 4px solid #0d6efd;
+        }
+
+        .metric-box.schedule { border-top-color: #0d6efd; }
+        .metric-box.cost { border-top-color: #28a745; }
+        .metric-box.hours { border-top-color: #17a2b8; }
+        .metric-box.risks { border-top-color: #dc3545; }
+
+        .metric-value {
+            font-size: 24pt;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .metric-label {
+            font-size: 9pt;
+            color: #666;
+            text-transform: uppercase;
+        }
+
+        .metric-detail {
+            font-size: 8pt;
+            color: #888;
+            margin-top: 5px;
+        }
+
+        /* Two columns */
+        .two-columns {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .column {
+            flex: 1;
+        }
+
+        /* Section */
+        .section {
+            margin-bottom: 15px;
+        }
+
+        .section-title {
+            font-size: 11pt;
+            font-weight: bold;
+            color: #0d6efd;
+            border-bottom: 1px solid #dee2e6;
+            padding-bottom: 5px;
+            margin-bottom: 10px;
+        }
+
+        /* Progress bar */
+        .progress-bar-container {
+            background: #e9ecef;
+            border-radius: 4px;
+            height: 12px;
+            overflow: hidden;
+            margin: 8px 0;
+        }
+
+        .progress-bar-fill {
+            height: 100%;
+            border-radius: 4px;
+        }
+
+        .progress-bar-fill.green { background: #28a745; }
+        .progress-bar-fill.yellow { background: #ffc107; }
+        .progress-bar-fill.red { background: #dc3545; }
+
+        /* Stats row */
+        .stats-row {
+            display: flex;
+            justify-content: space-between;
+            text-align: center;
+            margin: 10px 0;
+        }
+
+        .stat-item {
+            flex: 1;
+        }
+
+        .stat-value {
+            font-size: 14pt;
+            font-weight: bold;
+        }
+
+        .stat-label {
+            font-size: 8pt;
+            color: #666;
+        }
+
+        /* Risk list */
+        .risk-item {
+            padding: 8px 10px;
+            margin-bottom: 8px;
+            border-left: 4px solid;
+            background: #f8f9fa;
+        }
+
+        .risk-item.high { border-left-color: #dc3545; }
+        .risk-item.medium { border-left-color: #ffc107; }
+        .risk-item.low { border-left-color: #17a2b8; }
+
+        .risk-title {
+            font-weight: bold;
+            font-size: 10pt;
+        }
+
+        .risk-description {
+            font-size: 9pt;
+            color: #666;
+        }
+
+        .risk-action {
+            font-size: 8pt;
+            color: #0d6efd;
+            margin-top: 3px;
+        }
+
+        .risk-badge {
+            float: right;
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-size: 8pt;
+            font-weight: bold;
+        }
+
+        .risk-badge.high { background: #f8d7da; color: #721c24; }
+        .risk-badge.medium { background: #fff3cd; color: #856404; }
+
+        /* Milestone list */
+        .milestone-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 5px 0;
+            border-bottom: 1px solid #eee;
+        }
+
+        .milestone-name {
+            font-weight: 500;
+        }
+
+        .milestone-date {
+            color: #666;
+            font-size: 9pt;
+        }
+
+        /* Team */
+        .team-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .team-member {
+            flex: 0 0 48%;
+            font-size: 9pt;
+        }
+
+        .team-member strong {
+            display: block;
+        }
+
+        .team-member small {
+            color: #666;
+        }
+
+        /* Table */
+        .activities-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 9pt;
+        }
+
+        .activities-table th {
+            background: #f8f9fa;
+            padding: 6px 8px;
+            text-align: left;
+            border-bottom: 2px solid #dee2e6;
+        }
+
+        .activities-table td {
+            padding: 5px 8px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .activities-table td:last-child {
+            text-align: right;
+        }
+
+        /* Footer */
+        .footer {
+            margin-top: 20px;
+            padding-top: 10px;
+            border-top: 1px solid #dee2e6;
+            text-align: center;
+            font-size: 8pt;
+            color: #888;
+        }
+
+        /* Print button */
+        .print-button {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 12px 24px;
+            background: #0d6efd;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            cursor: pointer;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+        }
+
+        .print-button:hover {
+            background: #0b5ed7;
+        }
+
+        .no-risks {
+            text-align: center;
+            padding: 20px;
+            color: #28a745;
+        }
+
+        /* EVM Section */
+        .evm-grid {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .evm-box {
+            flex: 1;
+            text-align: center;
+            padding: 10px;
+            background: #f8f9fa;
+            border-radius: 6px;
+            border: 1px solid #dee2e6;
+        }
+
+        .evm-box.highlight {
+            border: 2px solid #0d6efd;
+            background: #e7f1ff;
+        }
+
+        .evm-value {
+            font-size: 16pt;
+            font-weight: bold;
+        }
+
+        .evm-value.good { color: #28a745; }
+        .evm-value.warning { color: #ffc107; }
+        .evm-value.bad { color: #dc3545; }
+
+        .evm-label {
+            font-size: 8pt;
+            color: #666;
+            font-weight: bold;
+        }
+
+        .evm-desc {
+            font-size: 7pt;
+            color: #888;
+        }
+
+        .evm-secondary {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .evm-mini {
+            flex: 1;
+            min-width: 60px;
+            text-align: center;
+            padding: 6px;
+            background: #f8f9fa;
+            border-radius: 4px;
+        }
+
+        .evm-mini .value {
+            font-size: 10pt;
+            font-weight: bold;
+        }
+
+        .evm-mini .label {
+            font-size: 7pt;
+            color: #888;
+        }
+    </style>
+</head>
+<body>
+    <button class="print-button no-print" onclick="window.print()">
+        {{ _('Salvar como PDF') }}
+    </button>
+
+    <!-- Header -->
+    <div class="header">
+        <div class="header-left">
+            <h1>{{ _('Status Report') }}</h1>
+            <div class="project-code">{{ project.code }} - {{ project.title }}</div>
+            {% if tenant %}
+            <div class="company">{{ tenant.name }}</div>
+            {% endif %}
+        </div>
+        <div class="header-right">
+            <div class="report-date">{{ report_date.strftime('%d/%m/%Y %H:%M') }}</div>
+            <div class="overall-status {{ overall_health }}">
+                {{ overall_label }}
+            </div>
+        </div>
+    </div>
+
+    <!-- Key Metrics -->
+    <div class="metrics">
+        <div class="metric-box schedule">
+            <div class="metric-value">{{ schedule_status.progress }}%</div>
+            <div class="metric-label">{{ _('Progresso') }}</div>
+            <div class="metric-detail">{{ schedule_status.completed }}/{{ schedule_status.total }} {{ _('marcos') }}</div>
+        </div>
+        <div class="metric-box cost">
+            <div class="metric-value">{{ cost_status.percent_used }}%</div>
+            <div class="metric-label">{{ _('Orçamento') }}</div>
+            <div class="metric-detail">R$ {{ "{:,.0f}".format(cost_status.spent) }} {{ _('de') }} R$ {{ "{:,.0f}".format(cost_status.budget) }}</div>
+        </div>
+        <div class="metric-box hours">
+            <div class="metric-value">{{ total_hours|round(0)|int }}</div>
+            <div class="metric-label">{{ _('Horas') }}</div>
+            <div class="metric-detail">{{ _('Total trabalhado') }}</div>
+        </div>
+        <div class="metric-box risks">
+            <div class="metric-value">{{ risks|length }}</div>
+            <div class="metric-label">{{ _('Riscos') }}</div>
+            <div class="metric-detail">{{ risks|selectattr('severity', 'equalto', 'high')|list|length }} {{ _('críticos') }}</div>
+        </div>
+    </div>
+
+    <!-- EVM Metrics -->
+    {% if evm_metrics and evm_metrics.has_data %}
+    <div class="section">
+        <div class="section-title">{{ _('Indicadores de Valor Agregado (EVM)') }}</div>
+        <div class="evm-grid">
+            <div class="evm-box highlight">
+                <div class="evm-value {{ 'good' if evm_metrics.cpi >= 1 else 'warning' if evm_metrics.cpi >= 0.9 else 'bad' }}">
+                    {{ evm_metrics.cpi }}
+                </div>
+                <div class="evm-label">CPI</div>
+                <div class="evm-desc">{{ _('Desempenho de Custo') }}</div>
+            </div>
+            <div class="evm-box highlight">
+                <div class="evm-value {{ 'good' if evm_metrics.spi >= 1 else 'warning' if evm_metrics.spi >= 0.9 else 'bad' }}">
+                    {{ evm_metrics.spi }}
+                </div>
+                <div class="evm-label">SPI</div>
+                <div class="evm-desc">{{ _('Desempenho de Prazo') }}</div>
+            </div>
+            <div class="evm-box">
+                <div class="evm-value" style="color: #0d6efd;">R$ {{ "{:,.0f}".format(evm_metrics.etc) }}</div>
+                <div class="evm-label">ETC</div>
+                <div class="evm-desc">{{ _('Estimativa p/ Terminar') }}</div>
+            </div>
+            <div class="evm-box">
+                <div class="evm-value {{ 'good' if evm_metrics.eac <= evm_metrics.bac else 'bad' }}">
+                    R$ {{ "{:,.0f}".format(evm_metrics.eac) }}
+                </div>
+                <div class="evm-label">EAC</div>
+                <div class="evm-desc">{{ _('Estimativa no Término') }}</div>
+            </div>
+        </div>
+        <div class="evm-secondary">
+            <div class="evm-mini">
+                <div class="value">R$ {{ "{:,.0f}".format(evm_metrics.bac) }}</div>
+                <div class="label">BAC (Orçamento)</div>
+            </div>
+            <div class="evm-mini">
+                <div class="value">R$ {{ "{:,.0f}".format(evm_metrics.ev) }}</div>
+                <div class="label">EV (Valor Agregado)</div>
+            </div>
+            <div class="evm-mini">
+                <div class="value">R$ {{ "{:,.0f}".format(evm_metrics.ac) }}</div>
+                <div class="label">AC (Custo Real)</div>
+            </div>
+            <div class="evm-mini">
+                <div class="value {{ 'good' if evm_metrics.cv >= 0 else 'bad' }}">R$ {{ "{:,.0f}".format(evm_metrics.cv) }}</div>
+                <div class="label">CV (Var. Custo)</div>
+            </div>
+            <div class="evm-mini">
+                <div class="value {{ 'good' if evm_metrics.sv >= 0 else 'bad' }}">R$ {{ "{:,.0f}".format(evm_metrics.sv) }}</div>
+                <div class="label">SV (Var. Prazo)</div>
+            </div>
+            <div class="evm-mini">
+                <div class="value {{ 'good' if evm_metrics.vac >= 0 else 'bad' }}">R$ {{ "{:,.0f}".format(evm_metrics.vac) }}</div>
+                <div class="label">VAC (Var. Termino)</div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Two Columns -->
+    <div class="two-columns">
+        <!-- Left Column -->
+        <div class="column">
+            <!-- Schedule -->
+            <div class="section">
+                <div class="section-title">{{ _('Cronograma') }}</div>
+                <div class="progress-bar-container">
+                    <div class="progress-bar-fill {{ 'green' if schedule_status.progress >= 70 else 'yellow' if schedule_status.progress >= 40 else 'red' }}"
+                         style="width: {{ schedule_status.progress }}%"></div>
+                </div>
+                <div class="stats-row">
+                    <div class="stat-item">
+                        <div class="stat-value" style="color: #28a745;">{{ schedule_status.completed }}</div>
+                        <div class="stat-label">{{ _('Concluídos') }}</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value" style="color: #0d6efd;">{{ schedule_status.on_track }}</div>
+                        <div class="stat-label">{{ _('No prazo') }}</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value" style="color: #dc3545;">{{ schedule_status.delayed }}</div>
+                        <div class="stat-label">{{ _('Atrasados') }}</div>
+                    </div>
+                </div>
+                <div class="stats-row" style="margin-top: 10px;">
+                    <div class="stat-item" style="text-align: left;">
+                        <div class="stat-label">{{ _('Início') }}</div>
+                        <div style="font-weight: bold;">{{ project.start_date.strftime('%d/%m/%Y') if project.start_date else '-' }}</div>
+                    </div>
+                    <div class="stat-item" style="text-align: right;">
+                        <div class="stat-label">{{ _('Término') }}</div>
+                        <div style="font-weight: bold;">{{ project.end_date.strftime('%d/%m/%Y') if project.end_date else '-' }}</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Budget -->
+            <div class="section">
+                <div class="section-title">{{ _('Orçamento') }}</div>
+                <div class="progress-bar-container">
+                    <div class="progress-bar-fill {{ 'red' if cost_status.percent_used > 100 else 'yellow' if cost_status.percent_used > 85 else 'green' }}"
+                         style="width: {{ [cost_status.percent_used, 100]|min }}%"></div>
+                </div>
+                <div class="stats-row">
+                    <div class="stat-item">
+                        <div class="stat-value">R$ {{ "{:,.0f}".format(cost_status.budget) }}</div>
+                        <div class="stat-label">{{ _('Orçamento') }}</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value" style="color: #0d6efd;">R$ {{ "{:,.0f}".format(cost_status.spent) }}</div>
+                        <div class="stat-label">{{ _('Gasto') }}</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value" style="color: {{ '#dc3545' if cost_status.remaining < 0 else '#28a745' }};">
+                            R$ {{ "{:,.0f}".format(cost_status.remaining) }}
+                        </div>
+                        <div class="stat-label">{{ _('Saldo') }}</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Resource Cost: Planned vs Realized -->
+            {% if resource_cost_status and resource_cost_status.has_data %}
+            <div class="section">
+                <div class="section-title">{{ _('Custo de Recursos (Planejado x Realizado)') }}</div>
+                <div class="progress-bar-container">
+                    <div class="progress-bar-fill {{ 'red' if resource_cost_status.cost_percent > 100 else 'yellow' if resource_cost_status.cost_percent > 85 else 'green' }}"
+                         style="width: {{ [resource_cost_status.cost_percent, 100]|min }}%"></div>
+                </div>
+                <div class="stats-row">
+                    <div class="stat-item">
+                        <div class="stat-value" style="color: #6c757d;">R$ {{ "{:,.0f}".format(resource_cost_status.planned_cost) }}</div>
+                        <div class="stat-label">{{ _('Planejado') }}</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value" style="color: #0d6efd;">R$ {{ "{:,.0f}".format(resource_cost_status.realized_cost) }}</div>
+                        <div class="stat-label">{{ _('Realizado') }}</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value" style="color: {{ '#dc3545' if resource_cost_status.cost_variance < 0 else '#28a745' }};">
+                            R$ {{ "{:,.0f}".format(resource_cost_status.cost_variance) }}
+                        </div>
+                        <div class="stat-label">{{ _('Variação') }}</div>
+                    </div>
+                </div>
+                <div class="stats-row" style="margin-top: 8px;">
+                    <div class="stat-item">
+                        <div class="stat-value" style="font-size: 10pt; color: #6c757d;">{{ resource_cost_status.planned_hours }}h</div>
+                        <div class="stat-label">{{ _('Horas Plan.') }}</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value" style="font-size: 10pt; color: #0d6efd;">{{ resource_cost_status.realized_hours }}h</div>
+                        <div class="stat-label">{{ _('Horas Real.') }}</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value" style="font-size: 10pt; color: {{ '#dc3545' if resource_cost_status.hours_variance < 0 else '#28a745' }};">
+                            {{ resource_cost_status.hours_variance }}h
+                        </div>
+                        <div class="stat-label">{{ _('Variação') }}</div>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+
+            <!-- Team -->
+            <div class="section">
+                <div class="section-title">{{ _('Equipe') }}</div>
+                {% if team %}
+                <div class="team-grid">
+                    {% for r in team[:6] %}
+                    <div class="team-member">
+                        <strong>{{ r.name }}</strong>
+                        <small>{{ r.role or 'Equipe' }}</small>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% if team|length > 6 %}
+                <div style="font-size: 8pt; color: #888; margin-top: 5px;">+ {{ team|length - 6 }} {{ _('outros membros') }}</div>
+                {% endif %}
+                {% else %}
+                <div style="color: #888; font-size: 9pt;">{{ _('Nenhum recurso alocado') }}</div>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Right Column -->
+        <div class="column">
+            <!-- Risks -->
+            <div class="section">
+                <div class="section-title">{{ _('Riscos e Alertas') }}</div>
+                {% if risks %}
+                    {% for risk in risks %}
+                    <div class="risk-item {{ risk.severity }}">
+                        <span class="risk-badge {{ risk.severity }}">
+                            {{ _('ALTO') if risk.severity == 'high' else _('MÉDIO') if risk.severity == 'medium' else _('BAIXO') }}
+                        </span>
+                        <div class="risk-title">{{ risk.title }}</div>
+                        <div class="risk-description">{{ risk.description }}</div>
+                        <div class="risk-action">{{ _('Ação:') }} {{ risk.action }}</div>
+                    </div>
+                    {% endfor %}
+                {% else %}
+                <div class="no-risks">
+                    {{ _('Nenhum risco identificado') }}
+                </div>
+                {% endif %}
+            </div>
+
+            <!-- Compliance Status -->
+            {% if compliance_status %}
+            <div class="section">
+                <div class="section-title">{{ _('Conformidade') }}
+                    <span style="float: right; font-size: 9pt; padding: 2px 8px; border-radius: 4px; background: {{ '#f8d7da' if compliance_status.status == 'red' else '#fff3cd' if compliance_status.status == 'yellow' else '#d4edda' }}; color: {{ '#721c24' if compliance_status.status == 'red' else '#856404' if compliance_status.status == 'yellow' else '#155724' }};">
+                        {{ compliance_status.label }}
+                    </span>
+                </div>
+                <table style="width: 100%; font-size: 9pt; margin-bottom: 8px;">
+                    <tr>
+                        <td style="text-align: center; padding: 5px;">
+                            <div style="font-size: 14pt; font-weight: bold; color: {{ '#dc3545' if compliance_status.open_risks > 0 else '#333' }};">{{ compliance_status.open_risks }}</div>
+                            <div style="font-size: 8pt; color: #888;">{{ _('Riscos') }}</div>
+                        </td>
+                        <td style="text-align: center; padding: 5px;">
+                            <div style="font-size: 14pt; font-weight: bold; color: {{ '#ffc107' if compliance_status.open_pending > 0 else '#333' }};">{{ compliance_status.open_pending }}</div>
+                            <div style="font-size: 8pt; color: #888;">{{ _('Pendências') }}</div>
+                        </td>
+                        <td style="text-align: center; padding: 5px;">
+                            <div style="font-size: 14pt; font-weight: bold; color: {{ '#dc3545' if compliance_status.open_bugs > 0 else '#333' }};">{{ compliance_status.open_bugs }}</div>
+                            <div style="font-size: 8pt; color: #888;">{{ _('Bugs') }}</div>
+                        </td>
+                        <td style="text-align: center; padding: 5px;">
+                            <div style="font-size: 14pt; font-weight: bold; color: {{ '#ffc107' if compliance_status.open_ncs > 0 else '#333' }};">{{ compliance_status.open_ncs }}</div>
+                            <div style="font-size: 8pt; color: #888;">{{ _('NCs') }}</div>
+                        </td>
+                    </tr>
+                </table>
+                {% if compliance_status.has_issues %}
+                <div style="font-size: 8pt; border-top: 1px solid #ddd; padding-top: 5px;">
+                    {% if compliance_status.critical_risks > 0 %}
+                    <div style="color: #dc3545;">* {{ compliance_status.critical_risks }} risco(s) critico(s)</div>
+                    {% endif %}
+                    {% if compliance_status.overdue_pending > 0 %}
+                    <div style="color: #dc3545;">* {{ compliance_status.overdue_pending }} pendencia(s) atrasada(s)</div>
+                    {% endif %}
+                    {% if compliance_status.critical_bugs > 0 %}
+                    <div style="color: #dc3545;">* {{ compliance_status.critical_bugs }} bug(s) critico(s)</div>
+                    {% endif %}
+                    {% if compliance_status.pending_actions > 0 %}
+                    <div style="color: #856404;">* {{ compliance_status.pending_actions }} acao(oes) pendente(s)</div>
+                    {% endif %}
+                </div>
+
+                {% if compliance_status.overdue_items %}
+                <div style="font-size: 8pt; margin-top: 5px;">
+                    <strong style="color: #dc3545;">{{ _('Itens Atrasados') }}:</strong>
+                    {% for item in compliance_status.overdue_items[:5] %}
+                    <div style="margin-left: 10px;">- {{ item.title|truncate(40) }} ({{ item.due_date.strftime('%d/%m') if item.due_date else '' }})</div>
+                    {% endfor %}
+                </div>
+                {% endif %}
+                {% endif %}
+            </div>
+            {% endif %}
+
+            <!-- Upcoming Milestones -->
+            <div class="section">
+                <div class="section-title">{{ _('Próximos Marcos') }}</div>
+                {% if upcoming_milestones %}
+                    {% for m in upcoming_milestones %}
+                    <div class="milestone-item">
+                        <div>
+                            <span class="milestone-name">{{ m.title }}</span>
+                            <div style="font-size: 8pt; color: #888;">{{ m.progress }}% {{ _('concluído') }}</div>
+                        </div>
+                        <span class="milestone-date">{{ m.end_date.strftime('%d/%m/%Y') }}</span>
+                    </div>
+                    {% endfor %}
+                {% else %}
+                <div style="color: #888; font-size: 9pt;">{{ _('Nenhum marco pendente') }}</div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <!-- Recent Activities -->
+    {% if recent_activities %}
+    <div class="section">
+        <div class="section-title">{{ _('Atividades Recentes') }}</div>
+        <table class="activities-table">
+            <thead>
+                <tr>
+                    <th>{{ _('Data') }}</th>
+                    <th>{{ _('Responsável') }}</th>
+                    <th>{{ _('Atividade') }}</th>
+                    <th>{{ _('Horas') }}</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for a in recent_activities %}
+                <tr>
+                    <td>{{ a.date.strftime('%d/%m') }}</td>
+                    <td>{{ a.user }}</td>
+                    <td>{{ a.activity[:60] }}{{ '...' if a.activity|length > 60 }}</td>
+                    <td>{{ a.hours }}h</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% endif %}
+
+    <!-- Footer -->
+    <div class="footer">
+        {{ _('Gerado por Orion Gestão de P&D em') }} {{ report_date.strftime('%d/%m/%Y as %H:%M') }}
+        {% if tenant %} | {{ tenant.name }}{% endif %}
+    </div>
+
+    <script>
+        // Auto-print when page loads (optional)
+        // window.onload = function() { window.print(); }
+    </script>
+</body>
+</html>

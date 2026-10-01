@@ -5,13 +5,15 @@ import re
 
 logger = logging.getLogger(__name__)
 
-# Multiple URLs to try for FINEP
+# Multiple URLs to try for FINEP (updated 2026)
 FINEP_URLS = [
-    "http://www.finep.gov.br/chamadas-publicas?situacao=aberta",
-    "http://www.finep.gov.br/chamadas-publicas",
-    "http://www.finep.gov.br/apoio-e-financiamento-externa/programas-e-linhas/chamadas-publicas",
+    "https://www.finep.gov.br/chamadas-publicas",
+    "https://www.finep.gov.br/apoio-e-financiamento/chamadas-publicas",
+    "https://www.finep.gov.br/noticias",
+    "https://www.finep.gov.br/acesso-a-informacao/chamadas-publicas",
+    "https://www.finep.gov.br/atuacao/chamadas-publicas",
 ]
-FINEP_BASE_URL = "http://www.finep.gov.br"
+FINEP_BASE_URL = "https://www.finep.gov.br"
 
 HEADERS = {
     'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',

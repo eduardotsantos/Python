@@ -1,6 +1,7 @@
 from flask import Blueprint, render_template, redirect, url_for, flash, request
 from flask_login import login_required
-from models import db, Resource, Project
+from sqlalchemy import func
+from models import db, Resource, Project, Timesheet
 from services.tenant_utils import tenant_required, ensure_tenant_access, get_current_tenant_id
 from datetime import datetime
 
@@ -23,14 +24,36 @@ def list_resources(project_id):
     resources = query.order_by(Resource.type, Resource.name).all()
     people = [r for r in resources if r.type == 'Pessoa']
     machines = [r for r in resources if r.type == 'Máquina']
-    total_cost = sum(r.hours_allocated * r.hourly_cost for r in resources)
+
+    # Planned cost
+    total_planned_cost = sum((r.hours_allocated or 0) * (r.hourly_cost or 0) for r in resources)
+    total_planned_hours = sum(r.hours_allocated or 0 for r in resources)
+
+    # Realized hours and cost per resource (from timesheet)
+    resource_realized = {}
+    for r in resources:
+        realized_hours = db.session.query(func.sum(Timesheet.hours))\
+            .filter_by(project_id=project_id, resource_id=r.id).scalar() or 0
+        realized_cost = realized_hours * (r.hourly_cost or 0)
+        resource_realized[r.id] = {
+            'hours': round(realized_hours, 1),
+            'cost': round(realized_cost, 2)
+        }
+
+    # Total realized
+    total_realized_hours = sum(v['hours'] for v in resource_realized.values())
+    total_realized_cost = sum(v['cost'] for v in resource_realized.values())
 
     return render_template('resources/list.html',
                            project=project,
                            resources=resources,
                            people=people,
                            machines=machines,
-                           total_cost=total_cost,
+                           total_planned_cost=total_planned_cost,
+                           total_planned_hours=total_planned_hours,
+                           total_realized_cost=total_realized_cost,
+                           total_realized_hours=total_realized_hours,
+                           resource_realized=resource_realized,
                            type_filter=type_filter)
 
 

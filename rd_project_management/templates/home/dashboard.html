@@ -1,0 +1,425 @@
+{% extends "base.html" %}
+{% block title %}{{ _('Home') }} - Orion P&D{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <!-- Header -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card bg-gradient-orion text-white">
+                <div class="card-body py-4">
+                    <div class="row align-items-center">
+                        <div class="col-md-8">
+                            <h2 class="mb-1">
+                                <i class="bi bi-building me-2"></i>
+                                {% if tenant %}{{ tenant.name }}{% else %}Orion P&D{% endif %}
+                            </h2>
+                            <p class="mb-0 opacity-75">
+                                <i class="bi bi-calendar3 me-1"></i>
+                                <span id="currentDate"></span> -
+                                {{ _('Bem-vindo') }}, {{ current_user.full_name }}
+                            </p>
+                        </div>
+                        <div class="col-md-4 text-md-end mt-3 mt-md-0">
+                            {% if ai_configured %}
+                            <a href="{{ url_for('ai.chat_page') }}" class="btn btn-light me-2">
+                                <i class="bi bi-chat-dots"></i> {{ _('Chat IA') }}
+                            </a>
+                            <button class="btn btn-light" onclick="generateInsights()">
+                                <i class="bi bi-lightbulb"></i> {{ _('Gerar Insights IA') }}
+                            </button>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quick Stats -->
+    <div class="row g-3 mb-4">
+        <div class="col-6 col-md-3">
+            <div class="card card-stats border-primary shadow-sm h-100">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <p class="text-muted mb-1 small">{{ _('Projetos Ativos') }}</p>
+                            <h3 class="fw-bold mb-0">{{ active_projects }}</h3>
+                            <small class="text-muted">{{ _('de') }} {{ total_projects }} {{ _('total') }}</small>
+                        </div>
+                        <i class="bi bi-folder-check text-primary opacity-50" style="font-size:2.5rem"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-6 col-md-3">
+            <div class="card card-stats border-success shadow-sm h-100">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <p class="text-muted mb-1 small">{{ _('Orçamento Total') }}</p>
+                            <h3 class="fw-bold mb-0">{{ "R$ {:,.0f}".format(total_budget).replace(",", ".") }}</h3>
+                        </div>
+                        <i class="bi bi-cash-stack text-success opacity-50" style="font-size:2.5rem"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-6 col-md-3">
+            <div class="card card-stats border-danger shadow-sm h-100">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <p class="text-muted mb-1 small">{{ _('Despesas') }}</p>
+                            <h3 class="fw-bold mb-0">{{ "R$ {:,.0f}".format(total_expenses).replace(",", ".") }}</h3>
+                        </div>
+                        <i class="bi bi-receipt text-danger opacity-50" style="font-size:2.5rem"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-6 col-md-3">
+            <div class="card card-stats border-warning shadow-sm h-100">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <p class="text-muted mb-1 small">{{ _('Chamadas Abertas') }}</p>
+                            <h3 class="fw-bold mb-0">{{ open_calls_count }}</h3>
+                            <a href="{{ url_for('public_calls.list_calls') }}" class="small text-primary">{{ _('Ver todas') }}</a>
+                        </div>
+                        <i class="bi bi-megaphone text-warning opacity-50" style="font-size:2.5rem"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- AI Insights Section (Hidden by default) -->
+    <div class="row mb-4 d-none" id="insightsSection">
+        <div class="col-12">
+            <div class="card border-info shadow-sm">
+                <div class="card-header bg-info text-white d-flex justify-content-between align-items-center">
+                    <span><i class="bi bi-lightbulb"></i> {{ _('Insights de IA para seu setor de P&D') }}</span>
+                    <button type="button" class="btn-close btn-close-white" onclick="hideInsights()"></button>
+                </div>
+                <div class="card-body" id="insightsContent">
+                    <div class="text-center py-4">
+                        <div class="spinner-border text-info"></div>
+                        <p class="mt-2">{{ _('Analisando dados e gerando insights...') }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row g-4">
+        <!-- Charts Section -->
+        <div class="col-lg-8">
+            <!-- Cost Distribution Chart -->
+            <div class="card shadow-sm mb-4">
+                <div class="card-header bg-white d-flex justify-content-between align-items-center">
+                    <h6 class="mb-0 fw-bold"><i class="bi bi-pie-chart text-primary"></i> {{ _('Distribuição de Custos por Projeto') }}</h6>
+                    <a href="{{ url_for('projects.list_projects') }}" class="btn btn-sm btn-outline-primary">{{ _('Ver Projetos') }}</a>
+                </div>
+                <div class="card-body">
+                    {% if expenses_by_project %}
+                    <canvas id="costPieChart" height="180"></canvas>
+                    {% else %}
+                    <div class="text-center py-4 text-muted">
+                        <i class="bi bi-pie-chart" style="font-size: 2rem;"></i>
+                        <p class="mt-2 mb-0">{{ _('Nenhuma despesa registrada') }}</p>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Gantt Chart -->
+            <div class="card shadow-sm">
+                <div class="card-header bg-white d-flex justify-content-between align-items-center">
+                    <h6 class="mb-0 fw-bold"><i class="bi bi-calendar-range text-info"></i> {{ _('Timeline de Marcos') }}</h6>
+                    <a href="{{ url_for('projects.list_projects') }}" class="btn btn-sm btn-outline-primary">{{ _('Ver Projetos') }}</a>
+                </div>
+                <div class="card-body p-0">
+                    {% if gantt_data %}
+                    <div class="table-responsive" style="max-height: 280px; overflow-y: auto;">
+                        <table class="table table-sm table-hover mb-0">
+                            <thead class="table-light sticky-top">
+                                <tr>
+                                    <th>{{ _('Marco') }}</th>
+                                    <th>{{ _('Projeto') }}</th>
+                                    <th class="text-center">{{ _('Prazo') }}</th>
+                                    <th style="width: 150px;">{{ _('Progresso') }}</th>
+                                </tr>
+                            </thead>
+                            <tbody id="ganttBody"></tbody>
+                        </table>
+                    </div>
+                    {% else %}
+                    <div class="text-center py-4 text-muted">
+                        <i class="bi bi-calendar-x" style="font-size: 2rem;"></i>
+                        <p class="mt-2 mb-0">{{ _('Nenhum marco cadastrado') }}</p>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Sidebar -->
+        <div class="col-lg-4">
+            <!-- Recent News from Entities -->
+            <div class="card shadow-sm mb-4">
+                <div class="card-header bg-white">
+                    <h6 class="mb-0 fw-bold"><i class="bi bi-newspaper text-success"></i> {{ _('Notícias de Editais') }}</h6>
+                </div>
+                <div class="card-body p-0">
+                    {% if recent_calls %}
+                    <ul class="list-group list-group-flush">
+                        {% for call in recent_calls %}
+                        <li class="list-group-item">
+                            <span class="badge bg-{{ 'primary' if call.source == 'FINEP' else 'success' if call.source == 'FAPESC' else 'info' }} mb-1">{{ call.source }}</span>
+                            <br>
+                            <a href="{{ call.url }}" target="_blank" class="text-decoration-none small">
+                                {{ call.title|truncate(55) }}
+                            </a>
+                            {% if call.deadline %}
+                            <br><small class="text-danger"><i class="bi bi-clock"></i> {{ call.deadline }}</small>
+                            {% endif %}
+                        </li>
+                        {% endfor %}
+                    </ul>
+                    {% else %}
+                    <div class="text-center py-3 text-muted">
+                        <small>{{ _('Nenhuma chamada recente') }}</small>
+                    </div>
+                    {% endif %}
+                </div>
+                <div class="card-footer bg-white text-center">
+                    <a href="{{ url_for('public_calls.list_calls') }}" class="btn btn-sm btn-outline-success">
+                        <i class="bi bi-megaphone"></i> {{ _('Ver Todas') }}
+                    </a>
+                </div>
+            </div>
+
+            <!-- Upcoming Milestones -->
+            <div class="card shadow-sm mb-4">
+                <div class="card-header bg-white">
+                    <h6 class="mb-0 fw-bold"><i class="bi bi-flag text-warning"></i> {{ _('Próximos Marcos') }}</h6>
+                </div>
+                <div class="card-body p-0">
+                    {% if upcoming_milestones %}
+                    <ul class="list-group list-group-flush">
+                        {% for m in upcoming_milestones %}
+                        <li class="list-group-item py-2">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <strong class="small">{{ m.title|truncate(30) }}</strong>
+                                    <br><small class="text-muted">{{ m.project.code }}</small>
+                                </div>
+                                <div class="text-end">
+                                    <span class="badge bg-warning text-dark">{{ m.end_date.strftime('%d/%m') }}</span>
+                                    <br><small>{{ m.progress }}%</small>
+                                </div>
+                            </div>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                    {% else %}
+                    <div class="text-center py-3 text-success">
+                        <i class="bi bi-check-circle"></i>
+                        <small class="d-block text-muted">{{ _('Nenhum marco próximo') }}</small>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Projects Ending Soon -->
+            {% if projects_ending_soon %}
+            <div class="card shadow-sm mb-4 border-warning">
+                <div class="card-header bg-warning text-dark">
+                    <h6 class="mb-0 fw-bold"><i class="bi bi-exclamation-triangle"></i> {{ _('Projetos Encerrando') }}</h6>
+                </div>
+                <div class="card-body p-0">
+                    <ul class="list-group list-group-flush">
+                        {% for p in projects_ending_soon[:3] %}
+                        <li class="list-group-item">
+                            <a href="{{ url_for('projects.view_project', project_id=p.id) }}" class="text-decoration-none">
+                                <strong>{{ p.code }}</strong> - {{ p.title|truncate(25) }}
+                            </a>
+                            <br><small class="text-danger">{{ p.end_date.strftime('%d/%m/%Y') }}</small>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+            {% endif %}
+
+            <!-- Quick Actions -->
+            <div class="card shadow-sm">
+                <div class="card-header bg-white">
+                    <h6 class="mb-0 fw-bold"><i class="bi bi-lightning"></i> {{ _('Ações Rápidas') }}</h6>
+                </div>
+                <div class="card-body">
+                    <div class="d-grid gap-2">
+                        <a href="{{ url_for('projects.create_project') }}" class="btn btn-outline-primary btn-sm">
+                            <i class="bi bi-plus-lg"></i> {{ _('Novo Projeto') }}
+                        </a>
+                        <a href="{{ url_for('public_calls.list_calls') }}" class="btn btn-outline-success btn-sm">
+                            <i class="bi bi-megaphone"></i> {{ _('Ver Chamadas') }}
+                        </a>
+                        <a href="{{ url_for('ai.ai_dashboard') }}" class="btn btn-outline-info btn-sm">
+                            <i class="bi bi-robot"></i> {{ _('Assistente IA') }}
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.bg-gradient-orion {
+    background: linear-gradient(135deg, #0a1628 0%, #1a2a4a 50%, #0d1f3c 100%);
+}
+.card-stats {
+    transition: transform 0.2s;
+}
+.card-stats:hover {
+    transform: translateY(-2px);
+}
+</style>
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+// Set current date
+document.getElementById('currentDate').textContent = new Date().toLocaleDateString('pt-BR');
+
+// Cost Pie Chart
+{% if expenses_by_project %}
+const costData = {{ expenses_by_project|tojson }};
+if (costData.length > 0) {
+    new Chart(document.getElementById('costPieChart'), {
+        type: 'doughnut',
+        data: {
+            labels: costData.slice(0, 8).map(d => d.code),
+            datasets: [{
+                data: costData.slice(0, 8).map(d => d.spent),
+                backgroundColor: ['#0d6efd', '#28a745', '#ffc107', '#dc3545', '#17a2b8', '#6610f2', '#fd7e14', '#20c997']
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: { legend: { position: 'right', labels: { boxWidth: 12, font: { size: 10 } } } }
+        }
+    });
+}
+{% endif %}
+
+// Gantt Table
+{% if gantt_data %}
+const ganttData = {{ gantt_data|tojson }};
+const ganttBody = document.getElementById('ganttBody');
+const today = new Date();
+ganttData.forEach(m => {
+    const endDate = new Date(m.end);
+    const isOverdue = endDate < today && m.status !== 'Concluido';
+    const progressClass = m.progress >= 100 ? 'bg-success' : m.progress > 0 ? 'bg-primary' : 'bg-secondary';
+    ganttBody.innerHTML += `
+        <tr>
+            <td class="small">${m.name}</td>
+            <td><span class="badge bg-secondary">${m.project_code}</span></td>
+            <td class="text-center ${isOverdue ? 'text-danger fw-bold' : ''}">${endDate.toLocaleDateString('pt-BR')}</td>
+            <td>
+                <div class="d-flex align-items-center">
+                    <div class="progress flex-grow-1 me-2" style="height: 6px;">
+                        <div class="progress-bar ${progressClass}" style="width: ${m.progress}%"></div>
+                    </div>
+                    <small>${m.progress}%</small>
+                </div>
+            </td>
+        </tr>
+    `;
+});
+{% endif %}
+
+function generateInsights() {
+    const section = document.getElementById('insightsSection');
+    const content = document.getElementById('insightsContent');
+
+    section.classList.remove('d-none');
+    content.innerHTML = `
+        <div class="text-center py-4">
+            <div class="spinner-border text-info"></div>
+            <p class="mt-2">{{ _('Analisando dados e gerando insights...') }}</p>
+        </div>
+    `;
+
+    fetch('{{ url_for("home.generate_insights") }}', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' }
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.error) {
+            content.innerHTML = `<div class="alert alert-danger">${data.error}</div>`;
+            return;
+        }
+
+        let html = '';
+
+        if (data.resumo_setor) {
+            html += `<p class="lead mb-3">${data.resumo_setor}</p>`;
+        }
+
+        html += '<div class="row">';
+
+        if (data.tendencias && data.tendencias.length) {
+            html += `
+                <div class="col-md-6 mb-3">
+                    <h6><i class="bi bi-graph-up text-primary"></i> Tendências</h6>
+                    <ul class="small">${data.tendencias.map(t => `<li>${t}</li>`).join('')}</ul>
+                </div>
+            `;
+        }
+
+        if (data.oportunidades && data.oportunidades.length) {
+            html += `
+                <div class="col-md-6 mb-3">
+                    <h6><i class="bi bi-star text-warning"></i> Oportunidades</h6>
+                    <ul class="small">${data.oportunidades.map(o => `<li>${o}</li>`).join('')}</ul>
+                </div>
+            `;
+        }
+
+        if (data.recomendacoes && data.recomendacoes.length) {
+            html += `
+                <div class="col-md-6 mb-3">
+                    <h6><i class="bi bi-check-circle text-success"></i> Recomendações</h6>
+                    <ul class="small">${data.recomendacoes.map(r => `<li>${r}</li>`).join('')}</ul>
+                </div>
+            `;
+        }
+
+        if (data.alertas && data.alertas.length) {
+            html += `
+                <div class="col-md-6 mb-3">
+                    <h6><i class="bi bi-exclamation-triangle text-danger"></i> Alertas</h6>
+                    <ul class="small">${data.alertas.map(a => `<li>${a}</li>`).join('')}</ul>
+                </div>
+            `;
+        }
+
+        html += '</div>';
+        content.innerHTML = html;
+    })
+    .catch(error => {
+        content.innerHTML = `<div class="alert alert-danger">Erro: ${error.message}</div>`;
+    });
+}
+
+function hideInsights() {
+    document.getElementById('insightsSection').classList.add('d-none');
+}
+</script>
+{% endblock %}

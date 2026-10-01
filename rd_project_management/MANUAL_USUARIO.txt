@@ -1,0 +1,607 @@
+================================================================================
+                         ORION P&D - MANUAL DO USUARIO
+                    Sistema de Gestao de Projetos de P&D
+                              Versao 1.2 - 2026
+================================================================================
+
+INDICE
+------
+1. Introducao
+2. Acesso ao Sistema
+3. Pagina Inicial (Dashboard)
+4. Gestao de Projetos
+5. Controle Financeiro (Despesas)
+6. Recursos e Equipe
+7. Cronograma
+8. Modulo Agil (Kanban e Sprints)
+9. Timesheet
+10. Chamadas Publicas
+11. Assistente de Inteligencia Artificial
+12. Usuarios e Permissoes
+13. Configuracoes
+14. Perguntas Frequentes
+
+================================================================================
+1. INTRODUCAO
+================================================================================
+
+O Orion P&D e uma plataforma completa para gestao de projetos de Pesquisa e
+Desenvolvimento. O sistema oferece:
+
+- Gestao completa de projetos com orcamento e cronograma
+- Controle de despesas com anexos (boletos, notas fiscais)
+- Acompanhamento de chamadas publicas (FINEP, FAPESC, BNDES)
+- Inteligencia Artificial para analise e geracao de relatorios
+- Modulo Agil com Kanban e Sprints
+- Suporte a multiplas empresas (multi-tenancy)
+- Interface em Portugues e Ingles
+
+================================================================================
+2. ACESSO AO SISTEMA
+================================================================================
+
+2.1 LOGIN
+---------
+1. Acesse o endereco do sistema no navegador
+2. Informe seu e-mail e senha
+3. Clique em "Entrar"
+
+2.2 SELECAO DE IDIOMA
+---------------------
+Na pagina de login e em todas as paginas do sistema, voce encontra as bandeiras
+no canto superior direito:
+
+  [Bandeira Brasil] - Portugues (padrao)
+  [Bandeira Reino Unido] - Ingles
+
+Clique na bandeira desejada para alterar o idioma. A preferencia e salva
+automaticamente.
+
+2.3 PRIMEIRO ACESSO
+-------------------
+Credenciais iniciais do administrador:
+- Usuario: superadmin
+- Senha: super123
+
+IMPORTANTE: Altere a senha apos o primeiro acesso!
+
+================================================================================
+3. PAGINA INICIAL (DASHBOARD)
+================================================================================
+
+A pagina inicial apresenta uma visao geral do seu setor de P&D:
+
+3.1 CABECALHO
+-------------
+- Nome da empresa
+- Data atual
+- Botao "Chat IA" - Acesso rapido ao assistente de chat
+- Botao "Gerar Insights IA" - Gera analises automaticas
+
+3.2 ESTATISTICAS RAPIDAS
+------------------------
+- Projetos Ativos: Quantidade de projetos em andamento
+- Orcamento Total: Soma dos orcamentos de todos os projetos
+- Despesas: Total de despesas registradas
+- Chamadas Abertas: Editais com inscricoes abertas
+
+3.3 GRAFICOS
+------------
+- Distribuicao de Custos: Grafico de pizza por projeto
+- Timeline de Marcos: Lista dos proximos marcos com progresso
+
+3.4 PAINEIS LATERAIS
+--------------------
+- Noticias de Editais: Chamadas publicas recentes
+- Proximos Marcos: Atividades com prazo proximo
+- Projetos Encerrando: Projetos com data fim proxima
+- Acoes Rapidas: Atalhos para criar projeto, ver chamadas, etc.
+
+================================================================================
+4. GESTAO DE PROJETOS
+================================================================================
+
+4.1 LISTAR PROJETOS
+-------------------
+Menu: Projetos
+
+Visualize todos os projetos cadastrados com:
+- Codigo e titulo
+- Status (Planejamento, Em Andamento, Concluido, Cancelado)
+- Orcamento e percentual gasto
+- Responsavel
+- Datas de inicio e termino
+
+4.2 CRIAR NOVO PROJETO
+----------------------
+1. Clique em "Novo Projeto"
+2. Preencha os campos:
+   - Codigo*: Identificador unico (ex: PRJ-2024-001)
+   - Titulo*: Nome do projeto
+   - Descricao: Detalhamento do projeto
+   - Categoria: Tipo de projeto (P&D, Inovacao, etc.)
+   - Status: Estado atual
+   - Orcamento: Valor total disponivel
+   - Fonte de Financiamento: FINEP, FAPESC, proprio, etc.
+   - Data Inicio e Data Termino
+   - Responsavel: Pessoa responsavel pelo projeto
+3. Clique em "Salvar"
+
+4.3 VISUALIZAR PROJETO
+----------------------
+Na pagina do projeto voce encontra:
+- Informacoes gerais
+- Abas para: Despesas, Recursos, Cronograma, Timesheet, Documentos
+- Botoes de acesso ao Kanban e Status Report
+
+4.4 DOCUMENTOS DO PROJETO
+-------------------------
+Anexe documentos ao projeto:
+1. Acesse a aba "Documentos"
+2. Clique em "Adicionar Documento"
+3. Selecione o arquivo (PDF, Word, Excel, PowerPoint)
+4. Informe uma descricao
+5. Clique em "Enviar"
+
+================================================================================
+5. CONTROLE FINANCEIRO (DESPESAS)
+================================================================================
+
+5.1 REGISTRAR DESPESA
+---------------------
+1. Acesse o projeto desejado
+2. Clique na aba "Despesas"
+3. Clique em "Nova Despesa"
+4. Preencha:
+   - Descricao*: O que foi adquirido/pago
+   - Categoria*: Bolsas, Material, Equipamento, Servicos, etc.
+   - Valor*: Montante em reais
+   - Data*: Data da despesa
+   - Fornecedor: Nome do fornecedor
+   - Numero da Nota: Numero do documento fiscal
+   - Observacoes: Informacoes adicionais
+5. Clique em "Salvar"
+
+5.2 ANEXAR COMPROVANTES
+-----------------------
+Apos criar a despesa:
+1. Clique no botao de anexos da despesa
+2. Selecione o tipo: Boleto, Nota Fiscal ou Comprovante
+3. Escolha o arquivo (PDF, JPG, PNG)
+4. Clique em "Enviar"
+
+Limite: 5 anexos por despesa
+
+5.3 CATEGORIAS DE DESPESAS
+--------------------------
+- Bolsas: Pagamento de bolsistas
+- Material de Consumo: Materiais de uso continuo
+- Material Permanente: Equipamentos e bens duraveis
+- Servicos de Terceiros: Contratacao de servicos
+- Viagens: Passagens, hospedagem, diarias
+- Outros: Demais categorias
+
+================================================================================
+6. RECURSOS E EQUIPE
+================================================================================
+
+6.1 TIPOS DE RECURSOS
+---------------------
+- Pessoa: Membros da equipe
+- Equipamento: Maquinas e ferramentas
+- Material: Insumos e materiais
+
+6.2 CADASTRAR RECURSO
+---------------------
+1. Acesse o projeto
+2. Clique na aba "Recursos"
+3. Clique em "Novo Recurso"
+4. Preencha:
+   - Nome*: Identificacao do recurso
+   - Tipo*: Pessoa, Equipamento ou Material
+   - Funcao: Cargo ou papel (para pessoas)
+   - Custo por Hora: Valor hora (para calculo de custos)
+   - Horas Alocadas: Total de horas previstas
+   - Status: Ativo ou Inativo
+5. Clique em "Salvar"
+
+6.3 CUSTO PLANEJADO VS REALIZADO
+--------------------------------
+O sistema calcula automaticamente:
+- Custo Planejado: Horas Alocadas x Custo/Hora
+- Custo Realizado: Horas do Timesheet x Custo/Hora
+
+Esta comparacao aparece nos relatorios de status.
+
+================================================================================
+7. CRONOGRAMA
+================================================================================
+
+7.1 MARCOS (MILESTONES)
+-----------------------
+Marcos sao as etapas ou entregas do projeto.
+
+7.2 CRIAR MARCO
+---------------
+1. Acesse o projeto
+2. Clique na aba "Cronograma"
+3. Clique em "Novo Marco"
+4. Preencha:
+   - Titulo*: Nome da atividade
+   - Descricao: Detalhamento
+   - Data Inicio*: Quando comeca
+   - Data Termino*: Prazo de entrega
+   - Progresso: Percentual concluido (0-100%)
+   - Status: Pendente, Em Andamento, Concluido, Atrasado
+   - Ordem: Sequencia no cronograma
+
+7.3 PREDECESSORA (DEPENDENCIA)
+------------------------------
+Para indicar que uma atividade depende de outra:
+1. No formulario do marco, localize "Predecessora"
+2. Selecione a atividade que deve terminar antes
+3. A relacao e do tipo "Finish-to-Start" (FS)
+
+O grafico de Gantt mostrara uma linha conectando as atividades.
+
+7.4 RESPONSAVEIS
+----------------
+Cada marco pode ter multiplos responsaveis com percentual de alocacao:
+
+1. Na secao "Responsaveis", selecione a pessoa
+2. Informe o percentual de alocacao (ex: 50%)
+3. Clique em "Adicionar Responsavel" para mais pessoas
+4. A soma das alocacoes nao pode ultrapassar 100%
+
+Exemplo:
+- Joao Silva: 60%
+- Maria Santos: 40%
+- Total: 100% (valido)
+
+7.5 GRAFICO DE GANTT
+--------------------
+Visualizacao grafica do cronograma:
+- Barras coloridas por status
+- Linhas de conexao entre atividades dependentes
+- Progresso indicado na barra
+
+7.6 IMPORTAR/EXPORTAR MS PROJECT
+--------------------------------
+O sistema e compativel com Microsoft Project:
+
+Exportar:
+1. Clique em "Exportar"
+2. Sera gerado um arquivo XML
+3. Abra no MS Project
+
+Importar:
+1. Clique em "Importar"
+2. Selecione o arquivo XML do MS Project
+3. Os marcos serao criados automaticamente
+
+O arquivo inclui: tarefas, recursos, alocacoes e predecessores.
+
+================================================================================
+8. MODULO AGIL (KANBAN E SPRINTS)
+================================================================================
+
+8.1 ACESSAR O KANBAN
+--------------------
+1. Acesse o projeto
+2. Clique no botao "Kanban" ou acesse via Menu Agil
+
+8.2 QUADRO KANBAN
+-----------------
+Visualizacao das atividades em colunas:
+
+| Nao Iniciado | Em Andamento | Concluido |
+|--------------|--------------|-----------|
+| [Card 1]     | [Card 3]     | [Card 5]  |
+| [Card 2]     | [Card 4]     |           |
+
+Cada card mostra:
+- Titulo da atividade
+- Data de termino
+- Responsaveis (avatares)
+- Story Points
+- Prioridade (cor da borda)
+
+8.3 MOVER CARDS
+---------------
+Arraste e solte os cards entre as colunas para atualizar o status.
+O progresso e ajustado automaticamente:
+- Nao Iniciado: 0%
+- Em Andamento: 10% (se estava em 0%)
+- Concluido: 100%
+
+8.4 FILTRAR POR SPRINT
+----------------------
+Use o seletor no topo para ver apenas as atividades de um sprint especifico.
+
+8.5 SPRINTS
+-----------
+Sprints sao ciclos de trabalho com duracao fixa (geralmente 2 semanas).
+
+Criar Sprint:
+1. Acesse "Sprints" no menu agil
+2. Clique em "Novo Sprint"
+3. Preencha:
+   - Nome: Ex: "Sprint 1"
+   - Meta: Objetivo do sprint
+   - Data Inicio e Data Fim
+   - Status: Planejado, Ativo ou Concluido
+4. Clique em "Salvar"
+
+Ativar Sprint:
+- Apenas um sprint pode estar ativo por vez
+- Clique em "Ativar" no sprint desejado
+
+8.6 GRAFICOS AGEIS
+------------------
+Acesse "Graficos" para visualizar:
+
+- Burndown: Evolucao do trabalho restante no sprint
+- Velocity: Historico de pontos entregues por sprint
+- Distribuicao por Status: Pizza com percentuais
+- Distribuicao por Prioridade: Quantidade por nivel
+- Carga da Equipe: Atividades por pessoa
+
+8.7 STORY POINTS
+----------------
+Pontuacao de complexidade das atividades (escala Fibonacci: 1, 2, 3, 5, 8, 13...).
+Edite na aba de cronograma ou diretamente no card do Kanban.
+
+8.8 PRIORIDADES
+---------------
+- Critica (vermelho): Bloqueante, urgente
+- Alta (laranja): Importante, prazo curto
+- Media (amarelo): Normal
+- Baixa (verde): Pode esperar
+
+================================================================================
+9. TIMESHEET
+================================================================================
+
+9.1 REGISTRAR HORAS
+-------------------
+1. Acesse o projeto
+2. Clique na aba "Timesheet"
+3. Clique em "Registrar Horas"
+4. Preencha:
+   - Data*: Dia trabalhado
+   - Recurso: Pessoa que trabalhou
+   - Horas*: Quantidade de horas
+   - Atividade: Marco relacionado
+   - Descricao: O que foi feito
+5. Clique em "Salvar"
+
+9.2 IMPORTAR TIMESHEET
+----------------------
+Para importar em lote:
+1. Baixe o template Excel
+2. Preencha com os dados
+3. Clique em "Importar"
+4. Selecione o arquivo
+
+9.3 CALCULO DE CUSTOS
+---------------------
+O sistema calcula automaticamente:
+- Custo Realizado = Horas Trabalhadas x Custo/Hora do Recurso
+
+Este valor aparece nos relatorios de status comparado ao custo planejado.
+
+================================================================================
+10. CHAMADAS PUBLICAS
+================================================================================
+
+10.1 LISTAR CHAMADAS
+--------------------
+Menu: Chamadas
+
+Visualize editais de:
+- FINEP
+- FAPESC
+- BNDES
+- Outros orgaos
+
+10.2 FILTROS
+------------
+- Por fonte (FINEP, FAPESC, etc.)
+- Por status (Aberta, Encerrada)
+- Por area tematica
+
+10.3 DETALHES DA CHAMADA
+------------------------
+Clique na chamada para ver:
+- Titulo e descricao
+- Prazo de submissao
+- Valores (minimo e maximo)
+- Requisitos
+- Link para o edital original
+
+10.4 ATUALIZACAO AUTOMATICA
+---------------------------
+O sistema busca novas chamadas automaticamente dos sites:
+- FINEP
+- FAPESC
+- BNDES
+
+================================================================================
+11. ASSISTENTE DE INTELIGENCIA ARTIFICIAL
+================================================================================
+
+O sistema integra IA para auxiliar na gestao de projetos.
+
+11.1 ACESSAR O ASSISTENTE
+-------------------------
+- Clique em "Chat IA" no cabecalho da pagina inicial
+- Ou acesse Menu > IA > Assistente de Chat
+
+11.2 CHAT COM A IA
+------------------
+Faca perguntas em linguagem natural:
+
+Exemplos:
+- "Quanto ja gastamos no projeto X?"
+- "Quais projetos estao atrasados?"
+- "Quem sao os responsaveis pela atividade Y?"
+- "Qual o progresso medio do projeto Z?"
+- "Quais atividades dependem do marco W?"
+
+A IA tem acesso a:
+- Dados de todos os projetos
+- Marcos e progresso
+- Recursos e alocacoes
+- Despesas e orcamentos
+- Horas do timesheet
+- Predecessores de atividades
+
+11.3 GERAR INSIGHTS
+-------------------
+Na pagina inicial, clique em "Gerar Insights IA" para receber:
+- Resumo do setor de P&D
+- Tendencias identificadas
+- Oportunidades de melhoria
+- Alertas e riscos
+- Recomendacoes
+
+11.4 ANALISE DE RISCOS
+----------------------
+Em cada projeto, acesse "Analise de Riscos" para ver:
+- Nivel de risco geral
+- Riscos de orcamento
+- Riscos de cronograma
+- Riscos de recursos
+- Recomendacoes de mitigacao
+
+11.5 GERACAO DE RELATORIOS
+--------------------------
+A IA pode gerar relatorios tecnicos:
+1. Acesse o projeto
+2. Clique em "Gerar Relatorio"
+3. Selecione o tipo: Parcial ou Final
+4. Aguarde a geracao
+5. Baixe ou visualize o relatorio
+
+11.6 ANALISE DE EDITAIS
+-----------------------
+Envie um PDF de edital para a IA extrair:
+- Prazos
+- Valores
+- Requisitos
+- Itens financiaveis
+- Documentos necessarios
+
+11.7 MATCHING PROJETO-EDITAL
+----------------------------
+A IA sugere editais compativeis com cada projeto:
+1. Acesse o projeto
+2. Clique em "Encontrar Editais"
+3. Veja a lista ordenada por compatibilidade
+4. Cada sugestao inclui justificativa e adaptacoes necessarias
+
+================================================================================
+12. USUARIOS E PERMISSOES
+================================================================================
+
+12.1 PAPEIS DE USUARIO
+----------------------
+- Superadmin: Acesso total, gerencia todas as empresas
+- Admin: Gerencia usuarios da sua empresa
+- Manager: Acesso a relatorios e configuracoes
+- User: Acesso basico aos projetos
+- Viewer: Apenas visualizacao
+
+12.2 CRIAR USUARIO
+------------------
+(Requer papel Admin ou superior)
+
+1. Menu > Usuarios
+2. Clique em "Novo Usuario"
+3. Preencha:
+   - Nome completo
+   - E-mail (sera o login)
+   - Senha inicial
+   - Papel/Funcao
+4. Clique em "Salvar"
+
+12.3 EDITAR PERFIL
+------------------
+1. Clique no seu nome no canto superior direito
+2. Selecione "Meu Perfil"
+3. Altere os dados desejados
+4. Clique em "Salvar"
+
+================================================================================
+13. CONFIGURACOES
+================================================================================
+
+13.1 IDIOMA
+-----------
+Clique nas bandeiras no cabecalho:
+- Brasil: Portugues
+- Reino Unido: Ingles
+
+A preferencia e salva automaticamente.
+
+13.2 EMPRESA (TENANT)
+---------------------
+(Apenas Superadmin)
+
+Cada empresa tem dados isolados. Configure:
+- Nome da empresa
+- CNPJ
+- Endereco
+- Logo
+- Plano (Basic, Professional, Enterprise)
+- Limites de usuarios e projetos
+
+================================================================================
+14. PERGUNTAS FREQUENTES
+================================================================================
+
+P: Como altero minha senha?
+R: Acesse Meu Perfil > Alterar Senha
+
+P: Como exporto dados para Excel?
+R: Na listagem de despesas ou timesheet, clique em "Exportar"
+
+P: A IA nao esta funcionando, o que faco?
+R: Verifique se a chave ANTHROPIC_API_KEY esta configurada.
+   Contate o administrador do sistema.
+
+P: Posso usar o sistema no celular?
+R: Sim, o sistema e responsivo e funciona em dispositivos moveis.
+
+P: Como faco backup dos dados?
+R: O administrador deve configurar backup automatico do banco de dados.
+   Para backup manual, copie o arquivo rd_projects.db
+
+P: Posso importar projetos de outro sistema?
+R: Use a importacao de MS Project (XML) para cronogramas.
+   Para outros dados, contate o suporte.
+
+P: Quantos usuarios posso ter?
+R: Depende do plano contratado:
+   - Basic: 5 usuarios
+   - Professional: 20 usuarios
+   - Enterprise: Ilimitado
+
+P: Os dados sao seguros?
+R: Sim, o sistema usa criptografia para senhas e dados sensiveis.
+   Cada empresa tem seus dados completamente isolados.
+
+================================================================================
+                              SUPORTE TECNICO
+================================================================================
+
+Para duvidas ou problemas:
+- Abra um chamado no sistema
+- Contate o administrador da sua empresa
+- E-mail: suporte@orionpd.com.br
+
+================================================================================
+                     Orion P&D - Gestao de Inovacao
+                          Versao 1.2 - Maio 2026
+              (c) 2026 - Todos os direitos reservados
+================================================================================

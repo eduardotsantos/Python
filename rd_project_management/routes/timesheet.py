@@ -1,8 +1,10 @@
-from flask import Blueprint, render_template, redirect, url_for, flash, request
+from flask import Blueprint, render_template, redirect, url_for, flash, request, send_file
 from flask_login import login_required, current_user
-from models import db, Timesheet, Project, Milestone, Resource
+from models import db, Timesheet, Project, Milestone, Resource, AuditLog
 from services.tenant_utils import tenant_required, ensure_tenant_access, get_current_tenant_id
+from services.excel_timesheet import create_timesheet_template, parse_timesheet_excel
 from datetime import datetime, date
+from werkzeug.utils import secure_filename
 
 timesheet_bp = Blueprint('timesheet', __name__)
 
@@ -125,3 +127,104 @@ def delete_entry(project_id, entry_id):
     db.session.commit()
     flash('Registro excluído com sucesso!', 'success')
     return redirect(url_for('timesheet.list_timesheet', project_id=project_id))
+
+
+@timesheet_bp.route('/projects/<int:project_id>/timesheet/template')
+@login_required
+@tenant_required
+def download_template(project_id):
+    """Download Excel template for timesheet import."""
+    project = Project.query.get_or_404(project_id)
+    ensure_tenant_access(project)
+
+    milestones = Milestone.query.filter_by(project_id=project_id).all()
+    resources = Resource.query.filter_by(project_id=project_id, type='Pessoa', status='Ativo').all()
+
+    output = create_timesheet_template(project, milestones, resources)
+    filename = f"timesheet_template_{project.id}.xlsx"
+
+    return send_file(
+        output,
+        mimetype='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+        as_attachment=True,
+        download_name=filename
+    )
+
+
+@timesheet_bp.route('/projects/<int:project_id>/timesheet/upload', methods=['GET', 'POST'])
+@login_required
+@tenant_required
+def upload_excel(project_id):
+    """Upload Excel file with timesheet entries."""
+    project = Project.query.get_or_404(project_id)
+    ensure_tenant_access(project)
+
+    tenant_id = get_current_tenant_id()
+
+    if request.method == 'POST':
+        if 'file' not in request.files:
+            flash('Nenhum arquivo selecionado.', 'danger')
+            return redirect(request.url)
+
+        file = request.files['file']
+        if file.filename == '':
+            flash('Nenhum arquivo selecionado.', 'danger')
+            return redirect(request.url)
+
+        if not file.filename.endswith(('.xlsx', '.xls')):
+            flash('Formato inválido. Use arquivos Excel (.xlsx ou .xls).', 'danger')
+            return redirect(request.url)
+
+        try:
+            milestones = Milestone.query.filter_by(project_id=project_id).all()
+            resources = Resource.query.filter_by(project_id=project_id, type='Pessoa', status='Ativo').all()
+
+            entries, errors = parse_timesheet_excel(
+                file,
+                project_id=project_id,
+                tenant_id=tenant_id,
+                user_id=current_user.id,
+                milestones=milestones,
+                resources=resources
+            )
+
+            if errors and not entries:
+                for error in errors[:5]:
+                    flash(error, 'danger')
+                if len(errors) > 5:
+                    flash(f'... e mais {len(errors) - 5} erros', 'danger')
+                return redirect(request.url)
+
+            imported_count = 0
+            for entry_data in entries:
+                entry = Timesheet(**entry_data)
+                db.session.add(entry)
+                imported_count += 1
+
+            db.session.commit()
+
+            try:
+                AuditLog.log(
+                    action='import',
+                    entity_type='timesheet',
+                    entity_id=project_id,
+                    entity_name=project.title,
+                    details=f'Importados {imported_count} registros via Excel'
+                )
+                db.session.commit()
+            except Exception:
+                pass
+
+            if errors:
+                flash(f'{imported_count} registros importados com sucesso! {len(errors)} linhas com erro foram ignoradas.', 'warning')
+            else:
+                flash(f'{imported_count} registros importados com sucesso!', 'success')
+
+            return redirect(url_for('timesheet.list_timesheet', project_id=project_id))
+
+        except Exception as e:
+            db.session.rollback()
+            flash(f'Erro ao processar arquivo: {str(e)}', 'danger')
+            return redirect(request.url)
+
+    return render_template('timesheet/upload.html', project=project)

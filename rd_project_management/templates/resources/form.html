@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% block title %}{{ 'Editar' if resource else 'Novo' }} Recurso - Gestão P&D{% endblock %}
+{% block title %}{{ _('Editar') if resource else _('Novo') }} {{ _('Recurso') }} - {{ _('Gestao P&D') }}{% endblock %}
 
 {% block content %}
 <div class="row justify-content-center">
@@ -8,7 +8,7 @@
             <a href="{{ url_for('resources.list_resources', project_id=project.id) }}" class="btn btn-outline-secondary btn-sm me-3">
                 <i class="bi bi-arrow-left"></i>
             </a>
-            <h4 class="fw-bold mb-0">{{ 'Editar' if resource else 'Novo' }} Recurso</h4>
+            <h4 class="fw-bold mb-0">{{ _('Editar') if resource else _('Novo') }} {{ _('Recurso') }}</h4>
         </div>
 
         <div class="card shadow-sm">
@@ -16,60 +16,60 @@
                 <form method="POST">
                     <div class="row g-3">
                         <div class="col-md-6">
-                            <label for="type" class="form-label">Tipo *</label>
+                            <label for="type" class="form-label">{{ _('Tipo') }} *</label>
                             <select class="form-select" id="type" name="type" required>
-                                <option value="Pessoa" {{ 'selected' if resource and resource.type == 'Pessoa' }}>Pessoa</option>
-                                <option value="Máquina" {{ 'selected' if resource and resource.type == 'Máquina' }}>Máquina / Equipamento</option>
+                                <option value="Pessoa" {{ 'selected' if resource and resource.type == 'Pessoa' }}>{{ _('Pessoa') }}</option>
+                                <option value="Maquina" {{ 'selected' if resource and resource.type == 'Maquina' }}>{{ _('Maquina / Equipamento') }}</option>
                             </select>
                         </div>
                         <div class="col-md-6">
-                            <label for="name" class="form-label">Nome *</label>
+                            <label for="name" class="form-label">{{ _('Nome') }} *</label>
                             <input type="text" class="form-control" id="name" name="name"
                                    value="{{ resource.name if resource else '' }}" required>
                         </div>
                         <div class="col-md-6">
-                            <label for="role" class="form-label">Função/Papel</label>
+                            <label for="role" class="form-label">{{ _('Funcao/Papel') }}</label>
                             <input type="text" class="form-control" id="role" name="role"
                                    value="{{ resource.role if resource else '' }}"
-                                   placeholder="Ex: Pesquisador, Técnico, CNC, etc.">
+                                   placeholder="{{ _('Ex: Pesquisador, Tecnico, CNC, etc.') }}">
                         </div>
                         <div class="col-md-6">
-                            <label for="status" class="form-label">Status</label>
+                            <label for="status" class="form-label">{{ _('Status') }}</label>
                             <select class="form-select" id="status" name="status">
-                                <option value="Ativo" {{ 'selected' if resource and resource.status == 'Ativo' }}>Ativo</option>
-                                <option value="Inativo" {{ 'selected' if resource and resource.status == 'Inativo' }}>Inativo</option>
+                                <option value="Ativo" {{ 'selected' if resource and resource.status == 'Ativo' }}>{{ _('Ativo') }}</option>
+                                <option value="Inativo" {{ 'selected' if resource and resource.status == 'Inativo' }}>{{ _('Inativo') }}</option>
                             </select>
                         </div>
                         <div class="col-md-6">
-                            <label for="hours_allocated" class="form-label">Horas Alocadas</label>
+                            <label for="hours_allocated" class="form-label">{{ _('Horas Alocadas') }}</label>
                             <input type="number" step="0.5" class="form-control" id="hours_allocated" name="hours_allocated"
                                    value="{{ resource.hours_allocated if resource else '' }}">
                         </div>
                         <div class="col-md-6">
-                            <label for="hourly_cost" class="form-label">Custo/Hora (R$)</label>
+                            <label for="hourly_cost" class="form-label">{{ _('Custo/Hora') }} (R$)</label>
                             <input type="number" step="0.01" class="form-control" id="hourly_cost" name="hourly_cost"
                                    value="{{ resource.hourly_cost if resource else '' }}" data-currency>
                         </div>
                         <div class="col-md-6">
-                            <label for="start_date" class="form-label">Data Início</label>
+                            <label for="start_date" class="form-label">{{ _('Data Inicio') }}</label>
                             <input type="date" class="form-control" id="start_date" name="start_date"
                                    value="{{ resource.start_date.strftime('%Y-%m-%d') if resource and resource.start_date else '' }}">
                         </div>
                         <div class="col-md-6">
-                            <label for="end_date" class="form-label">Data Fim</label>
+                            <label for="end_date" class="form-label">{{ _('Data Fim') }}</label>
                             <input type="date" class="form-control" id="end_date" name="end_date"
                                    value="{{ resource.end_date.strftime('%Y-%m-%d') if resource and resource.end_date else '' }}">
                         </div>
                         <div class="col-12">
-                            <label for="notes" class="form-label">Observações</label>
+                            <label for="notes" class="form-label">{{ _('Observacoes') }}</label>
                             <textarea class="form-control" id="notes" name="notes" rows="3">{{ resource.notes if resource else '' }}</textarea>
                         </div>
                     </div>
                     <hr class="my-4">
                     <div class="d-flex justify-content-end gap-2">
-                        <a href="{{ url_for('resources.list_resources', project_id=project.id) }}" class="btn btn-outline-secondary">Cancelar</a>
+                        <a href="{{ url_for('resources.list_resources', project_id=project.id) }}" class="btn btn-outline-secondary">{{ _('Cancelar') }}</a>
                         <button type="submit" class="btn btn-primary">
-                            <i class="bi bi-check-lg"></i> {{ 'Salvar' if resource else 'Adicionar' }}
+                            <i class="bi bi-check-lg"></i> {{ _('Salvar') if resource else _('Adicionar') }}
                         </button>
                     </div>
                 </form>
